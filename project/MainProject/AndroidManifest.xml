@@ -40,22 +40,17 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name=".authorization.LoginActivity"
             android:label="@string/app_name" >
         </activity>
 
         <activity
-            android:name=".CreateUserActivity"
+            android:name=".authorization.CreateUserActivity"
             android:label="@string/app_name" >
         </activity>
 
         <activity
-            android:name=".ForgotPassword"
-            android:label="@string/app_name" >
-        </activity>
-
-        <activity
-            android:name=".Main"
+            android:name=".authorization.ForgotPassword"
             android:label="@string/app_name" >
         </activity>
 
