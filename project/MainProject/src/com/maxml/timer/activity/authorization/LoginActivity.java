@@ -1,13 +1,15 @@
-package com.maxml.timer.authorization;
+package com.maxml.timer.activity.authorization;
 
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.maxml.timer.MainActivity;
 import com.maxml.timer.R;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
@@ -67,9 +69,14 @@ public class LoginActivity extends Activity {
     }
     
     public void loginOk(){
+    	try{
     	 Toast toast = Toast.makeText(getApplicationContext(), "Logined", duration);
          toast.show();
-//         Intent intent = new Intent(this, Main.class); <-------------------chenge "Main"
-//         startActivityForResult(intent, 1);
+         Intent intent = new Intent(this, MainActivity.class); 
+         startActivityForResult(intent, 1);
+         Log.i("myLog","logined");
+    	}catch(Exception e){
+    		Log.i("myLog",""+e);
+    	}
     }
 }

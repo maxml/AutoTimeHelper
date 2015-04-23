@@ -1,4 +1,4 @@
-package com.maxml.timer.authorization;
+package com.maxml.timer.activity.authorization;
 
 import android.app.Activity;
 import android.os.Bundle;
