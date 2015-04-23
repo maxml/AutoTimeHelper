@@ -1,4 +1,6 @@
-package com.maxml.timer;
+package com.maxml.timer.ui.activity;
+
+import com.maxml.timer.R;
 
 import android.app.Activity;
 import android.os.Bundle;
