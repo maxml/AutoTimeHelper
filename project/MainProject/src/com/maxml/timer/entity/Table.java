@@ -1,5 +1,4 @@
-package userEntity;
-
+package com.maxml.timer.entity;
 import java.util.ArrayList;
 
 public class Table {

@@ -1,4 +1,4 @@
-package userEntity;
+package com.maxml.timer.entity;
 
 public class Point {
 	private double x;

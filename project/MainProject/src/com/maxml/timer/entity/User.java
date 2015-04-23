@@ -1,4 +1,4 @@
-package userEntity;
+package com.maxml.timer.entity;
 
 public class User {
 	private int objectId;
