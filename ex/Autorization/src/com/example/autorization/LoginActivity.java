@@ -55,11 +55,7 @@ public class LoginActivity extends Activity {
         ParseUser.logInInBackground(entLogin.getText().toString(), entPassword.getText().toString(), new LogInCallback(){
         public void done(ParseUser user, ParseException e) {
             if (user != null) {
-                Toast toast = Toast.makeText(getApplicationContext(), "Logined", duration);
-                toast.show();
-//                Intent intent = new Intent(this, Main.class);
-//                startActivityForResult(intent, 1);
-
+               loginOk();
             } else {
                 Toast toast = Toast.makeText(getApplicationContext(), "Incorect login or password", duration);
                 toast.show();
@@ -67,5 +63,12 @@ public class LoginActivity extends Activity {
             }
         }
     });
+    }
+    
+    public void loginOk(){
+    	 Toast toast = Toast.makeText(getApplicationContext(), "Logined", duration);
+         toast.show();
+//         Intent intent = new Intent(this, Main.class); <-------------------chenge "Main"
+//         startActivityForResult(intent, 1);
     }
 }
