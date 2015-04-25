@@ -60,8 +60,8 @@ public class LoginActivity extends Activity {
             if (user != null) {
                loginOk();
             } else {
-                Toast toast = Toast.makeText(getApplicationContext(), "Incorect login or password", duration);
-                toast.show();
+                Toast.makeText(LoginActivity.this,
+                		"Incorect login or password", duration).show();
                 // Signup failed. Look at the ParseException to see what happened.
             }
         }
@@ -73,8 +73,10 @@ public class LoginActivity extends Activity {
     	 Toast toast = Toast.makeText(getApplicationContext(), "Logined", duration);
          toast.show();
          Intent intent = new Intent(this, MainActivity.class); 
-         startActivityForResult(intent, 1);
-         Log.i("myLog","logined");
+         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+         startActivity(intent);
+         finish();
+         
     	}catch(Exception e){
     		Log.i("myLog",""+e);
     	}
