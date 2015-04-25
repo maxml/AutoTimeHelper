@@ -1,22 +1,18 @@
 package com.maxml.timer.entity;
+
 public class Line {
-	private double distance;
 	private Point start;
 	private Point finish;
 
-	public Line(double distance, Point start, Point finish) {
+	public Line(Point start, Point finish) {
 		super();
-		this.distance = distance;
 		this.start = start;
 		this.finish = finish;
 	}
 
 	public double getDistance() {
-		return distance;
-	}
-
-	public void setDistance(double distance) {
-		this.distance = distance;
+		return Math.sqrt(Math.pow(start.getX() - finish.getX(), 2)
+				+ Math.pow(start.getY() - finish.getY(), 2));
 	}
 
 	public Point getStart() {
@@ -37,7 +33,7 @@ public class Line {
 
 	@Override
 	public String toString() {
-		return "Line [distance=" + distance + ", start=" + start + ", finish="
+		return "Line [distance=" + getDistance() + ", start=" + start + ", finish="
 				+ finish + "]";
 	}
 }
