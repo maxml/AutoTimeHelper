@@ -35,15 +35,11 @@ public class OnStart extends Activity {
 		ParseInstallation.getCurrentInstallation().saveInBackground();
 
 		mHandler = new DeviceHandler();
-		Date date = new Date();
 
-		
-		
 		Intent intent = new Intent(this, LoginActivity.class);
 		startActivity(intent);
 		finish();
 
-		// slicemanager.update(slice);
 
 	}
 	

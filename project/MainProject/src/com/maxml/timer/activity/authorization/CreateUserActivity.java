@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 
 import com.maxml.timer.R;
+import com.maxml.timer.ui.elements.DialogFactory;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
@@ -21,7 +22,6 @@ public class CreateUserActivity extends Activity {
     TextView entPassword;
     TextView entRPassword;
     TextView entEmail;
-//    Context context = getApplicationContext();
 
     int duration = Toast.LENGTH_SHORT;
 
@@ -52,10 +52,16 @@ public class CreateUserActivity extends Activity {
             user.signUpInBackground(new SignUpCallback() {
                 public void done(ParseException e) {
                     if (e == null) {
-                        // Hooray! Let them use the app now.
+                    	Toast.makeText(CreateUserActivity.this, 
+                    			"User " + entLogin.getText().toString() +
+                    			" created!", Toast.LENGTH_SHORT).show();
+                    	
+                    	Intent intent = new Intent(CreateUserActivity.this, LoginActivity.class);
+                    	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
                     } else {
-                        // Sign up didn't succeed. Look at the ParseException
-                        // to figure out what went wrong
+                    	DialogFactory.showErrorDialog(CreateUserActivity.this,
+                    			"Error", e.getLocalizedMessage());
                     }
                 }
             });
