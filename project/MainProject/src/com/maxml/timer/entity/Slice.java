@@ -2,7 +2,11 @@ package com.maxml.timer.entity;
 
 import java.util.Date;
 
+import com.parse.GetCallback;
+import com.parse.ParseObject;
+
 public class Slice {
+	private String user;
 	private String id;
 	private Line path;
 	private Date startDate;
@@ -10,19 +14,32 @@ public class Slice {
 	private String description;
 	private SliceType type;
 
-	enum SliceType {
+	public enum SliceType {
 		WORK, REST, CALL, WALK
 	}
 
-	public Slice(String id, Line path, Date startDate, Date endDate,
+	public Slice(String user, Line path, Date startDate, Date endDate,
 			String description, SliceType type) {
 		super();
+		this.user = user;
 		this.id = id;
 		this.path = path;
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.description = description;
 		this.type = type;
+	}
+
+	public Slice() {
+
+	}
+
+	public String getUser() {
+		return user;
+	}
+
+	public void setUser(String user) {
+		this.user = user;
 	}
 
 	public String getId() {
@@ -75,9 +92,9 @@ public class Slice {
 
 	@Override
 	public String toString() {
-		return "Slice [id=" + id + ", path=" + path + ", startDate="
-				+ startDate + ", endDate=" + endDate + ", description="
-				+ description + ", type=" + type + "]";
+		return "Slice [user=" + user + ", id=" + id + ", path=" + path
+				+ ", startDate=" + startDate + ", endDate=" + endDate
+				+ ", description=" + description + ", type=" + type + "]";
 	}
 
 }

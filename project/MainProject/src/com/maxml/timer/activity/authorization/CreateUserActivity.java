@@ -67,17 +67,25 @@ public class CreateUserActivity extends Activity {
 
     public void onClick(View v) {
         if (v.getId() == R.id.btnCreate) {
-            if (entPassword.getText().toString().equals(entRPassword.getText().toString())) {
+        	if (!entLogin.getText().toString().equals("") 
+            		&& !entPassword.getText().toString().equals("")
+            		&& !entEmail.getText().toString().equals("")){
+            if (entPassword.getText().toString().equals(entRPassword.getText().toString()) 
+            		) {
                 createUser();
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
                 Toast toast = Toast.makeText(getApplicationContext(), "User " + entLogin.getText().toString() + " created!", duration);
                 toast.show();
                 finish();
-            } else {
+            } else { //different passwords 
                 Toast toast = Toast.makeText(getApplicationContext(), "Use different passwords", duration);
                 toast.show();
             }
+        	} else { //login or password or @ !=0
+        		Toast toast = Toast.makeText(getApplicationContext(), "Enter data", duration);
+                toast.show();
+        	}
 
         }
     }

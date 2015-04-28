@@ -4,13 +4,18 @@ public class Line {
 	private Point start;
 	private Point finish;
 
+	
+	
+	public Line() {
+	}
+
 	public Line(double distance, Point start, Point finish) {
 		super();
 		this.distance = distance;
 		this.start = start;
 		this.finish = finish;
 	}
-
+	
 	public double getDistance() {
 		return distance;
 	}
