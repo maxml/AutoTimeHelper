@@ -19,7 +19,8 @@ import android.widget.RemoteViews;
 
 public class MyWidgetProvider extends AppWidgetProvider {
 
-	private WidgetController controller;
+	private static WidgetController controller = new WidgetController();
+	
 
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager,
@@ -32,16 +33,16 @@ public class MyWidgetProvider extends AppWidgetProvider {
 
 		// register for button event
 		remoteViews.setOnClickPendingIntent(R.id.butCall,
-				buildButtonPendingIntent(context, WidgetController.type.CALL));
+				buildButtonPendingIntent(context, SliceType.CALL));
 
 		remoteViews.setOnClickPendingIntent(R.id.butRest,
-				buildButtonPendingIntent(context, WidgetController.type.REST));
+				buildButtonPendingIntent(context, SliceType.REST));
 
 		remoteViews.setOnClickPendingIntent(R.id.butWalk,
-				buildButtonPendingIntent(context, WidgetController.type.WALK));
+				buildButtonPendingIntent(context, SliceType.WALK));
 
 		remoteViews.setOnClickPendingIntent(R.id.butWork,
-				buildButtonPendingIntent(context, WidgetController.type.WORK));
+				buildButtonPendingIntent(context, SliceType.WORK));
 
 		// updating view with initial data
 
@@ -51,7 +52,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
 		pushWidgetUpdate(context, remoteViews);
 	}
 
-	public  PendingIntent buildButtonPendingIntent(Context context,
+	public static PendingIntent buildButtonPendingIntent(Context context,
 			SliceType type) {
 
 		if (controller.getTable().getList().isEmpty()) {
@@ -76,7 +77,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
 		return updateWidget(context);
 	}
 
-	private PendingIntent updateWidget(Context context) {
+	private static PendingIntent updateWidget(Context context) {
 		Intent intent = new Intent();
 		intent.setAction(WidgetUtils.WIDGET_UPDATE_ACTION);
 		return PendingIntent.getBroadcast(context, 0, intent,
