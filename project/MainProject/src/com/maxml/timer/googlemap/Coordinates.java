@@ -6,16 +6,16 @@ public class Coordinates {
 
 	public double getDistance(Coordinates coordinats) {
 		double distance = 0;
-		double φ1 = toRadians(this.Lat);
-		double φ2 = toRadians(coordinats.Lat);
-		double Δφ = toRadians((coordinats.Lat - this.Lat));
-		double Δλ = toRadians((coordinats.Long - this.Long));
-
-		double a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) + Math.cos(φ1)
-				* Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-		double R = 6378100;
-		distance = R * c;
+		// double φ1 = toRadians(this.Lat);
+		// double φ2 = toRadians(coordinats.Lat);
+		// double Δφ = toRadians((coordinats.Lat - this.Lat));
+		// double Δλ = toRadians((coordinats.Long - this.Long));
+		//
+		// double a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) + Math.cos(φ1)
+		// * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+		// double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+		// double R = 6378100;
+		// distance = R * c;
 		return distance;
 	}
 
