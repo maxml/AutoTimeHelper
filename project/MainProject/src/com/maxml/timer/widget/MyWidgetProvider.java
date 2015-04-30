@@ -31,17 +31,17 @@ public class MyWidgetProvider extends AppWidgetProvider {
 		controller = new WidgetController();
 
 		// register for button event
-		remoteViews.setOnClickPendingIntent(R.id.butCall,
-				buildButtonPendingIntent(context, WidgetController.type.CALL));
-
-		remoteViews.setOnClickPendingIntent(R.id.butRest,
-				buildButtonPendingIntent(context, WidgetController.type.REST));
-
-		remoteViews.setOnClickPendingIntent(R.id.butWalk,
-				buildButtonPendingIntent(context, WidgetController.type.WALK));
-
-		remoteViews.setOnClickPendingIntent(R.id.butWork,
-				buildButtonPendingIntent(context, WidgetController.type.WORK));
+//		remoteViews.setOnClickPendingIntent(R.id.butCall,
+//				buildButtonPendingIntent(context, WidgetController.type.CALL));
+//
+//		remoteViews.setOnClickPendingIntent(R.id.butRest,
+//				buildButtonPendingIntent(context, WidgetController.type.REST));
+//
+//		remoteViews.setOnClickPendingIntent(R.id.butWalk,
+//				buildButtonPendingIntent(context, WidgetController.type.WALK));
+//
+//		remoteViews.setOnClickPendingIntent(R.id.butWork,
+//				buildButtonPendingIntent(context, WidgetController.type.WORK));
 
 		// updating view with initial data
 
