@@ -22,17 +22,18 @@ import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 
 public class OnStart extends Activity {
-	
+
 	private DeviceHandler mHandler;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		// setContentView(R.layout.activity_main);
-		Parse.enableLocalDatastore(this);
 
-		Parse.initialize(this, "v7xyeLy701EXeS70aggBiMDzRIlTH0q1tiYlZqFV",
+		/*Parse.initialize(this, "v7xyeLy701EXeS70aggBiMDzRIlTH0q1tiYlZqFV",
 				"oxzucbjTHAKP20t9o4UjBCRBoKN0gk4jL4Mm9UjK");
 		ParseInstallation.getCurrentInstallation().saveInBackground();
+		Parse.enableLocalDatastore(this);*/
 
 		mHandler = new DeviceHandler();
 
@@ -40,9 +41,8 @@ public class OnStart extends Activity {
 		startActivity(intent);
 		finish();
 
-
 	}
-	
+
 	class DeviceHandler extends Handler {
 
 		@Override
@@ -50,8 +50,6 @@ public class OnStart extends Activity {
 			// TODO Auto-generated method stub
 			super.handleMessage(msg);
 		}
-		
-		
-		
+
 	}
 }

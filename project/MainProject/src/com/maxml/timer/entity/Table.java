@@ -1,4 +1,5 @@
 package com.maxml.timer.entity;
+
 import java.util.ArrayList;
 
 public class Table {
@@ -7,6 +8,10 @@ public class Table {
 	public Table(ArrayList<Slice> list) {
 		super();
 		this.list = list;
+	}
+
+	public void addSlise(Slice slice) {
+		list.add(slice);
 	}
 
 	public ArrayList<Slice> getList() {

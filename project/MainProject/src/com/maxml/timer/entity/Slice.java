@@ -2,9 +2,6 @@ package com.maxml.timer.entity;
 
 import java.util.Date;
 
-import com.parse.GetCallback;
-import com.parse.ParseObject;
-
 public class Slice {
 	private String user;
 	private String id;
@@ -85,7 +82,7 @@ public class Slice {
 	public SliceType getType() {
 		return type;
 	}
-
+	
 	public void setType(SliceType type) {
 		this.type = type;
 	}
