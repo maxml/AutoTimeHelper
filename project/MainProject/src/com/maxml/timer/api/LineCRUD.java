@@ -1,9 +1,16 @@
 package com.maxml.timer.api;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import android.os.Handler;
 import android.util.Log;
 
 import com.maxml.timer.entity.Line;
+import com.maxml.timer.entity.Point;
+import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -11,76 +18,120 @@ import com.parse.ParseQuery;
 
 public class LineCRUD {
 
+	private static final String USER = "User";
+	private static final String START = "start";
+	private static final String FINISH = "finish";
+	private static final String LINE = "Line";
+	private static final String POINT = "Point";
+	private static final String X = "x";
+	private static final String Y = "y";
+	private static final String OBJECTID = "objectId";
+
+	public interface OnFinished {
+		void done(List<Line> lines);
+
+		void error();
+	}
+
 	private String LOG_TAG = "All_about_line";
-	private boolean networkDataBaseAvailable = false;
 	private Handler handler = new Handler();
 
 	public void create(Line line) {
-		ParseObject lineage = new ParseObject("Line");
-		lineage.put("User", line.getUser());
-		lineage.put("distance", line.getDistance());
-		lineage.put("start", line.getStart());
-		lineage.put("finish", line.getFinish());
-		lineage.saveEventually();
+		ParseObject lineage = new ParseObject(LINE);
+		lineage.put(START, line.getStart());
+		lineage.put(FINISH, line.getFinish());
+		lineage.saveInBackground();
 	}
 
-	public void read(String id) {
-		
-		ParseQuery<ParseObject> query = ParseQuery.getQuery("GameScore");
-		query.whereEqualTo("objectId", id);
-		if(!networkDataBaseAvailable){
-			query.fromLocalDatastore();
-		}
-		query.getFirstInBackground(new GetCallback<ParseObject>() {
-			public void done(ParseObject object, ParseException e) {
-				if (object == null) {
-					Log.i(LOG_TAG, "Read: The getFirst request failed.");
-				} else {
-					try {
-						object.fetch();
-						
-						Log.i(LOG_TAG,
-								"Read: User = " + object.getString("User")
-										+ ", distance = "
-										+ object.getNumber("distance")
-										+ ", start = "
-										+ object.getString("start")
-										+ ", finish = "
-										+ object.getString("finish"));
-					} catch (ParseException ex) {
-						Log.d(LOG_TAG, "Read: object not null, but" + ex);
-						ex.printStackTrace();
-					}
-					handler.sendEmptyMessage(0);
-					Log.i(LOG_TAG, "Read: Error " + e);
-				}
+	public void read(final OnFinished listener) {
 
+		// if(!NetworkAvailiabilityHelper.getIsNetworkAvailable()){
+		// query.fromLocalDatastore();
+		// TODO querry dad]ta from locakll deetdtda base
+		// return;
+		// }
+
+		ParseQuery<ParseObject> query = ParseQuery.getQuery(POINT);
+		query.findInBackground(new FindCallback<ParseObject>() {
+			public void done(List<ParseObject> points, ParseException e) {
+				if (e == null) {
+
+					final Map<String, Point> myPointMap = new HashMap<String, Point>();
+					for (ParseObject poijnt : points) {
+
+						int x = poijnt.getInt(X);
+						int y = poijnt.getInt(Y);
+						String s = poijnt.getString(USER);
+						String id = poijnt.getObjectId();
+						// Log.d("TAG", "x: " + x + " y: " + y + " user:" + s
+						// + " id: " + id);
+						myPointMap.put(id, new Point(s, x, y));
+					}
+
+					ParseQuery<ParseObject> querySecond = ParseQuery
+							.getQuery(LINE);
+					querySecond
+							.findInBackground(new FindCallback<ParseObject>() {
+								public void done(List<ParseObject> LineList,
+										ParseException e) {
+									if (e == null) {
+										Log.d("TAG",
+												"Retrieved " + LineList.size()
+														+ " lines");
+										List<Line> lines = new LinkedList<Line>();
+
+										for (ParseObject object : LineList) {
+											ParseObject start = object
+													.getParseObject(START);
+											ParseObject finish = object
+													.getParseObject(FINISH);
+
+											String id1 = start.getObjectId();
+											String id2 = finish.getObjectId();
+
+											Line line = new Line(myPointMap
+													.get(id1), myPointMap
+													.get(id2));
+											lines.add(line);
+										}
+
+										if (listener != null) {
+											listener.done(lines);
+										}
+									} else {
+										Log.d("TAG", "Error: " + e.getMessage());
+										listener.error();
+									}
+								}
+							});
+				} else {
+					listener.error();
+				}
 			}
 		});
+
 	}
 
-	public void update(final Line line, String id) {
-		ParseQuery<ParseObject> query = ParseQuery.getQuery("Line");
-		query.getInBackground(id, new GetCallback<ParseObject>() {
-			
+	public void update(final Line newline, final String idLine) {
+		ParseQuery<ParseObject> query = ParseQuery.getQuery(LINE);
+		query.getInBackground(idLine, new GetCallback<ParseObject>() {
+
 			@Override
-			public void done(ParseObject object, ParseException e) {
+			public void done(ParseObject line, ParseException e) {
 				if (e == null) {
-					object.put("distance", line.getDistance());
-					object.put("start", line.getStart());
-					object.put("finish", line.getFinish());
-					object.saveEventually();
+					line.put(START, newline.getStart());
+					line.put(FINISH, newline.getFinish());
 				} else {
 					e.printStackTrace();
 				}
 			}
 		});
 	}
-	
-	public void deleted(String id){
-		ParseQuery<ParseObject> query = ParseQuery.getQuery("Line");
+
+	public void deleted(String id) {
+		ParseQuery<ParseObject> query = ParseQuery.getQuery(LINE);
 		query.getInBackground(id, new GetCallback<ParseObject>() {
-			
+
 			@Override
 			public void done(ParseObject oLine, ParseException e) {
 				if (e == null) {
@@ -90,14 +141,6 @@ public class LineCRUD {
 				}
 			}
 		});
-	}
-
-	public boolean getIsNetworkDataBaseAvailable() {
-		return networkDataBaseAvailable;
-	}
-
-	public void setIsNetworkDataBaseAvailable(boolean isNetworkDataBaseAvailable) {
-		this.networkDataBaseAvailable = isNetworkDataBaseAvailable;
 	}
 
 }
