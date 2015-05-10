@@ -38,6 +38,8 @@ public class GoogleMapLogic extends ActionBarActivity implements
 
 	private Polyline line;
 
+	private static final int MIN_DISTANS_TO_ADD_NEW_POINT_ON_MAP = 5;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -66,8 +68,8 @@ public class GoogleMapLogic extends ActionBarActivity implements
 		point.setLong(location.getLongitude());
 
 		if (pointRadius != null) {
-			if (pointRadius.getDistance(point) > 5
-					&& pointRadius.getDistance(point) < -5) {
+			if (Coordinates.getDistanceInMeter(pointRadius, point) > MIN_DISTANS_TO_ADD_NEW_POINT_ON_MAP
+					&& Coordinates.getDistanceInMeter(pointRadius, point) < -MIN_DISTANS_TO_ADD_NEW_POINT_ON_MAP) {
 				map.addMarker(new MarkerOptions().position(new LatLng(point
 						.getLat(), point.getLong())));
 				map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(point
