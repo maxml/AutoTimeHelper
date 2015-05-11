@@ -46,11 +46,6 @@ public class PointCRUD {
 						e1.printStackTrace();
 					}
 					handler.sendEmptyMessage(0);
-					Log.i("Point", "Read: User = " + object.getString("User")
-							+ ", x = " + object.getNumber("x") + ", y = "
-							+ object.getNumber("y"));
-
-					Log.i("Point", "Read: Error " + e);
 				}
 
 			}
