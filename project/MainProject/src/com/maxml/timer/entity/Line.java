@@ -4,22 +4,12 @@ package com.maxml.timer.entity;
 public class Line {
 	private Point start;
 	private Point finish;
-	private String userLine;
 	
 	
 	public Line() {
 	}
 	
-	public String getUser() {
-		return userLine;
-	}
-	
-	public void setUser(Point user) {
-		this.userLine = user.getUser();
-	}
-	
 	public Line(Point start, Point finish) {
-		super();
 		this.start = start;
 		this.finish = finish;
 	}
