@@ -48,6 +48,7 @@ public class GPSTracker extends Service implements LocationListener {
 	}
 
 	public Location getLocation() {
+		Log.d("TAG", "getLocation() CALLED");
 		try {
 			locationManager = (LocationManager) context
 					.getSystemService(LOCATION_SERVICE);
@@ -166,20 +167,16 @@ public class GPSTracker extends Service implements LocationListener {
 
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void onProviderEnabled(String provider) {
-		// TODO Auto-generated method stub
-
+		getLocation();
 	}
 
 	@Override
 	public void onProviderDisabled(String provider) {
-		// TODO Auto-generated method stub
-
+		getLocation();
 	}
 
 	@Override

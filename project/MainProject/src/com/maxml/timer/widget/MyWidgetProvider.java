@@ -20,7 +20,6 @@ import android.widget.RemoteViews;
 public class MyWidgetProvider extends AppWidgetProvider {
 
 	private static WidgetController controller = new WidgetController();
-	
 
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager,
@@ -32,6 +31,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
 		controller = new WidgetController();
 
 		// register for button event
+
 		remoteViews.setOnClickPendingIntent(R.id.butCall,
 				buildButtonPendingIntent(context, SliceType.CALL));
 

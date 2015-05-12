@@ -1,22 +1,27 @@
 package com.maxml.timer.googlemap;
 
+
 public class Coordinates {
 	private double Lat;
 	private double Long;
 
-	public double getDistance(Coordinates coordinats) {
-		double distance = 0;
-		double fiOne = toRadians(this.Lat);
-		double fiTwo = toRadians(coordinats.Lat);
-		double deltaFi = toRadians((coordinats.Lat - this.Lat));
-		double deltaLambda = toRadians((coordinats.Long - this.Long));
+	public static double getDistanceInMeter(Coordinates c1, Coordinates c2) {
+		double theta = c1.getLong() - c2.getLong();
+		double dist = Math.sin(degTOrad(c1.getLat())) * Math.sin(degTOrad(c2.getLat()))
+				+ Math.cos(degTOrad(c1.getLat())) * Math.cos(degTOrad(c2.getLat()))
+				* Math.cos(degTOrad(theta));
+		dist = Math.acos(dist);
+		dist = radTOdeg(dist);
+		dist = dist * 1.609344 / 1000;
+		return (dist);
+	}
 
-		double a = Math.sin(deltaFi / 2) * Math.sin(deltaFi / 2) + Math.cos(fiOne)
-				* Math.cos(fiTwo) * Math.sin(deltaLambda / 2) * Math.sin(deltaLambda / 2);
-		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-		double R = 6378100;
-		distance = R * c;
-		return distance;
+	private static double degTOrad(double deg) {
+		return (deg * Math.PI / 180.0);
+	}
+
+	private static double radTOdeg(double rad) {
+		return (rad * 180 / Math.PI);
 	}
 
 	private double toRadians(double a) {
