@@ -33,4 +33,13 @@ public class NetworkAvailiabilityHelper {
 
 	    }
 	};
+	
+//	private BroadcastReceiver networkStateReceiver = new BroadcastReceiver() {
+//	    @Override
+//	    public void onReceive(Context context, Intent intent) {
+//	        Log.w("Network Listener", "Network Type Changed");
+//	        
+//	        
+//	    }
+//	};
 }
