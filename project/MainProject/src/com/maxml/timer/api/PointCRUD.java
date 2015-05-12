@@ -1,33 +1,39 @@
 package com.maxml.timer.api;
 
 import com.maxml.timer.entity.Point;
+import com.maxml.timer.*;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
-
 import com.parse.ParseQuery;
+import com.parse.SaveCallback;
 
 import android.os.Handler;
 import android.util.Log;
 
 public class PointCRUD {
 
-	private Handler handler;
+	
+	
+	public OnResult onresult;
 
-	public PointCRUD(Handler handler) {
-		this.handler = handler;
-	}
+	
 
 	public void create(Point point) {
-		ParseObject pair = new ParseObject("Point");
-		pair.put("User", point.getUser());
+		final ParseObject pair = new ParseObject("Point");
 		pair.put("x", point.getX());
 		pair.put("y", point.getY());
-		pair.saveInBackground();
+		pair.saveInBackground(new SaveCallback() {
+		    @Override
+		    public void done(ParseException e) {
+		        onresult.onResult(pair);
+		    }
+		});
 		Log.i("Point", "Create: Point created");
 	}
 
 	public void read(String id) {
+		
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("Point");
 		query.whereEqualTo("objectId", id);
 		query.getFirstInBackground(new GetCallback<ParseObject>() {
@@ -37,17 +43,14 @@ public class PointCRUD {
 				} else {
 					try {
 						object.fetch();
-						Log.i("Point",
-								"Read: User = " + object.getString("User")
-										+ ", x = " + object.getNumber("x")
-										+ ", y = " + object.getNumber("y"));
+						
 					} catch (ParseException e1) {
 						Log.d("Point", "Read: object not nul, but" + e1);
 						e1.printStackTrace();
 					}
-					handler.sendEmptyMessage(0);
+					
+					onresult.onResult(object);
 				}
-
 			}
 		});
 	}
@@ -55,10 +58,9 @@ public class PointCRUD {
 	public void update(final Point point) {
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("Point");
 		// Retrieve the object by id
-		query.getInBackground(point.getId(), new GetCallback<ParseObject>() {
+		query.getInBackground(point.getObjectId(), new GetCallback<ParseObject>() {
 			public void done(ParseObject parsePoint, ParseException e) {
 				if (e == null) {
-					parsePoint.put("User", point.getUser());
 					parsePoint.put("x", point.getX());
 					parsePoint.put("y", point.getY());
 					parsePoint.saveInBackground();
