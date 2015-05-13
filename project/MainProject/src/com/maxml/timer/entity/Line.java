@@ -6,7 +6,7 @@ public class Line {
 	private String user;
 	private String id;
 
-	public Line(Point start, Point finish, String id, String user) {
+	public Line(Point start, Point finish, String user) {
 		this.start = start;
 		this.finish = finish;
 		this.id = id;

@@ -10,19 +10,13 @@ public class Point {
 		this.y = y;
 	}
 
-	
-	
 	public String getObjectId() {
 		return objectId;
 	}
 
-
-
 	public void setObjectId(String objectId) {
 		this.objectId = objectId;
 	}
-
-
 
 	public double getX() {
 		return x;
