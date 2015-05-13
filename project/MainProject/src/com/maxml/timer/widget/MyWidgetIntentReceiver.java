@@ -31,7 +31,7 @@ public class MyWidgetIntentReceiver extends BroadcastReceiver {
 		// re-registering for click listener
 		remoteViews.setOnClickPendingIntent(R.id.butCall, MyWidgetProvider
 				.buildButtonPendingIntent(context, SliceType.CALL));
-		
+
 		remoteViews.setOnClickPendingIntent(R.id.butRest, MyWidgetProvider
 				.buildButtonPendingIntent(context, SliceType.REST));
 

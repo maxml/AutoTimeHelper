@@ -12,7 +12,6 @@ public class WidgetController {
 	// public static SliceType type;
 	private ArrayList<Slice> list = new ArrayList<Slice>();
 	private Table table = new Table(list);
-	
 
 	public Table getTable() {
 		return table;

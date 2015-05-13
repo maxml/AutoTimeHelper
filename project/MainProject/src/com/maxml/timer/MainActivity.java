@@ -23,6 +23,7 @@ import com.maxml.timer.activity.navigationdrawer.DrawerItem;
 import com.maxml.timer.activity.navigationdrawer.DrawerItemAdapter;
 import com.maxml.timer.activity.navigationdrawer.DrawerMenu;
 import com.maxml.timer.activity.navigationdrawer.SimpleFramgment;
+import com.maxml.timer.api.NetworkReceiver;
 import com.parse.Parse;
 import com.parse.ParseInstallation;
 
@@ -36,7 +37,7 @@ public class MainActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
+
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		RecyclerView drawerOptions = (RecyclerView) findViewById(R.id.drawer_options);
