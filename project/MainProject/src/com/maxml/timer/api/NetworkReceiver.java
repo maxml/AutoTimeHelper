@@ -30,10 +30,6 @@ public class NetworkReceiver extends BroadcastReceiver {
 							Log.v(LOG_TAG, "Now you are connected to Internet!");
 							Toast.makeText(context, "Internet available", Toast.LENGTH_SHORT).show();
 							isConnected = true;
-							// do your processing here ---
-							// if you need to post any data to the server or get
-							// status
-							// update from the server
 						}
 						return true;
 					}
