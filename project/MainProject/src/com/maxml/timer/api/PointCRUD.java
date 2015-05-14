@@ -1,6 +1,7 @@
 package com.maxml.timer.api;
 
 import com.maxml.timer.entity.Point;
+import com.maxml.timer.entity.Slice;
 import com.maxml.timer.*;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -87,5 +88,22 @@ public class PointCRUD {
 			}
 		});
 	}
+
+	public void create(Point point, final Slice slice) {
+		// TODO Auto-generated method stub
+
+		final ParseObject pair = new ParseObject("Point");
+		pair.put("x", point.getX());
+		pair.put("y", point.getY());
+		pair.saveInBackground(new SaveCallback() {
+		    @Override
+		    public void done(ParseException e) {
+		        onresult.onResult(pair,slice);
+		    }
+		});
+		Log.i("Point", "Create: Point created");
+	}
+
+	
 
 }

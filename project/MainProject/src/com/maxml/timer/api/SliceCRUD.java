@@ -9,44 +9,55 @@ import android.util.Log;
 import com.maxml.timer.entity.Line;
 import com.maxml.timer.entity.Slice;
 import com.maxml.timer.entity.Slice.SliceType;
+import com.maxml.timer.entity.Table;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.SaveCallback;
 
-public class SliceCRUD {
+public class SliceCRUD implements OnResult {
 
-	private Handler handler;
+	public OnResult onresultSlice;
 
-	public SliceCRUD(Handler handler) {
-		this.handler = handler;
-	}
-
-	public void create(String user, Line path, Date startDate, Date endDate,
-			String description, SliceType type) {
+	public void create(final Slice slice) {
 		try {
-			ParseObject slice = new ParseObject("Slice");
-			slice.put("User", user);
-			// slice.put("Line", path);
-			slice.put("startDate", startDate);
-			slice.put("endDate", endDate);
-			slice.put("Description", description);
-			if (type.equals(SliceType.CALL))
-				slice.put("SliceType", "CALL");
-			if (type.equals(SliceType.WALK))
-				slice.put("SliceType", "WALK");
-			if (type.equals(SliceType.WORK))
-				slice.put("SliceType", "WORK");
-			if (type.equals(SliceType.REST))
-				slice.put("SliceType", "REST");
-			slice.saveInBackground();
+			
+			LineCRUD lineCRUD = new LineCRUD();
+			lineCRUD.onresultLine = this;
+			lineCRUD.create(slice.getPath().getStart(), slice.getPath()
+					.getFinish(), slice);
+			
+
 			Log.i("SliceCreate", " Slice create ");
 		} catch (Exception e) {
 			Log.i("SliceCreate", " Slice dont create " + e);
 		}
 
+	}
+
+	@Override
+	// linieCRUD - read or create
+	public void onResult(ParseObject object,Slice slice) {
+		Log.i("Slice", "мне вернулась Line & Slice");
+		Log.i("Slice", "" + object.getString("User"));
+		ParseObject sliceParse = new ParseObject("Slice");
+		sliceParse.put("User", slice.getUser());
+		sliceParse.put("startDate", slice.getStartDate());
+		sliceParse.put("endDate", slice.getEndDate());
+		sliceParse.put("Description", slice.getDescription());
+		if (slice.getType().equals(SliceType.CALL))
+			sliceParse.put("SliceType", "CALL");
+		if (slice.getType().equals(SliceType.WALK))
+			sliceParse.put("SliceType", "WALK");
+		if (slice.getType().equals(SliceType.WORK))
+			sliceParse.put("SliceType", "WORK");
+		if (slice.getType().equals(SliceType.REST))
+			sliceParse.put("SliceType", "REST");
+		sliceParse.put("Line", object);
+		sliceParse.saveInBackground();
 	}
 
 	public void read(final String id) {
@@ -66,6 +77,7 @@ public class SliceCRUD {
 						slice.setEndDate(object.getDate("endDate"));
 						slice.setDescription(object.getString("Description"));
 						String sliceType = object.getString("SliceType");
+
 						if (sliceType.equals("WALK"))
 							slice.setType(SliceType.WALK);
 						if (sliceType.equals("CALL"))
@@ -74,53 +86,65 @@ public class SliceCRUD {
 							slice.setType(SliceType.REST);
 						if (sliceType.equals("WORK"))
 							slice.setType(SliceType.WORK);
+
 						Log.i("SliceRead", "object " + object.toString());
 						Log.i("SliceRead", "slice " + slice.toString());
 						Log.i("SliceRead",
 								"Slice Type  " + object.getString("SliceType"));
-						handler.sendEmptyMessage(7);
-
 					} catch (ParseException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 					Log.i("SliceRead", "Retrieved the object.");
-
+					onresultSlice.onResult(object);
 				}
-				
+
 			}
 		});
 
 	}
 
 	public void update(final Slice slice) {
+
+		final LineCRUD lineCRUD = new LineCRUD();
+		lineCRUD.onresultLine = this;
+
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("Slice");
 		// Retrieve the object by id
 		query.getInBackground(slice.getId(), new GetCallback<ParseObject>() {
-			public void done(ParseObject parseSlice, ParseException e) {
+			public void done(final ParseObject parseSlice, ParseException e) {
 				if (e == null) {
-					// Now let's update it with some new data. In this case,
-					// only cheatMode and score
-					// will get sent to the Parse Cloud. playerName hasn't
-					// changed.
 					parseSlice.put("User", slice.getUser());
-					// parseSlice.put("id", slice.getId());
-					// parseSlice.put("path", slice.getPath());
-
 					parseSlice.put("startDate", slice.getStartDate());
 					parseSlice.put("endDate", slice.getEndDate());
 					parseSlice.put("Description", slice.getDescription());
 					parseSlice.put("SliceType", "" + slice.getType());
-					parseSlice.saveInBackground();
+					LineCRUD lineCRUD = new LineCRUD();
+					lineCRUD.update(slice.getPath());
 
-					Log.i("SliceUpdate", "update User " + slice.getUser());
-					Log.i("SliceUpdate",
-							"update startDate " + slice.getStartDate());
-					Log.i("SliceUpdate", "update endDate " + slice.getEndDate());
-					Log.i("SliceUpdate",
-							"update Description " + slice.getDescription());
-					Log.i("SliceUpdate",
-							"update SliceType " + "" + slice.getType());
+					ParseQuery<ParseObject> query = ParseQuery.getQuery("Line");
+					query.whereEqualTo("objectId", slice.getPath().getId());
+					query.getFirstInBackground(new GetCallback<ParseObject>() {
+						public void done(ParseObject object, ParseException e) {
+							if (object == null) {
+								Log.i("Line",
+										"Read: The getFirst request failed.");
+							} else {
+
+								try {
+									object.fetch();
+
+									parseSlice.put("Line", object);
+									parseSlice.saveInBackground();
+
+								} catch (ParseException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+							}
+						}
+					});
+
 
 				}
 			}
@@ -133,16 +157,62 @@ public class SliceCRUD {
 		query.getInBackground(id, new GetCallback<ParseObject>() {
 			public void done(ParseObject parseSlice, ParseException e) {
 				if (e == null) {
-					// Now let's update it with some new data. In this case,
-					// only cheatMode and score
-					// will get sent to the Parse Cloud. playerName hasn't
-					// changed.
 					Log.i("delete", "" + id + "deleted");
 					parseSlice.deleteInBackground();
 
 				}
 			}
 		});
+	}
+
+	public void sinc(Table table) {
+
+		for (final Slice slice : table.getList()) {
+			if (slice.getId() == null) {
+				create(slice);
+			} else {
+				ParseQuery<ParseObject> query = ParseQuery.getQuery("Slice");
+				// Retrieve the object by id
+				query.getInBackground(slice.getId(),
+						new GetCallback<ParseObject>() {
+							public void done(final ParseObject parseSlice,
+									ParseException e) {
+								if (e == null) {
+									Slice sliceDummy = new Slice();
+									sliceDummy.setId(parseSlice.getObjectId());
+									sliceDummy.setUser(parseSlice
+											.getString("User"));
+									sliceDummy.setStartDate(parseSlice
+											.getDate("startDate"));
+									sliceDummy.setEndDate(parseSlice
+											.getDate("endDate"));
+									sliceDummy.setDescription(parseSlice
+											.getString("Description"));
+									String sliceType = parseSlice
+											.getString("SliceType");
+									if (sliceType.equals("WALK"))
+										sliceDummy.setType(SliceType.WALK);
+									if (sliceType.equals("CALL"))
+										sliceDummy.setType(SliceType.CALL);
+									if (sliceType.equals("REST"))
+										sliceDummy.setType(SliceType.REST);
+									if (sliceType.equals("WORK"))
+										sliceDummy.setType(SliceType.WORK);
+									if (slice.equals(sliceDummy)) {
+										update(slice);
+									}
+								}
+							}
+						});
+			}
+		}
+
+	}
+
+	@Override
+	public void onResult(ParseObject object) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

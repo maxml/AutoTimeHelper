@@ -12,6 +12,13 @@ public class Line {
 		this.id = id;
 		this.user = user;
 	}
+	
+	public Line(Point start, Point finish, String user, String id) {
+		this.start = start;
+		this.finish = finish;
+		this.id = id;
+		this.user = user;
+	}
 
 	public String getUser() {
 		return user;
