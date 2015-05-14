@@ -5,9 +5,9 @@ import java.util.ArrayList;
 public class Table {
 	private ArrayList<Slice> list;
 
-	public Table(ArrayList<Slice> list) {
+	public Table() {
 		super();
-		this.list = list;
+		this.list = new ArrayList<Slice>();
 	}
 
 	public void addSlise(Slice slice) {

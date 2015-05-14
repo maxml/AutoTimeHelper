@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 public class NetworkReceiver extends BroadcastReceiver {
 
-	private static final String LOG_TAG = "NetworkChangeReceiver";
+	private static final String LOG_TAG = "NetworkReceiver";
 	private boolean isConnected = false;
 	
 	@Override
