@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import com.maxml.timer.R;
+import com.maxml.timer.SliceControllers.Controller;
 import com.maxml.timer.entity.Slice;
 import com.maxml.timer.entity.Slice.SliceType;
 
@@ -19,7 +20,7 @@ import android.widget.RemoteViews;
 
 public class MyWidgetProvider extends AppWidgetProvider {
 
-	private static WidgetController controller = new WidgetController();
+	private static Controller controller = new Controller();
 
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager,
@@ -28,7 +29,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
 		// initializing widget layout
 		RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
 				R.layout.widget_layout);
-		controller = new WidgetController();
+		controller = new Controller();
 
 		// register for button event
 
@@ -61,19 +62,17 @@ public class MyWidgetProvider extends AppWidgetProvider {
 			start.setType(type);
 
 			controller.getTable().addSlise(start);
-
 			return updateWidget(context);
 		}
 
 		ArrayList<Slice> slices = controller.getTable().getList();
 		slices.get(slices.size() - 1).setEndDate(new Date());
 
-		Slice start = new Slice();
-		start.setStartDate(new Date());
-		start.setType(type);
+		Slice widgetstart = new Slice();
+		widgetstart.setStartDate(new Date());
+		widgetstart.setType(type);
 
-		slices.add(start);
-
+		slices.add(widgetstart);
 		return updateWidget(context);
 	}
 
