@@ -11,22 +11,17 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.maxml.timer.R;
-import com.maxml.timer.SliceControllers.Controller;
-import com.maxml.timer.api.SliceCRUD;
 import com.maxml.timer.entity.Line;
 import com.maxml.timer.entity.Point;
 import com.maxml.timer.entity.Slice;
 import com.maxml.timer.entity.Slice.SliceType;
-import com.maxml.timer.entity.Table;
 import com.maxml.timer.googlemap.GPSTracker.OnLocationChangedListener;
 import com.parse.ParseUser;
 
@@ -38,11 +33,9 @@ public class GoogleMapLogic extends ActionBarActivity implements OnMapReadyCallb
 	
 	private GPSTracker gps;
 	private GoogleMap map;
-	private Controller controller = new Controller();
+	private ControllerGoogleMap controllerGoogleMap = new ControllerGoogleMap();
 	
-	private List<Line> list = new ArrayList<Line>();
-	
-	public boolean heIsStandingNow = false;
+	private List<Object> list = new ArrayList<Object>();
 	
 	private Coordinates point;
 	private Coordinates pointRadius;
@@ -80,7 +73,7 @@ public class GoogleMapLogic extends ActionBarActivity implements OnMapReadyCallb
 		point.setLat(location.getLatitude());
 		point.setLong(location.getLongitude());
 		
-		Log.d(LOG, "current time = " + c);
+		// Log.d(LOG, "current time = " + c);
 		Log.d(LOG, "user " + ParseUser.getCurrentUser().getObjectId());
 		if (pointRadius != null) {
 			Log.d(LOG, "point radius != null");
@@ -99,19 +92,36 @@ public class GoogleMapLogic extends ActionBarActivity implements OnMapReadyCallb
 				
 				c = Calendar.getInstance();
 				Date finishtime = c.getTime();
-				Point start = new Point(point.getLat(), point.getLong());
-				Point finish = new Point(pointRadius.getLat(), pointRadius.getLong());
+				Point finish = new Point(point.getLat(), point.getLong());
+				Point start = new Point(pointRadius.getLat(), pointRadius.getLong());
 				Line line = new Line(start, finish, ParseUser.getCurrentUser().getObjectId());
 				Slice slice = new Slice(ParseUser.getCurrentUser().getObjectId(), line, starttime,
 						finishtime, "walk time", SliceType.WALK);
-				controller.addSlise(slice);
+				controllerGoogleMap.addSlise(slice);
+				Log.d(LOG, "start = " + start.toString());
+				Log.d(LOG, "finish = " + finish.toString());
 				Log.d(LOG, "slice = " + slice.toString());
-				list.add(line);
-				
+				Log.d(LOG, " ---------------------------------------- ");
 				starttime = finishtime;
+				list.add(lineAdd);
+				
 			} else {
+				c = Calendar.getInstance();
+				Date finishtime = c.getTime();
+				
 				Log.d(LOG, "he is standing now = true");
-				heIsStandingNow = true;
+				
+				Point finish = new Point(point.getLat(), point.getLong());
+				Point start = new Point(pointRadius.getLat(), pointRadius.getLong());
+				Line line = new Line(start, finish, ParseUser.getCurrentUser().getObjectId());
+				Slice slice = new Slice(ParseUser.getCurrentUser().getObjectId(), line, starttime,
+						finishtime, "rest time", SliceType.REST);
+				controllerGoogleMap.addSlise(slice);
+				Log.d(LOG, "start = " + start.toString());
+				Log.d(LOG, "finish = " + finish.toString());
+				Log.d(LOG, "slice = " + slice.toString());
+				Log.d(LOG, " ---------------------------------------- ");
+				starttime = finishtime;
 			}
 		}
 		pointRadius = point;
