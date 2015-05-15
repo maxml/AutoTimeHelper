@@ -12,15 +12,13 @@ public class User {
 
 	private User() {
 	}
-	
+
 	public static User getInstance() {
 		if (instance == null) {
 			instance = new User();
 		}
 		return instance;
 	}
-
-	
 
 	public String getObjectId() {
 		return objectId;
@@ -46,22 +44,18 @@ public class User {
 		this.email = email;
 	}
 
-//	public String getPassword() {
-//		return password;
-//	}
-//
-//	public void setPassword(String password) {
-//		this.password = password;
-//	}
+	// public String getPassword() {
+	// return password;
+	// }
+	//
+	// public void setPassword(String password) {
+	// this.password = password;
+	// }
 
 	@Override
 	public String toString() {
 		return "User [objectId=" + objectId + ", username=" + username
-				+ ", email=" + email + /*", password=" + password + */"]";
+				+ ", email=" + email + /* ", password=" + password + */"]";
 	}
-
-	
-
-	
 
 }
