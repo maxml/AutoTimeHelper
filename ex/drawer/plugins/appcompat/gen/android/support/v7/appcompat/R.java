@@ -1831,7 +1831,6 @@ containing a value of this type.
         public static int Base_TextAppearance_AppCompat_Headline=0x7f0b00a8;
         /**  Deprecated text styles 
  Deprecated text styles 
- Now deprecated styles 
          */
         public static int Base_TextAppearance_AppCompat_Inverse=0x7f0b00b2;
         public static int Base_TextAppearance_AppCompat_Large=0x7f0b00b3;
@@ -1843,8 +1842,6 @@ containing a value of this type.
         public static int Base_TextAppearance_AppCompat_Menu=0x7f0b00b0;
         public static int Base_TextAppearance_AppCompat_SearchResult=0x7f0b008e;
         public static int Base_TextAppearance_AppCompat_SearchResult_Subtitle=0x7f0b0090;
-        /**  Search View result styles 
-         */
         public static int Base_TextAppearance_AppCompat_SearchResult_Title=0x7f0b008f;
         public static int Base_TextAppearance_AppCompat_Small=0x7f0b00b7;
         public static int Base_TextAppearance_AppCompat_Small_Inverse=0x7f0b00b8;
@@ -1896,10 +1893,6 @@ containing a value of this type.
         public static int Base_V14_Theme_AppCompat_Dialog=0x7f0b00f2;
         public static int Base_V14_Theme_AppCompat_Light=0x7f0b00f1;
         public static int Base_V14_Theme_AppCompat_Light_Dialog=0x7f0b00f3;
-        public static int Base_V21_Theme_AppCompat=0x7f0b00f4;
-        public static int Base_V21_Theme_AppCompat_Dialog=0x7f0b00f6;
-        public static int Base_V21_Theme_AppCompat_Light=0x7f0b00f5;
-        public static int Base_V21_Theme_AppCompat_Light_Dialog=0x7f0b00f7;
         /**  Base platform-dependent theme providing an action bar in a dark-themed activity. 
          */
         public static int Base_V7_Theme_AppCompat=0x7f0b00d9;
@@ -1912,8 +1905,6 @@ containing a value of this type.
         public static int Base_Widget_AppCompat_ActionBar_TabBar=0x7f0b006c;
         public static int Base_Widget_AppCompat_ActionBar_TabText=0x7f0b0070;
         public static int Base_Widget_AppCompat_ActionBar_TabView=0x7f0b006e;
-        /**  Action Button Styles 
-         */
         public static int Base_Widget_AppCompat_ActionButton=0x7f0b0069;
         public static int Base_Widget_AppCompat_ActionButton_CloseMode=0x7f0b006a;
         public static int Base_Widget_AppCompat_ActionButton_Overflow=0x7f0b006b;
@@ -1943,11 +1934,7 @@ containing a value of this type.
         public static int Base_Widget_AppCompat_Light_ActionBar_TabView=0x7f0b006f;
         public static int Base_Widget_AppCompat_Light_PopupMenu=0x7f0b0089;
         public static int Base_Widget_AppCompat_Light_PopupMenu_Overflow=0x7f0b0087;
-        /**  Popup Menu 
-         */
         public static int Base_Widget_AppCompat_ListPopupWindow=0x7f0b0085;
-        /**  Spinner Widgets 
-         */
         public static int Base_Widget_AppCompat_ListView_DropDown=0x7f0b0081;
         public static int Base_Widget_AppCompat_ListView_Menu=0x7f0b0084;
         public static int Base_Widget_AppCompat_PopupMenu=0x7f0b0088;
@@ -1955,7 +1942,6 @@ containing a value of this type.
         public static int Base_Widget_AppCompat_PopupWindow=0x7f0b0093;
         public static int Base_Widget_AppCompat_ProgressBar=0x7f0b007c;
         /**  Progress Bar 
- Progress Bar 
          */
         public static int Base_Widget_AppCompat_ProgressBar_Horizontal=0x7f0b007b;
         public static int Base_Widget_AppCompat_RatingBar=0x7f0b009e;
@@ -1967,12 +1953,6 @@ containing a value of this type.
         public static int Base_Widget_AppCompat_Spinner_Underlined=0x7f0b007e;
         public static int Base_Widget_AppCompat_TextView_SpinnerItem=0x7f0b00a1;
         public static int Base_Widget_AppCompat_Toolbar=0x7f0b0094;
-        /** 
-        Widget.AppCompat.Toolbar style is purposely ommitted. This is because the support
-        Toolbar implementation is used on ALL platforms and relies on the unbundled attrs.
-        The supporting Toolbar styles below only use basic attrs so work fine.
-    
-         */
         public static int Base_Widget_AppCompat_Toolbar_Button_Navigation=0x7f0b0095;
         public static int Platform_AppCompat=0x7f0b00d5;
         public static int Platform_AppCompat_Dialog=0x7f0b00d7;
