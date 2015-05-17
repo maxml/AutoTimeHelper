@@ -1,9 +1,9 @@
-package com.maxml.timer.api;
+package com.maxml.timer.api.interfaces;
 
 import com.maxml.timer.entity.Slice;
 import com.parse.ParseObject;
 
-public interface OnResult {
+public interface OnDbResult {
 
 	void onResult(ParseObject object);
 

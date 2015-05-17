@@ -4,11 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import com.maxml.timer.R;
-import com.maxml.timer.SliceControllers.Controller;
-import com.maxml.timer.entity.Slice;
-import com.maxml.timer.entity.Slice.SliceType;
-
 import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -18,9 +13,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
+import com.maxml.timer.R;
+import com.maxml.timer.controllers.TableController;
+import com.maxml.timer.entity.Slice;
+import com.maxml.timer.entity.Slice.SliceType;
+import com.maxml.timer.util.TimerConstatnts;
+
 public class MyWidgetProvider extends AppWidgetProvider {
 
-	private static Controller controller = new Controller();
+	private static TableController controller = new TableController();
 
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager,
@@ -29,7 +30,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
 		// initializing widget layout
 		RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
 				R.layout.widget_layout);
-		controller = new Controller();
+		controller = new TableController();
 
 		// register for button event
 
@@ -78,7 +79,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
 
 	private static PendingIntent updateWidget(Context context) {
 		Intent intent = new Intent();
-		intent.setAction(WidgetUtils.WIDGET_UPDATE_ACTION);
+		intent.setAction(TimerConstatnts.WIDGET_UPDATE_ACTION);
 		return PendingIntent.getBroadcast(context, 0, intent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
 	}

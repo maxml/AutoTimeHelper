@@ -1,4 +1,4 @@
-package com.maxml.timer.ui.elements;
+package com.maxml.timer.util;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -13,7 +13,7 @@ public class DialogFactory {
 		builder.setTitle(title)
 				.setMessage(description)
 				.setIcon(R.drawable.ic_launcher)
-				.setPositiveButton("ÎÊ",
+				.setPositiveButton("ï¿½ï¿½",
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
 								dialog.cancel();

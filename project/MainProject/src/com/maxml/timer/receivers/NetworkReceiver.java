@@ -1,4 +1,4 @@
-package com.maxml.timer.api;
+package com.maxml.timer.receivers;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -12,13 +12,14 @@ public class NetworkReceiver extends BroadcastReceiver {
 
 	private static final String LOG_TAG = "NetworkReceiver";
 	private boolean isConnected = false;
-	
+
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		Log.v(LOG_TAG, "Receieved notification about network status");
 		isNetworkAvailable(context);
 	}
-	
+
+	// TODO:strings to resources
 	private boolean isNetworkAvailable(Context context) {
 		ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		if (connectivity != null) {

@@ -8,9 +8,11 @@ import java.util.Map;
 import android.os.Handler;
 import android.util.Log;
 
+import com.maxml.timer.api.interfaces.OnDbResult;
 import com.maxml.timer.entity.Line;
 import com.maxml.timer.entity.Point;
 import com.maxml.timer.entity.Slice;
+import com.maxml.timer.receivers.NetworkReceiver;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -18,11 +20,11 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 
-public class LineCRUD implements OnResult {
+public class LineCRUD implements OnDbResult {
 
 	private ParseObject point1;
 	private ParseObject point2;
-	public OnResult onresultLine;
+	public OnDbResult onresultLine;
 
 	private static final String USER = "User";
 	private static final String START = "start";
@@ -75,7 +77,7 @@ public class LineCRUD implements OnResult {
 
 	@Override
 	public void onResult(ParseObject object, final Slice slice) {
-		Log.i("Point", "мне вернулась точка");
+		Log.i("Point", "пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ");
 		if (point1 == null) {
 			point1 = object;
 		} else {
@@ -101,7 +103,7 @@ public class LineCRUD implements OnResult {
 	@Override
 	public void onResult(ParseObject object) {
 		// TODO Auto-generated method stub
-		Log.i("Point", "мне вернулась точка");
+		Log.i("Point", "пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ");
 		if (point1 == null) {
 			point1 = object;
 		} else {

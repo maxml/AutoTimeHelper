@@ -1,19 +1,20 @@
-package com.maxml.timer.googlemap;
+package com.maxml.timer.controllers;
 
 import java.util.Date;
 
 import android.util.Log;
 
-import com.maxml.timer.SliceControllers.Controller;
 import com.maxml.timer.entity.Point;
 import com.maxml.timer.entity.Slice;
 
 public class ControllerGoogleMap {
+	
 	private Slice googleMapSlice;
-	private Controller controller = new Controller();
+	private TableController controller = new TableController();
 	private Point start = new Point();
 	private Date date = new Date();
 	
+	// TODO: Must be in TableController - move!
 	public void addSlise(Slice slice) {
 		if (googleMapSlice != null) {
 			Log.d("DERMO", "googleMapSlice not null");

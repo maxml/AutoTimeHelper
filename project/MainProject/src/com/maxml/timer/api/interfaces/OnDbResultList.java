@@ -1,11 +1,9 @@
-package com.maxml.timer.api;
+package com.maxml.timer.api.interfaces;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import com.maxml.timer.entity.Slice;
-import com.parse.ParseObject;
 
-public interface OnResultList {
+public interface OnDbResultList {
 	public void onResult(ArrayList<Slice> listSlice);
 }

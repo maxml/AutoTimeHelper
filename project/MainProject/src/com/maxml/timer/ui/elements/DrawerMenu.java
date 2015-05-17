@@ -1,4 +1,4 @@
-package com.maxml.timer.activity.navigationdrawer;
+package com.maxml.timer.ui.elements;
 
 public class DrawerMenu extends DrawerItem {
 

@@ -1,11 +1,11 @@
 package com.maxml.timer.api;
 
-import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.maxml.timer.entity.User;
 import com.parse.ParseUser;
 
 public class UserAPI {
 
+	// TODO: WTF?
 	String name = User.getInstance().getUsername();;
 	String email = User.getInstance().getEmail();
 	String objectId = User.getInstance().getObjectId();

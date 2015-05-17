@@ -91,7 +91,6 @@ public class GPSTracker extends Service implements LocationListener {
 			}
 			
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 		}
 		
@@ -122,6 +121,7 @@ public class GPSTracker extends Service implements LocationListener {
 		return this.canGetLocation;
 	}
 	
+	//TODO: get it in DialogFactory
 	public void showSettingAlert() {
 		AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
 		
@@ -170,7 +170,6 @@ public class GPSTracker extends Service implements LocationListener {
 	
 	@Override
 	public IBinder onBind(Intent intent) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	
