@@ -12,7 +12,10 @@ import android.widget.RemoteViews;
 import com.maxml.timer.R;
 import com.maxml.timer.entity.Slice.SliceType;
 import com.maxml.timer.util.TimerConstatnts;
+<<<<<<< HEAD:project/MainProject/src/com/maxml/timer/receivers/MyWidgetIntentReceiver.java
 import com.maxml.timer.widget.MyWidgetProvider;
+=======
+>>>>>>> a4e130c5a2f8b8f10b9acc930e32795a66c98611:project/MainProject/src/com/maxml/timer/widget/MyWidgetIntentReceiver.java
 
 public class MyWidgetIntentReceiver extends BroadcastReceiver {
 
