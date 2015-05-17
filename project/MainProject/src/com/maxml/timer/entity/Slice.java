@@ -15,11 +15,9 @@ public class Slice {
 		WORK, REST, CALL, WALK
 	}
 
-	public Slice(String user, Line path, Date startDate, Date endDate,
-			String description, SliceType type) {
+	public Slice(String user, Line path, Date startDate, Date endDate, String description, SliceType type) {
 		super();
 		this.user = user;
-		this.id = id;
 		this.path = path;
 		this.startDate = startDate;
 		this.endDate = endDate;
@@ -82,16 +80,15 @@ public class Slice {
 	public SliceType getType() {
 		return type;
 	}
-	
+
 	public void setType(SliceType type) {
 		this.type = type;
 	}
 
 	@Override
 	public String toString() {
-		return "Slice [user=" + user + ", id=" + id + ", path=" + path
-				+ ", startDate=" + startDate + ", endDate=" + endDate
-				+ ", description=" + description + ", type=" + type + "]";
+		return "Slice [user=" + user + ", id=" + id + ", path=" + path + ", startDate=" + startDate + ", endDate="
+				+ endDate + ", description=" + description + ", type=" + type + "]";
 	}
 
 }

@@ -9,10 +9,9 @@ public class Line {
 	public Line(Point start, Point finish, String user) {
 		this.start = start;
 		this.finish = finish;
-		this.id = id;
 		this.user = user;
 	}
-	
+
 	public Line(Point start, Point finish, String user, String id) {
 		this.start = start;
 		this.finish = finish;
@@ -40,8 +39,7 @@ public class Line {
 	}
 
 	public double getDistance() {
-		return Math.sqrt(Math.pow(start.getX() - finish.getX(), 2)
-				+ Math.pow(start.getY() - finish.getY(), 2));
+		return Math.sqrt(Math.pow(start.getX() - finish.getX(), 2) + Math.pow(start.getY() - finish.getY(), 2));
 	}
 
 	public Point getStart() {
@@ -62,7 +60,7 @@ public class Line {
 
 	@Override
 	public String toString() {
-		return "Line [User =" + getUser() + " id =" + getId() +" ; " + " distance=" + getDistance() + ", start=" + start
-				+ ", finish=" + finish + "]";
+		return "Line [User =" + getUser() + " id =" + getId() + " ; " + " distance=" + getDistance() + ", start="
+				+ start + ", finish=" + finish + "]";
 	}
 }

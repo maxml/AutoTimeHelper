@@ -2,19 +2,19 @@ package com.maxml.timer.api;
 
 import java.util.Date;
 
-import com.maxml.timer.SliceControllers.Controller;
-import com.maxml.timer.entity.Slice;
-import com.maxml.timer.entity.Slice.SliceType;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import com.maxml.timer.controllers.TableController;
+import com.maxml.timer.entity.Slice;
+import com.maxml.timer.entity.Slice.SliceType;
+
 public class CallReceiver extends BroadcastReceiver {
 	String phoneNumber = "";
-	Controller controller = new Controller();
+	TableController controller = new TableController();
 	Slice call = new Slice();
 
 	public void onReceive(Context context, Intent intent) {

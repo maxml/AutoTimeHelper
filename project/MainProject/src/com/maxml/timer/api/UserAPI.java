@@ -1,6 +1,5 @@
 package com.maxml.timer.api;
 
-import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.maxml.timer.entity.User;
 import com.parse.ParseUser;
 

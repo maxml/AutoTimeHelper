@@ -1,11 +1,10 @@
 package com.maxml.timer.entity;
 
-import com.maxml.timer.api.UserAPI;
-
 public class User {
 	private String objectId;
 	private String username;
 	private String email;
+	// TODO: we need this field?
 	private String password;
 
 	private static User instance;
@@ -44,18 +43,22 @@ public class User {
 		this.email = email;
 	}
 
-	// public String getPassword() {
-	// return password;
-	// }
-	//
-	// public void setPassword(String password) {
-	// this.password = password;
-	// }
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
 	@Override
 	public String toString() {
-		return "User [objectId=" + objectId + ", username=" + username
-				+ ", email=" + email + /* ", password=" + password + */"]";
+		return "User [objectId=" + objectId + ", username=" + username + ", email=" + email + /*
+																							 * ", password="
+																							 * +
+																							 * password
+																							 * +
+																							 */"]";
 	}
 
 }

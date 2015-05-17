@@ -1,22 +1,14 @@
 package com.maxml.timer.api;
 
-import java.util.Date;
-import java.util.List;
-
-import android.os.Handler;
 import android.util.Log;
 
-import com.maxml.timer.entity.Line;
 import com.maxml.timer.entity.Slice;
 import com.maxml.timer.entity.Slice.SliceType;
 import com.maxml.timer.entity.Table;
-import com.parse.FindCallback;
 import com.parse.GetCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.SaveCallback;
 
 public class SliceCRUD implements OnResult {
 
@@ -41,7 +33,7 @@ public class SliceCRUD implements OnResult {
 	@Override
 	// linieCRUD - read or create
 	public void onResult(ParseObject object,Slice slice) {
-		Log.i("Slice", "мне вернулась Line & Slice");
+		Log.i("Slice", "пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ Line & Slice");
 		Log.i("Slice", "" + object.getString("User"));
 		ParseObject sliceParse = new ParseObject("Slice");
 		sliceParse.put("User", slice.getUser());
@@ -165,7 +157,7 @@ public class SliceCRUD implements OnResult {
 		});
 	}
 
-	public void sinc(Table table) {
+	public void sync(Table table) {
 
 		for (final Slice slice : table.getList()) {
 			if (slice.getId() == null) {

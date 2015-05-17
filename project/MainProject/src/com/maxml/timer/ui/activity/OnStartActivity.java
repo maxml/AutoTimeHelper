@@ -1,4 +1,4 @@
-package com.maxml.timer;
+package com.maxml.timer.ui.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,10 +6,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
-import com.maxml.timer.activity.authorization.LoginActivity;
+public class OnStartActivity extends Activity {
 
-public class OnStart extends Activity {
-
+	@SuppressWarnings("unused")
 	private DeviceHandler mHandler;
 
 	@Override
@@ -29,7 +28,6 @@ public class OnStart extends Activity {
 
 		@Override
 		public void handleMessage(Message msg) {
-			// TODO Auto-generated method stub
 			super.handleMessage(msg);
 		}
 

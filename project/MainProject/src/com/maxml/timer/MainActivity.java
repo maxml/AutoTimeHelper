@@ -3,7 +3,6 @@ package com.maxml.timer;
 import java.util.Arrays;
 import java.util.List;
 
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,14 +17,10 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.maxml.timer.activity.authorization.LoginActivity;
-import com.maxml.timer.activity.navigationdrawer.DrawerItem;
-import com.maxml.timer.activity.navigationdrawer.DrawerItemAdapter;
-import com.maxml.timer.activity.navigationdrawer.DrawerMenu;
-import com.maxml.timer.activity.navigationdrawer.SimpleFramgment;
-import com.maxml.timer.api.NetworkReceiver;
-import com.parse.Parse;
-import com.parse.ParseInstallation;
+import com.maxml.timer.ui.elements.DrawerItem;
+import com.maxml.timer.ui.elements.DrawerItemAdapter;
+import com.maxml.timer.ui.elements.DrawerMenu;
+import com.maxml.timer.ui.fragments.SimpleFragment;
 
 public class MainActivity extends ActionBarActivity {
 	private static final String FRAGMENT_TAG = "CURRENT_FRAGMENT";
@@ -42,27 +37,21 @@ public class MainActivity extends ActionBarActivity {
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		RecyclerView drawerOptions = (RecyclerView) findViewById(R.id.drawer_options);
 		setSupportActionBar(toolbar);
-		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
-				R.string.drawer_open, R.string.drawer_close);
+		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open,
+				R.string.drawer_close);
 		drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
 		drawerLayout.setStatusBarBackground(R.color.primary_dark);
 		drawerLayout.setDrawerListener(drawerToggle);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setHomeButtonEnabled(true);
-		List<DrawerItem> drawerItems = Arrays.asList(
-				new DrawerItem(DrawerItem.Type.HEADER),
-				new DrawerMenu().setIconRes(R.drawable.ic_group).setText(
-						getString(R.string.menu_template, 1)),
-				new DrawerMenu().setIconRes(R.drawable.ic_map).setText(
-						getString(R.string.menu_template, 2)),
+		List<DrawerItem> drawerItems = Arrays.asList(new DrawerItem(DrawerItem.Type.HEADER), new DrawerMenu()
+				.setIconRes(R.drawable.ic_group).setText(getString(R.string.menu_template, 1)), new DrawerMenu()
+				.setIconRes(R.drawable.ic_map).setText(getString(R.string.menu_template, 2)), new DrawerItem(
+				DrawerItem.Type.DIVIDER),
+				new DrawerMenu().setIconRes(R.drawable.ic_person).setText(getString(R.string.menu_template, 3)),
+				new DrawerMenu().setIconRes(R.drawable.ic_search).setText(getString(R.string.menu_template, 4)),
 				new DrawerItem(DrawerItem.Type.DIVIDER),
-				new DrawerMenu().setIconRes(R.drawable.ic_person).setText(
-						getString(R.string.menu_template, 3)),
-				new DrawerMenu().setIconRes(R.drawable.ic_search).setText(
-						getString(R.string.menu_template, 4)),
-				new DrawerItem(DrawerItem.Type.DIVIDER),
-				new DrawerMenu().setIconRes(R.drawable.ic_settings).setText(
-						getString(R.string.menu_template, 5)));
+				new DrawerMenu().setIconRes(R.drawable.ic_settings).setText(getString(R.string.menu_template, 5)));
 		drawerOptions.setLayoutManager(new LinearLayoutManager(this));
 		DrawerItemAdapter adapter = new DrawerItemAdapter(drawerItems);
 		adapter.setOnItemClickListener(new DrawerItemAdapter.OnItemClickListener() {
@@ -73,7 +62,7 @@ public class MainActivity extends ActionBarActivity {
 		drawerOptions.setAdapter(adapter);
 		drawerOptions.setHasFixedSize(true);
 		if (savedInstanceState == null)
-			setupFragment(new SimpleFramgment());
+			setupFragment(new SimpleFragment());
 
 	}
 
@@ -98,13 +87,9 @@ public class MainActivity extends ActionBarActivity {
 
 	private void setupFragment(Fragment fragment) {
 		FragmentManager fragmentManager = getSupportFragmentManager();
-		Fragment currentFragment = fragmentManager
-				.findFragmentByTag(FRAGMENT_TAG);
-		if (currentFragment == null
-				|| !currentFragment.getClass().equals(fragment.getClass())) {
-			fragmentManager.beginTransaction()
-					.replace(R.id.content_frame, fragment, FRAGMENT_TAG)
-					.commit();
+		Fragment currentFragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG);
+		if (currentFragment == null || !currentFragment.getClass().equals(fragment.getClass())) {
+			fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, FRAGMENT_TAG).commit();
 		}
 	}
 

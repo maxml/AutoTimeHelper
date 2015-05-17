@@ -1,16 +1,14 @@
 package com.maxml.timer.api;
 
+import android.util.Log;
+
 import com.maxml.timer.entity.Point;
 import com.maxml.timer.entity.Slice;
-import com.maxml.timer.*;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.SaveCallback;
-
-import android.os.Handler;
-import android.util.Log;
 
 public class PointCRUD {
 
