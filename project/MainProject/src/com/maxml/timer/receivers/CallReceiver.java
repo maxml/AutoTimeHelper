@@ -13,16 +13,10 @@ import com.maxml.timer.entity.Slice;
 import com.maxml.timer.entity.Slice.SliceType;
 
 public class CallReceiver extends BroadcastReceiver {
-<<<<<<< HEAD:project/MainProject/src/com/maxml/timer/receivers/CallReceiver.java
 	private String phoneNumber = "";
 	private TableController controller = new TableController();
 	// TODO: why?
 	private Slice call = new Slice();
-=======
-	String phoneNumber = "";
-	TableController controller = new TableController();
-	Slice call = new Slice();
->>>>>>> a4e130c5a2f8b8f10b9acc930e32795a66c98611:project/MainProject/src/com/maxml/timer/api/CallReceiver.java
 
 	public void onReceive(Context context, Intent intent) {
 		//TODO: get out three inner cycles
