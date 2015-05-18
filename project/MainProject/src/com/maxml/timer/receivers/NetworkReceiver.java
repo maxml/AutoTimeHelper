@@ -11,6 +11,8 @@ import android.widget.Toast;
 public class NetworkReceiver extends BroadcastReceiver {
 
 	private static final String LOG_TAG = "NetworkReceiver";
+	private static final String CONNECTED = "android.net.NetworkInfo.State.CONNECTED";
+	private static final String CONNECTIVITY_SERVICE = "android.content.Context.CONNECTIVITY_SERVICE = connectivity";
 	private boolean isConnected = false;
 
 	@Override
