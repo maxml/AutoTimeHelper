@@ -17,8 +17,8 @@ import com.parse.Parse;
 import com.parse.ParseInstallation;
 
 public class App extends Application {
-	
-	public static boolean isNetworkAvailable = false ;
+
+	public static boolean isNetworkAvailable = true;
 
 	@Override
 	public void onCreate() {
@@ -26,34 +26,16 @@ public class App extends Application {
 
 		Parse.enableLocalDatastore(this);
 
-		Parse.initialize(this, "v7xyeLy701EXeS70aggBiMDzRIlTH0q1tiYlZqFV", "oxzucbjTHAKP20t9o4UjBCRBoKN0gk4jL4Mm9UjK");
+		Parse.initialize(this, "v7xyeLy701EXeS70aggBiMDzRIlTH0q1tiYlZqFV",
+				"oxzucbjTHAKP20t9o4UjBCRBoKN0gk4jL4Mm9UjK");
 
 		ParseInstallation.getCurrentInstallation().saveInBackground();
-		
+
 		NetworkReceiver networkReceiver = new NetworkReceiver();
-		networkReceiver.onReceive(this,new Intent());
-		isNetworkAvailable =  networkReceiver.isNetworkAvailable(this);
-		Log.i("Slice", " isNetworkAvailable is  " + isNetworkAvailable );
-		test();
+		networkReceiver.onReceive(this, new Intent());
+//		isNetworkAvailable = networkReceiver.isNetworkAvailable(this);
+//		Log.i("Slice", " isNetworkAvailable is  " + isNetworkAvailable);
 	}
-	
-	public void test(){
-		SliceCRUD sliceCRUD = new SliceCRUD();
-		
-		Table table = new Table();
-		for(int i = 0; i<5; i++){
-		Point point = new Point(i,i);
-		Line line = new Line(point,point);
-		
-		Slice slice = new Slice("Lantar",line,new Date(),new Date(), "Descriprion "+i, SliceType.WALK);
-		table.addSlise(slice);
-		}
-		sliceCRUD.sync(table);
-	
-//			sliceCRUD.read("Lantar");
-		
-		
-		
-	}
-	
+
+
 }

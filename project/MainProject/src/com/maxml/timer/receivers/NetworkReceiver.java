@@ -1,5 +1,7 @@
 package com.maxml.timer.receivers;
 
+import com.maxml.timer.util.NetworkStatus;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,18 +11,22 @@ import android.util.Log;
 import android.widget.Toast;
 
 public class NetworkReceiver extends BroadcastReceiver {
-
 	private static final String LOG_TAG = "NetworkReceiver";
-	public boolean isConnected = false;
+
+	private boolean isConnected = false;
+
+	NetworkStatus networkStatus;
+
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		Log.v(LOG_TAG, "Receieved notification about network status");
-		isNetworkAvailable(context);
+		networkStatus.isNetworkAvailable(context);
 	}
 
+
 	// TODO:strings to resources
-	public boolean isNetworkAvailable(Context context) {
+	private boolean isNetworkAvailable(Context context) {
 		ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		if (connectivity != null) {
 			NetworkInfo[] info = connectivity.getAllNetworkInfo();
@@ -42,4 +48,5 @@ public class NetworkReceiver extends BroadcastReceiver {
 		isConnected = false;
 		return false;
 	}
+
 }

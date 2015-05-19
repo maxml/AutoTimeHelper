@@ -14,6 +14,8 @@ local.properties
 *.properties
 .settings/
 .loadpath
+gen/
+project/MainProject/gen/
 
 # Eclipse Core
 .project
