@@ -5,6 +5,13 @@ public class Line {
 	private Point finish;
 	private String user;
 	private String id;
+	private String startUUID;
+	private String finishUUID;
+	
+	public Line(Point start, Point finish) {
+		this.start = start;
+		this.finish = finish;
+	}
 
 	public Line(Point start, Point finish, String user) {
 		this.start = start;
@@ -56,6 +63,24 @@ public class Line {
 
 	public void setFinish(Point finish) {
 		this.finish = finish;
+	}
+	
+	
+
+	public String getStartUUID() {
+		return startUUID;
+	}
+
+	public void setStartUUID(String startUUID) {
+		this.startUUID = startUUID;
+	}
+
+	public String getFinishUUID() {
+		return finishUUID;
+	}
+
+	public void setFinishUUID(String finishUUID) {
+		this.finishUUID = finishUUID;
 	}
 
 	@Override

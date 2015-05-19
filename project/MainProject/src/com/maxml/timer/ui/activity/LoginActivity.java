@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.maxml.timer.MainActivity;
 import com.maxml.timer.R;
+import com.maxml.timer.api.SliceCRUD;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -43,7 +44,6 @@ public class LoginActivity extends Activity {
 
 			break;
 		case R.id.btnForgotPass:
-
 			startActivityForResult(new Intent(this, ForgotPasswordActivity.class), 1);
 
 			break;

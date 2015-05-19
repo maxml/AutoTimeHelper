@@ -10,6 +10,8 @@ public class Slice {
 	private Date endDate;
 	private String description;
 	private SliceType type;
+	private String lineUUID;
+	private Date updatedat;
 
 	public enum SliceType {
 		WORK, REST, CALL, WALK
@@ -83,6 +85,24 @@ public class Slice {
 
 	public void setType(SliceType type) {
 		this.type = type;
+	}
+	
+
+	public String getLineUUID() {
+		return lineUUID;
+	}
+
+	public void setLineUUID(String lineUUID) {
+		this.lineUUID = lineUUID;
+	}
+	
+
+	public Date getUpdatedat() {
+		return updatedat;
+	}
+
+	public void setUpdatedat(Date updatedat) {
+		this.updatedat = updatedat;
 	}
 
 	@Override

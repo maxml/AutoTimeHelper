@@ -4,15 +4,15 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
-import android.os.Handler;
 import android.util.Log;
 
+import com.maxml.timer.App;
 import com.maxml.timer.api.interfaces.OnDbResult;
 import com.maxml.timer.entity.Line;
 import com.maxml.timer.entity.Point;
 import com.maxml.timer.entity.Slice;
-import com.maxml.timer.receivers.NetworkReceiver;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -22,9 +22,12 @@ import com.parse.SaveCallback;
 
 public class LineCRUD implements OnDbResult {
 
-	private ParseObject point1;
-	private ParseObject point2;
+	ParseObject point1;
+	ParseObject point2;
+	Point startPoint = null;
+	LineCRUD lineCRUD = this;
 	public OnDbResult onresultLine;
+	
 
 	private static final String USER = "User";
 	private static final String START = "start";
@@ -33,7 +36,6 @@ public class LineCRUD implements OnDbResult {
 	private static final String POINT = "Point";
 	private static final String X = "x";
 	private static final String Y = "y";
-	private static final String OBJECTID = "objectId";
 	private static final String TG = "myboolshit";
 
 	public interface OnFinished {
@@ -43,268 +45,161 @@ public class LineCRUD implements OnDbResult {
 	}
 
 	private String user = "nullUser";
-	private NetworkReceiver nt = new NetworkReceiver();
 
-	private String LOG_TAG = "All_about_line";
-	private Handler handler = new Handler();
 
-	public void create(Point pointStart, Point pointFinish, String user) {
-		Log.d(TG, "starting to create");
+
+	public void create(Slice slice) {
+		Log.i("Line", " Line starting create");
 		PointCRUD pointCRUD = new PointCRUD();
 		pointCRUD.onresult = this;
-		pointCRUD.create(pointStart);
-		pointCRUD.create(pointFinish);
-		this.user = user;
-	}
-
-	public void create(Point pointStart, Point pointFinish, Slice slice) {
-		Log.d(TG, "starting to create");
-		PointCRUD pointCRUD = new PointCRUD();
-		pointCRUD.onresult = this;
-		pointCRUD.create(pointStart);
-		pointCRUD.create(pointFinish, slice);
-		this.user = slice.getUser();
-	}
-
-	public void create(String pointStartId, String pointFinishId, String user) {
-
-		PointCRUD pointCRUD = new PointCRUD();
-		pointCRUD.onresult = this;
-		pointCRUD.read(pointStartId);
-		pointCRUD.read(pointFinishId);
-		this.user = user;
+		pointCRUD.create(slice.getPath().getStart(), slice);
+		pointCRUD.create(slice.getPath().getFinish(), slice);
 	}
 
 	@Override
-	public void onResult(ParseObject object, final Slice slice) {
-		Log.i("Point", "��� ��������� �����");
+	public void onResult(ParseObject parsePoint, final Slice slice) {
+		
+	
 		if (point1 == null) {
-			point1 = object;
+			point1 = parsePoint;
+			
 		} else {
-			point2 = object;
-			final ParseObject pair = new ParseObject(LINE);
-			pair.put(START, point1);
-			pair.put(FINISH, point2);
-			pair.put(USER, user);
-			pair.saveInBackground(
+			point2 = parsePoint;
+			final ParseObject parseLine = new ParseObject("Line");
+			parseLine.put("start", point1);
+			parseLine.put("finish", point2);
+			parseLine.put("User", slice.getUser());
+			parseLine.put("UUID", ""+UUID.randomUUID());
+			parseLine.put("startUUID", point1.getString("UUID"));
+			parseLine.put("finishUUID", ""+point2.getString("UUID"));
+			if(App.isNetworkAvailable){
+			parseLine.saveInBackground(
 
 			new SaveCallback() {
 				@Override
 				public void done(ParseException e) {
-					onresultLine.onResult(pair, slice);
+					Log.i("Line", "line is created " + parseLine.getObjectId());
+					
+					onresultLine.onResult(parseLine, slice);
 				}
 			}
 
 			);
+			
+		}else{
+			Log.i("Line", "line is created ofline UUID" + parseLine.getString("UUID"));
+			parsePoint.saveInBackground();
+			parseLine.pinInBackground();
+			onresultLine.onResult(parseLine, slice);
 		}
-
+		}
+		
 	}
 
-	@Override
-	public void onResult(ParseObject object) {
-		// TODO Auto-generated method stub
-		Log.i("Point", "��� ��������� �����");
-		if (point1 == null) {
-			point1 = object;
-		} else {
-			point2 = object;
-			final ParseObject pair = new ParseObject(LINE);
-			pair.put(START, point1);
-			pair.put(FINISH, point2);
-			pair.put(USER, user);
-			pair.saveInBackground(
 
-			new SaveCallback() {
-				@Override
-				public void done(ParseException e) {
-					onresultLine.onResult(pair);
-				}
-			}
 
-			);
-		}
-	}
-
-	public void read(String id) {
+	public void read(final String UUID, final List<Slice> sliceList) {
 
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("Line");
-		query.whereEqualTo("objectId", id);
+		if(!App.isNetworkAvailable)
+			query.fromLocalDatastore();
+			
+		query.whereEqualTo("UUID", UUID);
 		query.getFirstInBackground(new GetCallback<ParseObject>() {
-			public void done(ParseObject object, ParseException e) {
-				if (object == null) {
+			public void done(ParseObject parseLine, ParseException e) {
+				if (parseLine == null) {
 					Log.i("Line", "Read: The getFirst request failed.");
 				} else {
 
 					try {
-						object.fetch();
+						Log.i("Line", "Starting read");
+						parseLine.fetch();
+						Line line = new Line();
+						line.setId(parseLine.getString("UUID"));
+						line.setStartUUID(parseLine.getString("startUUID"));
+						line.setFinishUUID(parseLine.getString("finishUUID"));
+						PointCRUD pointCRUD = new PointCRUD();
+						pointCRUD.onresult = lineCRUD;
+						Log.i("Line", "Line id:" + line.getId());
+						for(Slice slice: sliceList)
+							if(slice.getLineUUID().equals(line.getId()))
+								slice.setPath(line);
+						pointCRUD.read(parseLine.getString("startUUID"),parseLine, sliceList);
+						pointCRUD.read(parseLine.getString("finishUUID"),parseLine, sliceList);
 					} catch (ParseException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-					onresultLine.onResult(object);
+					
 				}
 			}
 		});
 	}
-
-	public void read(final OnFinished listener) {
-		ParseQuery<ParseObject> query = ParseQuery.getQuery(POINT);
-		query.findInBackground(new FindCallback<ParseObject>() {
-			public void done(List<ParseObject> points, ParseException e) {
-				if (e == null) {
-
-					final Map<String, Point> myPointMap = new HashMap<String, Point>();
-					for (ParseObject poijnt : points) {
-
-						double x = poijnt.getInt(X);
-						double y = poijnt.getInt(Y);
-						String id = poijnt.getObjectId();
-						myPointMap.put(id, new Point(x, y));
-					}
-
-					ParseQuery<ParseObject> querySecond = ParseQuery
-							.getQuery(LINE);
-					querySecond
-							.findInBackground(new FindCallback<ParseObject>() {
-								public void done(List<ParseObject> LineList,
-										ParseException e) {
-									if (e == null) {
-										Log.d(TG,
-												"Retrieved " + LineList.size()
-														+ " lines");
-										List<Line> lines = new LinkedList<Line>();
-
-										for (ParseObject object : LineList) {
-											ParseObject start = object
-													.getParseObject(START);
-											ParseObject finish = object
-													.getParseObject(FINISH);
-											String user = object
-													.getString(USER);
-											String id = object.getObjectId();
-											String id1 = start.getObjectId();
-											String id2 = finish.getObjectId();
-
-											Line line = new Line(myPointMap
-													.get(id1), myPointMap
-													.get(id2), user);
-											line.setId(id);
-											lines.add(line);
-											Log.d(TG,
-													"add line: start x = "
-															+ start.getInt(X)
-															+ " y = "
-															+ start.getInt(Y)
-															+ " finish x = "
-															+ finish.getDouble(X)
-															+ " y = "
-															+ finish.getDouble(Y)
-															+ " user = " + user);
-										}
-
-										if (listener != null) {
-											listener.done(lines);
-										}
-									} else {
-										Log.d(TG, "Error: " + e.getMessage());
-										listener.error();
-									}
-								}
-							});
-				} else {
-					listener.error();
-				}
+	
+	
+	
+	
+	@Override
+	public void onResult(Point point, List<Slice> sliceList) {
+		
+		Point finishPoint;
+		if (startPoint == null) {
+			startPoint = point;
+		} else {
+			for(Slice slice: sliceList){
+				if(slice.getPath().getStartUUID().equals(point.getObjectId()))
+					slice.getPath().setStart(startPoint);
+					slice.getPath().setFinish(point);
 			}
-		});
-
+			onresultLine.onResultRead(sliceList);
+		}
+		
 	}
+	
 
-	// public void update(final Line newline) {
-	// ParseQuery<ParseObject> query = ParseQuery.getQuery(LINE);
-	// query.getInBackground(newline.getId(), new GetCallback<ParseObject>() {
-	//
-	// @Override
-	// public void done(ParseObject line, ParseException e) {
-	// if (e == null) {
-	// line.put(START, newline.getStart());
-	// line.put(FINISH, newline.getFinish());
-	// } else {
-	// e.printStackTrace();
-	// }
-	// }
-	// });
-	// }
+	
 
-	public void update(final Line line) {
 
-		final LineCRUD lineCRUD = new LineCRUD();
-		lineCRUD.onresultLine = this;
+
+	public void update(final Slice slice) {
 
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("Line");
-		// Retrieve the object by id
-		query.getInBackground(line.getId(), new GetCallback<ParseObject>() {
-			public void done(final ParseObject parseLine, ParseException e) {
-				if (e == null) {
-					PointCRUD pointCRUD = new PointCRUD();
-					pointCRUD.update(line.getStart());
-					pointCRUD.update(line.getFinish());
-					parseLine.put(USER, line.getUser());
-					parseLine.saveInBackground();
+		if(!App.isNetworkAvailable)
+			query.fromLocalDatastore();
+			
+		query.whereEqualTo("UUID", slice.getPath().getId());
+		query.getFirstInBackground(new GetCallback<ParseObject>() {
+			public void done(ParseObject parseLine, ParseException e) {
+				if (parseLine == null) {
+					Log.i("Line", "Read: The getFirst request failed.");
+				} else {
 
-					ParseQuery<ParseObject> query = ParseQuery
-							.getQuery("Point");
-					query.whereEqualTo("objectId", line.getStart()
-							.getObjectId());
-					query.getFirstInBackground(new GetCallback<ParseObject>() {
-						public void done(ParseObject object, ParseException e) {
-							if (object == null) {
-								Log.i("Line",
-										"Read: The getFirst request failed.");
-							} else {
-
-								try {
-									object.fetch();
-									
-									parseLine.put(START, object);
-									parseLine.saveInBackground();
-
-								} catch (ParseException e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
-								}
-							}
-						}
-					});
-
-					ParseQuery<ParseObject> queryF = ParseQuery
-							.getQuery("Point");
-					queryF.whereEqualTo("objectId", line.getFinish()
-							.getObjectId());
-					queryF.getFirstInBackground(new GetCallback<ParseObject>() {
-						public void done(ParseObject object, ParseException e) {
-							if (object == null) {
-								Log.i("Line",
-										"Read: The getFirst request failed.");
-							} else {
-
-								try {
-									object.fetch();
-
-									parseLine.put(FINISH, object);
-									parseLine.saveInBackground();
-
-								} catch (ParseException e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
-								}
-							}
-						}
-					});
-
+					try {
+						Log.i("Line", "Starting update");
+						parseLine.fetch();
+						parseLine.put("User", slice.getUser());
+						parseLine.put("UUID", ""+ slice.getPath().getId());
+						parseLine.put("startUUID", "" + slice.getPath().getStartUUID());
+						parseLine.put("finishUUID", "" + slice.getPath().getFinishUUID());
+						parseLine.saveInBackground();
+						parseLine.pinInBackground();
+						parseLine.saveEventually();
+					} catch (ParseException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					
 				}
 			}
 		});
 	}
+	
+	@Override
+	public void onResult(ParseObject parsePoint) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 	public void deleted(Line line) {
 		ParseQuery<ParseObject> query = ParseQuery.getQuery(LINE);
@@ -320,5 +215,25 @@ public class LineCRUD implements OnDbResult {
 			}
 		});
 	}
+
+	@Override
+	public void onResultRead(List<Slice> sliceList) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
 
 }
