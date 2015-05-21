@@ -7,25 +7,25 @@ import android.util.Log;
 
 import com.maxml.timer.R;
 
-public class TablesFragment extends FragmentActivity {
-	// When requested, this adapter returns a DemoObjectFragment,
+public class TablesActivity extends FragmentActivity {
+	// When requested, this adapter returns a ObjectFragment,
 	// representing an object in the collection.
-	CollectionPagerAdapter mDemoCollectionPagerAdapter;
+	CollectionPagerAdapter CollectionPagerAdapter;
 	ViewPager mViewPager;
 	
-	public void onCreate(Bundle savedInstanceState) {
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tables);
 		
 		// ViewPager and its adapters use support library
 		// fragments, so use getSupportFragmentManager.
-		Log.d("Tag", "support managet :" + getSupportFragmentManager());
+		// Log.d("Tag", "support manager :" + getSupportFragmentManager());
 		
-		mDemoCollectionPagerAdapter = new CollectionPagerAdapter(getSupportFragmentManager());
+		CollectionPagerAdapter = new CollectionPagerAdapter(getSupportFragmentManager());
 		mViewPager = (ViewPager) findViewById(R.id.pager);
-		mViewPager.setAdapter(mDemoCollectionPagerAdapter);
+		mViewPager.setAdapter(CollectionPagerAdapter);
 		mViewPager.setOffscreenPageLimit(1);
-		
 	}
 	
 }
