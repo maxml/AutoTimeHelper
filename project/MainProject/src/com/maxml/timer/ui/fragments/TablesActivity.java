@@ -22,7 +22,7 @@ public class TablesActivity extends FragmentActivity {
 		// fragments, so use getSupportFragmentManager.
 		// Log.d("Tag", "support manager :" + getSupportFragmentManager());
 		
-		CollectionPagerAdapter = new CollectionPagerAdapter(getSupportFragmentManager());
+		CollectionPagerAdapter = new CollectionPagerAdapter(this);
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(CollectionPagerAdapter);
 		mViewPager.setOffscreenPageLimit(1);
