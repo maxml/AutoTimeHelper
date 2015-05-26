@@ -9,7 +9,7 @@ public class User {
 
 	private static User instance;
 
-	private User() {
+	public User() {
 	}
 
 	public static User getInstance() {
