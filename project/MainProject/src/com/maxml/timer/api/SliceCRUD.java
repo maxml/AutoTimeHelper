@@ -14,6 +14,7 @@ import com.maxml.timer.entity.Point;
 import com.maxml.timer.entity.Slice;
 import com.maxml.timer.entity.Slice.SliceType;
 import com.maxml.timer.entity.Table;
+import com.maxml.timer.util.NetworkStatus;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -59,18 +60,19 @@ public class SliceCRUD implements OnDbResult {
 		parseSlice.put("UUID", ""+UUID.randomUUID());
 		parseSlice.put("Line", parseLine);
 		parseSlice.put("LineUUID", ""+parseLine.getString("UUID"));
-		if(App.isNetworkAvailable)
+		if(NetworkStatus.isConnected)
 		parseSlice.saveInBackground(
 
 				new SaveCallback() {
 					@Override
 					public void done(ParseException e) {
+						parseSlice.pinInBackground();
 						Log.i("Slice", "Slice is created id: "+ parseSlice.getObjectId() +" Line UUID: "+parseLine.getString("UUID"));
 					}
 				}
 
 				);
-		if(!App.isNetworkAvailable)
+		if(!NetworkStatus.isConnected)
 		{
 			parseSlice.saveInBackground();
 			parseSlice.pinInBackground();
@@ -83,7 +85,7 @@ public class SliceCRUD implements OnDbResult {
 	public void read(final String user) {
 		
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("Slice");
-		if(!App.isNetworkAvailable)
+		if(!NetworkStatus.isConnected)
 			query.fromLocalDatastore();
 			query.whereEqualTo("User", user);
 			query.findInBackground(new FindCallback<ParseObject>() {
@@ -91,14 +93,14 @@ public class SliceCRUD implements OnDbResult {
 				if (parseSliceList == null) {
 					Log.i("Slice", "The getFirst request failed.");
 				} else {
-					try {
+//					try {
 						Log.i("Slice", "Starting read");
 						List<Slice> sliceList = new ArrayList<Slice>();
 						for(ParseObject parseSlice: parseSliceList)
 						{
-							Log.i("Slice", "Slice: "+ parseSlice.getObjectId());
+							Log.i("Slice", "Slice: "+ parseSlice.getString("UUID"));
 			
-						parseSlice.fetch();
+//						parseSlice.fetch();
 						Slice slice = new Slice();
 						slice.setUser(parseSlice.getString("User"));
 						slice.setStartDate(parseSlice.getDate("startDate"));
@@ -124,13 +126,13 @@ public class SliceCRUD implements OnDbResult {
 						lineCRUD.read(parseSlice.getString("LineUUID"), sliceList);
 							
 						}
-						Log.i("Slice", "Slice: "+ parseSliceList.size());
+						Log.i("Slice", ""+ parseSliceList.size());
 						
-					} catch (ParseException e1) {
-						Log.i("Slice", "Slice: error "+e1);
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+//					} catch (ParseException e1) {
+//						Log.i("Slice", "error "+e1);
+//						// TODO Auto-generated catch block
+//						e1.printStackTrace();
+//					}
 //					onresultSlice.onResult(object);
 				}
 
@@ -147,28 +149,31 @@ public class SliceCRUD implements OnDbResult {
 		readCount++;
 		if(readCount == sliceList.size()){
 		Log.i("Slice", "Slice list size: " + sliceList.size());
+		
 		for(Slice slice: sliceList){
+//			try {
+//				Thread.sleep(1000);
+			
 			Log.i("Slice", "Slice UUID: "+slice.getId());
 			Log.i("Slice", "Slice updateDdat: "+slice.getUpdatedat());
-//			Log.i("Slice", "point UUID "+slice.getPath().getStartUUID());
-//			Log.i("Slice", "point UUID "+slice.getPath().getFinishUUID());
+			Log.i("Slice", "Slice Description: "+slice.getDescription());
 			Point point = new Point(11,11);
 			point.setObjectId(slice.getPath().getFinishUUID());
 			slice.getPath().setFinish(point);
 			slice.setDescription("TEST");
-//			update(slice);
-//			slice.setUpdatedat(new Date());
+			slice.setUpdatedat(new Date());
 			table.addSlise(slice);
-			
+//		}
 		}
 		sync(table);
+		
 //		onresultSlice.onResult(sliceList);
 		}
 	}
 
 	public void update(final Slice slice) throws InterruptedException {
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("Slice");
-		if(!App.isNetworkAvailable)
+		if(!NetworkStatus.isConnected)
 			query.fromLocalDatastore();
 			
 		query.whereEqualTo("UUID","" + slice.getId());
@@ -239,7 +244,7 @@ public class SliceCRUD implements OnDbResult {
 				create(slice);
 			} else {
 				ParseQuery<ParseObject> query = ParseQuery.getQuery("Slice");
-				if(!App.isNetworkAvailable)
+				if(!NetworkStatus.isConnected)
 					query.fromLocalDatastore();
 					
 				query.whereEqualTo("UUID", slice.getId());
@@ -248,7 +253,7 @@ public class SliceCRUD implements OnDbResult {
 						if (parseSlice == null) {
 							Log.i("Slice", "Sync: The getFirst request failed.");
 						} else {
-									if(!slice.getUpdatedat().equals(parseSlice.getUpdatedAt()))
+									if(!slice.getUpdatedat().equals(parseSlice.getUpdatedAt()))// ----------
 										try {
 											update(slice);
 										} catch (InterruptedException e1) {
@@ -265,16 +270,18 @@ public class SliceCRUD implements OnDbResult {
 	}
 
 	@Override
-	public void onResult(Point point, List<Slice> sliceList) {
+	public void onResult(ParseObject parsePoint, ParseObject parsePointFinish,
+			Slice slice) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void onResult(ParseObject parsePoint) {
+	public void onResult(Point point, List<Slice> sliceList) {
 		// TODO Auto-generated method stub
 		
 	}
+
 
 	
 

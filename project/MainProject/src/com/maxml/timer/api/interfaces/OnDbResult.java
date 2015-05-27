@@ -9,17 +9,12 @@ import com.parse.ParseObject;
 
 public interface OnDbResult {
 
+	void onResult(ParseObject parseLine, Slice slice);
 
-
-
-
-
-	void onResult(Point point, List<Slice> sliceList);
-
-	void onResult(ParseObject parsePoint, Slice slice);
+	void onResult(ParseObject parsePoint, ParseObject parsePointFinish, Slice slice);
 
 	void onResultRead(List<Slice> sliceList);
 
-	void onResult(ParseObject parsePoint);
+	void onResult(Point point, List<Slice> sliceList);
 
 }

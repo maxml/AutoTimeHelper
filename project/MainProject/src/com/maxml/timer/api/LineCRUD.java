@@ -13,6 +13,7 @@ import com.maxml.timer.api.interfaces.OnDbResult;
 import com.maxml.timer.entity.Line;
 import com.maxml.timer.entity.Point;
 import com.maxml.timer.entity.Slice;
+import com.maxml.timer.util.NetworkStatus;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -38,12 +39,6 @@ public class LineCRUD implements OnDbResult {
 	private static final String Y = "y";
 	private static final String TG = "myboolshit";
 
-	public interface OnFinished {
-		void done(List<Line> lines);
-
-		void error();
-	}
-
 	private String user = "nullUser";
 
 
@@ -52,34 +47,26 @@ public class LineCRUD implements OnDbResult {
 		Log.i("Line", " Line starting create");
 		PointCRUD pointCRUD = new PointCRUD();
 		pointCRUD.onresult = this;
-		pointCRUD.create(slice.getPath().getStart(), slice);
-		pointCRUD.create(slice.getPath().getFinish(), slice);
+		pointCRUD.create(slice.getPath().getStart(),slice.getPath().getFinish(), slice);
 	}
 
 	@Override
-	public void onResult(ParseObject parsePoint, final Slice slice) {
-		
-	
-		if (point1 == null) {
-			point1 = parsePoint;
+	public void onResult(ParseObject parsePointStart,ParseObject parsePointFinish, final Slice slice) {
 			
-		} else {
-			point2 = parsePoint;
 			final ParseObject parseLine = new ParseObject("Line");
-			parseLine.put("start", point1);
-			parseLine.put("finish", point2);
+			parseLine.put("start", parsePointStart);
+			parseLine.put("finish", parsePointFinish);
 			parseLine.put("User", slice.getUser());
 			parseLine.put("UUID", ""+UUID.randomUUID());
-			parseLine.put("startUUID", point1.getString("UUID"));
-			parseLine.put("finishUUID", ""+point2.getString("UUID"));
-			if(App.isNetworkAvailable){
+			parseLine.put("startUUID", parsePointFinish.getString("UUID"));
+			parseLine.put("finishUUID", ""+parsePointFinish.getString("UUID"));
+			if(NetworkStatus.isConnected){
 			parseLine.saveInBackground(
-
 			new SaveCallback() {
 				@Override
 				public void done(ParseException e) {
 					Log.i("Line", "line is created " + parseLine.getObjectId());
-					
+					parseLine.pinInBackground();
 					onresultLine.onResult(parseLine, slice);
 				}
 			}
@@ -88,12 +75,10 @@ public class LineCRUD implements OnDbResult {
 			
 		}else{
 			Log.i("Line", "line is created ofline UUID" + parseLine.getString("UUID"));
-			parsePoint.saveInBackground();
+			parseLine.saveInBackground();
 			parseLine.pinInBackground();
 			onresultLine.onResult(parseLine, slice);
 		}
-		}
-		
 	}
 
 
@@ -101,7 +86,7 @@ public class LineCRUD implements OnDbResult {
 	public void read(final String UUID, final List<Slice> sliceList) {
 
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("Line");
-		if(!App.isNetworkAvailable)
+		if(!NetworkStatus.isConnected)
 			query.fromLocalDatastore();
 			
 		query.whereEqualTo("UUID", UUID);
@@ -111,9 +96,9 @@ public class LineCRUD implements OnDbResult {
 					Log.i("Line", "Read: The getFirst request failed.");
 				} else {
 
-					try {
+//					try {
 						Log.i("Line", "Starting read");
-						parseLine.fetch();
+//						parseLine.fetch();
 						Line line = new Line();
 						line.setId(parseLine.getString("UUID"));
 						line.setStartUUID(parseLine.getString("startUUID"));
@@ -126,17 +111,15 @@ public class LineCRUD implements OnDbResult {
 								slice.setPath(line);
 						pointCRUD.read(parseLine.getString("startUUID"),parseLine, sliceList);
 						pointCRUD.read(parseLine.getString("finishUUID"),parseLine, sliceList);
-					} catch (ParseException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+//					} catch (ParseException e1) {
+//						 TODO Auto-generated catch block
+//						e1.printStackTrace();
+//					}
 					
 				}
 			}
 		});
 	}
-	
-	
 	
 	
 	@Override
@@ -156,15 +139,10 @@ public class LineCRUD implements OnDbResult {
 		
 	}
 	
-
-	
-
-
-
 	public void update(final Slice slice) {
 
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("Line");
-		if(!App.isNetworkAvailable)
+		if(!NetworkStatus.isConnected)
 			query.fromLocalDatastore();
 			
 		query.whereEqualTo("UUID", slice.getPath().getId());
@@ -194,12 +172,6 @@ public class LineCRUD implements OnDbResult {
 		});
 	}
 	
-	@Override
-	public void onResult(ParseObject parsePoint) {
-		// TODO Auto-generated method stub
-		
-	}
-
 
 	public void deleted(Line line) {
 		ParseQuery<ParseObject> query = ParseQuery.getQuery(LINE);
@@ -217,23 +189,16 @@ public class LineCRUD implements OnDbResult {
 	}
 
 	@Override
-	public void onResultRead(List<Slice> sliceList) {
+	public void onResult(ParseObject parseLine, Slice slice) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
+	@Override
+	public void onResultRead(List<Slice> sliceList) {
+		// TODO Auto-generated method stub
+		
+	}
 
 
 }

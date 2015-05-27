@@ -13,12 +13,12 @@ import com.maxml.timer.entity.Slice;
 import com.maxml.timer.entity.Slice.SliceType;
 import com.maxml.timer.entity.Table;
 import com.maxml.timer.receivers.NetworkReceiver;
+import com.maxml.timer.util.NetworkStatus;
 import com.parse.Parse;
 import com.parse.ParseInstallation;
 
 public class App extends Application {
 
-	public static boolean isNetworkAvailable = true;
 
 	@Override
 	public void onCreate() {
@@ -33,6 +33,27 @@ public class App extends Application {
 
 		NetworkReceiver networkReceiver = new NetworkReceiver();
 		networkReceiver.onReceive(this, new Intent());
+		
+		 NetworkStatus.isNetworkAvailable(this);
+		
+		Point point = new Point(999,999);
+		Line line = new Line(point,point);
+		Table table = new Table();
+		for(int i = 0; i<3; i++){
+		Slice slice = new Slice("User", line, new Date(), new Date(), "desc" + i, SliceType.WALK);
+		table.addSlise(slice);
+		}
+		SliceCRUD sliceCRUD = new SliceCRUD();
+		sliceCRUD.sync(table);
+		
+//		try {
+//			Thread.sleep(20000);
+//			sliceCRUD.read("User");
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
 //		isNetworkAvailable = networkReceiver.isNetworkAvailable(this);
 //		Log.i("Slice", " isNetworkAvailable is  " + isNetworkAvailable);
 	}
