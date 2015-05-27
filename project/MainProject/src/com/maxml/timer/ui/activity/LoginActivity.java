@@ -3,22 +3,22 @@ package com.maxml.timer.ui.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.maxml.timer.MainActivity;
 import com.maxml.timer.R;
-import com.maxml.timer.api.SliceCRUD;
-import com.parse.LogInCallback;
-import com.parse.ParseException;
+import com.maxml.timer.api.UserAPI;
 import com.parse.ParseUser;
 
 /**
  * Created by Lantar on 22.04.2015.
  */
 public class LoginActivity extends Activity {
+	protected static final int CONNECTION_OK = 1;
 	private TextView entLogin;
 	private TextView entPassword;
 	
@@ -26,6 +26,10 @@ public class LoginActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login_activity);
+		
+		ParseUser currentUser = ParseUser.getCurrentUser();
+		if (currentUser != null)
+			loginOk();
 		
 		entLogin = (TextView) findViewById(R.id.textLogin);
 		entPassword = (TextView) findViewById(R.id.textPassword);
@@ -35,52 +39,44 @@ public class LoginActivity extends Activity {
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.btnLogin:
-				autorization();
+				login();
 			break;
 			case R.id.btnSignIn:
 				Intent intent = new Intent(this, CreateUserActivity.class);
-				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 				startActivity(intent);
 			
 			break;
 			case R.id.btnForgotPass:
-				startActivityForResult(new Intent(this, ForgotPasswordActivity.class), 1);
-			
+				Intent intentForgot = new Intent(this, ForgotPasswordActivity.class);
+				startActivity(intentForgot);
 			break;
 		}
 	}
 	
-	public void autorization() {
-		
-		ParseUser.logInInBackground(entLogin.getText().toString(), entPassword.getText().toString(),
-				new LogInCallback() {
-					public void done(ParseUser user, ParseException e) {
-						if (user != null) {
-							loginOk();
-						} else {
-							Toast.makeText(LoginActivity.this, "Incorect login or password", Toast.LENGTH_SHORT)
-									.show();
-							// Signup failed. Look at the ParseException to see
-							// what
-							// happened.
-						}
-					}
-				});
+	public void login() {
+		UserAPI c = new UserAPI();
+		c.login(entLogin.getText().toString(), entPassword.getText().toString());
+		c.handler = new Handler() {
+			public void handleMessage(Message msg) {
+				if (msg.what == CONNECTION_OK) {
+					loginOk();
+				} else {
+					incorrect();
+				}
+			};
+		};
+	}
+	
+	private void incorrect() {
+		Toast.makeText(getApplicationContext(), "Incorrect login or password", Toast.LENGTH_SHORT)
+				.show();
 	}
 	
 	public void loginOk() {
-		try {
-			Toast.makeText(getApplicationContext(), "Logined", Toast.LENGTH_SHORT).show();
-			
-			Intent intent = new Intent(this, MainActivity.class);
-			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-			startActivity(intent);
-			
-			finish();
-			
-		} catch (Exception e) {
-			// TODO: delete catch, fix error!
-			Log.i("myLog", "" + e);
-		}
+		Toast.makeText(getApplicationContext(), "Logined", Toast.LENGTH_SHORT).show();
+		Intent intent = new Intent(this, MainActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(intent);
+		finish();
 	}
 }

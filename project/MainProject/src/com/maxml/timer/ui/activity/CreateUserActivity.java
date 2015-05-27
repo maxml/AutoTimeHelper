@@ -3,6 +3,8 @@ package com.maxml.timer.ui.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -10,8 +12,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.maxml.timer.MainActivity;
 import com.maxml.timer.R;
-import com.maxml.timer.controllers.UserController;
+import com.maxml.timer.api.UserAPI;
 import com.maxml.timer.entity.User;
 
 public class CreateUserActivity extends Activity {
@@ -22,7 +25,8 @@ public class CreateUserActivity extends Activity {
 	private TextView entEmail;
 	
 	private Button btnCreate;
-	private UserController c;
+	
+	protected int CONNECTION_OK = 1;
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -58,6 +62,19 @@ public class CreateUserActivity extends Activity {
 		});
 	}
 	
+	private void autorisation() {
+		Toast.makeText(CreateUserActivity.this, "Welcome", Toast.LENGTH_SHORT).show();
+		Intent intent = new Intent(CreateUserActivity.this, MainActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		startActivity(intent);
+	}
+	
+	private void incorrect() {
+		Toast.makeText(CreateUserActivity.this, "Please check and try again", Toast.LENGTH_SHORT)
+				.show();
+		
+	}
+	
 	public void createUser() {
 		Log.d("User", "create user");
 		User user = new User();
@@ -65,13 +82,16 @@ public class CreateUserActivity extends Activity {
 		user.setPassword(entPassword.getText().toString());
 		user.setEmail(entEmail.getText().toString());
 		
-		c = new UserController();
-		c.addUser(user);
-		
-		Toast.makeText(CreateUserActivity.this, "successfully", Toast.LENGTH_SHORT).show();
-		
-		Intent intent = new Intent(CreateUserActivity.this, LoginActivity.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(intent);
+		UserAPI c = new UserAPI();
+		c.sync(user);
+		c.handler = new Handler() {
+			public void handleMessage(Message msg) {
+				if (msg.what == CONNECTION_OK) {
+					autorisation();
+				} else {
+					incorrect();
+				}
+			};
+		};
 	}
 }
