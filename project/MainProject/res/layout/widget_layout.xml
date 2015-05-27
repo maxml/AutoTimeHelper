@@ -38,43 +38,43 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:layout_weight="0.3"
-            android:background="@color/yellow"
+            android:layout_marginRight="8dp"
+            android:layout_weight="1.38"
+            android:background="@drawable/button_call"
             android:padding="8dp"
-            android:text="CALL" />
+            android:text="@string/call" />
 
         <Button
             android:id="@+id/butWork"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.3"
-            android:background="@color/grey"
+            android:background="@drawable/button_work"
+            android:layout_weight="1"
             android:padding="8dp"
-            android:text="WORK" />
+            android:text="@string/work" />
 
         <Button
             android:id="@+id/butRest"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_weight="0.3"
-            android:background="@color/gren"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_rest"
             android:padding="8dp"
-            android:text="REST" />
+            android:text="@string/rest" />
 
         <Button
             android:id="@+id/butWalk"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.3"
-            android:background="@color/blue"
+            android:layout_weight="1"
+            android:background="@drawable/button_walk"
             android:padding="8dp"
-            android:text="WALK" />
+            android:text="@string/walk" />
     </LinearLayout>
 
 </LinearLayout>
