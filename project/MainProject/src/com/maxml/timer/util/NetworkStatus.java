@@ -2,8 +2,11 @@ package com.maxml.timer.util;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.preference.PreferenceActivity;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -27,13 +30,14 @@ public class NetworkStatus {
 						Log.v(LOG_TAG, "Now you are connected to Internet!");
 
 						Toast.makeText(context, INTERNET_AVAILABLE,
-						Toast.LENGTH_SHORT).show();
-//						AlertDialog.Builder availablle = new AlertDialog.Builder(
-//								context);
-//						availablle.setMessage(INTERNET_AVAILABLE);
-//						availablle.setCancelable(true);
-//						availablle.show();
-						
+								Toast.LENGTH_SHORT).show();
+						// AlertDialog.Builder availablle = new
+						// AlertDialog.Builder(
+						// context);
+						// availablle.setMessage(INTERNET_AVAILABLE);
+						// availablle.setCancelable(true);
+						// availablle.show();
+
 						return true;
 					}
 				}
@@ -44,11 +48,18 @@ public class NetworkStatus {
 		// .show();
 		AlertDialog.Builder notAvailablle = new AlertDialog.Builder(context);
 		notAvailablle.setMessage(INTERNET_NOT_AVAILABLE);
+//		notAvailablle.setPositiveButton("Settings",
+//				new DialogInterface.OnClickListener() {
+//					@Override
+//					public void onClick(DialogInterface dialog, int which) {
+//						Intent intent = new Intent( PreferenceActivity.class;);
+//					}
+//
+//				});
 		notAvailablle.setCancelable(true);
 		notAvailablle.show();
 
 		isConnected = false;
 		return false;
 	}
-
 }
