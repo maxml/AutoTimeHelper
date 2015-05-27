@@ -36,26 +36,7 @@ public class App extends Application {
 		
 		 NetworkStatus.isNetworkAvailable(this);
 		
-		Point point = new Point(999,999);
-		Line line = new Line(point,point);
-		Table table = new Table();
-		for(int i = 0; i<3; i++){
-		Slice slice = new Slice("User", line, new Date(), new Date(), "desc" + i, SliceType.WALK);
-		table.addSlise(slice);
-		}
-		SliceCRUD sliceCRUD = new SliceCRUD();
-		sliceCRUD.sync(table);
 		
-//		try {
-//			Thread.sleep(20000);
-//			sliceCRUD.read("User");
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		
-//		isNetworkAvailable = networkReceiver.isNetworkAvailable(this);
-//		Log.i("Slice", " isNetworkAvailable is  " + isNetworkAvailable);
 	}
 
 
