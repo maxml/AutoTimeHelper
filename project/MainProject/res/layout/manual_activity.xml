@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:layout_margin="5sp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="1dp"
     android:background="@drawable/appwidget_dark_bg"
     android:orientation="vertical" >
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:orientation="horizontal"
@@ -25,61 +25,78 @@
             android:textStyle="normal" />
     </LinearLayout>
 
-    <LinearLayout
+    <AnalogClock
+        android:id="@+id/analogClock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
+    <TableLayout
         android:id="@+id/contentContainer"
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        
         android:orientation="horizontal"
         android:padding="8dp" >
 
-        <Button
-            android:id="@+id/butCall"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
+        <TableRow
+            android:id="@+id/tableRow1"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:layout_weight="0.3"
-            android:background="@color/yellow"
-            android:onClick="onClick"
-            android:padding="8dp"
-            android:text="CALL" />
+            android:gravity="center"
+            android:padding="8dp" >
 
-        <Button
-            android:id="@+id/butWork"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
+            <ToggleButton
+                android:id="@+id/butCall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_call"
+                android:onClick="onClick"
+                android:textOff="@string/call"
+                android:textOn="@string/stop" />
+
+            <ToggleButton
+                android:id="@+id/butWork"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/button_work"
+                android:onClick="onClick"
+                android:textOff="@string/work"
+                android:textOn="@string/stop"
+                />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow2"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.3"
-            android:background="@color/grey"
-            android:onClick="onClick"
-            android:padding="8dp"
-            android:text="WORK" />
+            android:gravity="center"
+            android:padding="8dp" >
 
-        <Button
-            android:id="@+id/butRest"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_weight="0.3"
-            android:background="@color/gren"
-            android:onClick="onClick"
-            android:padding="8dp"
-            android:text="REST" />
+            <ToggleButton
+                android:id="@+id/butWalk"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_walk"
+                android:onClick="onClick"
+                android:textOff="@string/walk"
+                android:textOn="@string/stop" />
 
-        <Button
-            android:id="@+id/butWalk"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.3"
-            android:background="@color/blue"
-            android:onClick="onClick"
-            android:padding="8dp"
-            android:text="WALK" />
-
-    </LinearLayout>
+            <ToggleButton
+                android:id="@+id/butRest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/button_rest"
+                android:onClick="onClick"
+                android:textOff="@string/rest"
+                android:textOn="@string/stop" />
+        </TableRow>
+    </TableLayout>
 
 </LinearLayout>
