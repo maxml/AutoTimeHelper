@@ -1,17 +1,19 @@
-package com.maxml.timer.ui.activity;
+package com.maxml.timer.ui.fragments;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.accessibility.AccessibilityNodeInfo;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.maxml.timer.R;
+import com.maxml.timer.api.UserAPI;
+import com.parse.ParseUser;
 
-public class MainUserPageActivity extends Activity {
+public class MainUserPageFragment extends Fragment {
 	
 	private Button btnChangePicture;
 	private Button btnChangeName;
@@ -20,11 +22,17 @@ public class MainUserPageActivity extends Activity {
 	
 	private EditText etSetName;
 	private EditText etSetEmail;
+	private UserAPI us = new UserAPI();
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		return inflater.inflate(R.layout.activity_main_user_page, container, false);
+		
+	}
+	
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main_user_page);
 		
 		btnChangeEmail = buttonsAutorisation(R.id.btnEmail);
 		btnChangeName = buttonsAutorisation(R.id.btnName);
@@ -34,6 +42,8 @@ public class MainUserPageActivity extends Activity {
 		
 		etSetName = editTextAutorisation(R.id.tvName);
 		etSetEmail = editTextAutorisation(R.id.tvEmail);
+		etSetEmail.setText(us.getCurrentUser().getEmail());
+		etSetName.setText(us.getCurrentUser().getUsername());
 		etSetName.setEnabled(false);
 		etSetEmail.setEnabled(false);
 		
@@ -49,12 +59,14 @@ public class MainUserPageActivity extends Activity {
 					public void onClick(View v) {
 						etSetEmail.setEnabled(false);
 						btnChangeOk.setVisibility(View.INVISIBLE);
+						us.updateEmail(etSetEmail.getText().toString(), ParseUser.getCurrentUser()
+								.getObjectId());
 					}
 				});
 			}
 		});
 		
-	btnChangeName.setOnClickListener(new OnClickListener() {
+		btnChangeName.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -66,6 +78,7 @@ public class MainUserPageActivity extends Activity {
 					public void onClick(View v) {
 						etSetName.setEnabled(false);
 						btnChangeOk.setVisibility(View.INVISIBLE);
+						us.updateName(etSetName.getText().toString(), ParseUser.getCurrentUser().getObjectId());
 					}
 				});
 			}
@@ -74,12 +87,12 @@ public class MainUserPageActivity extends Activity {
 	}
 	
 	private EditText editTextAutorisation(int idintification) {
-		EditText et = (EditText) findViewById(idintification);
+		EditText et = (EditText) getActivity().findViewById(idintification);
 		return et;
 	}
 	
 	private Button buttonsAutorisation(int idintification) {
-		Button btn = (Button) findViewById(idintification);
+		Button btn = (Button) getActivity().findViewById(idintification);
 		return btn;
 	}
 	

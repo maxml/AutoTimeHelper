@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,11 +27,12 @@ public class LoginActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login_activity);
-		
-		ParseUser currentUser = ParseUser.getCurrentUser();
-		if (currentUser != null)
-			loginOk();
-		
+		Log.d("User", "start login activity");
+		// ParseUser currentUser = ParseUser.getCurrentUser();
+		// if (currentUser != null) {
+		// Log.d("User", "user = " + currentUser.getUsername());
+		// loginOk();
+		// }
 		entLogin = (TextView) findViewById(R.id.textLogin);
 		entPassword = (TextView) findViewById(R.id.textPassword);
 		

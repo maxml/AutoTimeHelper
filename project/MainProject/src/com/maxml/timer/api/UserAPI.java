@@ -22,7 +22,7 @@ public class UserAPI {
 	private static final String EMAIL = "email";
 	public int CONNECTION_OK = 1;
 	
-	public Handler handler;
+	public Handler handler = new Handler();
 	
 	public OnDbUserResult onresult;
 	
@@ -73,18 +73,54 @@ public class UserAPI {
 		});
 	}
 	
-	public void update(User user) {
+	public void updateName(final String name, final String id) {
+		Log.d("UserAPI", "start updateName");
 		ParseQuery<ParseUser> query = ParseUser.getQuery();
-		query.whereEqualTo(USERNAME, user.getUsername());
+		query.whereEqualTo(USERNAME, ParseUser.getCurrentUser().getUsername());
 		query.findInBackground(new FindCallback<ParseUser>() {
 			public void done(List<ParseUser> objects, ParseException e) {
 				if (e == null) {
-					handler.sendEmptyMessage(CONNECTION_OK);
-				} else {	 
-					handler.sendEmptyMessage(0);
+					for (ParseUser parseUser : objects) {
+						Log.d("UserAPI", "find object");
+						if (parseUser.getObjectId().equals(id)) {
+							Log.d("UserAPI", "found, rename");
+							ParseUser.getCurrentUser().put(USERNAME, name);
+						}
+					}
+				} else {
+					Log.d("UserAPI", "problem in updateName");
+					e.printStackTrace();
 				}
 			}
 		});
+	}
+	
+	public void updateEmail(final String email, final String id) {
+		Log.d("UserAPI", "start updateEmail");
+		ParseQuery<ParseUser> queryOne = ParseUser.getQuery();
+		queryOne.whereEqualTo(EMAIL, email);
+		queryOne.findInBackground(new FindCallback<ParseUser>() {
+			public void done(List<ParseUser> objects, ParseException e) {
+				if (e == null) {
+					for (ParseUser parseUser : objects) {
+						if (parseUser.getObjectId().equals(id)) {
+							ParseUser.getCurrentUser().put(EMAIL, email);
+						}
+					}
+				} else {
+					Log.d("UserAPI", "problem in updateEmail");
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+	
+	public User getCurrentUser() {
+		User user = new User();
+		user.setObjectId(ParseUser.getCurrentUser().getObjectId());
+		user.setEmail(ParseUser.getCurrentUser().getEmail());
+		user.setUsername(ParseUser.getCurrentUser().getUsername());
+		return user;
 	}
 	
 	public void sync(User user) {
@@ -93,8 +129,8 @@ public class UserAPI {
 			Log.d("User", "create user");
 			create(user);
 		} else {
-			Log.d("User", "update user");
-			update(user);
+			updateEmail(user.getEmail(), user.getObjectId());
+			updateName(user.getUsername(), user.getObjectId());
 		}
 	}
 }

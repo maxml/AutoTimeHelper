@@ -20,25 +20,25 @@ import android.view.View;
 import com.maxml.timer.ui.elements.DrawerItem;
 import com.maxml.timer.ui.elements.DrawerItemAdapter;
 import com.maxml.timer.ui.elements.DrawerMenu;
-import com.maxml.timer.ui.fragments.SimpleFragment;
+import com.maxml.timer.ui.fragments.MainUserPageFragment;
 
 public class MainActivity extends ActionBarActivity {
 	private static final String FRAGMENT_TAG = "CURRENT_FRAGMENT";
-
+	
 	private DrawerLayout drawerLayout;
 	private ActionBarDrawerToggle drawerToggle;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+		
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		RecyclerView drawerOptions = (RecyclerView) findViewById(R.id.drawer_options);
 		setSupportActionBar(toolbar);
-		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
-				R.string.drawer_open, R.string.drawer_close);
+		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open,
+				R.string.drawer_close);
 		drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
 		drawerLayout.setStatusBarBackground(R.color.primary_dark);
 		drawerLayout.setDrawerListener(drawerToggle);
@@ -52,12 +52,10 @@ public class MainActivity extends ActionBarActivity {
 						getString(R.string.manual_activity, 2)),
 				new DrawerItem(DrawerItem.Type.DIVIDER),
 				new DrawerMenu().setIconRes(R.drawable.ic_person).setText(
-						getString(R.string.menu_template, 3)),
-				new DrawerMenu().setIconRes(R.drawable.ic_search).setText(
-						getString(R.string.menu_template, 4)),
-				new DrawerItem(DrawerItem.Type.DIVIDER),
-				new DrawerMenu().setIconRes(R.drawable.ic_settings).setText(
-						getString(R.string.menu_template, 5)));
+						getString(R.string.menu_template, 3)), new DrawerMenu()
+						.setIconRes(R.drawable.ic_search).setText(getString(R.string.menu_template, 4)),
+				new DrawerItem(DrawerItem.Type.DIVIDER), new DrawerMenu()
+						.setIconRes(R.drawable.ic_settings).setText(getString(R.string.menu_template, 5)));
 		drawerOptions.setLayoutManager(new LinearLayoutManager(this));
 		DrawerItemAdapter adapter = new DrawerItemAdapter(drawerItems);
 		adapter.setOnItemClickListener(new DrawerItemAdapter.OnItemClickListener() {
@@ -68,44 +66,41 @@ public class MainActivity extends ActionBarActivity {
 		drawerOptions.setAdapter(adapter);
 		drawerOptions.setHasFixedSize(true);
 		if (savedInstanceState == null)
-			setupFragment(new SimpleFragment());
-
+			setupFragment(new MainUserPageFragment());
+		
 	}
-
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (drawerToggle.onOptionsItemSelected(item))
 			return true;
 		return super.onOptionsItemSelected(item);
-
+		
 	}
-
+	
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 		drawerToggle.syncState();
 	}
-
+	
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		drawerToggle.onConfigurationChanged(newConfig);
 	}
-
+	
 	private void setupFragment(Fragment fragment) {
 		FragmentManager fragmentManager = getSupportFragmentManager();
-		Fragment currentFragment = fragmentManager
-				.findFragmentByTag(FRAGMENT_TAG);
-		if (currentFragment == null
-				|| !currentFragment.getClass().equals(fragment.getClass())) {
-			fragmentManager.beginTransaction()
-					.replace(R.id.content_frame, fragment, FRAGMENT_TAG)
+		Fragment currentFragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG);
+		if (currentFragment == null || !currentFragment.getClass().equals(fragment.getClass())) {
+			fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, FRAGMENT_TAG)
 					.commit();
 		}
 	}
-
+	
 	private void onDrawerMenuSelected(int position) {
 		drawerLayout.closeDrawers();
 	}
-
+	
 }
