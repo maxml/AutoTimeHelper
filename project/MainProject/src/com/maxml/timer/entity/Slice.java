@@ -12,6 +12,7 @@ public class Slice {
 	private SliceType type;
 	private String lineUUID;
 	private Date updatedat;
+	private boolean isDeleted = false;
 
 	public enum SliceType {
 		WORK, REST, CALL, WALK
@@ -104,11 +105,20 @@ public class Slice {
 	public void setUpdatedat(Date updatedat) {
 		this.updatedat = updatedat;
 	}
+	
+
+	public boolean isDeleted() {
+		return isDeleted;
+	}
+
+	public void setDeleted(boolean isDeleted) {
+		this.isDeleted = isDeleted;
+	}
 
 	@Override
 	public String toString() {
 		return "Slice [user=" + user + ", id=" + id + ", path=" + path + ", startDate=" + startDate + ", endDate="
-				+ endDate + ", description=" + description + ", type=" + type + "]";
+				+ endDate + ", description=" + description + ", type=" + type + ", isDeleted=" + isDeleted + "]";
 	}
 
 }

@@ -77,7 +77,7 @@ public class SliceCRUD implements OnDbResult {
 			parseSlice.saveInBackground();
 			parseSlice.pinInBackground();
 			Log.i("Slice", "Slice is created offline, id:"+ parseSlice.getString("UUID"));
-			parseSlice.saveEventually();
+//			parseSlice.saveEventually();
 		}
 		
 	}
@@ -94,11 +94,11 @@ public class SliceCRUD implements OnDbResult {
 					Log.i("Slice", "The getFirst request failed.");
 				} else {
 //					try {
-						Log.i("Slice", "Starting read");
+						Log.i("SliceRead", "Starting read");
 						List<Slice> sliceList = new ArrayList<Slice>();
 						for(ParseObject parseSlice: parseSliceList)
 						{
-							Log.i("Slice", "Slice: "+ parseSlice.getString("UUID"));
+							Log.i("SliceRead", "Slice: "+ parseSlice.getString("UUID"));
 			
 //						parseSlice.fetch();
 						Slice slice = new Slice();
@@ -126,7 +126,7 @@ public class SliceCRUD implements OnDbResult {
 						lineCRUD.read(parseSlice.getString("LineUUID"), sliceList);
 							
 						}
-						Log.i("Slice", ""+ parseSliceList.size());
+						Log.i("SliceRead", ""+ parseSliceList.size());
 						
 //					} catch (ParseException e1) {
 //						Log.i("Slice", "error "+e1);
@@ -157,15 +157,17 @@ public class SliceCRUD implements OnDbResult {
 			Log.i("Slice", "Slice UUID: "+slice.getId());
 			Log.i("Slice", "Slice updateDdat: "+slice.getUpdatedat());
 			Log.i("Slice", "Slice Description: "+slice.getDescription());
-			Point point = new Point(11,11);
-			point.setObjectId(slice.getPath().getFinishUUID());
-			slice.getPath().setFinish(point);
-			slice.setDescription("TEST");
-			slice.setUpdatedat(new Date());
-			table.addSlise(slice);
+//			Point point = new Point(11,11);
+//			point.setObjectId(slice.getPath().getFinishUUID());
+//			slice.getPath().setFinish(point);
+//			slice.setDescription("TEST");
+//			slice.setUpdatedat(new Date());
+//			slice.setDeleted(true);
+//			table.addSlise(slice);
+			delete(slice.getId());
 //		}
 		}
-		sync(table);
+//		sync(table);
 		
 //		onresultSlice.onResult(sliceList);
 		}
@@ -204,7 +206,7 @@ public class SliceCRUD implements OnDbResult {
 						LineCRUD lineCRUD = new LineCRUD();
 						lineCRUD.update(slice);
 						PointCRUD pointCRUD = new PointCRUD();
-//						pointCRUD.update(slice.getPath().getStart());
+						pointCRUD.update(slice.getPath().getStart());
 						pointCRUD.update(slice.getPath().getFinish());
 						parseSlice.saveInBackground();
 						parseSlice.pinInBackground();
@@ -225,19 +227,28 @@ public class SliceCRUD implements OnDbResult {
 
 	public void delete(final String id) {
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("Slice");
-		// Retrieve the object by id
-		query.getInBackground(id, new GetCallback<ParseObject>() {
+		if(!NetworkStatus.isConnected)
+			query.fromLocalDatastore();
+			
+		query.whereEqualTo("UUID",""+id);
+		query.getFirstInBackground(new GetCallback<ParseObject>() {
 			public void done(ParseObject parseSlice, ParseException e) {
-				if (e == null) {
-					Log.i("delete", "" + id + "deleted");
-					parseSlice.deleteInBackground();
-
+				if (parseSlice == null) {
+					
+					Log.i("Slice", "Deleted: The getFirst request failed.");
+				} else {
+					Log.i("Slice", "Slice " + id + " is deleted");
+					parseSlice.put("deleted", true);
+					parseSlice.pinInBackground();
+					parseSlice.saveInBackground();
 				}
 			}
 		});
 	}
 
 	public void sync(Table table) {
+		 Log.i("Slice",""+NetworkStatus.isConnected);
+		 
 		Log.i("Slice", "Slice synchronized start");
 		for (final Slice slice : table.getList()) {
 			if (slice.getId() == null) {
