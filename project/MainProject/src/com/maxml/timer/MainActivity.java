@@ -13,6 +13,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,7 +21,10 @@ import android.view.View;
 import com.maxml.timer.ui.elements.DrawerItem;
 import com.maxml.timer.ui.elements.DrawerItemAdapter;
 import com.maxml.timer.ui.elements.DrawerMenu;
+import com.maxml.timer.ui.fragments.GoogleMapFragment;
 import com.maxml.timer.ui.fragments.MainUserPageFragment;
+import com.maxml.timer.ui.fragments.SettingsFragment;
+import com.maxml.timer.ui.fragments.TablesFragment;
 
 public class MainActivity extends ActionBarActivity {
 	private static final String FRAGMENT_TAG = "CURRENT_FRAGMENT";
@@ -49,13 +53,13 @@ public class MainActivity extends ActionBarActivity {
 				new DrawerMenu().setIconRes(R.drawable.ic_group).setText(
 						getString(R.string.menu_template, 1)),
 				new DrawerMenu().setIconRes(R.drawable.ic_map).setText(
-						getString(R.string.manual_activity, 2)),
+						getString(R.string.manual_activity, 10)),
 				new DrawerItem(DrawerItem.Type.DIVIDER),
 				new DrawerMenu().setIconRes(R.drawable.ic_person).setText(
-						getString(R.string.menu_template, 3)), new DrawerMenu()
-						.setIconRes(R.drawable.ic_search).setText(getString(R.string.menu_template, 4)),
-				new DrawerItem(DrawerItem.Type.DIVIDER), new DrawerMenu()
-						.setIconRes(R.drawable.ic_settings).setText(getString(R.string.menu_template, 5)));
+						getString(R.string.info_result, 3)), new DrawerMenu().setIconRes(R.drawable.ic_search)
+						.setText(getString(R.string.map, 4)), new DrawerItem(DrawerItem.Type.DIVIDER),
+				new DrawerMenu().setIconRes(R.drawable.ic_settings)
+						.setText(getString(R.string.settings, 5)));
 		drawerOptions.setLayoutManager(new LinearLayoutManager(this));
 		DrawerItemAdapter adapter = new DrawerItemAdapter(drawerItems);
 		adapter.setOnItemClickListener(new DrawerItemAdapter.OnItemClickListener() {
@@ -100,7 +104,34 @@ public class MainActivity extends ActionBarActivity {
 	}
 	
 	private void onDrawerMenuSelected(int position) {
+		switch (position) {
+			case 1:
+				Log.d("MainAc", "position = " + 1);
+				setupFragment(new MainUserPageFragment());
+			break;
+			
+			case 2:
+				Log.d("MainAc", "position = " + 2);
+			break;
+			
+			case 4:
+				Log.d("MainAc", "position = " + 3);
+				setupFragment(new TablesFragment());
+			break;
+			
+			case 5:
+				Log.d("MainAc", "position = " + 5);
+				setupFragment(new GoogleMapFragment());
+			break;
+			
+			case 7:
+				Log.d("MainAc", "position = " + 7);
+				setupFragment(new SettingsFragment());
+			break;
+			
+			default:
+			break;
+		}
 		drawerLayout.closeDrawers();
 	}
-	
 }

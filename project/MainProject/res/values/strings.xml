@@ -7,8 +7,11 @@
     <string name="user_name">User Name</string>
     <string name="drawer_open">Menu Opened</string>
     <string name="drawer_close">Menu Closed</string>
-    <string name="menu_template">Menu %d</string>
+    <string name="menu_template">My page</string>
     <string name="manual_activity">Manual Activity</string>
+    <string name="settings">Settings</string>
+    <string name="info_result">Result</string>
+    <string name="map">Map</string>
     <string name="stop">STOP</string>
     <string name="call">CALL</string>
     <string name="work">WORK</string>
