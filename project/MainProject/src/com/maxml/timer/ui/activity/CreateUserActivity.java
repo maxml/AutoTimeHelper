@@ -35,11 +35,28 @@ public class CreateUserActivity extends Activity {
 		
 		entLogin = (TextView) findViewById(R.id.textCreateLogin);
 		entPassword = (TextView) findViewById(R.id.textCreatePassword);
-		entRPassword = (TextView) findViewById(R.id.textCreateRepeatPassword);
+		entRPassword = (TextView) findViewById(R.id.textRepeatPassword);
 		entEmail = (TextView) findViewById(R.id.textCreateEmail);
+	}
+	
+	public void onClick(View v) {
+		if (!entLogin.getText().toString().equals("")
+				&& !entPassword.getText().toString().equals("")
+				&& !entEmail.getText().toString().equals("")
+				&& !entRPassword.getText().toString().equals("")) {
+			if (entPassword.getText().toString().equals(entRPassword.getText().toString())) {
+				Log.d("User", "start create ");
+				createUser();
+			} else {
+				Toast.makeText(getApplicationContext(), "Use different passwords", Toast.LENGTH_SHORT)
+						.show();
+			}
+		} else {
+			Toast.makeText(getApplicationContext(), "Something isn't correct", Toast.LENGTH_SHORT).show();
+	}
+	}
 		
-		btnCreate = (Button) findViewById(R.id.btnCreate);
-		btnCreate.setOnClickListener(new OnClickListener() {
+	/*	btnCreate.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -60,7 +77,7 @@ public class CreateUserActivity extends Activity {
 				}
 			}
 		});
-	}
+	}*/
 	
 	private void autorisation() {
 		Toast.makeText(CreateUserActivity.this, "Welcome", Toast.LENGTH_SHORT).show();

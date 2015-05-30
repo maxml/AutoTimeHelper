@@ -45,10 +45,10 @@ public class App extends Application {
 //			Slice slice = new Slice("User", line, new Date(), new Date(), "ololo" + i, SliceType.WALK);
 //			table.addSlise(slice);
 //			}
-			SliceCRUD sliceCRUD = new SliceCRUD();
+//			SliceCRUD sliceCRUD = new SliceCRUD();
 //			sliceCRUD.sync(table);
 			
-		sliceCRUD.read("User");
+//		sliceCRUD.read("User");
 	}
 
 
