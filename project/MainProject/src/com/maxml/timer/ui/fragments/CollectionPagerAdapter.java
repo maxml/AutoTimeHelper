@@ -34,9 +34,12 @@ public class CollectionPagerAdapter extends PagerAdapter {
 		View view = LayoutInflater.from(ctx).inflate(R.layout.fragment_tables, collection, false);
 		ListView lv = (ListView) view.findViewById(R.id.list);
 		List<String> lst = new ArrayList<String>();
-		lst.add("Monday");
-		lst.add("Gifg");
-		lst.add("Hope");
+		lst.add("Here");
+		lst.add("Will");
+		lst.add("Be");
+		lst.add("Our");
+		lst.add("Tables");
+		lst.add("this page can swipe ->");
 		
 		SmallAdapter sm = new SmallAdapter(collection.getContext(), lst);
 		lv.setAdapter(sm);

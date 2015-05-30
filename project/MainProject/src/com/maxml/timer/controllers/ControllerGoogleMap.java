@@ -14,10 +14,9 @@ public class ControllerGoogleMap {
 	private Point start = new Point();
 	private Date date = new Date();
 	
-	// TODO: Must be in TableController - move!
 	public void addSlise(Slice slice) {
 		if (googleMapSlice != null) {
-			Log.d("DERMO", "googleMapSlice not null");
+			Log.d("Controller", "googleMapSlice not null");
 			if (googleMapSlice.getType() == slice.getType()) {
 				// finish.setX(slice.getPath().getFinish().getX());
 				// finish.setY(slice.getPath().getFinish().getY());
@@ -30,18 +29,18 @@ public class ControllerGoogleMap {
 				// controller.addSlise(slice);
 			}
 		} else {
-			Log.d("DERMO", "googleMapSlice null");
+			Log.d("Controller", "googleMapSlice null");
 			// controller.addSlise(slice);
 			start.setX(slice.getPath().getStart().getX());
 			start.setY(slice.getPath().getStart().getY());
 			date = slice.getStartDate();
-			Log.d("DERMO", "set start: " + start.toString());
+			Log.d("Controller", "set start: " + start.toString());
 		}
 		this.googleMapSlice = slice;
 	}
 	
 	private void update(Slice slice) {
-		Log.d("DERMO", "start = " + start.toString());
+		Log.d("Controller", "start = " + start.toString());
 		if (date != null) {
 			slice.setStartDate(date);
 			slice.getPath().setStart(start);
