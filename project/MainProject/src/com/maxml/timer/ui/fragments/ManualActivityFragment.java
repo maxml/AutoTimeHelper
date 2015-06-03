@@ -1,4 +1,4 @@
-package com.maxml.timer.ui.activity;
+package com.maxml.timer.ui.fragments;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,20 +10,22 @@ import com.maxml.timer.entity.Line;
 import com.maxml.timer.entity.Point;
 import com.maxml.timer.entity.Slice;
 import com.maxml.timer.entity.Slice.SliceType;
+import com.parse.ParseUser;
+import android.support.v4.app.Fragment;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-public class ManualActivity extends Activity {
+public class ManualActivityFragment extends Fragment {
 	private TableController controller = new TableController();
 	private String SELECT_ACTION = "Select an action!";
-	Point point = new Point(1, 5);
-	Line line = new Line(point, point, "sada");
-	Slice start = new Slice("123", line, new Date(), new Date(), "ololo",
-			SliceType.CALL);
+	private Point point = new Point(1, 5);
+	private Line line = new Line(point, point, "sada");
 
 	private TextView title;
 	private ToggleButton butCall;
@@ -31,19 +33,24 @@ public class ManualActivity extends Activity {
 	private ToggleButton butRest;
 	private ToggleButton butWalk;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		return inflater.inflate(R.layout.manual_activity_fragment, container,
+				false);
+	}
+
+	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.manual_activity);
 
-		butCall = (ToggleButton) findViewById(R.id.butCall);
-		butWork = (ToggleButton) findViewById(R.id.butWork);
-		butRest = (ToggleButton) findViewById(R.id.butRest);
-		butWalk = (ToggleButton) findViewById(R.id.butWalk);
+		butCall = (ToggleButton) getActivity().findViewById(R.id.butCall);
+		butWork = (ToggleButton) getActivity().findViewById(R.id.butWork);
+		butRest = (ToggleButton) getActivity().findViewById(R.id.butRest);
+		butWalk = (ToggleButton) getActivity().findViewById(R.id.butWalk);
 
-		title = (TextView) findViewById(R.id.title);
+		title = (TextView) getActivity().findViewById(R.id.title);
 		title.setText(SELECT_ACTION);
-
+		
+	
 	}
 
 	public void onClick(View v) {
@@ -80,12 +87,10 @@ public class ManualActivity extends Activity {
 	}
 
 	public void buildButtonPendingIntent(SliceType type) {
-		Point point = new Point(1, 5);
-		Line line = new Line(point, point, "sada");
 
 		if (controller.getTable().getList().isEmpty()) {
-			Slice manualstart = new Slice("123", line, new Date(), new Date(),
-					"ololo", type);
+			Slice manualstart = new Slice(ParseUser.getCurrentUser()
+					.getObjectId(), line, new Date(), new Date(), "ololo", type);
 			// manualstart.setStartDate(new Date());
 			// manualstart.setType(type);
 			// controller.getTable().addSlise(start);
@@ -96,8 +101,8 @@ public class ManualActivity extends Activity {
 		ArrayList<Slice> slices = controller.getTable().getList();
 		slices.get(slices.size() - 1).setEndDate(new Date());
 
-		Slice manualnext = new Slice("123", line, new Date(), new Date(),
-				"ololo", type);
+		Slice manualnext = new Slice(ParseUser.getCurrentUser().getObjectId(),
+				line, new Date(), new Date(), "ololo", type);
 		// manualnext.setStartDate(new Date());
 		// manualnext.setType(type);
 		// slices.add(manualnext);
