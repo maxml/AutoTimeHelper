@@ -21,10 +21,6 @@ public class App extends Application {
 		
 		ParseInstallation.getCurrentInstallation().saveInBackground();
 
-		
-
-	
-		
 		NetworkReceiver networkReceiver = new NetworkReceiver();
 		networkReceiver.onReceive(this, new Intent());
 		
