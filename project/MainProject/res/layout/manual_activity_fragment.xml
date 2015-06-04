@@ -59,7 +59,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/button_call"
-                android:onClick="onClick"
+               
                 android:textOff="@string/call"
                 android:textOn="@string/stop" />
 
@@ -69,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@drawable/button_work"
-                android:onClick="onClick"
+                
                 android:textOff="@string/work"
                 android:textOn="@string/stop"
                 />
@@ -89,7 +89,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/button_walk"
-                android:onClick="onClick"
+               
                 android:textOff="@string/walk"
                 android:textOn="@string/stop" />
 
@@ -99,7 +99,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@drawable/button_rest"
-                android:onClick="onClick"
+               
                 android:textOff="@string/rest"
                 android:textOn="@string/stop" />
         </TableRow>

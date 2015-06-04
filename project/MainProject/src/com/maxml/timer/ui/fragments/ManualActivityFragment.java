@@ -49,41 +49,57 @@ public class ManualActivityFragment extends Fragment {
 
 		title = (TextView) getActivity().findViewById(R.id.title);
 		title.setText(SELECT_ACTION);
-		
-	
-	}
 
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.butCall:
-			title.setText(CharSequence());
-			buildButtonPendingIntent(SliceType.CALL);
-			butWork.setChecked(false);
-			butWalk.setChecked(false);
-			butRest.setChecked(false);
-			break;
-		case R.id.butWork:
-			title.setText(CharSequence());
-			buildButtonPendingIntent(SliceType.WORK);
-			butCall.setChecked(false);
-			butWalk.setChecked(false);
-			butRest.setChecked(false);
-			break;
-		case R.id.butRest:
-			title.setText(CharSequence());
-			buildButtonPendingIntent(SliceType.REST);
-			butCall.setChecked(false);
-			butWalk.setChecked(false);
-			butWork.setChecked(false);
-			break;
-		case R.id.butWalk:
-			title.setText(CharSequence());
-			buildButtonPendingIntent(SliceType.WALK);
-			butCall.setChecked(false);
-			butRest.setChecked(false);
-			butWork.setChecked(false);
-			break;
-		}
+		butCall.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				title.setText(CharSequence());
+				buildButtonPendingIntent(SliceType.CALL);
+				butWork.setChecked(false);
+				butWalk.setChecked(false);
+				butRest.setChecked(false);
+
+			}
+		});
+
+		butWork.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				title.setText(CharSequence());
+				buildButtonPendingIntent(SliceType.WORK);
+				butCall.setChecked(false);
+				butWalk.setChecked(false);
+				butRest.setChecked(false);
+
+			}
+		});
+		butRest.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				title.setText(CharSequence());
+				buildButtonPendingIntent(SliceType.REST);
+				butCall.setChecked(false);
+				butWalk.setChecked(false);
+				butWork.setChecked(false);
+
+			}
+		});
+		butWalk.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				title.setText(CharSequence());
+				buildButtonPendingIntent(SliceType.WALK);
+				butCall.setChecked(false);
+				butRest.setChecked(false);
+				butWork.setChecked(false);
+
+			}
+		});
+
 	}
 
 	public void buildButtonPendingIntent(SliceType type) {
@@ -115,3 +131,36 @@ public class ManualActivityFragment extends Fragment {
 		return currentDateandTime;
 	}
 }
+
+// public void onClick(View v) {
+// switch (v.getId()) {
+// case R.id.butCall:
+// title.setText(CharSequence());
+// buildButtonPendingIntent(SliceType.CALL);
+// butWork.setChecked(false);
+// butWalk.setChecked(false);
+// butRest.setChecked(false);
+// break;
+// case R.id.butWork:
+// title.setText(CharSequence());
+// buildButtonPendingIntent(SliceType.WORK);
+// butCall.setChecked(false);
+// butWalk.setChecked(false);
+// butRest.setChecked(false);
+// break;
+// case R.id.butRest:
+// title.setText(CharSequence());
+// buildButtonPendingIntent(SliceType.REST);
+// butCall.setChecked(false);
+// butWalk.setChecked(false);
+// butWork.setChecked(false);
+// break;
+// case R.id.butWalk:
+// title.setText(CharSequence());
+// buildButtonPendingIntent(SliceType.WALK);
+// butCall.setChecked(false);
+// butRest.setChecked(false);
+// butWork.setChecked(false);
+// break;
+// }
+// }
