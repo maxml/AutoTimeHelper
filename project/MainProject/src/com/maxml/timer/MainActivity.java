@@ -26,6 +26,7 @@ import com.maxml.timer.ui.elements.DrawerMenu;
 import com.maxml.timer.ui.fragments.GoogleMapFragment;
 import com.maxml.timer.ui.fragments.MainUserPageFragment;
 import com.maxml.timer.ui.fragments.SettingsFragment;
+import com.maxml.timer.ui.fragments.Slice_ListViev;
 import com.maxml.timer.ui.fragments.TablesFragment;
 
 public class MainActivity extends ActionBarActivity {
@@ -72,7 +73,7 @@ public class MainActivity extends ActionBarActivity {
 		drawerOptions.setAdapter(adapter);
 		drawerOptions.setHasFixedSize(true);
 		if (savedInstanceState == null)
-			setupFragment(new MainUserPageFragment());
+			setupFragment(new Slice_ListViev());
 		
 	}
 	
@@ -109,7 +110,7 @@ public class MainActivity extends ActionBarActivity {
 		switch (position) {
 			case 1:
 				Log.d("MainAc", "position = " + 1);
-				setupFragment(new MainUserPageFragment());
+				setupFragment(new Slice_ListViev());
 			break;
 			
 			case 2:

@@ -13,6 +13,7 @@ public class Slice {
 	private String lineUUID;
 	private Date updatedat;
 	private boolean isDeleted = false;
+	private int position;
 
 	public enum SliceType {
 		WORK, REST, CALL, WALK
@@ -113,6 +114,15 @@ public class Slice {
 
 	public void setDeleted(boolean isDeleted) {
 		this.isDeleted = isDeleted;
+	}
+	
+
+	public int getPosition() {
+		return position;
+	}
+
+	public void setPosition(int position) {
+		this.position = position;
 	}
 
 	@Override
