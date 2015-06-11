@@ -26,6 +26,11 @@ public class ManualActivityFragment extends Fragment {
 	private String SELECT_ACTION = "Select an action!";
 	private Point point = new Point(1, 5);
 	private Line line = new Line(point, point, "sada");
+	private SliceType type;
+	private Slice manualstart = new Slice(ParseUser.getCurrentUser()
+			.getObjectId(), line, new Date(), new Date(), "ololo", type);
+	private Slice manualEnd = new Slice(ParseUser.getCurrentUser()
+			.getObjectId(), line, new Date(), new Date(), "ololo", type);
 
 	private TextView title;
 	private ToggleButton butCall;
@@ -55,7 +60,12 @@ public class ManualActivityFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				title.setText(CharSequence());
-				buildButtonPendingIntent(SliceType.CALL);
+				try {
+					buildButtonPendingIntent(SliceType.CALL);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				butWork.setChecked(false);
 				butWalk.setChecked(false);
 				butRest.setChecked(false);
@@ -68,7 +78,12 @@ public class ManualActivityFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				title.setText(CharSequence());
-				buildButtonPendingIntent(SliceType.WORK);
+				try {
+					buildButtonPendingIntent(SliceType.WORK);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				butCall.setChecked(false);
 				butWalk.setChecked(false);
 				butRest.setChecked(false);
@@ -80,7 +95,12 @@ public class ManualActivityFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				title.setText(CharSequence());
-				buildButtonPendingIntent(SliceType.REST);
+				try {
+					buildButtonPendingIntent(SliceType.REST);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				butCall.setChecked(false);
 				butWalk.setChecked(false);
 				butWork.setChecked(false);
@@ -92,7 +112,12 @@ public class ManualActivityFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				title.setText(CharSequence());
-				buildButtonPendingIntent(SliceType.WALK);
+				try {
+					buildButtonPendingIntent(SliceType.WALK);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				butCall.setChecked(false);
 				butRest.setChecked(false);
 				butWork.setChecked(false);
@@ -102,27 +127,32 @@ public class ManualActivityFragment extends Fragment {
 
 	}
 
-	public void buildButtonPendingIntent(SliceType type) {
-
+	public void buildButtonPendingIntent(SliceType type) throws InterruptedException {
+		
 		if (controller.getTable().getList().isEmpty()) {
-			Slice manualstart = new Slice(ParseUser.getCurrentUser()
-					.getObjectId(), line, new Date(), new Date(), "ololo", type);
-			// manualstart.setStartDate(new Date());
-			// manualstart.setType(type);
-			// controller.getTable().addSlise(start);
+			
+			manualstart.setStartDate(new Date());
+			manualstart.setEndDate(new Date());
+			manualstart.setType(type);
+		 //   controller.getTable().addSlise(manualstart);
+		//	controller.addSlise(manualstart);
+		//	controller.addOneSlise(manualstart);
 
-			controller.addSlise(manualstart);
+			
+		} else {
+			ArrayList<Slice> slices = controller.getTable().getList();
+			slices.get(slices.size() - 1).setEndDate(new Date());
+			
+		//	controller.ubdateSlise(manualstart);
+			
+			manualstart.setEndDate(new Date());
+			manualEnd.setType(type);
+			// slices.add(manualnext);
+			
+		//	controller.addOneSlise(manualEnd);
+		//	controller.ubdateSlise(manualEnd);
 		}
 
-		ArrayList<Slice> slices = controller.getTable().getList();
-		slices.get(slices.size() - 1).setEndDate(new Date());
-
-		Slice manualnext = new Slice(ParseUser.getCurrentUser().getObjectId(),
-				line, new Date(), new Date(), "ololo", type);
-		// manualnext.setStartDate(new Date());
-		// manualnext.setType(type);
-		// slices.add(manualnext);
-		controller.addSlise(manualnext);
 	}
 
 	public String CharSequence() {
@@ -163,4 +193,25 @@ public class ManualActivityFragment extends Fragment {
 // butWork.setChecked(false);
 // break;
 // }
+// }
+
+// if (controller.getTable().getList().isEmpty()) {
+// Slice manualstart = new Slice(ParseUser.getCurrentUser()
+// .getObjectId(), line, new Date(), new Date(), "ololo", type);
+// // manualstart.setStartDate(new Date());
+// // manualstart.setType(type);
+// // controller.getTable().addSlise(start);
+//
+// controller.addSlise(manualstart);
+// }
+//
+// ArrayList<Slice> slices = controller.getTable().getList();
+// slices.get(slices.size() - 1).setEndDate(new Date());
+//
+// Slice manualnext = new Slice(ParseUser.getCurrentUser().getObjectId(),
+// line, new Date(), new Date(), "ololo", type);
+// // manualnext.setStartDate(new Date());
+// // manualnext.setType(type);
+// // slices.add(manualnext);
+// //controller.addSlise(manualnext);
 // }

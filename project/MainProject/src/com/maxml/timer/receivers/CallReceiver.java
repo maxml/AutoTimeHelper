@@ -38,22 +38,21 @@ public class CallReceiver extends BroadcastReceiver {
 				// phone calls, receive incoming number
 				phoneNumber = intent
 						.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
-				call.setStartDate(new Date());
 				Log.d("myLog", phoneNumber);
 			} else if (phone_state.equals(TelephonyManager.EXTRA_STATE_OFFHOOK)) {
 				// the phone is in call mode (dial / call)
 				call.setStartDate(new Date());
-				/*
-				 * Log.d("myLog", controller .getTable() .getList()
-				 * .get(controller.getTable().getList().size() - 1)
-				 * .getStartDate().toString());
-				 */
+			//	controller.addOneSlise(call);
+				
+				
 			} else if (phone_state.equals(TelephonyManager.EXTRA_STATE_IDLE)) {
 				// the phone is in standby mode. This event occurs at the
 				// end of the conversation when we already
 				// know the number and the fact that the call
 				call.setEndDate(new Date());
-				controller.addSlise(call);
+				
+				
+			//	controller.addOneSlise(call);
 
 				/*
 				 * Log.d("myLog", controller .getTable() .getList()
