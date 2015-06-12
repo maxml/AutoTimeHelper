@@ -1,12 +1,13 @@
 package com.maxml.timer.entity;
 
+import java.util.Comparator;
 import java.util.Date;
 
 public class Slice {
 	private String user;
 	private String id;
 	private Line path;
-	private Date startDate;
+	public Date startDate;
 	private Date endDate;
 	private String description;
 	private SliceType type;
@@ -14,6 +15,7 @@ public class Slice {
 	private Date updatedat;
 	private boolean isDeleted = false;
 	private int position;
+	public long sortByDate;
 
 	public enum SliceType {
 		WORK, REST, CALL, WALK
@@ -27,6 +29,7 @@ public class Slice {
 		this.endDate = endDate;
 		this.description = description;
 		this.type = type;
+		this.sortByDate = (int) startDate.getTime() ;
 	}
 
 	public Slice() {
@@ -63,6 +66,7 @@ public class Slice {
 
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
+		this.sortByDate = startDate.getTime();
 	}
 
 	public Date getEndDate() {
@@ -124,11 +128,54 @@ public class Slice {
 	public void setPosition(int position) {
 		this.position = position;
 	}
+	
+	
+
+	public  long getSortByDate() {
+		return sortByDate;
+	}
+
+	public  void setSortByDate(int sortByDate) {
+		this.sortByDate = sortByDate;
+	}
 
 	@Override
 	public String toString() {
 		return "Slice [user=" + user + ", id=" + id + ", path=" + path + ", startDate=" + startDate + ", endDate="
 				+ endDate + ", description=" + description + ", type=" + type + ", isDeleted=" + isDeleted + "]";
 	}
+	
+	public long compareTo(Slice compareSlice) {
+		 
+		long compareQuantity = ((Slice) compareSlice).getStartDate().getTime(); 
+ 
+		//ascending order
+		return this.sortByDate - compareQuantity;
+ 
+		//descending order
+		//return compareQuantity - this.quantity;
+ 
+	}	
+	
+	public static Comparator<Slice> sliceComparator 
+    = new Comparator<Slice>() {
+
+
+
+@Override
+public int compare(Slice slice1, Slice slice2) {
+
+String sliceName1 = ""+slice1.getSortByDate();
+String sliceName2 = ""+slice2.getSortByDate();
+sliceName1.toUpperCase();
+sliceName2.toUpperCase();
+//ascending order
+return sliceName2.compareTo(sliceName1);
+
+//descending order
+//return fruitName2.compareTo(fruitName1);
+}
+
+};
 
 }

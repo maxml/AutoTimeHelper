@@ -86,8 +86,8 @@ public class Slice_ListViev extends Fragment implements OnResultList {
 		
 
 		titleText = (TextView) getActivity().findViewById(R.id.titleText);
-		titleText.setText("Work: " + durationWork/60 + " m, Call: " + durationCall/60
-				+ " m, Walk: " + durationWalk/60 + " m, Rest: " + durationRest/60 + " m");
+		titleText.setText("Work: " + durationWork/60 + "s, Call: " + durationCall/60
+				+ "s, Walk: " + durationWalk/60 + "s, Rest: " + durationRest/60 + "s");
 	}
 
 }

@@ -149,6 +149,7 @@ public class SliceCRUD implements OnDbResult {
 		readCount++;
 		if (readCount == sliceList.size()) {
 			Log.i("Slice", "Slice list size: " + sliceList.size());
+			Collections.sort(sliceList, Slice.sliceComparator);
 			onresultList.OnResultSlices(sliceList);
 		}
 	}
