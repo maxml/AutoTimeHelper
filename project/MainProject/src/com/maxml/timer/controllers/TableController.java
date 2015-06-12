@@ -47,8 +47,14 @@ public class TableController implements OnResultList {
 			Log.i("Slice", "Slice UUID: " + slice.getId());
 			Log.i("Slice", "Slice updateDdat: " + slice.getUpdatedat());
 			Log.i("Slice", "Slice Description: " + slice.getDescription());
+			Log.i("SliceRead", " Read finish 3" );
 			onResult.OnResultSlices(sliceList);
 		}
+	}
+
+	public void delete(Slice slice) {
+		// TODO Auto-generated method stub
+		sliceCRUD.delete(slice.getId());
 	}
 
 }

@@ -187,6 +187,10 @@ public class LineCRUD implements OnDbResult {
 			}
 		});
 	}
+	
+	public void emputySliceList(List<Slice> sliceListNull1){
+		onresultLine.onResultRead(sliceListNull1);
+	}
 
 	@Override
 	public void onResult(ParseObject parseLine, Slice slice) {

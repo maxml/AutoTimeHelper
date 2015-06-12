@@ -3,6 +3,7 @@ package com.maxml.timer.api;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -60,6 +61,7 @@ public class SliceCRUD implements OnDbResult {
 		parseSlice.put("UUID", "" + UUID.randomUUID());
 		parseSlice.put("Line", parseLine);
 		parseSlice.put("LineUUID", "" + parseLine.getString("UUID"));
+		parseSlice.put("deleted", false);
 		if (NetworkStatus.isConnected)
 			parseSlice.saveInBackground(
 
@@ -96,58 +98,72 @@ public class SliceCRUD implements OnDbResult {
 			public void done(List<ParseObject> parseSliceList, ParseException e) {
 				if (parseSliceList == null) {
 					Log.i("Slice", "The getFirst request failed.");
+
 				} else {
-					// try {
-					Log.i("SliceRead", "Starting read");
-					List<Slice> sliceList = new ArrayList<Slice>();
-					for (ParseObject parseSlice : parseSliceList) {
-						Log.i("SliceRead",
-								"Slice: " + parseSlice.getString("UUID"));
 
-						// parseSlice.fetch();
-						Slice slice = new Slice();
-						slice.setUser(parseSlice.getString("User"));
-						slice.setStartDate(parseSlice.getDate("startDate"));
-						slice.setEndDate(parseSlice.getDate("endDate"));
-						slice.setDescription(parseSlice
-								.getString("Description"));
-						slice.setUpdatedat(parseSlice.getUpdatedAt());
-
-						String sliceType = parseSlice.getString("SliceType");
-						if (sliceType.equals("WALK"))
-							slice.setType(SliceType.WALK);
-						if (sliceType.equals("CALL"))
-							slice.setType(SliceType.CALL);
-						if (sliceType.equals("REST"))
-							slice.setType(SliceType.REST);
-						if (sliceType.equals("WORK"))
-							slice.setType(SliceType.WORK);
-
-						slice.setId(parseSlice.getString("UUID"));
-						slice.setLineUUID(parseSlice.getString("LineUUID"));
-						sliceList.add(slice);
+					if (parseSliceList.size() == 0) {
+						List<Slice> sliceListNull1 = new ArrayList<Slice>();
 						LineCRUD lineCRUD = new LineCRUD();
+						sliceListNull1.add(new Slice("", null, new Date(),
+								new Date(), "you list is emputy",
+								SliceType.REST));
 						lineCRUD.onresultLine = sliceCRUD;
-						lineCRUD.read(parseSlice.getString("LineUUID"),
-								sliceList);
+						lineCRUD.emputySliceList(sliceListNull1);
+					} else {
+
+						Log.i("SliceRead", "Starting read");
+						List<Slice> sliceList = new ArrayList<Slice>();
+						for (ParseObject parseSlice : parseSliceList) {
+							Log.i("SliceRead",
+									"Slice: " + parseSlice.getString("UUID"));
+
+							Slice slice = new Slice();
+							slice.setUser(parseSlice.getString("User"));
+							slice.setStartDate(parseSlice.getDate("startDate"));
+							slice.setEndDate(parseSlice.getDate("endDate"));
+							slice.setDescription(parseSlice
+									.getString("Description"));
+							slice.setUpdatedat(parseSlice.getUpdatedAt());
+
+							String sliceType = parseSlice
+									.getString("SliceType");
+							if (sliceType.equals("WALK"))
+								slice.setType(SliceType.WALK);
+							if (sliceType.equals("CALL"))
+								slice.setType(SliceType.CALL);
+							if (sliceType.equals("REST"))
+								slice.setType(SliceType.REST);
+							if (sliceType.equals("WORK"))
+								slice.setType(SliceType.WORK);
+							slice.setId(parseSlice.getString("UUID"));
+							slice.setLineUUID(parseSlice.getString("LineUUID"));
+
+							if (!parseSlice.getBoolean("deleted")) {
+								sliceList.add(slice);
+								LineCRUD lineCRUD = new LineCRUD();
+								lineCRUD.onresultLine = sliceCRUD;
+								lineCRUD.read(parseSlice.getString("LineUUID"),
+										sliceList);
+							} 
+
+							Log.i("SliceRead", "" + parseSliceList.size());
+
+						}
 
 					}
-					Log.i("SliceRead", "" + parseSliceList.size());
-
-			
 				}
-
 			}
 		});
 
 	}
 
-
 	@Override
 	public void onResultRead(List<Slice> sliceList) {
 		// TODO Auto-generated method stub
 		readCount++;
+		Log.i("SliceRead", " Read finish");
 		if (readCount == sliceList.size()) {
+			Log.i("SliceRead", " Read finish 2");
 			Log.i("Slice", "Slice list size: " + sliceList.size());
 			Collections.sort(sliceList, Slice.sliceComparator);
 			onresultList.OnResultSlices(sliceList);

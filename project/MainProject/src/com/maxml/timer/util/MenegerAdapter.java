@@ -54,7 +54,7 @@ public class MenegerAdapter extends ArrayAdapter {
 			if (essence.getType().equals(Slice.SliceType.WALK))
 				holder.layout.setBackgroundColor(Color.rgb(100, 100, 250));
 			if (essence.getType().equals(Slice.SliceType.CALL))
-				holder.layout.setBackgroundColor(Color.rgb(50, 150, 250));
+				holder.layout.setBackgroundColor(Color.rgb(210, 225, 90));
 			if (essence.getType().equals(Slice.SliceType.REST))
 				holder.layout.setBackgroundColor(Color.rgb(50, 250, 100));
 			if (essence.getType().equals(Slice.SliceType.WORK))
@@ -80,7 +80,7 @@ public class MenegerAdapter extends ArrayAdapter {
 		if (essence.getType().equals(Slice.SliceType.WALK))
 			holder.layout.setBackgroundColor(Color.rgb(100, 100, 250));
 		if (essence.getType().equals(Slice.SliceType.CALL))
-			holder.layout.setBackgroundColor(Color.rgb(50, 150, 250));
+			holder.layout.setBackgroundColor(Color.rgb(210, 225, 90));
 		if (essence.getType().equals(Slice.SliceType.REST))
 			holder.layout.setBackgroundColor(Color.rgb(50, 250, 100));
 		if (essence.getType().equals(Slice.SliceType.WORK))

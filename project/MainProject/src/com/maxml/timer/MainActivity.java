@@ -28,6 +28,7 @@ import com.maxml.timer.ui.fragments.MainUserPageFragment;
 import com.maxml.timer.ui.fragments.SettingsFragment;
 import com.maxml.timer.ui.fragments.Slice_ListViev;
 import com.maxml.timer.ui.fragments.TablesFragment;
+import com.maxml.timer.ui.fragments.Update_item_listView;
 
 public class MainActivity extends ActionBarActivity {
 	private static final String FRAGMENT_TAG = "CURRENT_FRAGMENT";
@@ -97,7 +98,7 @@ public class MainActivity extends ActionBarActivity {
 		drawerToggle.onConfigurationChanged(newConfig);
 	}
 	
-	private void setupFragment(Fragment fragment) {
+	public void setupFragment(Fragment fragment) {
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		Fragment currentFragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG);
 		if (currentFragment == null || !currentFragment.getClass().equals(fragment.getClass())) {
@@ -138,4 +139,7 @@ public class MainActivity extends ActionBarActivity {
 		}
 		drawerLayout.closeDrawers();
 	}
+
+	
+
 }
