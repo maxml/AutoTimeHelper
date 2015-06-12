@@ -11,9 +11,10 @@ import com.maxml.timer.entity.Point;
 import com.maxml.timer.entity.Slice;
 import com.maxml.timer.entity.Slice.SliceType;
 import com.parse.ParseUser;
-import android.support.v4.app.Fragment;
 
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,7 +29,7 @@ public class ManualActivityFragment extends Fragment {
 	private Line line = new Line(point, point, "sada");
 	private SliceType type;
 	private Slice manualstart = new Slice(ParseUser.getCurrentUser()
-			.getObjectId(), line, new Date(), new Date(), "ololo", type);
+			.getObjectId(), line, new Date(), new Date(), "", type);
 	private Slice manualEnd = new Slice(ParseUser.getCurrentUser()
 			.getObjectId(), line, new Date(), new Date(), "ololo", type);
 
@@ -37,6 +38,8 @@ public class ManualActivityFragment extends Fragment {
 	private ToggleButton butWork;
 	private ToggleButton butRest;
 	private ToggleButton butWalk;
+	
+	private boolean btnIsPress = false;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -61,7 +64,8 @@ public class ManualActivityFragment extends Fragment {
 			public void onClick(View v) {
 				title.setText(CharSequence());
 				try {
-					buildButtonPendingIntent(SliceType.CALL);
+					Log.d("my_Log","btn CALL press");
+					buildButtonPendingIntentCopy(SliceType.CALL);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -79,7 +83,7 @@ public class ManualActivityFragment extends Fragment {
 			public void onClick(View v) {
 				title.setText(CharSequence());
 				try {
-					buildButtonPendingIntent(SliceType.WORK);
+					buildButtonPendingIntentCopy(SliceType.WORK);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -96,7 +100,7 @@ public class ManualActivityFragment extends Fragment {
 			public void onClick(View v) {
 				title.setText(CharSequence());
 				try {
-					buildButtonPendingIntent(SliceType.REST);
+					buildButtonPendingIntentCopy(SliceType.REST);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -113,7 +117,7 @@ public class ManualActivityFragment extends Fragment {
 			public void onClick(View v) {
 				title.setText(CharSequence());
 				try {
-					buildButtonPendingIntent(SliceType.WALK);
+					buildButtonPendingIntentCopy(SliceType.WALK);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -125,6 +129,26 @@ public class ManualActivityFragment extends Fragment {
 			}
 		});
 
+	}
+	
+	public void buildButtonPendingIntentCopy(SliceType type) throws InterruptedException{
+	if (!btnIsPress) {
+		Log.d("my_Log","metod start work first");
+		manualstart.setStartDate(new Date());
+			manualstart.setType(type);
+			manualstart.setDescription(""+manualstart.getType());
+			btnIsPress = true;
+			
+		} else {
+			Log.d("my_Log","metod start work second");
+			manualstart.setEndDate(new Date());
+			ArrayList sliceList = new ArrayList();
+			sliceList.add(manualstart);
+			controller.addSlise(manualstart);
+			btnIsPress = false;
+			if(!manualstart.getType().equals(type))
+				buildButtonPendingIntentCopy(type);
+		}
 	}
 
 	public void buildButtonPendingIntent(SliceType type) throws InterruptedException {

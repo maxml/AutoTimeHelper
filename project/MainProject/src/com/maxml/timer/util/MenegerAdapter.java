@@ -63,10 +63,9 @@ public class MenegerAdapter extends ArrayAdapter {
 
 		} else
 			holder = (ViewHolder) convertView.getTag();
-		long duration = essence.getStartDate().getTime()
-				- essence.getEndDate().getTime();
-		holder.duration.setText("  Duration: " + duration);
-		Date dateStart = essence.getStartDate();
+		long duration = essence.getEndDate().getTime()
+				- essence.getStartDate().getTime();
+		holder.duration.setText("  Duration: " + duration/6000);
 
 		Date currentDate = new Date();
 		SimpleDateFormat dateFormat = null;
@@ -76,8 +75,7 @@ public class MenegerAdapter extends ArrayAdapter {
 				+ dateFormat.format(essence.getStartDate()));
 		holder.endDate.setText("  End date: "
 				+ dateFormat.format(essence.getEndDate()));
-		holder.description.setText(essence.getType().toString() + " "
-				+ essence.getDescription());
+		holder.description.setText( essence.getDescription());
 		holder.layout = convertView.findViewById(R.id.layout);
 		if (essence.getType().equals(Slice.SliceType.WALK))
 			holder.layout.setBackgroundColor(Color.rgb(100, 100, 250));

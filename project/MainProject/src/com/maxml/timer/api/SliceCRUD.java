@@ -1,6 +1,8 @@
 package com.maxml.timer.api;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -132,12 +134,7 @@ public class SliceCRUD implements OnDbResult {
 					}
 					Log.i("SliceRead", "" + parseSliceList.size());
 
-					// } catch (ParseException e1) {
-					// Log.i("Slice", "error "+e1);
-					// // TODO Auto-generated catch block
-					// e1.printStackTrace();
-					// }
-					// onresultSlice.onResult(object);
+			
 				}
 
 			}
@@ -145,7 +142,6 @@ public class SliceCRUD implements OnDbResult {
 
 	}
 
-	Table table = new Table();
 
 	@Override
 	public void onResultRead(List<Slice> sliceList) {
@@ -153,7 +149,6 @@ public class SliceCRUD implements OnDbResult {
 		readCount++;
 		if (readCount == sliceList.size()) {
 			Log.i("Slice", "Slice list size: " + sliceList.size());
-
 			onresultList.OnResultSlices(sliceList);
 		}
 	}

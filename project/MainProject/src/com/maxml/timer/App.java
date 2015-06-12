@@ -30,7 +30,7 @@ public class App extends Application {
 		
 	//	TableController table = new TableController();
 		
-	//	table.getListSlice(ParseUser.getCurrentUser().getObjectId());
+	//	table.getListSlice();
 
 	}
 	

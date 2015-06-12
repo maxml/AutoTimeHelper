@@ -8,14 +8,16 @@ import com.maxml.timer.api.SliceCRUD;
 import com.maxml.timer.api.interfaces.OnResultList;
 import com.maxml.timer.entity.Slice;
 import com.maxml.timer.entity.Table;
+import com.parse.ParseUser;
 
 public class TableController implements OnResultList {
+	public OnResultList onResult;
 	private Table table = new Table();
 	private SliceCRUD sliceCRUD = new SliceCRUD();
 
-	public void getListSlice(String userID) {
+	public void getListSlice() {
 		sliceCRUD.onresultList = this;
-		sliceCRUD.read(userID);
+		sliceCRUD.read(ParseUser.getCurrentUser().getObjectId());
 
 	}
 
@@ -40,11 +42,12 @@ public class TableController implements OnResultList {
 	}
 
 	@Override
-	public void OnResultSlices(List<Slice> listSlice) {
-		for (Slice slice : listSlice) {
+	public void OnResultSlices(List<Slice> sliceList) {
+		for (Slice slice : sliceList) {
 			Log.i("Slice", "Slice UUID: " + slice.getId());
 			Log.i("Slice", "Slice updateDdat: " + slice.getUpdatedat());
 			Log.i("Slice", "Slice Description: " + slice.getDescription());
+			onResult.OnResultSlices(sliceList);
 		}
 	}
 
