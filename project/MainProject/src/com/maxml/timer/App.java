@@ -1,20 +1,14 @@
 package com.maxml.timer;
 
 import android.app.Application;
-import android.content.Intent;
 
-import com.maxml.timer.controllers.TableController;
-import com.maxml.timer.receivers.NetworkReceiver;
-import com.maxml.timer.util.NetworkStatus;
 import com.parse.Parse;
 import com.parse.ParseInstallation;
-import com.parse.ParseUser;
 
 public class App extends Application {
 	
 	@Override
 	public void onCreate() {
-		super.onCreate();
 		
 		Parse.enableLocalDatastore(this);
 		
