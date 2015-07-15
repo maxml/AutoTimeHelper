@@ -53,7 +53,6 @@ public class TableController implements OnResultList {
 	}
 
 	public void delete(Slice slice) {
-		// TODO Auto-generated method stub
 		sliceCRUD.delete(slice.getId());
 	}
 

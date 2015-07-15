@@ -9,11 +9,12 @@ import android.util.Log;
 
 public class NetworkReceiver extends BroadcastReceiver {
 	private static final String LOG_TAG = "NetworkReceiver";
-
+	
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		Log.v(LOG_TAG, "Receieved notification about network status");
-		NetworkStatus.isNetworkAvailable(context);
+		NetworkStatus netStat = new NetworkStatus();
+		netStat.isNetworkOnline(context);
 	}
-
+	
 }

@@ -29,11 +29,11 @@ public class LoginActivity extends Activity {
 		setContentView(R.layout.login_activity);
 		Log.d("User", "start login activity");
 		// comment this if u want to see login and registration pages!
-		ParseUser currentUser = ParseUser.getCurrentUser();
-		if (currentUser != null) {
-			Log.d("User", "user = " + currentUser.getUsername());
-			loginOk();
-		}
+		// ParseUser currentUser = ParseUser.getCurrentUser();
+		// if (currentUser != null) {
+		// Log.d("User", "user = " + currentUser.getUsername());
+		// loginOk();
+		// }
 		entLogin = (TextView) findViewById(R.id.textLogin);
 		entPassword = (TextView) findViewById(R.id.textPassword);
 		

@@ -1,6 +1,5 @@
 package com.maxml.timer.api;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -24,11 +23,11 @@ import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 
 public class SliceCRUD implements OnDbResult {
-
+	
 	public OnResultList onresultList;
 	private int readCount = 0;
 	SliceCRUD sliceCRUD = this;
-
+	
 	public void create(final Slice slice) {
 		try {
 			Log.i("Slice", " Slice starting create");
@@ -38,13 +37,13 @@ public class SliceCRUD implements OnDbResult {
 		} catch (Exception e) {
 			Log.i("Slice", " Slice dont create " + e);
 		}
-
+		
 	}
-
+	
 	@Override
 	// linieCRUD - read or create
 	public void onResult(final ParseObject parseLine, Slice slice) {
-
+		
 		final ParseObject parseSlice = new ParseObject("Slice");
 		parseSlice.put("User", slice.getUser());
 		parseSlice.put("startDate", slice.getStartDate());
@@ -64,32 +63,28 @@ public class SliceCRUD implements OnDbResult {
 		parseSlice.put("deleted", false);
 		if (NetworkStatus.isConnected)
 			parseSlice.saveInBackground(
-
+			
 			new SaveCallback() {
 				@Override
 				public void done(ParseException e) {
 					parseSlice.pinInBackground();
-					Log.i("Slice",
-							"Slice is created id: " + parseSlice.getObjectId()
-									+ " Line UUID: "
-									+ parseLine.getString("UUID"));
+					Log.i("Slice", "Slice is created id: " + parseSlice.getObjectId() + " Line UUID: "
+							+ parseLine.getString("UUID"));
 				}
 			}
-
+			
 			);
 		if (!NetworkStatus.isConnected) {
 			parseSlice.saveInBackground();
 			parseSlice.pinInBackground();
-			Log.i("Slice",
-					"Slice is created offline, id:"
-							+ parseSlice.getString("UUID"));
+			Log.i("Slice", "Slice is created offline, id:" + parseSlice.getString("UUID"));
 			// parseSlice.saveEventually();
 		}
-
+		
 	}
-
+	
 	public void read(final String user) {
-
+		
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("Slice");
 		if (!NetworkStatus.isConnected)
 			query.fromLocalDatastore();
@@ -98,35 +93,31 @@ public class SliceCRUD implements OnDbResult {
 			public void done(List<ParseObject> parseSliceList, ParseException e) {
 				if (parseSliceList == null) {
 					Log.i("Slice", "The getFirst request failed.");
-
+					
 				} else {
-
+					
 					if (parseSliceList.size() == 0) {
 						List<Slice> sliceListNull1 = new ArrayList<Slice>();
 						LineCRUD lineCRUD = new LineCRUD();
-						sliceListNull1.add(new Slice("", null, new Date(),
-								new Date(), "you list is emputy",
+						sliceListNull1.add(new Slice("", null, new Date(), new Date(), "your list is emputy",
 								SliceType.REST));
 						lineCRUD.onresultLine = sliceCRUD;
 						lineCRUD.emputySliceList(sliceListNull1);
 					} else {
-
+						
 						Log.i("SliceRead", "Starting read");
 						List<Slice> sliceList = new ArrayList<Slice>();
 						for (ParseObject parseSlice : parseSliceList) {
-							Log.i("SliceRead",
-									"Slice: " + parseSlice.getString("UUID"));
-
+							Log.i("SliceRead", "Slice: " + parseSlice.getString("UUID"));
+							
 							Slice slice = new Slice();
 							slice.setUser(parseSlice.getString("User"));
 							slice.setStartDate(parseSlice.getDate("startDate"));
 							slice.setEndDate(parseSlice.getDate("endDate"));
-							slice.setDescription(parseSlice
-									.getString("Description"));
+							slice.setDescription(parseSlice.getString("Description"));
 							slice.setUpdatedat(parseSlice.getUpdatedAt());
-
-							String sliceType = parseSlice
-									.getString("SliceType");
+							
+							String sliceType = parseSlice.getString("SliceType");
 							if (sliceType.equals("WALK"))
 								slice.setType(SliceType.WALK);
 							if (sliceType.equals("CALL"))
@@ -137,26 +128,26 @@ public class SliceCRUD implements OnDbResult {
 								slice.setType(SliceType.WORK);
 							slice.setId(parseSlice.getString("UUID"));
 							slice.setLineUUID(parseSlice.getString("LineUUID"));
-
+							
 							if (!parseSlice.getBoolean("deleted")) {
 								sliceList.add(slice);
 								LineCRUD lineCRUD = new LineCRUD();
 								lineCRUD.onresultLine = sliceCRUD;
-								lineCRUD.read(parseSlice.getString("LineUUID"),
-										sliceList);
-							} 
-
+								lineCRUD.read(parseSlice.getString("LineUUID"), sliceList);
+							}
+							
 							Log.i("SliceRead", "" + parseSliceList.size());
-
+							Log.d("SliceCRUD_Special", "slice: " + parseSlice.getString("Description"));
+							
 						}
-
+						
 					}
 				}
 			}
 		});
-
+		
 	}
-
+	
 	@Override
 	public void onResultRead(List<Slice> sliceList) {
 		// TODO Auto-generated method stub
@@ -169,21 +160,21 @@ public class SliceCRUD implements OnDbResult {
 			onresultList.OnResultSlices(sliceList);
 		}
 	}
-
+	
 	public void update(final Slice slice) throws InterruptedException {
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("Slice");
 		if (!NetworkStatus.isConnected)
 			query.fromLocalDatastore();
-
+		
 		query.whereEqualTo("UUID", "" + slice.getId());
 		query.getFirstInBackground(new GetCallback<ParseObject>() {
 			public void done(ParseObject parseSlice, ParseException e) {
 				if (parseSlice == null) {
 					Log.i("SliceUpdate", "Update: The getFirst request failed.");
 				} else {
-
+					
 					try {
-
+						
 						parseSlice.fetch();
 						Log.i("SliceUpdate", "Starting update");
 						parseSlice.put("User", slice.getUser());
@@ -199,8 +190,7 @@ public class SliceCRUD implements OnDbResult {
 						if (slice.getType().equals(SliceType.REST))
 							parseSlice.put("SliceType", "REST");
 						parseSlice.put("UUID", "" + UUID.randomUUID());
-						parseSlice
-								.put("LineUUID", "" + slice.getPath().getId());
+						parseSlice.put("LineUUID", "" + slice.getPath().getId());
 						LineCRUD lineCRUD = new LineCRUD();
 						lineCRUD.update(slice);
 						PointCRUD pointCRUD = new PointCRUD();
@@ -208,31 +198,29 @@ public class SliceCRUD implements OnDbResult {
 						pointCRUD.update(slice.getPath().getFinish());
 						parseSlice.saveInBackground();
 						parseSlice.pinInBackground();
-						Log.i("Slice",
-								"Slice is update, UUID:"
-										+ parseSlice.getString("UUID"));
+						Log.i("Slice", "Slice is update, UUID:" + parseSlice.getString("UUID"));
 						parseSlice.saveEventually();
-
+						
 					} catch (ParseException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-
+					
 				}
 			}
 		});
 	}
-
+	
 	public void delete(final String id) {
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("Slice");
 		if (!NetworkStatus.isConnected)
 			query.fromLocalDatastore();
-
+		
 		query.whereEqualTo("UUID", "" + id);
 		query.getFirstInBackground(new GetCallback<ParseObject>() {
 			public void done(ParseObject parseSlice, ParseException e) {
 				if (parseSlice == null) {
-
+					
 					Log.i("Slice", "Deleted: The getFirst request failed.");
 				} else {
 					Log.i("Slice", "Slice " + id + " is deleted");
@@ -243,10 +231,10 @@ public class SliceCRUD implements OnDbResult {
 			}
 		});
 	}
-
+	
 	public void sync(Table table) {
 		Log.i("Slice", "" + NetworkStatus.isConnected);
-
+		
 		Log.i("Slice", "Slice synchronized start");
 		for (final Slice slice : table.getList()) {
 			if (slice.getId() == null) {
@@ -255,15 +243,14 @@ public class SliceCRUD implements OnDbResult {
 				ParseQuery<ParseObject> query = ParseQuery.getQuery("Slice");
 				if (!NetworkStatus.isConnected)
 					query.fromLocalDatastore();
-
+				
 				query.whereEqualTo("UUID", slice.getId());
 				query.getFirstInBackground(new GetCallback<ParseObject>() {
 					public void done(ParseObject parseSlice, ParseException e) {
 						if (parseSlice == null) {
 							Log.i("Slice", "Sync: The getFirst request failed.");
 						} else {
-							if (!slice.getUpdatedat().equals(
-									parseSlice.getUpdatedAt()))// ----------
+							if (!slice.getUpdatedat().equals(parseSlice.getUpdatedAt()))// ----------
 								try {
 									update(slice);
 								} catch (InterruptedException e1) {
@@ -276,20 +263,19 @@ public class SliceCRUD implements OnDbResult {
 				});
 			}
 		}
-
+		
 	}
-
+	
 	@Override
 	public void onResult(Point point, List<Slice> sliceList) {
 		// TODO Auto-generated method stub
-
+		
 	}
-
+	
 	@Override
-	public void onResult(ParseObject parsePoint, ParseObject parsePointFinish,
-			Slice slice) {
+	public void onResult(ParseObject parsePoint, ParseObject parsePointFinish, Slice slice) {
 		// TODO Auto-generated method stub
-
+		
 	}
-
+	
 }

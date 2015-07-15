@@ -3,7 +3,6 @@ package com.maxml.timer;
 import java.util.Arrays;
 import java.util.List;
 
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,16 +18,14 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.maxml.timer.ui.fragments.ManualActivityFragment;
 import com.maxml.timer.ui.elements.DrawerItem;
 import com.maxml.timer.ui.elements.DrawerItemAdapter;
 import com.maxml.timer.ui.elements.DrawerMenu;
 import com.maxml.timer.ui.fragments.GoogleMapFragment;
-import com.maxml.timer.ui.fragments.MainUserPageFragment;
+import com.maxml.timer.ui.fragments.ManualActivityFragment;
 import com.maxml.timer.ui.fragments.SettingsFragment;
 import com.maxml.timer.ui.fragments.Slice_ListViev;
 import com.maxml.timer.ui.fragments.TablesFragment;
-import com.maxml.timer.ui.fragments.Update_item_listView;
 
 public class MainActivity extends ActionBarActivity {
 	private static final String FRAGMENT_TAG = "CURRENT_FRAGMENT";
