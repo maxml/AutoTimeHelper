@@ -1,25 +1,13 @@
 package com.maxml.timer.ui.fragments;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import com.maxml.timer.MainActivity;
-import com.maxml.timer.R;
-import com.maxml.timer.api.interfaces.OnResultList;
-import com.maxml.timer.controllers.TableController;
-import com.maxml.timer.entity.Line;
-import com.maxml.timer.entity.Point;
-import com.maxml.timer.entity.Slice;
-import com.maxml.timer.entity.Slice.SliceType;
-import com.maxml.timer.util.MenegerAdapter;
-
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar.LayoutParams;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -28,11 +16,21 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.maxml.timer.MainActivity;
+import com.maxml.timer.R;
+import com.maxml.timer.api.interfaces.OnResultList;
+import com.maxml.timer.controllers.TableController;
+import com.maxml.timer.entity.Slice;
+import com.maxml.timer.entity.Slice.SliceType;
+import com.maxml.timer.util.MenegerAdapter;
 
 public class Slice_ListViev extends Fragment implements OnResultList {
 	
@@ -60,13 +58,18 @@ public class Slice_ListViev extends Fragment implements OnResultList {
 	
 	@Override
 	public void OnResultSlices(final List<Slice> listSlice) {
-		// TODO Auto-generated method stub
 		
 		progressBar.setVisibility(ProgressBar.INVISIBLE);
 		
 		final ListView listMain = (ListView) getActivity().findViewById(R.id.listView);
 		
 		final MenegerAdapter adapter = new MenegerAdapter(getActivity(), R.layout.item_list, listSlice);
+		
+		LayoutInflater layoutInflater = (LayoutInflater) getActivity().getApplication()
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		final View popupView = layoutInflater.inflate(R.layout.popup, null);
+		final PopupWindow popupWindow = new PopupWindow(popupView, LayoutParams.WRAP_CONTENT,
+				LayoutParams.WRAP_CONTENT);
 		
 		for (int j = 0; j < listSlice.size(); j++) {
 			Log.d("Slice_List", "slice " + j + " - " + listSlice.get(j).getDescription());
@@ -104,49 +107,52 @@ public class Slice_ListViev extends Fragment implements OnResultList {
 			public void onItemClick(AdapterView<?> parent, View view, final int position, final long id) {
 				Log.d(LOG_TAG, "itemClick: position = " + position + ", id = " + id);
 				
-				PopupMenu popup = new PopupMenu(getActivity().getApplication(), listMain);
-				// Inflating the Popup using xml file
-				popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
+				if (popupWindow.isOutsideTouchable()) {
+					popupWindow.dismiss();
+				}
 				
-				// registering popup with OnMenuItemClickListener
-				popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-					public boolean onMenuItemClick(MenuItem item) {
-						
-						switch ("" + item.getTitle()) {
-							case "Update description":
-								MainActivity mainActivity = new MainActivity();
-								setupFragment(new Update_item_listView());
-								slice = listSlice.get(position);
-							
-							break;
-							case "Delete":
-								TableController controler = new TableController();
-								controler.delete(listSlice.get(position));
-								listSlice.remove(position);
-								Toast.makeText(
-										getActivity(),
-										"You time is DELETED   description :"
-												+ listSlice.get(position).getDescription(), Toast.LENGTH_SHORT).show();
-								OnResultSlices(listSlice);
-							break;
-						}
-						
-						return true;
+				if (popupWindow.isShowing()) {
+					popupWindow.dismiss();
+				}
+				
+				Button btnDelete = (Button) popupView.findViewById(R.id.btndelete);
+				Button btnUpgrade = (Button) popupView.findViewById(R.id.btnupgrade);
+				Button btnDismiss = (Button) popupView.findViewById(R.id.btnDismiss);
+				
+				btnDismiss.setOnClickListener(new Button.OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						popupWindow.dismiss();
 					}
 				});
 				
-				popup.show();// showing popup menu
+				btnDelete.setOnClickListener(new Button.OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						TableController controler = new TableController();
+						controler.delete(listSlice.get(position));
+						listSlice.remove(position);
+						Toast.makeText(getActivity(),
+								"You time is DELETED   description :" + listSlice.get(position).getDescription(),
+								Toast.LENGTH_SHORT).show();
+						OnResultSlices(listSlice);
+						popupWindow.dismiss();
+					}
+				});
 				
-			}
-		});
-		
-		listMain.setOnItemSelectedListener(new OnItemSelectedListener() {
-			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				Log.d(LOG_TAG, "itemSelect: position = " + position + ", id = " + id);
-			}
-			
-			public void onNothingSelected(AdapterView<?> parent) {
-				Log.d(LOG_TAG, "itemSelect: nothing");
+				btnUpgrade.setOnClickListener(new Button.OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						MainActivity mainActivity = new MainActivity();
+						setupFragment(new Update_item_listView());
+						slice = listSlice.get(position);
+						popupWindow.dismiss();
+					}
+				});
+				popupWindow.showAsDropDown(view);
 			}
 		});
 		
