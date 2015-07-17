@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:background="@android:color/darker_gray"
+        android:background="@android:color/holo_green_dark"
         android:gravity="center"
         android:orientation="vertical" >
 
@@ -23,7 +23,7 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="choose an action"
+                android:text="Choose An Action"
                 android:textSize="25sp" />
 
             <ImageView

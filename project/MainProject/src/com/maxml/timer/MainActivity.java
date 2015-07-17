@@ -3,6 +3,9 @@ package com.maxml.timer;
 import java.util.Arrays;
 import java.util.List;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -32,6 +35,18 @@ public class MainActivity extends ActionBarActivity {
 	
 	private DrawerLayout drawerLayout;
 	private ActionBarDrawerToggle drawerToggle;
+	
+	@Override
+	public void onBackPressed() {
+		new AlertDialog.Builder(this).setTitle("Really Exit?")
+				.setMessage("Are you sure you want to exit?").setNegativeButton(android.R.string.no, null)
+				.setPositiveButton(android.R.string.yes, new OnClickListener() {
+					
+					public void onClick(DialogInterface arg0, int arg1) {
+						MainActivity.super.onBackPressed();
+					}
+				}).create().show();
+	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -136,7 +151,5 @@ public class MainActivity extends ActionBarActivity {
 		}
 		drawerLayout.closeDrawers();
 	}
-
 	
-
 }

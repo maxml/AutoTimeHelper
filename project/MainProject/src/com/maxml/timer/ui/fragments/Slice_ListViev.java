@@ -11,7 +11,10 @@ import android.support.v7.app.ActionBar.LayoutParams;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -40,8 +43,19 @@ public class Slice_ListViev extends Fragment implements OnResultList {
 	public static Slice slice;
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.slice_listview, container, false);
 		
+		View view = inflater.inflate(R.layout.slice_listview, container, false);
+		
+		view.setOnTouchListener(new View.OnTouchListener() {
+			public boolean onTouch(View v, MotionEvent event) {
+				
+				if (event.getAction() == MotionEvent.ACTION_MOVE) {
+					// do something
+				}
+				return true;
+			}
+		});
+		return inflater.inflate(R.layout.slice_listview, container, false);
 	}
 	
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -106,10 +120,6 @@ public class Slice_ListViev extends Fragment implements OnResultList {
 		listMain.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, final int position, final long id) {
 				Log.d(LOG_TAG, "itemClick: position = " + position + ", id = " + id);
-				
-				if (popupWindow.isOutsideTouchable()) {
-					popupWindow.dismiss();
-				}
 				
 				if (popupWindow.isShowing()) {
 					popupWindow.dismiss();
