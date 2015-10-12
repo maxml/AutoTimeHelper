@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="orange">#FFFFFF</color>
+    <color name="primary">#222222</color>
+    <color name="primary_dark">#000000</color>
+    <color name="gren">#008000</color>
+    <color name="blue">#0000FF</color>
+    <color name="grey">#808080</color>
+    <color name="yellow">#FFF380</color>
+    <color name="red">#FF0D0D</color>
+    <color name="backGroundGrey">#E0E0E0</color>
+    <color name="org">#FFFFFF</color>
+   
+
+</resources>
