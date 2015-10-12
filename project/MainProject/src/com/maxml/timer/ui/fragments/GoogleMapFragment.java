@@ -41,6 +41,7 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback,
 	private ControllerGoogleMap controllerGoogleMap = new ControllerGoogleMap();
 	
 	public List<Object> list = new ArrayList<Object>();
+	public List<Line> listLine = new ArrayList<Line>();
 	public static List<Slice> listSlice = new ArrayList<Slice>();
 	
 	private Coordinates point;
@@ -70,7 +71,7 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback,
 		mapFragment.getMapAsync(this);
 		
 	}
-
+	
 	@Override
 	public void onMapReady(GoogleMap map) {
 		Log.d(LOG, "start method onMapReady");
@@ -116,6 +117,7 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback,
 		Point finish = new Point(point.getLat(), point.getLong());
 		Point start = new Point(pointRadius.getLat(), pointRadius.getLong());
 		Line line = new Line(start, finish, ParseUser.getCurrentUser().getObjectId());
+		listLine.add(line);
 		Slice slice = new Slice(ParseUser.getCurrentUser().getObjectId(), line, starttime, finishtime,
 				"walk time", SliceType.WALK);
 		controllerGoogleMap.addSlise(slice);

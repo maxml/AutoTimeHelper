@@ -1,4 +1,4 @@
-package com.maxml.timer.receivers;
+package com.maxml.timer.entity.receivers;
 
 import java.util.Date;
 
