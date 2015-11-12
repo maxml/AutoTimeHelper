@@ -18,41 +18,39 @@ import com.maxml.timer.ui.activity.ForgotPasswordActivity;
 import com.parse.ParseUser;
 
 public class MainUserPageFragment extends Fragment {
-	
-	private BootstrapButton btnChangePicture;
-	private BootstrapButton btnChangeName;
-	private BootstrapButton btnChangeEmail;
-	private BootstrapButton btnChangeOk;
-	
-	private EditText etSetName;
-	private EditText etSetEmail;
-	private UserAPI us = new UserAPI();
-	
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.activity_main_user_page, container, false);
-		
-	}
-	
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		
-		btnChangeEmail = (BootstrapButton) getActivity().findViewById(R.id.btnEmail);
-		btnChangeName = buttonsAutorisation(R.id.btnName);
-		btnChangePicture = buttonsAutorisation(R.id.btnChangePicture);
-		btnChangeOk = buttonsAutorisation(R.id.btnOk);
-		btnChangeOk.setBootstrapButtonEnabled(true);
-		
-		etSetName = editTextAutorisation(R.id.tvName);
-		etSetEmail = editTextAutorisation(R.id.tvEmail);
-		etSetEmail.setText(us.getCurrentUser().getEmail());
-		etSetName.setText(us.getCurrentUser().getUsername());
-		etSetName.setEnabled(false);
-		etSetEmail.setEnabled(false);
-		
-		
-		
+
+    private BootstrapButton btnChangePicture;
+    private BootstrapButton btnChangeName;
+    private BootstrapButton btnChangeEmail;
+    private BootstrapButton btnChangeOk;
+
+    private EditText etSetName;
+    private EditText etSetEmail;
+    private UserAPI us = new UserAPI();
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.activity_main_user_page, container, false);
+
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        btnChangeEmail = (BootstrapButton) getActivity().findViewById(R.id.btnEmail);
+        btnChangeName = buttonsAutorisation(R.id.btnName);
+        btnChangePicture = buttonsAutorisation(R.id.btnChangePicture);
+        btnChangeOk = buttonsAutorisation(R.id.btnOk);
+
+        etSetName = editTextAutorisation(R.id.tvName);
+        etSetEmail = editTextAutorisation(R.id.tvEmail);
+        etSetEmail.setText(us.getCurrentUser().getEmail());
+        etSetName.setText(us.getCurrentUser().getUsername());
+        etSetName.setEnabled(false);
+        etSetEmail.setEnabled(false);
+
+
 //		btnChangeEmail.setOnClickListener(new OnClickListener() {
 //			
 //			@Override
@@ -90,44 +88,42 @@ public class MainUserPageFragment extends Fragment {
 //			}
 //		});
 //		
-	}
-	
-	public void onClick(View v) {
-		switch (v.getId()) {
-			case R.id.btnEmail:
-				//
-				etSetEmail.setEnabled(true);
-				btnChangeOk.setVisibility(View.VISIBLE);
-			break;
-			case R.id.btnName:
-			//
-				etSetName.setEnabled(true);
-				btnChangeOk.setBootstrapButtonEnabled(true);
-			break;
-			
-			case R.id.btnChangePicture:
-				//
-				break;
-				
-			case R.id.btnOk:
-				//
-				etSetEmail.setEnabled(false);
-				btnChangeOk.setBootstrapButtonEnabled(false);
-				us.updateEmail(etSetEmail.getText().toString(), ParseUser.getCurrentUser()
-						.getObjectId());
-				us.updateName(etSetName.getText().toString(), ParseUser.getCurrentUser().getObjectId());
-			break;
-		}
-	}
-	
-	private EditText editTextAutorisation(int idintification) {
-		EditText et = (EditText) getActivity().findViewById(idintification);
-		return et;
-	}
-	
-	private BootstrapButton buttonsAutorisation(int idintification) {
-		BootstrapButton btn = (BootstrapButton) getActivity().findViewById(idintification);
-		return btn;
-	}
-	
+    }
+
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btnEmail:
+                //
+                etSetEmail.setEnabled(true);
+                btnChangeOk.setVisibility(View.VISIBLE);
+                break;
+            case R.id.btnName:
+                //
+                etSetName.setEnabled(true);
+                break;
+
+            case R.id.btnChangePicture:
+                //
+                break;
+
+            case R.id.btnOk:
+                //
+                etSetEmail.setEnabled(false);
+                us.updateEmail(etSetEmail.getText().toString(), ParseUser.getCurrentUser()
+                        .getObjectId());
+                us.updateName(etSetName.getText().toString(), ParseUser.getCurrentUser().getObjectId());
+                break;
+        }
+    }
+
+    private EditText editTextAutorisation(int idintification) {
+        EditText et = (EditText) getActivity().findViewById(idintification);
+        return et;
+    }
+
+    private BootstrapButton buttonsAutorisation(int idintification) {
+        BootstrapButton btn = (BootstrapButton) getActivity().findViewById(idintification);
+        return btn;
+    }
+
 }

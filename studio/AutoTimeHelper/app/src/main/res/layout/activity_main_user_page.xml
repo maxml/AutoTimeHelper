@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/backGroundGrey"
     android:gravity="top|center"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <ImageView
         android:id="@+id/imageView1"
@@ -22,7 +22,7 @@
         android:ems="10"
         android:gravity="center"
         android:hint="name"
-        bootstrapbutton:be_roundedCorners="true" >
+        bootstrapbutton:roundedCorners="true">
 
         <requestFocus />
     </com.beardedhen.androidbootstrap.BootstrapEditText>
@@ -36,7 +36,7 @@
         android:gravity="center"
         android:hint="email"
         android:inputType="textPersonName"
-        bootstrapbutton:be_roundedCorners="true" />
+        bootstrapbutton:roundedCorners="true" />
 
     <com.beardedhen.androidbootstrap.BootstrapButton
         android:id="@+id/btnChangePicture"
@@ -45,10 +45,9 @@
         android:layout_margin="10dp"
         android:enabled="true"
         android:text="Change Picture"
-        bootstrapbutton:bb_roundedCorners="true"
-        bootstrapbutton:bb_size="default"
-        bootstrapbutton:bb_type="primary" >
-    </com.beardedhen.androidbootstrap.BootstrapButton>
+        bootstrapbutton:bootstrapBrand="primary"
+        bootstrapbutton:bootstrapSize="lg"
+        bootstrapbutton:roundedCorners="true" />
 
     <com.beardedhen.androidbootstrap.BootstrapButton
         android:id="@+id/btnName"
@@ -57,10 +56,9 @@
         android:layout_margin="10dp"
         android:enabled="true"
         android:text="Change Name"
-        bootstrapbutton:bb_roundedCorners="true"
-        bootstrapbutton:bb_size="default"
-        bootstrapbutton:bb_type="primary" >
-    </com.beardedhen.androidbootstrap.BootstrapButton>
+        bootstrapbutton:bootstrapBrand="primary"
+        bootstrapbutton:bootstrapSize="lg"
+        bootstrapbutton:roundedCorners="true" />
 
     <com.beardedhen.androidbootstrap.BootstrapButton
         android:id="@+id/btnEmail"
@@ -69,10 +67,9 @@
         android:layout_margin="10dp"
         android:enabled="true"
         android:text="Change Email"
-        bootstrapbutton:bb_roundedCorners="true"
-        bootstrapbutton:bb_size="default"
-        bootstrapbutton:bb_type="primary" >
-    </com.beardedhen.androidbootstrap.BootstrapButton>
+        bootstrapbutton:bootstrapBrand="primary"
+        bootstrapbutton:bootstrapSize="lg"
+        bootstrapbutton:roundedCorners="true" />
 
     <com.beardedhen.androidbootstrap.BootstrapButton
         android:id="@+id/btnOk"
@@ -81,9 +78,8 @@
         android:layout_margin="10dp"
         android:enabled="false"
         android:text="Change Email"
-        bootstrapbutton:bb_roundedCorners="true"
-        bootstrapbutton:bb_size="default"
-        bootstrapbutton:bb_type="primary" >
-    </com.beardedhen.androidbootstrap.BootstrapButton>
+        bootstrapbutton:bootstrapBrand="primary"
+        bootstrapbutton:bootstrapSize="lg"
+        bootstrapbutton:roundedCorners="true" />
 
 </LinearLayout>

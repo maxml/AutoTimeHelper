@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/backGroundGrey"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <ImageView
         android:id="@+id/imageView1"
@@ -23,7 +23,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/imageView1"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <com.beardedhen.androidbootstrap.BootstrapEditText
             android:id="@+id/textLogin"
@@ -34,7 +34,7 @@
             android:gravity="center"
             android:hint="login"
             android:inputType="textPersonName"
-            bootstrapbutton:be_roundedCorners="true" />
+            bootstrapbutton:roundedCorners="true" />
 
         <com.beardedhen.androidbootstrap.BootstrapEditText
             android:id="@+id/textPassword"
@@ -45,7 +45,7 @@
             android:gravity="center"
             android:hint="password"
             android:inputType="textPassword"
-            bootstrapbutton:be_roundedCorners="true" />
+            bootstrapbutton:roundedCorners="true" />
 
         <com.beardedhen.androidbootstrap.BootstrapButton
             android:id="@+id/btnLogin"
@@ -54,13 +54,13 @@
             android:layout_margin="10dp"
             android:onClick="onClick"
             android:text="Login"
-            bootstrapbutton:bb_roundedCorners="true"
-            bootstrapbutton:bb_size="default"
-            bootstrapbutton:bb_type="primary" />
+            bootstrapbutton:bootstrapBrand="primary"
+            bootstrapbutton:bootstrapSize="lg"
+            bootstrapbutton:roundedCorners="true" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content">
 
             <com.beardedhen.androidbootstrap.BootstrapButton
                 android:id="@+id/btnSignIn"
@@ -70,9 +70,9 @@
                 android:layout_weight="1"
                 android:onClick="onClick"
                 android:text="Sign in"
-                bootstrapbutton:bb_roundedCorners="true"
-                bootstrapbutton:bb_size="default"
-                bootstrapbutton:bb_type="primary" />
+                bootstrapbutton:bootstrapBrand="primary"
+                bootstrapbutton:bootstrapSize="lg"
+                bootstrapbutton:roundedCorners="true" />
 
             <com.beardedhen.androidbootstrap.BootstrapButton
                 android:id="@+id/btnForgotPass"
@@ -82,9 +82,9 @@
                 android:layout_weight="1"
                 android:onClick="onClick"
                 android:text="Forgot pass"
-                bootstrapbutton:bb_roundedCorners="true"
-                bootstrapbutton:bb_size="default"
-                bootstrapbutton:bb_type="primary" />
+                bootstrapbutton:bootstrapBrand="primary"
+                bootstrapbutton:bootstrapSize="lg"
+                bootstrapbutton:roundedCorners="true" />
         </LinearLayout>
     </LinearLayout>
 
