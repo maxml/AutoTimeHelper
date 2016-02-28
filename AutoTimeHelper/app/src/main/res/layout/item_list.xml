@@ -1,56 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layout"
+<android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/itemRootLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:ems="10"
-    android:orientation="horizontal" >
+    android:orientation="horizontal">
 
-    <LinearLayout
+    <android.support.v7.widget.LinearLayoutCompat
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/size_8"
+        android:orientation="vertical">
 
-
-
-        <TextView
+        <android.support.v7.widget.AppCompatTextView
             android:id="@+id/textViewStartDate"
+            style="@style/MyObject.Content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:text="textViewStartDate"
-            android:textSize="14dp" />
+            android:text="@string/textViewStartDate" />
 
-        <TextView
+        <android.support.v7.widget.AppCompatTextView
             android:id="@+id/textViewEndDate"
+            style="@style/MyObject.Content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:text="textViewEndDate"
-            android:textSize="14dp" />
+            android:text="@string/textViewEndDate" />
 
-        <TextView
+        <android.support.v7.widget.AppCompatTextView
             android:id="@+id/duration"
+            style="@style/MyObject.Content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:paddingRight="0dp"
-            android:text="durationt" />
-    </LinearLayout>
+            android:text="@string/duration" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="vertical" >
+    </android.support.v7.widget.LinearLayoutCompat>
 
-        <TextView
-            android:id="@+id/description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="30dp"
-            android:paddingTop="10dp"
-            android:text="Description"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-    </LinearLayout>
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/description"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/description"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-</LinearLayout>
+</android.support.v7.widget.LinearLayoutCompat>

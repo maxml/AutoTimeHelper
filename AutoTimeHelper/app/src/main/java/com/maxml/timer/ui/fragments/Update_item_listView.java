@@ -1,41 +1,19 @@
 package com.maxml.timer.ui.fragments;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import com.beardedhen.androidbootstrap.BootstrapButton;
-import com.maxml.timer.MainActivity;
-import com.maxml.timer.R;
-import com.maxml.timer.api.interfaces.OnResultList;
-import com.maxml.timer.controllers.TableController;
-import com.maxml.timer.entity.Line;
-import com.maxml.timer.entity.Point;
-import com.maxml.timer.entity.Slice;
-import com.maxml.timer.entity.Slice.SliceType;
-import com.maxml.timer.util.MenegerAdapter;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ListView;
-import android.widget.PopupMenu;
-import android.widget.ProgressBar;
+import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ToggleButton;
+
+import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.maxml.timer.R;
+import com.maxml.timer.controllers.TableController;
+
+import java.util.Date;
 
 public class Update_item_listView extends Fragment {
 

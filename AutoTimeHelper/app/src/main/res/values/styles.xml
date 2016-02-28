@@ -18,4 +18,26 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
+    <!-- my own styles -->
+
+    <style name="MyObject">
+        <item name="android:layout_margin">@dimen/size_4</item>
+    </style>
+
+    <style name="MyObject.Header">
+        <item name="android:layout_gravity">center</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/primary_text</item>
+        <item name="android:textSize">@dimen/bigTextSize</item>
+    </style>
+
+    <style name="MyObject.Content">
+        <item name="android:textSize">@dimen/textSize</item>
+        <item name="android:paddingLeft">@dimen/size_8</item>
+    </style>
+
+    <style name="MyLayout">
+        <item name="android:background">@drawable/my_layout_shape_colored</item>
+    </style>
+
 </resources>

@@ -1,8 +1,5 @@
 package com.maxml.timer.ui.fragments;
 
-import java.text.SimpleDateFormat;
-import java.util.List;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,7 +7,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar.LayoutParams;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,10 +14,8 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -33,7 +27,10 @@ import com.maxml.timer.api.interfaces.OnResultList;
 import com.maxml.timer.controllers.TableController;
 import com.maxml.timer.entity.Slice;
 import com.maxml.timer.entity.Slice.SliceType;
-import com.maxml.timer.util.MenegerAdapter;
+import com.maxml.timer.util.ManagerAdapter;
+
+import java.text.SimpleDateFormat;
+import java.util.List;
 
 public class Slice_ListViev extends Fragment implements OnResultList {
 	
@@ -77,7 +74,7 @@ public class Slice_ListViev extends Fragment implements OnResultList {
 		
 		final ListView listMain = (ListView) getActivity().findViewById(R.id.listView);
 		
-		final MenegerAdapter adapter = new MenegerAdapter(getActivity(), R.layout.item_list, listSlice);
+		final ManagerAdapter adapter = new ManagerAdapter(getActivity(), R.layout.item_list, listSlice);
 		
 		LayoutInflater layoutInflater = (LayoutInflater) getActivity().getApplication()
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

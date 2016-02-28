@@ -17,5 +17,9 @@
     <string name="work">WORK</string>
     <string name="walk">WALK</string>
     <string name="rest">REST</string>
+    <string name="textViewStartDate">textViewStartDate</string>
+    <string name="textViewEndDate">textViewEndDate</string>
+    <string name="duration">duration</string>
+    <string name="description">Description</string>
 
 </resources>

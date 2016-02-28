@@ -1,22 +1,19 @@
 package com.maxml.timer.ui.fragments;
 
-import java.util.ArrayList;
-import java.util.Date;
-
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import com.maxml.timer.R;
 import com.maxml.timer.entity.Line;
 import com.maxml.timer.entity.Point;
 import com.maxml.timer.entity.Slice;
 import com.maxml.timer.entity.Slice.SliceType;
-import com.maxml.timer.util.MenegerAdapter;
+
+import java.util.ArrayList;
+import java.util.Date;
 
 public class Listview_fragment extends Fragment{
 
