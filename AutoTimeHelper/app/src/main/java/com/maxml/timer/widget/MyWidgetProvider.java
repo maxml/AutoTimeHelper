@@ -1,10 +1,5 @@
 package com.maxml.timer.widget;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-
-import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -19,83 +14,90 @@ import com.maxml.timer.entity.Slice;
 import com.maxml.timer.entity.Slice.SliceType;
 import com.maxml.timer.util.TimerConstatnts;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+
 public class MyWidgetProvider extends AppWidgetProvider {
 
-	private static TableController controller = new TableController();
+    private static TableController controller;
+//    private static TableController controller = new TableController();
 
-	@Override
-	public void onUpdate(Context context, AppWidgetManager appWidgetManager,
-			int[] appWidgetIds) {
+    @Override
+    public void onUpdate(Context context,
+                         AppWidgetManager appWidgetManager,
+                         int[] appWidgetIds) {
 
-		// initializing widget layout
-		RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
-				R.layout.widget_layout);
-		controller = new TableController();
+        // initializing widget layout
+        RemoteViews remoteViews = new RemoteViews(
+                context.getPackageName(),
+                R.layout.widget_layout);
 
-		// register for button event
+        controller = new TableController();
 
-		remoteViews.setOnClickPendingIntent(R.id.butCall,
-				buildButtonPendingIntent(context, SliceType.CALL));
+        // register for button event
 
-		remoteViews.setOnClickPendingIntent(R.id.butRest,
-				buildButtonPendingIntent(context, SliceType.REST));
+        remoteViews.setOnClickPendingIntent(R.id.butCall,
+                buildButtonPendingIntent(context, SliceType.CALL));
 
-		remoteViews.setOnClickPendingIntent(R.id.butWalk,
-				buildButtonPendingIntent(context, SliceType.WALK));
+        remoteViews.setOnClickPendingIntent(R.id.butRest,
+                buildButtonPendingIntent(context, SliceType.REST));
 
-		remoteViews.setOnClickPendingIntent(R.id.butWork,
-				buildButtonPendingIntent(context, SliceType.WORK));
+        remoteViews.setOnClickPendingIntent(R.id.butWalk,
+                buildButtonPendingIntent(context, SliceType.WALK));
 
-		// updating view with initial data
+        remoteViews.setOnClickPendingIntent(R.id.butWork,
+                buildButtonPendingIntent(context, SliceType.WORK));
 
-		remoteViews.setTextViewText(R.id.title, getTitle());
+        // updating view with initial data
 
-		// request for widget update
-		pushWidgetUpdate(context, remoteViews);
-	}
+        remoteViews.setTextViewText(R.id.title, getTitle());
 
-	public static PendingIntent buildButtonPendingIntent(Context context,
-			SliceType type) {
+        // request for widget update
+        pushWidgetUpdate(context, remoteViews);
+    }
 
-		if (controller.getTable().getList().isEmpty()) {
-			Slice start = new Slice();
-			start.setStartDate(new Date());
-			start.setType(type);
+    public static PendingIntent buildButtonPendingIntent(Context context,
+                                                         SliceType type) {
 
-			controller.getTable().addSlise(start);
-			return updateWidget(context);
-		}
+        if (controller.getTable().getList().isEmpty()) {
+            Slice start = new Slice();
+            start.setStartDate(new Date());
+            start.setType(type);
 
-		ArrayList<Slice> slices = controller.getTable().getList();
-		slices.get(slices.size() - 1).setEndDate(new Date());
+            controller.getTable().addSlise(start);
+            return updateWidget(context);
+        }
 
-		Slice widgetstart = new Slice();
-		widgetstart.setStartDate(new Date());
-		widgetstart.setType(type);
+        ArrayList<Slice> slices = controller.getTable().getList();
+        slices.get(slices.size() - 1).setEndDate(new Date());
 
-		slices.add(widgetstart);
-		return updateWidget(context);
-	}
+        Slice widgetstart = new Slice();
+        widgetstart.setStartDate(new Date());
+        widgetstart.setType(type);
 
-	private static PendingIntent updateWidget(Context context) {
-		Intent intent = new Intent();
-		intent.setAction(TimerConstatnts.WIDGET_UPDATE_ACTION);
-		return PendingIntent.getBroadcast(context, 0, intent,
-				PendingIntent.FLAG_UPDATE_CURRENT);
-	}
+        slices.add(widgetstart);
+        return updateWidget(context);
+    }
 
-	@SuppressLint("SimpleDateFormat")
-	private static CharSequence getTitle() {
+    private static PendingIntent updateWidget(Context context) {
+        Intent intent = new Intent();
+        intent.setAction(TimerConstatnts.WIDGET_UPDATE_ACTION);
+        return PendingIntent.getBroadcast(context, 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+    }
 
-		SimpleDateFormat sdf = new SimpleDateFormat("kk:mm:ss");
-		String currentDateandTime = sdf.format(new Date());
-		return currentDateandTime;
-	}
+    private static CharSequence getTitle() {
 
-	public static void pushWidgetUpdate(Context context, RemoteViews remoteViews) {
-		ComponentName myWidget = new ComponentName(context,
-				MyWidgetProvider.class);
-		AppWidgetManager manager = AppWidgetManager.getInstance(context);
-		manager.updateAppWidget(myWidget, remoteViews);
-	}
+        SimpleDateFormat sdf = new SimpleDateFormat("kk:mm:ss", Locale.getDefault());
+        return sdf.format(new Date());
+    }
+
+    public static void pushWidgetUpdate(Context context, RemoteViews remoteViews) {
+        ComponentName myWidget = new ComponentName(context,
+                MyWidgetProvider.class);
+        AppWidgetManager manager = AppWidgetManager.getInstance(context);
+        manager.updateAppWidget(myWidget, remoteViews);
+    }
 }
