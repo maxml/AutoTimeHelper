@@ -1,21 +1,15 @@
 package com.maxml.timer.ui.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.maxml.timer.R;
 import com.maxml.timer.api.UserAPI;
-import com.maxml.timer.ui.activity.CreateUserActivity;
-import com.maxml.timer.ui.activity.ForgotPasswordActivity;
-import com.parse.ParseUser;
 
 public class MainUserPageFragment extends Fragment {
 
@@ -109,9 +103,9 @@ public class MainUserPageFragment extends Fragment {
             case R.id.btnOk:
                 //
                 etSetEmail.setEnabled(false);
-                us.updateEmail(etSetEmail.getText().toString(), ParseUser.getCurrentUser()
-                        .getObjectId());
-                us.updateName(etSetName.getText().toString(), ParseUser.getCurrentUser().getObjectId());
+//                us.updateEmail(etSetEmail.getText().toString(), ParseUser.getCurrentUser()
+//                        .getObjectId());
+//                us.updateName(etSetName.getText().toString(), ParseUser.getCurrentUser().getObjectId());
                 break;
         }
     }

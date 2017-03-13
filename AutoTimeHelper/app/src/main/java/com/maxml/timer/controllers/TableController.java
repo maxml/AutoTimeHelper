@@ -1,7 +1,5 @@
 package com.maxml.timer.controllers;
 
-import java.util.List;
-
 import android.util.Log;
 
 import com.maxml.timer.api.SliceCRUD;
@@ -9,7 +7,8 @@ import com.maxml.timer.api.interfaces.OnResultList;
 import com.maxml.timer.entity.Slice;
 import com.maxml.timer.entity.Table;
 import com.maxml.timer.ui.fragments.GoogleMapFragment;
-import com.parse.ParseUser;
+
+import java.util.List;
 
 public class TableController implements OnResultList {
 	public OnResultList onResult;
@@ -19,8 +18,7 @@ public class TableController implements OnResultList {
 	
 	public void getListSlice() {
 		sliceCRUD.onresultList = this;
-		sliceCRUD.read(ParseUser.getCurrentUser().getObjectId());
-		
+//		sliceCRUD.read(ParseUser.getCurrentUser().getObjectId());
 	}
 	
 	public void addSlise(Slice slice) {

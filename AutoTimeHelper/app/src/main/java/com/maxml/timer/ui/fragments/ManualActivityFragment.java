@@ -1,19 +1,7 @@
 package com.maxml.timer.ui.fragments;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-
-import com.maxml.timer.R;
-import com.maxml.timer.controllers.TableController;
-import com.maxml.timer.entity.Line;
-import com.maxml.timer.entity.Point;
-import com.maxml.timer.entity.Slice;
-import com.maxml.timer.entity.Slice.SliceType;
-import com.parse.ParseUser;
-
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,16 +10,27 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.maxml.timer.R;
+import com.maxml.timer.controllers.TableController;
+import com.maxml.timer.entity.Line;
+import com.maxml.timer.entity.Point;
+import com.maxml.timer.entity.Slice;
+import com.maxml.timer.entity.Slice.SliceType;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
 public class ManualActivityFragment extends Fragment {
 	private TableController controller = new TableController();
 	private String SELECT_ACTION = "Select an action!";
 	private Point point = new Point(1, 5);
 	private Line line = new Line(point, point, "sada");
 	private SliceType type;
-	private Slice manualstart = new Slice(ParseUser.getCurrentUser()
-			.getObjectId(), line, new Date(), new Date(), "", type);
-	private Slice manualEnd = new Slice(ParseUser.getCurrentUser()
-			.getObjectId(), line, new Date(), new Date(), "ololo", type);
+//	private Slice manualstart = new Slice(ParseUser.getCurrentUser()
+//			.getObjectId(), line, new Date(), new Date(), "", type);
+//	private Slice manualEnd = new Slice(ParseUser.getCurrentUser()
+//			.getObjectId(), line, new Date(), new Date(), "ololo", type);
 
 	private TextView title;
 	private ToggleButton butCall;
@@ -134,20 +133,20 @@ public class ManualActivityFragment extends Fragment {
 	public void buildButtonPendingIntentCopy(SliceType type) throws InterruptedException{
 	if (!btnIsPress) {
 		Log.d("my_Log","metod start work first");
-		manualstart.setStartDate(new Date());
-			manualstart.setType(type);
-			manualstart.setDescription(""+manualstart.getType());
-			btnIsPress = true;
-			
-		} else {
-			Log.d("my_Log","metod start work second");
-			manualstart.setEndDate(new Date());
-			ArrayList sliceList = new ArrayList();
-			sliceList.add(manualstart);
-			controller.addSlise(manualstart);
-			btnIsPress = false;
-			if(!manualstart.getType().equals(type))
-				buildButtonPendingIntentCopy(type);
+//		manualstart.setStartDate(new Date());
+//			manualstart.setType(type);
+//			manualstart.setDescription(""+manualstart.getType());
+//			btnIsPress = true;
+//
+//		} else {
+//			Log.d("my_Log","metod start work second");
+//			manualstart.setEndDate(new Date());
+//			ArrayList sliceList = new ArrayList();
+//			sliceList.add(manualstart);
+//			controller.addSlise(manualstart);
+//			btnIsPress = false;
+//			if(!manualstart.getType().equals(type))
+//				buildButtonPendingIntentCopy(type);
 		}
 	}
 
@@ -155,10 +154,10 @@ public class ManualActivityFragment extends Fragment {
 		
 		if (controller.getTable().getList().isEmpty()) {
 			
-			manualstart.setStartDate(new Date());
-			manualstart.setEndDate(new Date());
-			manualstart.setType(type);
-		 //   controller.getTable().addSlise(manualstart);
+//			manualstart.setStartDate(new Date());
+//			manualstart.setEndDate(new Date());
+//			manualstart.setType(type);
+//		 //   controller.getTable().addSlise(manualstart);
 		//	controller.addSlise(manualstart);
 		//	controller.addOneSlise(manualstart);
 
@@ -169,9 +168,9 @@ public class ManualActivityFragment extends Fragment {
 			
 		//	controller.ubdateSlise(manualstart);
 			
-			manualstart.setEndDate(new Date());
-			manualEnd.setType(type);
-			// slices.add(manualnext);
+//			manualstart.setEndDate(new Date());
+//			manualEnd.setType(type);
+//			// slices.add(manualnext);
 			
 		//	controller.addOneSlise(manualEnd);
 		//	controller.ubdateSlise(manualEnd);

@@ -1,15 +1,8 @@
 package com.maxml.timer.ui.fragments;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,10 +18,14 @@ import com.maxml.timer.entity.Coordinates;
 import com.maxml.timer.entity.Line;
 import com.maxml.timer.entity.Point;
 import com.maxml.timer.entity.Slice;
-import com.maxml.timer.entity.Slice.SliceType;
 import com.maxml.timer.googlemap.GPSTracker;
 import com.maxml.timer.googlemap.GPSTracker.OnLocationChangedListener;
-import com.parse.ParseUser;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+//import com.parse.ParseUser;
 
 public class GoogleMapFragment extends Fragment implements OnMapReadyCallback,
 		OnLocationChangedListener {
@@ -86,7 +83,7 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback,
 		point.setLong(location.getLongitude());
 		
 		// Log.d(LOG, "current time = " + c);
-		Log.d(LOG, "user " + ParseUser.getCurrentUser().getObjectId());
+//		Log.d(LOG, "user " + ParseUser.getCurrentUser().getObjectId());
 		if (pointRadius != null) {
 			Log.d(LOG, "point radius != null");
 			Log.d(LOG, "distance:" + Coordinates.getDistanceInMeter(pointRadius, point));
@@ -116,18 +113,18 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback,
 		Date finishtime = c.getTime();
 		Point finish = new Point(point.getLat(), point.getLong());
 		Point start = new Point(pointRadius.getLat(), pointRadius.getLong());
-		Line line = new Line(start, finish, ParseUser.getCurrentUser().getObjectId());
-		listLine.add(line);
-		Slice slice = new Slice(ParseUser.getCurrentUser().getObjectId(), line, starttime, finishtime,
-				"walk time", SliceType.WALK);
-		controllerGoogleMap.addSlise(slice);
-		Log.d(LOG, "start = " + start.toString());
-		Log.d(LOG, "finish = " + finish.toString());
-		Log.d(LOG, "slice = " + slice.toString());
-		Log.d(LOG, " ---------------------------------------- ");
-		listSlice.add(slice);
-		starttime = finishtime;
-		list.add(lineAdd);
+//		Line line = new Line(start, finish, ParseUser.getCurrentUser().getObjectId());
+//		listLine.add(line);
+//		Slice slice = new Slice(ParseUser.getCurrentUser().getObjectId(), line, starttime, finishtime,
+//				"walk time", SliceType.WALK);
+//		controllerGoogleMap.addSlise(slice);
+//		Log.d(LOG, "start = " + start.toString());
+//		Log.d(LOG, "finish = " + finish.toString());
+//		Log.d(LOG, "slice = " + slice.toString());
+//		Log.d(LOG, " ---------------------------------------- ");
+//		listSlice.add(slice);
+//		starttime = finishtime;
+//		list.add(lineAdd);
 	}
 	
 	private void outTheRadius() {
@@ -138,15 +135,15 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback,
 		
 		Point finish = new Point(point.getLat(), point.getLong());
 		Point start = new Point(pointRadius.getLat(), pointRadius.getLong());
-		Line line = new Line(start, finish, ParseUser.getCurrentUser().getObjectId());
-		Slice slice = new Slice(ParseUser.getCurrentUser().getObjectId(), line, starttime, finishtime,
-				"rest time", SliceType.REST);
-		controllerGoogleMap.addSlise(slice);
-		Log.d(LOG, "start = " + start.toString());
-		Log.d(LOG, "finish = " + finish.toString());
-		Log.d(LOG, "slice = " + slice.toString());
-		Log.d(LOG, " ---------------------------------------- ");
-		listSlice.add(slice);
-		starttime = finishtime;
+//		Line line = new Line(start, finish, ParseUser.getCurrentUser().getObjectId());
+//		Slice slice = new Slice(ParseUser.getCurrentUser().getObjectId(), line, starttime, finishtime,
+//				"rest time", SliceType.REST);
+//		controllerGoogleMap.addSlise(slice);
+//		Log.d(LOG, "start = " + start.toString());
+//		Log.d(LOG, "finish = " + finish.toString());
+//		Log.d(LOG, "slice = " + slice.toString());
+//		Log.d(LOG, " ---------------------------------------- ");
+//		listSlice.add(slice);
+//		starttime = finishtime;
 	}
 }

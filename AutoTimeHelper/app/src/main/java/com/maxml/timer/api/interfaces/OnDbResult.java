@@ -1,17 +1,15 @@
 package com.maxml.timer.api.interfaces;
 
-import java.util.List;
-
-import com.maxml.timer.entity.Line;
 import com.maxml.timer.entity.Point;
 import com.maxml.timer.entity.Slice;
-import com.parse.ParseObject;
+
+import java.util.List;
 
 public interface OnDbResult {
 
-	void onResult(ParseObject parseLine, Slice slice);
-
-	void onResult(ParseObject parsePoint, ParseObject parsePointFinish, Slice slice);
+//	void onResult(ParseObject parseLine, Slice slice);
+//
+//	void onResult(ParseObject parsePoint, ParseObject parsePointFinish, Slice slice);
 
 	void onResultRead(List<Slice> sliceList);
 
