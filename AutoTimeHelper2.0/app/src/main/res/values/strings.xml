@@ -1,6 +1,0 @@
-<resources>
-    <string name="app_name">Layout</string>
-    <string name="enter_name">Enter your name</string>
-    <string name="enter_age">Enter your age</string>
-    <string name="add_to_base_button">Add to base</string>
-</resources>
