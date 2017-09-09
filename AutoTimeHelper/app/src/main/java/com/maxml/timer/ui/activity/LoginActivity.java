@@ -13,12 +13,18 @@ import android.widget.Toast;
 import com.maxml.timer.MainActivity;
 import com.maxml.timer.R;
 import com.maxml.timer.api.UserAPI;
+import com.maxml.timer.entity.User;
+import com.maxml.timer.util.Constants;
+import com.maxml.timer.util.SharedPrefUtils;
 
 /**
  * Created by Lantar on 22.04.2015.
  */
 public class LoginActivity extends Activity {
     protected static final int CONNECTION_OK = 1;
+
+    private Handler handler;
+    private UserAPI userAPI;
     private TextView entLogin;
     private TextView entPassword;
 
@@ -27,15 +33,30 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
         Log.d("User", "start login activity");
-        // comment this if u want to see login and registration pages!
-//		ParseUser currentUser = ParseUser.getCurrentUser();
-//		if (currentUser != null) {
-//			Log.d("User", "user = " + currentUser.getUsername());
-        loginOk();
-//		}
+
+        initHandler();
+        userAPI = new UserAPI(this, handler);
+
         entLogin = (TextView) findViewById(R.id.textLogin);
         entPassword = (TextView) findViewById(R.id.textPassword);
 
+    }
+
+    private void initHandler() {
+        handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case Constants.RESULT_OK:
+                        // user already sign in
+                        loginOk();
+                        break;
+                    case Constants.RESULT_FALSE:
+                        // user not sign yet, start auth
+                        break;
+                }
+            }
+        };
     }
 
     public void onClick(View v) {
@@ -56,19 +77,22 @@ public class LoginActivity extends Activity {
     }
 
     public void login() {
-        UserAPI c = new UserAPI();
-        c.login(entLogin.getText().toString(), entPassword.getText().toString());
-        c.handler = new Handler() {
+        handler = new Handler() {
+            @Override
             public void handleMessage(Message msg) {
-                if (msg.what == CONNECTION_OK) {
-                    loginOk();
-                } else {
-                    incorrect();
+                switch (msg.what) {
+                    case Constants.RESULT_OK:
+                        // sign in successful
+                        loginOk();
+                        break;
+                    case Constants.RESULT_FALSE:
+                        // sign in error
+                        incorrect();
+                        break;
                 }
             }
-
-            ;
         };
+        userAPI.login(entLogin.getText().toString(), entPassword.getText().toString());
     }
 
     private void incorrect() {
@@ -77,10 +101,24 @@ public class LoginActivity extends Activity {
     }
 
     public void loginOk() {
+        User user = userAPI.getCurrentUser();
+        SharedPrefUtils.saveCurrentUser(this, user);
         Toast.makeText(getApplicationContext(), "Logined", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        userAPI.attachListener();
+    }
+
+    @Override
+    protected void onStop() {
+        userAPI.removeListener();
+        super.onStop();
     }
 }

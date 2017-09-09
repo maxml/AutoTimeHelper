@@ -1,22 +1,22 @@
 package com.maxml.timer.entity;
 
+import android.net.Uri;
+
 public class User {
 	private String objectId;
 	private String username;
 	private String email;
-	// TODO: we need this field?
-	private String password;
-
-	private static User instance;
+	private Uri photo;
 
 	public User() {
 	}
 
-	public static User getInstance() {
-		if (instance == null) {
-			instance = new User();
-		}
-		return instance;
+	public Uri getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(Uri photo) {
+		this.photo = photo;
 	}
 
 	public String getObjectId() {
@@ -43,13 +43,6 @@ public class User {
 		this.email = email;
 	}
 
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
 
 	@Override
 	public String toString() {

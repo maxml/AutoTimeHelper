@@ -1,6 +1,7 @@
 package com.maxml.timer.ui.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,25 +21,26 @@ public class MainUserPageFragment extends Fragment {
 
     private EditText etSetName;
     private EditText etSetEmail;
-    private UserAPI us = new UserAPI();
+    private UserAPI us;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        us= new UserAPI(getActivity(), new Handler());
         return inflater.inflate(R.layout.activity_main_user_page, container, false);
 
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onActivityCreated(savedInstanceState);
 
         btnChangeEmail = (BootstrapButton) getActivity().findViewById(R.id.btnEmail);
-        btnChangeName = buttonsAutorisation(R.id.btnName);
-        btnChangePicture = buttonsAutorisation(R.id.btnChangePicture);
-        btnChangeOk = buttonsAutorisation(R.id.btnOk);
+        btnChangeName = buttonsAuthorisation(R.id.btnName);
+        btnChangePicture = buttonsAuthorisation(R.id.btnChangePicture);
+        btnChangeOk = buttonsAuthorisation(R.id.btnOk);
 
-        etSetName = editTextAutorisation(R.id.tvName);
-        etSetEmail = editTextAutorisation(R.id.tvEmail);
+        etSetName = editTextAuthorisation(R.id.tvName);
+        etSetEmail = editTextAuthorisation(R.id.tvEmail);
         etSetEmail.setText(us.getCurrentUser().getEmail());
         etSetName.setText(us.getCurrentUser().getUsername());
         etSetName.setEnabled(false);
@@ -110,12 +112,12 @@ public class MainUserPageFragment extends Fragment {
         }
     }
 
-    private EditText editTextAutorisation(int idintification) {
+    private EditText editTextAuthorisation(int idintification) {
         EditText et = (EditText) getActivity().findViewById(idintification);
         return et;
     }
 
-    private BootstrapButton buttonsAutorisation(int idintification) {
+    private BootstrapButton buttonsAuthorisation(int idintification) {
         BootstrapButton btn = (BootstrapButton) getActivity().findViewById(idintification);
         return btn;
     }

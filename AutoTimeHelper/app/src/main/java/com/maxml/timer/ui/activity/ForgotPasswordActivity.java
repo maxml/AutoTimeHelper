@@ -15,30 +15,33 @@ import com.maxml.timer.api.UserAPI;
  * Created by Lantar on 22.04.2015.
  */
 public class ForgotPasswordActivity extends Activity {
-	
-	protected static final int CONNECTION_OK = 1;
-	private TextView tvEmail;
-	
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.forgot_password);
-		
-		tvEmail = (TextView) findViewById(R.id.textFPEmail);
-	}
-	
-	public void onClick(View v) {
-		
-		UserAPI c = new UserAPI();
-		c.sentPassword(tvEmail.getText().toString());
-		c.handler = new Handler() {
-			public void handleMessage(Message msg) {
-				if (msg.what == CONNECTION_OK) {
-					Toast.makeText(getApplicationContext(),
-							"An email was successfully sent with reset instructions.", Toast.LENGTH_SHORT).show();
-				} else {
-					Toast.makeText(getApplicationContext(), "Wrong email.", Toast.LENGTH_SHORT).show();
-				}
-			};
-		};
-	}
+
+    protected static final int CONNECTION_OK = 1;
+    private TextView tvEmail;
+
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.forgot_password);
+
+        tvEmail = (TextView) findViewById(R.id.textFPEmail);
+    }
+
+    public void onClick(View v) {
+
+
+        Handler handler = new Handler() {
+            public void handleMessage(Message msg) {
+                if (msg.what == CONNECTION_OK) {
+                    Toast.makeText(getApplicationContext(),
+                            "An email was successfully sent with reset instructions.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Wrong email.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            ;
+        };
+        UserAPI c = new UserAPI(this, handler);
+        c.sentPassword(tvEmail.getText().toString());
+    }
 }

@@ -1,71 +1,134 @@
 package com.maxml.timer.api;
 
+import android.app.Activity;
+import android.content.Context;
+import android.net.Uri;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.maxml.timer.api.interfaces.OnDbUserResult;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.maxml.timer.MyLog;
 import com.maxml.timer.entity.User;
+import com.maxml.timer.util.Constants;
 
 public class UserAPI {
-	
-	private static final String USERNAME = "username";
-	private static final String PASSWORD = "password";
-	private static final String EMAIL = "email";
-	public int CONNECTION_OK = 1;
-	
-	public Handler handler = new Handler();
-	
-	public OnDbUserResult onresult;
-	
-	public void create(User user) {
-		Log.d("User", "start method create in UserCRUD");
-//		ParseUser usr = new ParseUser();
-//		usr.put(USERNAME, user.getUsername());
-//		usr.put(PASSWORD, user.getPassword());
-//		usr.put(EMAIL, user.getEmail());
-//		Log.d("User", user.getUsername());
-//		usr.signUpInBackground(new SignUpCallback() {
-//
-//			@Override
-//			public void done(ParseException e) {
-//				if (e == null) {
-//					Log.d("User", "h send empty message");
-//					handler.sendEmptyMessage(CONNECTION_OK);
-//					Log.d("User", "h = 1");
-//				} else {
-//					handler.sendEmptyMessage(0);
-//					Log.d("User", "exception" + e.toString());
-//				}
-//			}
-//		});
-	}
-	
-	public void login(String name, String password) {
-//		ParseUser.logInInBackground(name, password, new LogInCallback() {
-//			public void done(ParseUser user, ParseException e) {
-//				if (user != null) {
-//					handler.sendEmptyMessage(CONNECTION_OK);
-//				} else {
-//					handler.sendEmptyMessage(0);
-//				}
-//			}
-//		});
-	}
-	
-	public void sentPassword(String email) {
-//		ParseUser.requestPasswordResetInBackground(email, new RequestPasswordResetCallback() {
-//			public void done(ParseException e) {
-//				if (e == null) {
-//					handler.sendEmptyMessage(CONNECTION_OK);
-//				} else {
-//					handler.sendEmptyMessage(0);
-//				}
-//			}
-//		});
-	}
-	
-	public void updateName(final String name, final String id) {
-		Log.d("UserAPI", "start updateName");
+    // Firebase
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+
+    private Activity activity;
+    private Handler handler = new Handler();
+    private boolean isLogined = false;
+
+    public UserAPI(Activity activity, Handler handler) {
+        this.handler = handler;
+        this.activity = activity;
+        initAuth();
+    }
+
+    private void initAuth() {
+        mAuth = FirebaseAuth.getInstance();
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    MyLog.d("onAuthStateChanged:signed_in:" + user.getUid());
+                } else {
+                    // User is signed out
+                    MyLog.d("onAuthStateChanged:signed_out");
+
+                }
+            }
+        };
+    }
+
+    // call in onStart
+    public void attachListener() {
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    // call in onStop
+    public void removeListener() {
+        if (mAuthListener != null)
+            mAuth.removeAuthStateListener(mAuthListener);
+    }
+
+    public void create(String email, String password) {
+        Log.d("User", "start method create in UserCRUD");
+        if (email == null || password == null) {
+            handler.sendEmptyMessage(Constants.RESULT_FALSE);
+            return;
+        }
+
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        MyLog.d("createUserWithEmail:onComplete:" + task.isSuccessful());
+
+                       if (!task.isSuccessful()) {
+                            handler.sendEmptyMessage(Constants.RESULT_FALSE);
+                        }else {
+                            handler.sendEmptyMessage(Constants.RESULT_OK);
+                        }
+                    }
+                });
+    }
+
+    public void login(String email, String password) {
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        MyLog.d("signInWithEmail:onComplete:" + task.isSuccessful());
+
+                        if (!task.isSuccessful()) {
+                            handler.sendEmptyMessage(Constants.RESULT_FALSE);
+                        }else {
+                            handler.sendEmptyMessage(Constants.RESULT_OK);
+                        }
+                    }
+                });
+    }
+
+    public User getCurrentUser() {
+        User user = new User();
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (firebaseUser == null) return null;
+        String objectId = firebaseUser.getProviderId();
+        String username = firebaseUser.getDisplayName();
+        String email = firebaseUser.getEmail();
+        Uri photo = firebaseUser.getPhotoUrl();
+        user.setObjectId(objectId);
+        user.setUsername(username);
+        user.setEmail(email);
+        user.setPhoto(photo);
+        return user;
+    }
+
+    public void sentPassword(String email) {
+        mAuth.sendPasswordResetEmail(email)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            MyLog.d("Email sent.");
+                            handler.sendEmptyMessage(Constants.RESULT_OK);
+                        }else {
+                            handler.sendEmptyMessage(Constants.RESULT_FALSE);
+                        }
+                    }
+                });    }
+
+    public void updateName(final String name, final String id) {
+        Log.d("UserAPI", "start updateName");
 //		ParseQuery<ParseUser> query = ParseUser.getQuery();
 //		query.whereEqualTo(USERNAME, ParseUser.getCurrentUser().getUsername());
 //		query.findInBackground(new FindCallback<ParseUser>() {
@@ -84,10 +147,10 @@ public class UserAPI {
 //				}
 //			}
 //		});
-	}
-	
-	public void updateEmail(final String email, final String id) {
-		Log.d("UserAPI", "start updateEmail");
+    }
+
+    public void updateEmail(final String email, final String id) {
+        Log.d("UserAPI", "start updateEmail");
 //		ParseQuery<ParseUser> queryOne = ParseUser.getQuery();
 //		queryOne.whereEqualTo(EMAIL, email);
 //		queryOne.findInBackground(new FindCallback<ParseUser>() {
@@ -104,24 +167,17 @@ public class UserAPI {
 //				}
 //			}
 //		});
-	}
-	
-	public User getCurrentUser() {
-		User user = new User();
-//		user.setObjectId(ParseUser.getCurrentUser().getObjectId());
-//		user.setEmail(ParseUser.getCurrentUser().getEmail());
-//		user.setUsername(ParseUser.getCurrentUser().getUsername());
-		return user;
-	}
-	
-	public void sync(User user) {
-		Log.d("User", "start method sync");
-		if (user.getObjectId() == null) {
-			Log.d("User", "create user");
-			create(user);
-		} else {
-			updateEmail(user.getEmail(), user.getObjectId());
-			updateName(user.getUsername(), user.getObjectId());
-		}
-	}
+    }
+
+
+//    public void sync(User user) {
+//        Log.d("User", "start method sync");
+//        if (user.getObjectId() == null) {
+//            Log.d("User", "create user");
+//            create(user);
+//        } else {
+//            updateEmail(user.getEmail(), user.getObjectId());
+//            updateName(user.getUsername(), user.getObjectId());
+//        }
+//    }
 }
