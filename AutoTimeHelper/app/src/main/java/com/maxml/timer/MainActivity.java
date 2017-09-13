@@ -108,7 +108,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (user.getEmail() != null && !user.getEmail().isEmpty()) {
             if (user.getUsername() != null) {
                 name.setText(user.getUsername());
-            } else name.setText(user.getEmail());
+            } else {
+                name.setText(user.getEmail());
+            }
             Picasso.with(this)
                     .load(user.getPhoto())
                     .placeholder(R.drawable.ic_contact_picture)

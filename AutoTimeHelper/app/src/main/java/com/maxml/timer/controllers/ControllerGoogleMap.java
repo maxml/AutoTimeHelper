@@ -26,11 +26,11 @@ public class ControllerGoogleMap {
 				start.setX(slice.getPath().getStart().getX());
 				start.setY(slice.getPath().getStart().getY());
 				date = slice.getStartDate();
-				// controller.addSlise(slice);
+				// controller.addSlice(slice);
 			}
 		} else {
 			Log.d("Controller", "googleMapSlice null");
-			// controller.addSlise(slice);
+			// controller.addSlice(slice);
 			start.setX(slice.getPath().getStart().getX());
 			start.setY(slice.getPath().getStart().getY());
 			date = slice.getStartDate();
@@ -45,6 +45,6 @@ public class ControllerGoogleMap {
 			slice.setStartDate(date);
 			slice.getPath().setStart(start);
 		}
-		controller.addSlise(slice);
+		controller.addSlice(slice);
 	}
 }

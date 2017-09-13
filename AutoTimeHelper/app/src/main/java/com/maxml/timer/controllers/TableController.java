@@ -21,7 +21,7 @@ public class TableController implements OnResultList {
 //		sliceCRUD.read(ParseUser.getCurrentUser().getObjectId());
 	}
 	
-	public void addSlise(Slice slice) {
+	public void addSlice(Slice slice) {
 		Table tableAdd = new Table();
 		if (slice.getPath().equals(null)) {
 			slice.setPath(googlemapF.listLine.get(googlemapF.listLine.size() - 1));
