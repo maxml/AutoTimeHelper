@@ -105,7 +105,7 @@ public class SliceCRUD implements OnDbResult {
 //							slice.setStartDate(parseSlice.getDate("startDate"));
 //							slice.setEndDate(parseSlice.getDate("endDate"));
 //							slice.setDescription(parseSlice.getString("Description"));
-//							slice.setUpdatedat(parseSlice.getUpdatedAt());
+//							slice.setUpdateDate(parseSlice.getUpdatedAt());
 //
 //							String sliceType = parseSlice.getString("SliceType");
 //							if (sliceType.equals("WALK"))
@@ -240,7 +240,7 @@ public class SliceCRUD implements OnDbResult {
 //						if (parseSlice == null) {
 //							Log.i("Slice", "Sync: The getFirst request failed.");
 //						} else {
-//							if (!slice.getUpdatedat().equals(parseSlice.getUpdatedAt()))// ----------
+//							if (!slice.getUpdateDate().equals(parseSlice.getUpdatedAt()))// ----------
 //								try {
 //									update(slice);
 //								} catch (InterruptedException e1) {

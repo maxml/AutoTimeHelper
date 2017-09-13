@@ -17,8 +17,8 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
 
-    <!--IMPORTANT: Change "com.parse.starter.permission.C2D_MESSAGE" in the lines below-->
-    <!--to match your app's package name + ".permission.C2D_MESSAGE".-->
+    <!-- IMPORTANT: Change "com.parse.starter.permission.C2D_MESSAGE" in the lines below -->
+    <!-- to match your app's package name + ".permission.C2D_MESSAGE". -->
 
     <permission
         android:name="com.maxml.timer.permission.C2D_MESSAGE"
@@ -29,25 +29,26 @@
         android:required="true" />
 
     <application
-        android:name="com.maxml.timer.App"
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
 
-        <!-- <activity
+        <!--
+        <activity
             android:name="com.maxml.timer.ui.activity.OnStartActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme" >
-        </activity> -->
+        </activity>
+        -->
 
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme" />
-
         <activity
-            android:name="com.maxml.timer.ui.activity.LoginActivity"
+            android:name=".ui.activity.LoginActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -56,22 +57,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
-            android:name="com.maxml.timer.ui.activity.CreateUserActivity"
+            android:name=".ui.activity.CreateUserActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.activity.ForgotPasswordActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme" />
 
-        <activity
-            android:name="com.maxml.timer.ui.activity.ForgotPasswordActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme" />
-
-        <!--         <activity
+        <!--
+                     <activity
                     android:name="com.maxml.timer.ui.fragments.GoogleMapFragment"
                     android:label="@string/app_name"
                     android:theme="@style/AppTheme" >
-                </activity> -->
+                </activity>
+        -->
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
@@ -89,9 +90,8 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/demo_widget_provider" />
         </receiver>
-
         <receiver
-            android:name="com.maxml.timer.receivers.MyWidgetIntentReceiver"
+            android:name=".receivers.MyWidgetIntentReceiver"
             android:exported="false"
             android:label="@string/app_name">
             <intent-filter>
@@ -102,14 +102,13 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/demo_widget_provider" />
         </receiver>
-
-
         <receiver android:name=".receivers.NetworkReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
 
+        <activity android:name=".ui.activity.CalendarActivity"></activity>
     </application>
 
 </manifest>

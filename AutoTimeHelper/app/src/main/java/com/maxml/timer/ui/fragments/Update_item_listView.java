@@ -30,7 +30,7 @@ public class Update_item_listView extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		textDescription = (TextView) getActivity().findViewById(R.id.description);
-		textDescription.setText(Slice_ListViev.slice.getDescription());
+		textDescription.setText(SliceListViewFragment.slice.getDescription());
 		btnSave = (BootstrapButton) getActivity().findViewById(R.id.save);
 		
 		btnSave.setOnClickListener(new OnClickListener() {
@@ -39,11 +39,11 @@ public class Update_item_listView extends Fragment {
 			public void onClick(View v) {
 				
 				TableController tableController = new TableController();
-				Slice_ListViev.slice.setDescription(textDescription.getText()
+				SliceListViewFragment.slice.setDescription(textDescription.getText()
 						.toString());
-				Slice_ListViev.slice.setUpdatedat(new Date());
-				tableController.update(Slice_ListViev.slice);
-				setupFragment(new Slice_ListViev());
+				SliceListViewFragment.slice.setUpdateDate(new Date());
+				tableController.update(SliceListViewFragment.slice);
+				setupFragment(new SliceListViewFragment());
 			}
 		});
 	}

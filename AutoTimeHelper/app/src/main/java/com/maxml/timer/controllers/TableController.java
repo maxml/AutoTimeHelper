@@ -8,6 +8,7 @@ import com.maxml.timer.entity.Slice;
 import com.maxml.timer.entity.Table;
 import com.maxml.timer.ui.fragments.GoogleMapFragment;
 
+import java.util.Date;
 import java.util.List;
 
 public class TableController implements OnResultList {
@@ -21,7 +22,7 @@ public class TableController implements OnResultList {
 //		sliceCRUD.read(ParseUser.getCurrentUser().getObjectId());
 	}
 	
-	public void addSlise(Slice slice) {
+	public void addSlice(Slice slice) {
 		Table tableAdd = new Table();
 		if (slice.getPath().equals(null)) {
 			slice.setPath(googlemapF.listLine.get(googlemapF.listLine.size() - 1));
@@ -44,6 +45,11 @@ public class TableController implements OnResultList {
 		return table;
 	}
 	
+	public Table getTable(Date date) {
+		// // TODO: 13.09.17  
+		return table;
+	}
+	
 	public void setTable(Table table) {
 		this.table = table;
 	}
@@ -52,7 +58,7 @@ public class TableController implements OnResultList {
 	public void OnResultSlices(List<Slice> sliceList) {
 		for (Slice slice : sliceList) {
 			Log.i("Slice", "Slice UUID: " + slice.getId());
-			Log.i("Slice", "Slice updateDdat: " + slice.getUpdatedat());
+			Log.i("Slice", "Slice updateDdat: " + slice.getUpdateDate());
 			Log.i("Slice", "Slice Description: " + slice.getDescription());
 			Log.i("SliceRead", " Read finish 3");
 			onResult.OnResultSlices(sliceList);

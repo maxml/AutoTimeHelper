@@ -143,7 +143,7 @@ public class ManualActivityFragment extends Fragment {
 //			manualstart.setEndDate(new Date());
 //			ArrayList sliceList = new ArrayList();
 //			sliceList.add(manualstart);
-//			controller.addSlise(manualstart);
+//			controller.addSlice(manualstart);
 //			btnIsPress = false;
 //			if(!manualstart.getType().equals(type))
 //				buildButtonPendingIntentCopy(type);
@@ -157,8 +157,8 @@ public class ManualActivityFragment extends Fragment {
 //			manualstart.setStartDate(new Date());
 //			manualstart.setEndDate(new Date());
 //			manualstart.setType(type);
-//		 //   controller.getTable().addSlise(manualstart);
-		//	controller.addSlise(manualstart);
+//		 //   controller.getTable().addSlice(manualstart);
+		//	controller.addSlice(manualstart);
 		//	controller.addOneSlise(manualstart);
 
 			
@@ -223,9 +223,9 @@ public class ManualActivityFragment extends Fragment {
 // .getObjectId(), line, new Date(), new Date(), "ololo", type);
 // // manualstart.setStartDate(new Date());
 // // manualstart.setType(type);
-// // controller.getTable().addSlise(start);
+// // controller.getTable().addSlice(start);
 //
-// controller.addSlise(manualstart);
+// controller.addSlice(manualstart);
 // }
 //
 // ArrayList<Slice> slices = controller.getTable().getList();
@@ -236,5 +236,5 @@ public class ManualActivityFragment extends Fragment {
 // // manualnext.setStartDate(new Date());
 // // manualnext.setType(type);
 // // slices.add(manualnext);
-// //controller.addSlise(manualnext);
+// //controller.addSlice(manualnext);
 // }

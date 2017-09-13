@@ -12,7 +12,7 @@ public class Slice {
 	private String description;
 	private SliceType type;
 	private String lineUUID;
-	private Date updatedat;
+	private Date updateDate;
 	private boolean isDeleted = false;
 	private int position;
 	public long sortByDate;
@@ -103,12 +103,12 @@ public class Slice {
 	}
 	
 
-	public Date getUpdatedat() {
-		return updatedat;
+	public Date getUpdateDate() {
+		return updateDate;
 	}
 
-	public void setUpdatedat(Date updatedat) {
-		this.updatedat = updatedat;
+	public void setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
 	}
 	
 

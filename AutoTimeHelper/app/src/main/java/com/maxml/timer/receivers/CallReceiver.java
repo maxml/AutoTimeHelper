@@ -92,7 +92,7 @@ public class CallReceiver extends BroadcastReceiver {
 					}
 					// end ol type of calling
 					call.setEndDate(new Date());
-					controller.addSlise(call);
+					controller.addSlice(call);
 				}
 				break;
 

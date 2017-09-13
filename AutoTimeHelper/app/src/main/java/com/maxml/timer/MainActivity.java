@@ -4,42 +4,31 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.maxml.timer.api.UserAPI;
 import com.maxml.timer.entity.User;
-import com.maxml.timer.ui.elements.DrawerItem;
-import com.maxml.timer.ui.elements.DrawerItemAdapter;
-import com.maxml.timer.ui.elements.DrawerMenu;
+import com.maxml.timer.ui.activity.CalendarActivity;
+import com.maxml.timer.ui.fragments.CalendarFragment;
 import com.maxml.timer.ui.fragments.GoogleMapFragment;
 import com.maxml.timer.ui.fragments.ManualActivityFragment;
 import com.maxml.timer.ui.fragments.SettingsFragment;
-import com.maxml.timer.ui.fragments.Slice_ListViev;
+import com.maxml.timer.ui.fragments.SliceListViewFragment;
 import com.maxml.timer.ui.fragments.TablesFragment;
 import com.maxml.timer.util.FragmentUtils;
 import com.maxml.timer.util.SharedPrefUtils;
 import com.squareup.picasso.Picasso;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -71,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         initDrawer();
         if (savedInstanceState == null)
-            setupFragment(new Slice_ListViev());
+            setupFragment(new SliceListViewFragment());
     }
 
     private void initDrawer() {
@@ -147,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (item.getItemId()) {
             case R.id.group:
                 MyLog.d("Select group");
-                setupFragment(new Slice_ListViev());
+                setupFragment(new CalendarFragment());
                 break;
             case R.id.map:
                 MyLog.d("Select map");
