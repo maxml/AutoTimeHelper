@@ -1,35 +1,65 @@
 package com.maxml.timer.api;
 
+import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.maxml.timer.api.interfaces.OnDbResult;
 import com.maxml.timer.api.interfaces.OnResultList;
 import com.maxml.timer.entity.Point;
 import com.maxml.timer.entity.Slice;
 import com.maxml.timer.entity.Table;
+import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.NetworkStatus;
 
 import java.util.Collections;
 import java.util.List;
 
 public class SliceCRUD implements OnDbResult {
-	
-	public OnResultList onresultList;
-	private int readCount = 0;
-	SliceCRUD sliceCRUD = this;
-	
-	public void create(final Slice slice) {
-		try {
-			Log.i("Slice", " Slice starting create");
-			LineCRUD lineCRUD = new LineCRUD();
-			lineCRUD.onresultLine = this;
-			lineCRUD.create(slice);
-		} catch (Exception e) {
-			Log.i("Slice", " Slice dont create " + e);
-		}
-		
-	}
-	
+
+    private DatabaseReference sliceRef;
+    private Handler handler;
+
+    public OnResultList onresultList;
+    private int readCount = 0;
+    SliceCRUD sliceCRUD = this;
+
+    public SliceCRUD(Handler handler) {
+        if (sliceRef == null) {
+            sliceRef = FirebaseDatabase.getInstance().getReference().child(Constants.SLICE_DATABASE_PATH);
+        }
+        this.handler = handler;
+    }
+
+    public void create(Slice slice) {
+        Log.i("Slice", " Slice starting create");
+        // get Firebase id
+        String key = sliceRef.push().getKey();
+        // set id entity
+        slice.setId(key);
+        sliceRef.child(key).setValue(slice).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                   handler.sendEmptyMessage(Constants.RESULT_OK);
+                } else {
+                    handler.sendEmptyMessage(Constants.RESULT_FALSE);
+                }
+            }
+        });
+    }
+
+    private void success(int result) {
+
+    }
+
 //	@Override
 //	// linieCRUD - read or create
 //	public void onResult(final ParseObject parseLine, Slice slice) {
@@ -72,9 +102,9 @@ public class SliceCRUD implements OnDbResult {
 //		}
 //
 //	}
-	
-	public void read(final String user) {
-		
+
+    public void read(final String user) {
+
 //		ParseQuery<ParseObject> query = ParseQuery.getQuery("Slice");
 //		if (!NetworkStatus.isConnected)
 //			query.fromLocalDatastore();
@@ -136,22 +166,22 @@ public class SliceCRUD implements OnDbResult {
 //			}
 //		});
 //
-	}
-	
-	@Override
-	public void onResultRead(List<Slice> sliceList) {
-		// TODO Auto-generated method stub
-		readCount++;
-		Log.i("SliceRead", " Read finish");
-		if (readCount == sliceList.size()) {
-			Log.i("SliceRead", " Read finish 2");
-			Log.i("Slice", "Slice list size: " + sliceList.size());
-			Collections.sort(sliceList, Slice.sliceComparator);
-			onresultList.OnResultSlices(sliceList);
-		}
-	}
-	
-	public void update(final Slice slice) throws InterruptedException {
+    }
+
+    @Override
+    public void onResultRead(List<Slice> sliceList) {
+        // TODO Auto-generated method stub
+        readCount++;
+        Log.i("SliceRead", " Read finish");
+        if (readCount == sliceList.size()) {
+            Log.i("SliceRead", " Read finish 2");
+            Log.i("Slice", "Slice list size: " + sliceList.size());
+            Collections.sort(sliceList, Slice.sliceComparator);
+            onresultList.OnResultSlices(sliceList);
+        }
+    }
+
+    public void update(final Slice slice) throws InterruptedException {
 //		ParseQuery<ParseObject> query = ParseQuery.getQuery("Slice");
 //		if (!NetworkStatus.isConnected)
 //			query.fromLocalDatastore();
@@ -199,9 +229,9 @@ public class SliceCRUD implements OnDbResult {
 //				}
 //			}
 //		});
-	}
-	
-	public void delete(final String id) {
+    }
+
+    public void delete(final String id) {
 //		ParseQuery<ParseObject> query = ParseQuery.getQuery("Slice");
 //		if (!NetworkStatus.isConnected)
 //			query.fromLocalDatastore();
@@ -220,12 +250,12 @@ public class SliceCRUD implements OnDbResult {
 //				}
 //			}
 //		});
-	}
-	
-	public void sync(Table table) {
-		Log.i("Slice", "" + NetworkStatus.isConnected);
-		
-		Log.i("Slice", "Slice synchronized start");
+    }
+
+    public void sync(Table table) {
+        Log.i("Slice", "" + NetworkStatus.isConnected);
+
+        Log.i("Slice", "Slice synchronized start");
 //		for (final Slice slice : table.getList()) {
 //			if (slice.getId() == null) {
 //				create(slice);
@@ -253,19 +283,21 @@ public class SliceCRUD implements OnDbResult {
 //				});
 //			}
 //		}
-		
-	}
-	
-	@Override
-	public void onResult(Point point, List<Slice> sliceList) {
-		// TODO Auto-generated method stub
-		
-	}
-	
+
+    }
+
+    @Override
+    public void onResult(Point point, List<Slice> sliceList) {
+        // TODO Auto-generated method stub
+
+    }
+
+
+
 //	@Override
 //	public void onResult(ParseObject parsePoint, ParseObject parsePointFinish, Slice slice) {
 //		// TODO Auto-generated method stub
 //
 //	}
-	
+
 }

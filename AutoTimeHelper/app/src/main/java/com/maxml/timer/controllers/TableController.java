@@ -1,5 +1,6 @@
 package com.maxml.timer.controllers;
 
+import android.os.Handler;
 import android.util.Log;
 
 import com.maxml.timer.api.SliceCRUD;
@@ -14,7 +15,7 @@ import java.util.List;
 public class TableController implements OnResultList {
 	public OnResultList onResult;
 	private Table table = new Table();
-	private SliceCRUD sliceCRUD = new SliceCRUD();
+	private SliceCRUD sliceCRUD = new SliceCRUD(Handler);
 	private GoogleMapFragment googlemapF;
 	
 	public void getListSlice() {
