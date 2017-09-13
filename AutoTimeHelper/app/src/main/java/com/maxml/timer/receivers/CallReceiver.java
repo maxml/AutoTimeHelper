@@ -92,7 +92,7 @@ public class CallReceiver extends BroadcastReceiver {
 					}
 					// end ol type of calling
 					call.setEndDate(new Date());
-					controller.addSlice(call);
+					controller.addSlise(call);
 				}
 				break;
 
@@ -104,14 +104,14 @@ public class CallReceiver extends BroadcastReceiver {
 
 			case TelephonyManager.CALL_STATE_OFFHOOK:
 				if (lastState != TelephonyManager.CALL_STATE_RINGING) {
-					// OUTGOING CALL ANSWERED
+					// outgoing call answered
 					isIncoming = false;
 					// todo test
-					phoneNumber = intent.getExtras().getString("android.intent.extra.PHONE_NUMBER");
+					phoneNumber = intent.getExtras().getString("android.intent.extra.phone_number");
 					call.setStartDate(new Date());
 					call.setDescription(CallType.OUTGOING.name());
 				} else {
-					// INCOMING CALL ANSWERED
+					// incoming call answered
 					isIncoming = true;
 					phoneNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
 					call.setStartDate(new Date());

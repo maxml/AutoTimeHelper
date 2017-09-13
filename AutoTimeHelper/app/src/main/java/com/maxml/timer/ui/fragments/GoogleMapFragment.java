@@ -117,7 +117,7 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback,
 //		listLine.add(line);
 //		Slice slice = new Slice(ParseUser.getCurrentUser().getObjectId(), line, starttime, finishtime,
 //				"walk time", SliceType.WALK);
-//		controllerGoogleMap.addSlice(slice);
+//		controllerGoogleMap.addSlise(slice);
 //		Log.d(LOG, "start = " + start.toString());
 //		Log.d(LOG, "finish = " + finish.toString());
 //		Log.d(LOG, "slice = " + slice.toString());
@@ -138,7 +138,7 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback,
 //		Line line = new Line(start, finish, ParseUser.getCurrentUser().getObjectId());
 //		Slice slice = new Slice(ParseUser.getCurrentUser().getObjectId(), line, starttime, finishtime,
 //				"rest time", SliceType.REST);
-//		controllerGoogleMap.addSlice(slice);
+//		controllerGoogleMap.addSlise(slice);
 //		Log.d(LOG, "start = " + start.toString());
 //		Log.d(LOG, "finish = " + finish.toString());
 //		Log.d(LOG, "slice = " + slice.toString());

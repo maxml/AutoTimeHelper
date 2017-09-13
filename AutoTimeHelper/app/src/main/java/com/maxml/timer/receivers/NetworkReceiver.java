@@ -21,7 +21,7 @@ public class NetworkReceiver extends BroadcastReceiver {
 		// Slice slice = new Slice();
 		// slice.setType(SliceType.WORK);
 		// slice.setDescription("Work");
-		// tbContr.addSlice(slice);
+		// tbContr.addSlise(slice);
 		// }
 	}
 	
