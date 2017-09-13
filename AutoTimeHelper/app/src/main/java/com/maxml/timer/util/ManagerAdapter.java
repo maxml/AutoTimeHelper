@@ -79,15 +79,15 @@ public class ManagerAdapter extends ArrayAdapter {
         holder.description.setText(essence.getDescription());
         holder.itemRootLayout = convertView.findViewById(R.id.itemRootLayout);
 
-        if (essence.getType().equals(Slice.SliceType.WALK))
+        if (essence.getType().equals(SliceType.WALK))
             holder.itemRootLayout.setBackgroundColor(colorForWalk);
-        else if (essence.getType().equals(Slice.SliceType.CALL))
+        else if (essence.getType().equals(SliceType.CALL))
 //        if (essence.getType().equals(Slice.SliceType.CALL))
             holder.itemRootLayout.setBackgroundColor(colorForCall);
-        else if (essence.getType().equals(Slice.SliceType.REST))
+        else if (essence.getType().equals(SliceType.REST))
 //        if (essence.getType().equals(Slice.SliceType.REST))
             holder.itemRootLayout.setBackgroundColor(colorForRest);
-        else if (essence.getType().equals(Slice.SliceType.WORK))
+        else if (essence.getType().equals(SliceType.WORK))
 //        if (essence.getType().equals(Slice.SliceType.WORK))
             holder.itemRootLayout.setBackgroundColor(colorForWork);
         // TODO: 28.02.2016 is it possible to convert this ladder of if-else to switch ?

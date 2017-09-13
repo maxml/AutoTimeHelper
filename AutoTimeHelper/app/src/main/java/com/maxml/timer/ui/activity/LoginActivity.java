@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.maxml.timer.MainActivity;
 import com.maxml.timer.R;
 import com.maxml.timer.api.UserAPI;
@@ -40,6 +41,10 @@ public class LoginActivity extends Activity {
         entLogin = (TextView) findViewById(R.id.textLogin);
         entPassword = (TextView) findViewById(R.id.textPassword);
 
+        boolean isLogged = FirebaseAuth.getInstance().getCurrentUser() != null;
+        if (isLogged) {
+            loginOk();
+            }
     }
 
     private void initHandler() {

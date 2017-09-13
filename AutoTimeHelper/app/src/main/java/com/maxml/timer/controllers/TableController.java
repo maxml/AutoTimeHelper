@@ -14,10 +14,20 @@ import java.util.List;
 
 public class TableController implements OnResultList {
 	public OnResultList onResult;
-	private Table table = new Table();
-	private SliceCRUD sliceCRUD = new SliceCRUD(Handler);
+	private Table table;
+	private SliceCRUD sliceCRUD;
 	private GoogleMapFragment googlemapF;
-	
+
+
+	public TableController(Handler handler) {
+		sliceCRUD = new SliceCRUD(handler);
+		table = new Table();
+	}
+
+	// // TODO: 13.09.17 update all calling with new constructor
+	public TableController() {
+	}
+
 	public void getListSlice() {
 		sliceCRUD.onresultList = this;
 //		sliceCRUD.read(ParseUser.getCurrentUser().getObjectId());

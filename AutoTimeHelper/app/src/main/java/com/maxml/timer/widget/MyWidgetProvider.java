@@ -11,7 +11,7 @@ import android.widget.RemoteViews;
 import com.maxml.timer.R;
 import com.maxml.timer.controllers.TableController;
 import com.maxml.timer.entity.Slice;
-import com.maxml.timer.entity.Slice.SliceType;
+import com.maxml.timer.util.SliceType;
 import com.maxml.timer.util.TimerConstatnts;
 
 import java.text.SimpleDateFormat;

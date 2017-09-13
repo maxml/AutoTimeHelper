@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -18,6 +19,11 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.maxml.timer.api.SliceCRUD;
+import com.maxml.timer.controllers.TableController;
+import com.maxml.timer.entity.Line;
+import com.maxml.timer.entity.Point;
+import com.maxml.timer.entity.Slice;
 import com.maxml.timer.entity.User;
 import com.maxml.timer.ui.activity.CalendarActivity;
 import com.maxml.timer.ui.fragments.CalendarFragment;
@@ -28,7 +34,10 @@ import com.maxml.timer.ui.fragments.SliceListViewFragment;
 import com.maxml.timer.ui.fragments.TablesFragment;
 import com.maxml.timer.util.FragmentUtils;
 import com.maxml.timer.util.SharedPrefUtils;
+import com.maxml.timer.util.SliceType;
 import com.squareup.picasso.Picasso;
+
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -51,6 +60,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         hideProgressBar();
+
+        SliceCRUD c = new SliceCRUD(new Handler());
+        c.create(
+                new Slice(
+                        "test",
+                        new Line(new Point(1, 1), new Point(2, 2)),
+                        new Date(20),
+                        new Date(),
+                        "test entity",
+                        SliceType.CALL
+                ));
 /*
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);

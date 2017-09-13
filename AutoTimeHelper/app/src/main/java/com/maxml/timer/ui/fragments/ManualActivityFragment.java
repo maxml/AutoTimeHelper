@@ -15,7 +15,7 @@ import com.maxml.timer.controllers.TableController;
 import com.maxml.timer.entity.Line;
 import com.maxml.timer.entity.Point;
 import com.maxml.timer.entity.Slice;
-import com.maxml.timer.entity.Slice.SliceType;
+import com.maxml.timer.util.SliceType;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

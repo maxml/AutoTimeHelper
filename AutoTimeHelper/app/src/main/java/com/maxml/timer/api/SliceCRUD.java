@@ -46,6 +46,7 @@ public class SliceCRUD implements OnDbResult {
         String key = sliceRef.push().getKey();
         // set id entity
         slice.setId(key);
+        try{
         sliceRef.child(key).setValue(slice).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -55,7 +56,9 @@ public class SliceCRUD implements OnDbResult {
                     handler.sendEmptyMessage(Constants.RESULT_FALSE);
                 }
             }
-        });
+        });}catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 //	@Override
@@ -205,6 +208,22 @@ public class SliceCRUD implements OnDbResult {
     }
 
     public void update(final Slice slice) throws InterruptedException {
+
+        // get Firebase id
+        String key = sliceRef.push().getKey();
+        // set id entity
+        slice.setId(key);
+        sliceRef.child(key).setValue(slice).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    handler.sendEmptyMessage(Constants.RESULT_OK);
+                } else {
+                    handler.sendEmptyMessage(Constants.RESULT_FALSE);
+                }
+            }
+        });
+
 //		ParseQuery<ParseObject> query = ParseQuery.getQuery("Slice");
 //		if (!NetworkStatus.isConnected)
 //			query.fromLocalDatastore();
@@ -315,7 +334,13 @@ public class SliceCRUD implements OnDbResult {
 
     }
 
+    public Handler getHandler() {
+        return handler;
+    }
 
+    public void setHandler(Handler handler) {
+        this.handler = handler;
+    }
 
 //	@Override
 //	public void onResult(ParseObject parsePoint, ParseObject parsePointFinish, Slice slice) {

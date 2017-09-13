@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 
 import com.maxml.timer.R;
-import com.maxml.timer.entity.Slice.SliceType;
+import com.maxml.timer.util.SliceType;
 import com.maxml.timer.util.TimerConstatnts;
 import com.maxml.timer.widget.MyWidgetProvider;
 

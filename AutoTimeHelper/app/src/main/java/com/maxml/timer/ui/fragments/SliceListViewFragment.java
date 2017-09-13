@@ -26,8 +26,8 @@ import com.maxml.timer.R;
 import com.maxml.timer.api.interfaces.OnResultList;
 import com.maxml.timer.controllers.TableController;
 import com.maxml.timer.entity.Slice;
-import com.maxml.timer.entity.Slice.SliceType;
 import com.maxml.timer.util.ManagerAdapter;
+import com.maxml.timer.util.SliceType;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -57,14 +57,16 @@ public class SliceListViewFragment extends Fragment implements OnResultList {
 	
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+/*
+
 		TableController tableControler = new TableController();
 		tableControler.onResult = this;
 		tableControler.getListSlice();
 		
 		progressBar = (ProgressBar) getActivity().findViewById(R.id.progressBar);
 		progressBar.setVisibility(ProgressBar.VISIBLE);
-		
+*/
+
 	}
 	
 	@Override
