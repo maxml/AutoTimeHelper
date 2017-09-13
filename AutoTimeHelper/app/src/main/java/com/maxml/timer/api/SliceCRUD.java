@@ -1,6 +1,7 @@
 package com.maxml.timer.api;
 
 import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -19,6 +20,7 @@ import com.maxml.timer.entity.Table;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.NetworkStatus;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -54,10 +56,6 @@ public class SliceCRUD implements OnDbResult {
                 }
             }
         });
-    }
-
-    private void success(int result) {
-
     }
 
 //	@Override
@@ -103,8 +101,33 @@ public class SliceCRUD implements OnDbResult {
 //
 //	}
 
-    public void read(final String user) {
-
+    public void read(String user) {
+        if (user == null) return;
+        sliceRef.orderByChild("user")
+                .equalTo(user)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            List<Slice> list = new ArrayList<>();
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                Slice slice = snapshot.getValue(Slice.class);
+                                if (!slice.isDeleted()) {
+                                        list.add(slice);
+                                }
+                            }
+                            // send result
+                            Message m = handler.obtainMessage(Constants.RESULT_OK, list);
+                            handler.sendMessage(m);
+                        } else {
+                            handler.sendEmptyMessage(Constants.RESULT_FALSE);
+                        }
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        handler.sendEmptyMessage(Constants.RESULT_FALSE);
+                    }
+                });
 //		ParseQuery<ParseObject> query = ParseQuery.getQuery("Slice");
 //		if (!NetworkStatus.isConnected)
 //			query.fromLocalDatastore();
