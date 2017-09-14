@@ -19,4 +19,19 @@ public class Constants {
     public static final int DB_RESULT_FALSE = 0;
 
 
+    // slice columns
+    public static final String SLICE_USER = "user";
+    public static final String SLICE_ID = "id";
+    public static final String SLICE_PATH = "path";
+    public static final String SLICE_START_DATE = "startDate";
+    public static final String SLICE_END_DATE = "endDate";
+    public static final String SLICE_DESCRIPTION = "description";
+    public static final String SLICE_TYPE = "sliceType";
+    public static final String SLICE_LINE_ID = "lineUUID";
+    public static final String SLICE_UPDATE_DATE = "updateDate";
+    public static final String SLICE_IS_DELETED = "isDeleted";
+    public static final String SLICE_POSITION = "position";
+    public static final String SLICE_SOTR_BY_DATE = "sortByDate";
+
+
 }

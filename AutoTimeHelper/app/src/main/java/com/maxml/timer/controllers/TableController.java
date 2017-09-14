@@ -42,13 +42,13 @@ public class TableController implements OnResultList {
 			slice.setEndDate(googlemapF.listSlice.get(googlemapF.listSlice.size() - 1).getEndDate());
 			slice.setStartDate(googlemapF.listSlice.get(googlemapF.listSlice.size() - 1).getStartDate());
 		}
-		tableAdd.addSlise(slice);
+		tableAdd.addSlice(slice);
 		sliceCRUD.sync(tableAdd);
 	}
 	
 	public void update(Slice slice) {
 		Table tableUpdate = new Table();
-		tableUpdate.addSlise(slice);
+		tableUpdate.addSlice(slice);
 		sliceCRUD.sync(tableUpdate);
 	}
 	

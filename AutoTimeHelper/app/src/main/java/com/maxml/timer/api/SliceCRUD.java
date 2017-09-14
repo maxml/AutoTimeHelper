@@ -22,7 +22,9 @@ import com.maxml.timer.util.NetworkStatus;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SliceCRUD implements OnDbResult {
 
@@ -46,17 +48,18 @@ public class SliceCRUD implements OnDbResult {
         String key = sliceRef.push().getKey();
         // set id entity
         slice.setId(key);
-        try{
-        sliceRef.child(key).setValue(slice).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                   handler.sendEmptyMessage(Constants.DB_RESULT_OK);
-                } else {
-                    handler.sendEmptyMessage(Constants.DB_RESULT_FALSE);
+        try {
+            sliceRef.child(key).setValue(slice).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        handler.sendEmptyMessage(Constants.DB_RESULT_OK);
+                    } else {
+                        handler.sendEmptyMessage(Constants.DB_RESULT_FALSE);
+                    }
                 }
-            }
-        });}catch (Exception e){
+            });
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -106,7 +109,7 @@ public class SliceCRUD implements OnDbResult {
 
     public void read(String user) {
         if (user == null) return;
-        sliceRef.orderByChild("user")
+        sliceRef.orderByChild(Constants.SLICE_USER)
                 .equalTo(user)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -116,7 +119,7 @@ public class SliceCRUD implements OnDbResult {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 Slice slice = snapshot.getValue(Slice.class);
                                 if (!slice.isDeleted()) {
-                                        list.add(slice);
+                                    list.add(slice);
                                 }
                             }
                             // send result
@@ -126,6 +129,7 @@ public class SliceCRUD implements OnDbResult {
                             handler.sendEmptyMessage(Constants.DB_RESULT_FALSE);
                         }
                     }
+
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
                         handler.sendEmptyMessage(Constants.DB_RESULT_FALSE);
@@ -207,7 +211,7 @@ public class SliceCRUD implements OnDbResult {
         }
     }
 
-    public void update(Slice slice){
+    public void update(Slice slice) {
         // get Firebase id
         String key = slice.getId();
         // set id entity
@@ -306,11 +310,29 @@ public class SliceCRUD implements OnDbResult {
     public void sync(Table table) {
         Log.i("Slice", "" + NetworkStatus.isConnected);
 
+        Map<String,Object> updateList = new HashMap<>();
         Log.i("Slice", "Slice synchronized start");
-//		for (final Slice slice : table.getList()) {
-//			if (slice.getId() == null) {
-//				create(slice);
-//			} else {
+        for (Slice slice : table.getList()) {
+            // if slice already exist in DB it has no null id field
+            // if field null - save new slice to DB
+            if (slice.getId() == null) {
+                create(slice);
+            } else {
+                updateList.put(slice.getId(), slice);
+            }
+        }
+        // update items from updateList in DB
+        sliceRef.updateChildren(updateList).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    handler.sendEmptyMessage(Constants.RESULT_OK);
+                } else {
+                    handler.sendEmptyMessage(Constants.RESULT_FALSE);
+                }
+            }
+        });
+
 //				ParseQuery<ParseObject> query = ParseQuery.getQuery("Slice");
 //				if (!NetworkStatus.isConnected)
 //					query.fromLocalDatastore();

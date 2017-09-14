@@ -2,10 +2,13 @@ package com.maxml.timer.entity;
 
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
+import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.SliceType;
 
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @IgnoreExtraProperties
 public class Slice {
@@ -37,6 +40,60 @@ public class Slice {
     public Slice() {
 
     }
+
+    @Exclude
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put(Constants.SLICE_USER, user);
+        result.put(Constants.SLICE_ID, id);
+        result.put(Constants.SLICE_PATH, path);
+        result.put(Constants.SLICE_START_DATE, startDate);
+        result.put(Constants.SLICE_END_DATE, endDate);
+        result.put(Constants.SLICE_DESCRIPTION, description);
+        result.put(Constants.SLICE_TYPE, sliceType);
+        result.put(Constants.SLICE_LINE_ID, lineUUID);
+        result.put(Constants.SLICE_UPDATE_DATE, updateDate);
+        result.put(Constants.SLICE_IS_DELETED, isDeleted);
+        result.put(Constants.SLICE_POSITION, position);
+        result.put(Constants.SLICE_SOTR_BY_DATE, sortByDate);
+        return result;
+    }
+
+    // getter for default use
+    // The Firebase data mapper will ignore this
+    @Exclude
+    public SliceType getType() {
+        return sliceType;
+    }
+
+    // getter for Firebase
+    public String getSliceType() {
+        // Convert enum to string
+        if (sliceType == null) {
+            return null;
+        } else {
+            return sliceType.name();
+        }
+    }
+
+    // setter for default use
+    // The Firebase data mapper will ignore this
+    @Exclude
+    public void setType(SliceType type) {
+        this.sliceType = type;
+    }
+
+
+    // setter for Firebase
+    public void setSliceType(String sliceType) {
+        // Get enum from string
+        if (sliceType == null) {
+            this.sliceType = null;
+        } else {
+            this.sliceType = SliceType.valueOf(sliceType);
+        }
+    }
+
 
     public String getUser() {
         return user;
@@ -86,42 +143,6 @@ public class Slice {
     public void setDescription(String description) {
         this.description = description;
     }
-
-    // getter for default use
-    // The Firebase data mapper will ignore this
-    @Exclude
-    public SliceType getType() {
-        return sliceType;
-    }
-
-    // getter for Firebase
-    public String getSliceType() {
-        // Convert enum to string
-        if (sliceType == null) {
-            return null;
-        } else {
-            return sliceType.name();
-        }
-    }
-
-    // setter for default use
-    // The Firebase data mapper will ignore this
-    @Exclude
-    public void setType(SliceType type) {
-        this.sliceType = type;
-    }
-
-
-    // setter for Firebase
-    public void setSliceType(String sliceType) {
-        // Get enum from string
-        if (sliceType == null) {
-            this.sliceType = null;
-        } else {
-            this.sliceType = SliceType.valueOf(sliceType);
-        }
-    }
-
 
     public String getLineUUID() {
         return lineUUID;

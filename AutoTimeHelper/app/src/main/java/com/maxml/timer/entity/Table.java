@@ -10,7 +10,7 @@ public class Table {
 		this.list = new ArrayList<Slice>();
 	}
 
-	public void addSlise(Slice slice) {
+	public void addSlice(Slice slice) {
 		list.add(slice);
 	}
 

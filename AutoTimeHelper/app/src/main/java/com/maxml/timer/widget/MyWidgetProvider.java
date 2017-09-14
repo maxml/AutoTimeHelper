@@ -66,7 +66,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
             start.setStartDate(new Date());
             start.setType(type);
 
-            controller.getTable().addSlise(start);
+            controller.getTable().addSlice(start);
             return updateWidget(context);
         }
 
