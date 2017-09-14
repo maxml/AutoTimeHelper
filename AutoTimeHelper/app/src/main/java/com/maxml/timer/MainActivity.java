@@ -6,6 +6,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -32,12 +33,14 @@ import com.maxml.timer.ui.fragments.ManualActivityFragment;
 import com.maxml.timer.ui.fragments.SettingsFragment;
 import com.maxml.timer.ui.fragments.SliceListViewFragment;
 import com.maxml.timer.ui.fragments.TablesFragment;
+import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.FragmentUtils;
 import com.maxml.timer.util.SharedPrefUtils;
 import com.maxml.timer.util.SliceType;
 import com.squareup.picasso.Picasso;
 
 import java.util.Date;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -47,10 +50,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ProgressBar progressBar;
     private ActionBarDrawerToggle drawerToggle;
     private Toolbar toolbar;
+    // // TODO: test
+//    SliceCRUD c;
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -61,16 +66,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         hideProgressBar();
 
-        SliceCRUD c = new SliceCRUD(new Handler());
-        c.create(
-                new Slice(
-                        "test",
-                        new Line(new Point(1, 1), new Point(2, 2)),
-                        new Date(20),
-                        new Date(),
-                        "test entity",
-                        SliceType.CALL
-                ));
+/*
+        // todo test
+        c = new SliceCRUD(new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what){
+                    case Constants.RESULT_OK:
+                        List<Slice> resultList = (List<Slice>) msg.obj;
+                        Slice slice = (Slice) resultList.get(0);
+                        slice.setDescription("updated");
+
+                        c.setHandler(new Handler());
+                        c.update(slice);
+                    break;
+                }
+            }
+        });
+        c.read("update");
+*/
+
+
+
 /*
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);

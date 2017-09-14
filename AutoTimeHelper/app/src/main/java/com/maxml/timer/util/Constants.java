@@ -11,4 +11,12 @@ public class Constants {
 
     // firebase database
     public static final String SLICE_DATABASE_PATH = "SLICE";
+
+    // handler
+    public static final int DB_RESULT_OK = 1;
+    public static final int DB_RESULT_ENTITY = 2;
+    public static final int DB_RESULT_LIST = 3;
+    public static final int DB_RESULT_FALSE = 0;
+
+
 }

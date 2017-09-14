@@ -51,9 +51,9 @@ public class SliceCRUD implements OnDbResult {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                   handler.sendEmptyMessage(Constants.RESULT_OK);
+                   handler.sendEmptyMessage(Constants.DB_RESULT_OK);
                 } else {
-                    handler.sendEmptyMessage(Constants.RESULT_FALSE);
+                    handler.sendEmptyMessage(Constants.DB_RESULT_FALSE);
                 }
             }
         });}catch (Exception e){
@@ -120,15 +120,15 @@ public class SliceCRUD implements OnDbResult {
                                 }
                             }
                             // send result
-                            Message m = handler.obtainMessage(Constants.RESULT_OK, list);
+                            Message m = handler.obtainMessage(Constants.DB_RESULT_LIST, list);
                             handler.sendMessage(m);
                         } else {
-                            handler.sendEmptyMessage(Constants.RESULT_FALSE);
+                            handler.sendEmptyMessage(Constants.DB_RESULT_FALSE);
                         }
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                        handler.sendEmptyMessage(Constants.RESULT_FALSE);
+                        handler.sendEmptyMessage(Constants.DB_RESULT_FALSE);
                     }
                 });
 //		ParseQuery<ParseObject> query = ParseQuery.getQuery("Slice");
@@ -207,19 +207,18 @@ public class SliceCRUD implements OnDbResult {
         }
     }
 
-    public void update(final Slice slice) throws InterruptedException {
-
+    public void update(Slice slice){
         // get Firebase id
-        String key = sliceRef.push().getKey();
+        String key = slice.getId();
         // set id entity
         slice.setId(key);
         sliceRef.child(key).setValue(slice).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    handler.sendEmptyMessage(Constants.RESULT_OK);
+                    handler.sendEmptyMessage(Constants.DB_RESULT_OK);
                 } else {
-                    handler.sendEmptyMessage(Constants.RESULT_FALSE);
+                    handler.sendEmptyMessage(Constants.DB_RESULT_FALSE);
                 }
             }
         });
@@ -273,7 +272,17 @@ public class SliceCRUD implements OnDbResult {
 //		});
     }
 
-    public void delete(final String id) {
+    public void delete(String id) {
+        sliceRef.child(id).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    handler.sendEmptyMessage(Constants.RESULT_OK);
+                } else {
+                    handler.sendEmptyMessage(Constants.RESULT_FALSE);
+                }
+            }
+        });
 //		ParseQuery<ParseObject> query = ParseQuery.getQuery("Slice");
 //		if (!NetworkStatus.isConnected)
 //			query.fromLocalDatastore();
