@@ -28,9 +28,9 @@ public class ManualActivityFragment extends Fragment {
 	private Line line = new Line(point, point, "sada");
 	private SliceType type;
 //	private Slice manualstart = new Slice(ParseUser.getCurrentUser()
-//			.getObjectId(), line, new Date(), new Date(), "", type);
+//			.getId(), line, new Date(), new Date(), "", type);
 //	private Slice manualEnd = new Slice(ParseUser.getCurrentUser()
-//			.getObjectId(), line, new Date(), new Date(), "ololo", type);
+//			.getId(), line, new Date(), new Date(), "ololo", type);
 
 	private TextView title;
 	private ToggleButton butCall;
@@ -220,7 +220,7 @@ public class ManualActivityFragment extends Fragment {
 
 // if (controller.getTable().getList().isEmpty()) {
 // Slice manualstart = new Slice(ParseUser.getCurrentUser()
-// .getObjectId(), line, new Date(), new Date(), "ololo", type);
+// .getId(), line, new Date(), new Date(), "ololo", type);
 // // manualstart.setStartDate(new Date());
 // // manualstart.setType(type);
 // // controller.getTable().addSlice(start);
@@ -231,7 +231,7 @@ public class ManualActivityFragment extends Fragment {
 // ArrayList<Slice> slices = controller.getTable().getList();
 // slices.get(slices.size() - 1).setEndDate(new Date());
 //
-// Slice manualnext = new Slice(ParseUser.getCurrentUser().getObjectId(),
+// Slice manualnext = new Slice(ParseUser.getCurrentUser().getId(),
 // line, new Date(), new Date(), "ololo", type);
 // // manualnext.setStartDate(new Date());
 // // manualnext.setType(type);

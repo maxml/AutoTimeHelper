@@ -1,7 +1,6 @@
 package com.maxml.timer.api;
 
 import android.app.Activity;
-import android.content.Context;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -98,7 +97,7 @@ public class UserAPI {
                 });
     }
 
-    public User getCurrentUser() {
+    public static User getCurrentUser() {
         User user = new User();
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser == null) return null;
@@ -106,7 +105,7 @@ public class UserAPI {
         String username = firebaseUser.getDisplayName();
         String email = firebaseUser.getEmail();
         Uri photo = firebaseUser.getPhotoUrl();
-        user.setObjectId(objectId);
+        user.setId(objectId);
         user.setUsername(username);
         user.setEmail(email);
         user.setPhoto(photo);
@@ -136,7 +135,7 @@ public class UserAPI {
 //				if (e == null) {
 //					for (ParseUser parseUser : objects) {
 //						Log.d("UserAPI", "find object");
-//						if (parseUser.getObjectId().equals(id)) {
+//						if (parseUser.getId().equals(id)) {
 //							Log.d("UserAPI", "found, rename");
 //							ParseUser.getCurrentUser().put(USERNAME, name);
 //						}
@@ -157,7 +156,7 @@ public class UserAPI {
 //			public void done(List<ParseUser> objects, ParseException e) {
 //				if (e == null) {
 //					for (ParseUser parseUser : objects) {
-//						if (parseUser.getObjectId().equals(id)) {
+//						if (parseUser.getId().equals(id)) {
 //							ParseUser.getCurrentUser().put(EMAIL, email);
 //						}
 //					}
@@ -172,12 +171,12 @@ public class UserAPI {
 
 //    public void sync(User user) {
 //        Log.d("User", "start method sync");
-//        if (user.getObjectId() == null) {
+//        if (user.getId() == null) {
 //            Log.d("User", "create user");
 //            create(user);
 //        } else {
-//            updateEmail(user.getEmail(), user.getObjectId());
-//            updateName(user.getUsername(), user.getObjectId());
+//            updateEmail(user.getEmail(), user.getId());
+//            updateName(user.getUsername(), user.getId());
 //        }
 //    }
 }

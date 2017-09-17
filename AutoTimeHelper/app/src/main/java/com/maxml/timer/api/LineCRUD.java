@@ -1,12 +1,24 @@
 package com.maxml.timer.api;
 
+import android.os.Handler;
+import android.os.Message;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.maxml.timer.api.interfaces.OnDbResult;
 import com.maxml.timer.entity.Line;
 import com.maxml.timer.entity.Point;
 import com.maxml.timer.entity.Slice;
+import com.maxml.timer.util.Constants;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LineCRUD implements OnDbResult {
@@ -16,7 +28,9 @@ public class LineCRUD implements OnDbResult {
 	Point startPoint = null;
 	LineCRUD lineCRUD = this;
 	public OnDbResult onresultLine;
-	
+
+	private DatabaseReference lineReference;
+	private Handler handler;
 
 	private static final String USER = "User";
 	private static final String START = "start";
@@ -29,13 +43,31 @@ public class LineCRUD implements OnDbResult {
 
 	private String user = "nullUser";
 
+	public LineCRUD(Handler handler) {
+		lineReference = FirebaseDatabase.getInstance().getReference().child(Constants.LINE_DATABASE_PATH);
+		this.handler = handler;
+	}
 
-
-	public void create(Slice slice) {
+	public void create(Line line) {
 		Log.i("Line", " Line starting create");
-		PointCRUD pointCRUD = new PointCRUD();
-		pointCRUD.onresult = this;
-		pointCRUD.create(slice.getPath().getStart(),slice.getPath().getFinish(), slice);
+		// get Firebase id
+		String key = lineReference.push().getKey();
+		// set id entity
+		line.setId(key);
+		try {
+			lineReference.child(key).setValue(line).addOnCompleteListener(new OnCompleteListener<Void>() {
+				@Override
+				public void onComplete(@NonNull Task<Void> task) {
+					if (task.isSuccessful()) {
+						handler.sendEmptyMessage(Constants.DB_RESULT_OK);
+					} else {
+						handler.sendEmptyMessage(Constants.DB_RESULT_FALSE);
+					}
+				}
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 //	@Override
@@ -44,7 +76,7 @@ public class LineCRUD implements OnDbResult {
 //			final ParseObject parseLine = new ParseObject("Line");
 //			parseLine.put("start", parsePointStart);
 //			parseLine.put("finish", parsePointFinish);
-//			parseLine.put("User", slice.getUser());
+//			parseLine.put("User", slice.getUserId());
 //			parseLine.put("UUID", ""+UUID.randomUUID());
 //			parseLine.put("startUUID", parsePointFinish.getString("UUID"));
 //			parseLine.put("finishUUID", ""+parsePointFinish.getString("UUID"));
@@ -53,7 +85,7 @@ public class LineCRUD implements OnDbResult {
 //			new SaveCallback() {
 //				@Override
 //				public void done(ParseException e) {
-//					Log.i("Line", "line is created " + parseLine.getObjectId());
+//					Log.i("Line", "line is created " + parseLine.getId());
 //					parseLine.pinInBackground();
 //					onresultLine.onResult(parseLine, slice);
 //				}
@@ -71,7 +103,35 @@ public class LineCRUD implements OnDbResult {
 
 
 
-	public void read(final String UUID, final List<Slice> sliceList) {
+	public void read(String user) {
+
+		if (user == null) return;
+		lineReference.orderByChild(Constants.LINE_USER)
+				.equalTo(user)
+				.addListenerForSingleValueEvent(new ValueEventListener() {
+					@Override
+					public void onDataChange(DataSnapshot dataSnapshot) {
+						if (dataSnapshot.exists()) {
+							List<Line> list = new ArrayList<>();
+							for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+								Line line = snapshot.getValue(Line.class);
+								if (!line.isDelete()) {
+									list.add(line);
+								}
+							}
+							// send result
+							Message m = handler.obtainMessage(Constants.DB_RESULT_LIST, list);
+							handler.sendMessage(m);
+						} else {
+							handler.sendEmptyMessage(Constants.DB_RESULT_FALSE);
+						}
+					}
+
+					@Override
+					public void onCancelled(DatabaseError databaseError) {
+						handler.sendEmptyMessage(Constants.DB_RESULT_FALSE);
+					}
+				});
 
 //		ParseQuery<ParseObject> query = ParseQuery.getQuery("Line");
 //		if(!NetworkStatus.isConnected)
@@ -92,7 +152,7 @@ public class LineCRUD implements OnDbResult {
 //						line.setStartUUID(parseLine.getString("startUUID"));
 //						line.setFinishUUID(parseLine.getString("finishUUID"));
 //						PointCRUD pointCRUD = new PointCRUD();
-//						pointCRUD.onresult = lineCRUD;
+//						pointCRUD.onResult = lineCRUD;
 //						Log.i("Line", "Line id:" + line.getId());
 //						for(Slice slice: sliceList)
 //							if(slice.getLineUUID().equals(line.getId()))
@@ -143,7 +203,7 @@ public class LineCRUD implements OnDbResult {
 //					try {
 //						Log.i("Line", "Starting update");
 //						parseLine.fetch();
-//						parseLine.put("User", slice.getUser());
+//						parseLine.put("User", slice.getUserId());
 //						parseLine.put("UUID", ""+ slice.getPath().getId());
 //						parseLine.put("startUUID", "" + slice.getPath().getStartUUID());
 //						parseLine.put("finishUUID", "" + slice.getPath().getFinishUUID());

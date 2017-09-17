@@ -30,7 +30,7 @@ public class TableController implements OnResultList {
 
 	public void getListSlice() {
 		sliceCRUD.onresultList = this;
-//		sliceCRUD.read(ParseUser.getCurrentUser().getObjectId());
+//		sliceCRUD.read(ParseUser.getCurrentUser().getId());
 	}
 	
 	public void addSlice(Slice slice) {

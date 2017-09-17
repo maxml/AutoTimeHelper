@@ -60,7 +60,7 @@ public class MainUserPageFragment extends Fragment {
 ////						etSetEmail.setEnabled(false);
 ////						btnChangeOk.setVisibility(View.INVISIBLE);
 //						us.updateEmail(etSetEmail.getText().toString(), ParseUser.getCurrentUser()
-//								.getObjectId());
+//								.getId());
 //					}
 //				});
 //			}
@@ -78,7 +78,7 @@ public class MainUserPageFragment extends Fragment {
 //					public void onClick(View v) {
 //						etSetName.setEnabled(false);
 //						btnChangeOk.setVisibility(View.INVISIBLE);
-//						us.updateName(etSetName.getText().toString(), ParseUser.getCurrentUser().getObjectId());
+//						us.updateName(etSetName.getText().toString(), ParseUser.getCurrentUser().getId());
 //					}
 //				});
 //			}
@@ -106,8 +106,8 @@ public class MainUserPageFragment extends Fragment {
                 //
                 etSetEmail.setEnabled(false);
 //                us.updateEmail(etSetEmail.getText().toString(), ParseUser.getCurrentUser()
-//                        .getObjectId());
-//                us.updateName(etSetName.getText().toString(), ParseUser.getCurrentUser().getObjectId());
+//                        .getId());
+//                us.updateName(etSetName.getText().toString(), ParseUser.getCurrentUser().getId());
                 break;
         }
     }

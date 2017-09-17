@@ -3,7 +3,7 @@ package com.maxml.timer.entity;
 import android.net.Uri;
 
 public class User {
-	private String objectId;
+	private String id;
 	private String username;
 	private String email;
 	private Uri photo;
@@ -19,12 +19,12 @@ public class User {
 		this.photo = photo;
 	}
 
-	public String getObjectId() {
-		return objectId;
+	public String getId() {
+		return id;
 	}
 
-	public void setObjectId(String objectId) {
-		this.objectId = objectId;
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getUsername() {
@@ -46,7 +46,7 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [objectId=" + objectId + ", username=" + username + ", email=" + email + /*
+		return "User [id=" + id + ", username=" + username + ", email=" + email + /*
 																							 * ", password="
 																							 * +
 																							 * password

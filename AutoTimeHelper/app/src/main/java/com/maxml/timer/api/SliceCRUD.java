@@ -37,7 +37,7 @@ public class SliceCRUD implements OnDbResult {
 
     public SliceCRUD(Handler handler) {
         if (sliceRef == null) {
-            sliceRef = FirebaseDatabase.getInstance().getReference().child(Constants.SLICE_DATABASE_PATH);
+            sliceRef = FirebaseDatabase.getInstance().getReference().child(Constants.USER_DATABASE_PATH);
         }
         this.handler = handler;
     }
@@ -69,7 +69,7 @@ public class SliceCRUD implements OnDbResult {
 //	public void onResult(final ParseObject parseLine, Slice slice) {
 //
 //		final ParseObject parseSlice = new ParseObject("Slice");
-//		parseSlice.put("User", slice.getUser());
+//		parseSlice.put("User", slice.getUserId());
 //		parseSlice.put("startDate", slice.getStartDate());
 //		parseSlice.put("endDate", slice.getEndDate());
 //		parseSlice.put("Description", slice.getDescription());
@@ -92,7 +92,7 @@ public class SliceCRUD implements OnDbResult {
 //				@Override
 //				public void done(ParseException e) {
 //					parseSlice.pinInBackground();
-//					Log.i("Slice", "Slice is created id: " + parseSlice.getObjectId() + " Line UUID: "
+//					Log.i("Slice", "Slice is created id: " + parseSlice.getId() + " Line UUID: "
 //							+ parseLine.getString("UUID"));
 //				}
 //			}
@@ -109,7 +109,7 @@ public class SliceCRUD implements OnDbResult {
 
     public void read(String user) {
         if (user == null) return;
-        sliceRef.orderByChild(Constants.SLICE_USER)
+        sliceRef.orderByChild(Constants.COLUMN_USER_ID)
                 .equalTo(user)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -161,7 +161,7 @@ public class SliceCRUD implements OnDbResult {
 //							Log.i("SliceRead", "Slice: " + parseSlice.getString("UUID"));
 //
 //							Slice slice = new Slice();
-//							slice.setUser(parseSlice.getString("User"));
+//							slice.setUserId(parseSlice.getString("User"));
 //							slice.setStartDate(parseSlice.getDate("startDate"));
 //							slice.setEndDate(parseSlice.getDate("endDate"));
 //							slice.setDescription(parseSlice.getString("Description"));
@@ -242,7 +242,7 @@ public class SliceCRUD implements OnDbResult {
 //
 //						parseSlice.fetch();
 //						Log.i("SliceUpdate", "Starting update");
-//						parseSlice.put("User", slice.getUser());
+//						parseSlice.put("User", slice.getUserId());
 //						parseSlice.put("startDate", slice.getStartDate());
 //						parseSlice.put("endDate", slice.getEndDate());
 //						parseSlice.put("Description", slice.getDescription());

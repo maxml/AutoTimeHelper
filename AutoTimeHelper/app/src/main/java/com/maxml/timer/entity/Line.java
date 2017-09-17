@@ -7,6 +7,7 @@ public class Line {
 	private String id;
 	private String startUUID;
 	private String finishUUID;
+	private boolean isDelete =false;
 	
 	public Line(Point start, Point finish) {
 		this.start = start;
@@ -64,8 +65,14 @@ public class Line {
 	public void setFinish(Point finish) {
 		this.finish = finish;
 	}
-	
-	
+
+	public boolean isDelete() {
+		return isDelete;
+	}
+
+	public void setDelete(boolean delete) {
+		isDelete = delete;
+	}
 
 	public String getStartUUID() {
 		return startUUID;

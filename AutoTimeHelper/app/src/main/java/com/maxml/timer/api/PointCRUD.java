@@ -9,7 +9,7 @@ import com.maxml.timer.entity.Slice;
 public class PointCRUD {
 	
 	PointCRUD pointCRUD = this;
-	public OnDbResult onresult;
+	public OnDbResult onResult;
 	
 	public void create(Point pointStart, Point pointFinish, final Slice slice) {
 		Log.i("Point", " Points starting create");
@@ -18,12 +18,12 @@ public class PointCRUD {
 //		final ParseObject parsePointFinish = new ParseObject("Point");
 //		parsePointStart.put("x", pointStart.getX());
 //		parsePointStart.put("y", pointStart.getY());
-//		parsePointStart.put("User", slice.getUser());
+//		parsePointStart.put("User", slice.getUserId());
 //		parsePointStart.put("UUID", "" + UUID.randomUUID());
 //
 //		parsePointFinish.put("x", pointFinish.getX());
 //		parsePointFinish.put("y", pointFinish.getY());
-//		parsePointFinish.put("User", slice.getUser());
+//		parsePointFinish.put("User", slice.getUserId());
 //		parsePointFinish.put("UUID", "" + UUID.randomUUID());
 //		Log.i("Point", " Points all date put");
 //		if (NetworkStatus.isConnected) {
@@ -36,9 +36,9 @@ public class PointCRUD {
 //							parsePointStart.pinInBackground();
 //							parsePointFinish.pinInBackground();
 //
-//							Log.i("Point", "Create: Point Start created " + parsePointStart.getObjectId());
-//							Log.i("Point", "Create: Point Finish created " + parsePointFinish.getObjectId());
-//							onresult.onResult(parsePointStart, parsePointFinish, slice);
+//							Log.i("Point", "Create: Point Start created " + parsePointStart.getId());
+//							Log.i("Point", "Create: Point Finish created " + parsePointFinish.getId());
+//							onResult.onResult(parsePointStart, parsePointFinish, slice);
 //						}
 //					});
 //				}
@@ -53,7 +53,7 @@ public class PointCRUD {
 //					"Create: Point Start created offline. UUID: " + parsePointStart.getString("UUID"));
 //			Log.i("Point",
 //					"Create: Point Finish created offline. UUID: " + parsePointFinish.getString("UUID"));
-//			onresult.onResult(parsePointStart, parsePointFinish, slice);
+//			onResult.onResult(parsePointStart, parsePointFinish, slice);
 //		}
 //
 	}
@@ -73,8 +73,8 @@ public class PointCRUD {
 //					Log.i("Point", "Starting read");
 //					// parsePoint.fetch();
 //					Point point = new Point(parsePoint.getDouble("x"), parsePoint.getDouble("y"));
-//					point.setObjectId(parsePoint.getString("UUID"));
-//					onresult.onResult(point, sliceList);
+//					point.setId(parsePoint.getString("UUID"));
+//					onResult.onResult(point, sliceList);
 //					// } catch (ParseException e1) {
 //					// Log.d("Point", "Read: object not nul, but" + e1);
 //					// e1.printStackTrace();
@@ -91,7 +91,7 @@ public class PointCRUD {
 //		if (!NetworkStatus.isConnected)
 //			query.fromLocalDatastore();
 //
-//		query.whereEqualTo("UUID", point.getObjectId());
+//		query.whereEqualTo("UUID", point.getId());
 //		query.getFirstInBackground(new GetCallback<ParseObject>() {
 //			public void done(ParseObject parsePoint, ParseException e) {
 //				if (parsePoint == null) {
