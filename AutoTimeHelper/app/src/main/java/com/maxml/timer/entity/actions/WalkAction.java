@@ -1,7 +1,8 @@
-package com.maxml.timer.entity;
+package com.maxml.timer.entity.actions;
 
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
+import com.maxml.timer.entity.Line;
 import com.maxml.timer.util.Constants;
 
 import java.util.Date;
@@ -9,17 +10,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 @IgnoreExtraProperties
-public class WorkEvent extends BaseEvent{
+public class WalkAction extends BaseAction {
+    private Line path;
 
-    public WorkEvent(Date startDate, Date endDate, String description) {
+    public WalkAction(Date startDate, Date endDate, String description, Line path) {
         super();
+        this.path = path;
         setStartDate(startDate);
         setEndDate(endDate);
         setDescription(description);
     }
 
-    public WorkEvent() {
+    public WalkAction() {
 
+    }
+
+    public Line getPath() {
+        return path;
+    }
+
+    public void setPath(Line path) {
+        this.path = path;
     }
 
     @Exclude
@@ -30,6 +41,7 @@ public class WorkEvent extends BaseEvent{
         result.put(Constants.COLUMN_END_DATE, getEndDate());
         result.put(Constants.COLUMN_DESCRIPTION, getDescription());
         result.put(Constants.COLUMN_IS_DELETED, isDeleted());
+        result.put(Constants.COLUMN_PATH, path);
         return result;
     }
 }

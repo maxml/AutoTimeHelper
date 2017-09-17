@@ -1,15 +1,8 @@
-package com.maxml.timer.entity;
+package com.maxml.timer.entity.actions;
 
-import com.google.firebase.database.Exclude;
-import com.maxml.timer.util.Constants;
-import com.maxml.timer.util.SliceType;
-
-import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
-abstract class BaseEvent {
+abstract class BaseAction {
     private String id;
     private Date startDate;
     private Date endDate;

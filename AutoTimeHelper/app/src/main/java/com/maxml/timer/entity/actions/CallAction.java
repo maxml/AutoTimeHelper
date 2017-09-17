@@ -1,4 +1,4 @@
-package com.maxml.timer.entity;
+package com.maxml.timer.entity.actions;
 
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
@@ -9,16 +9,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 @IgnoreExtraProperties
-public class CallEvent extends BaseEvent{
+public class CallAction extends BaseAction {
 
-    public CallEvent(Date startDate, Date endDate, String description) {
+    public CallAction(Date startDate, Date endDate, String description) {
         super();
         setStartDate(startDate);
         setEndDate(endDate);
         setDescription(description);
     }
 
-    public CallEvent() {
+    public CallAction() {
 
     }
 

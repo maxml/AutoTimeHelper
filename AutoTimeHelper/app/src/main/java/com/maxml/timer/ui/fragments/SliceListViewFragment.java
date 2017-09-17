@@ -109,7 +109,7 @@ public class SliceListViewFragment extends Fragment implements OnResultList {
 		}
 		
 		titleText = (TextView) getActivity().findViewById(R.id.titleText);
-		titleText.setText("WorkEvent: " + durationWork / 60 + "s, CallEvent: " + durationCall / 60 + "s, Walk: "
+		titleText.setText("WorkAction: " + durationWork / 60 + "s, CallAction: " + durationCall / 60 + "s, Walk: "
 				+ durationWalk / 60 + "s, Rest: " + durationRest / 60 + "s");
 		
 		listMain.setChoiceMode(ListView.CHOICE_MODE_SINGLE);

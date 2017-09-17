@@ -1,4 +1,4 @@
-package com.maxml.timer.entity;
+package com.maxml.timer.entity.actions;
 
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
@@ -9,27 +9,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 @IgnoreExtraProperties
-public class WalkEvent extends BaseEvent{
-    private Line path;
+public class RestAction extends BaseAction {
 
-    public WalkEvent(Date startDate, Date endDate, String description, Line path) {
+
+    public RestAction(Date startDate, Date endDate, String description) {
         super();
-        this.path = path;
         setStartDate(startDate);
         setEndDate(endDate);
         setDescription(description);
     }
 
-    public WalkEvent() {
+    public RestAction() {
 
-    }
-
-    public Line getPath() {
-        return path;
-    }
-
-    public void setPath(Line path) {
-        this.path = path;
     }
 
     @Exclude
@@ -40,7 +31,8 @@ public class WalkEvent extends BaseEvent{
         result.put(Constants.COLUMN_END_DATE, getEndDate());
         result.put(Constants.COLUMN_DESCRIPTION, getDescription());
         result.put(Constants.COLUMN_IS_DELETED, isDeleted());
-        result.put(Constants.COLUMN_PATH, path);
         return result;
     }
 }
+
+

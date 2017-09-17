@@ -20,7 +20,7 @@ public class NetworkReceiver extends BroadcastReceiver {
 		// if (netStat.isConnected) {
 		// Slice slice = new Slice();
 		// slice.setType(SliceType.WORK);
-		// slice.setDescription("WorkEvent");
+		// slice.setDescription("WorkAction");
 		// tbContr.addSlice(slice);
 		// }
 	}
