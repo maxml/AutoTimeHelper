@@ -21,7 +21,7 @@ public class CollectionPagerAdapter extends PagerAdapter {
 	
 	private static final int AMOUNT_OF_WEEK_DAYS = 3;
 	
-	// private TableController c = new TableController();
+	// private TableControllerService c = new TableControllerService();
 	
 	private Context ctx;
 	

@@ -5,8 +5,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -20,29 +18,21 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.maxml.timer.api.SliceCRUD;
-import com.maxml.timer.controllers.TableController;
-import com.maxml.timer.entity.Line;
-import com.maxml.timer.entity.Point;
-import com.maxml.timer.entity.Slice;
+import com.maxml.timer.controllers.TableControllerService;
 import com.maxml.timer.entity.User;
-import com.maxml.timer.ui.activity.CalendarActivity;
 import com.maxml.timer.ui.fragments.CalendarFragment;
 import com.maxml.timer.ui.fragments.GoogleMapFragment;
 import com.maxml.timer.ui.fragments.ManualActivityFragment;
 import com.maxml.timer.ui.fragments.SettingsFragment;
 import com.maxml.timer.ui.fragments.SliceListViewFragment;
 import com.maxml.timer.ui.fragments.TablesFragment;
-import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.FragmentUtils;
 import com.maxml.timer.util.SharedPrefUtils;
-import com.maxml.timer.util.SliceType;
+import com.maxml.timer.util.Utils;
 import com.squareup.picasso.Picasso;
 
-import java.util.Date;
-import java.util.List;
-
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String FRAGMENT_TAG = "CURRENT_FRAGMENT";
 
@@ -98,6 +88,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         initDrawer();
         if (savedInstanceState == null)
             setupFragment(new SliceListViewFragment());
+        initService();
+    }
+
+    private void initService() {
+        // if service not instant yet, start one
+        if (!Utils.isServiceRunning(this, TableControllerService.class)) {
+            MyLog.d("start new service instance");
+            Intent serviceIntent = new Intent(this, TableControllerService.class);
+            startService(serviceIntent);
+        }
+
     }
 
     private void initDrawer() {

@@ -5,12 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.maxml.timer.controllers.TableController;
+import com.maxml.timer.controllers.TableControllerService;
 import com.maxml.timer.util.NetworkStatus;
 
 public class NetworkReceiver extends BroadcastReceiver {
 	private static final String LOG_TAG = "NetworkReceiver";
-	private TableController tbContr;
+	private TableControllerService tbContr;
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {

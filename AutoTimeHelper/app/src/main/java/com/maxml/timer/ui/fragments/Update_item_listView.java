@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.maxml.timer.R;
-import com.maxml.timer.controllers.TableController;
+import com.maxml.timer.controllers.TableControllerService;
 
 import java.util.Date;
 
@@ -38,11 +38,11 @@ public class Update_item_listView extends Fragment {
 			@Override
 			public void onClick(View v) {
 				
-				TableController tableController = new TableController();
+				TableControllerService tableControllerService = new TableControllerService();
 				SliceListViewFragment.slice.setDescription(textDescription.getText()
 						.toString());
 				SliceListViewFragment.slice.setUpdateDate(new Date());
-				tableController.update(SliceListViewFragment.slice);
+				tableControllerService.update(SliceListViewFragment.slice);
 				setupFragment(new SliceListViewFragment());
 			}
 		});

@@ -19,5 +19,9 @@
     <string name="textViewEndDate">textViewEndDate</string>
     <string name="duration">duration</string>
     <string name="description">Description</string>
+    <string name="notification_title">AutoTimeHelper</string>
+    <string name="notification_text">some message</string>
+    <string name="ongoing_call_description">ongoing call</string>
+    <string name="incoming_call_description">incoming call</string>
 
 </resources>

@@ -23,16 +23,13 @@ import android.widget.Toast;
 
 import com.maxml.timer.MainActivity;
 import com.maxml.timer.R;
-import com.maxml.timer.api.interfaces.OnResultList;
-import com.maxml.timer.controllers.TableController;
-import com.maxml.timer.entity.Slice;
+import com.maxml.timer.controllers.TableControllerService;
 import com.maxml.timer.util.ManagerAdapter;
 import com.maxml.timer.util.SliceType;
 
 import java.text.SimpleDateFormat;
-import java.util.List;
 
-public class SliceListViewFragment extends Fragment implements OnResultList {
+public class SliceListViewFragment extends Fragment {
 	
 	TextView titleText;
 	ProgressBar progressBar;
@@ -59,7 +56,7 @@ public class SliceListViewFragment extends Fragment implements OnResultList {
 		super.onCreate(savedInstanceState);
 /*
 
-		TableController tableControler = new TableController();
+		TableControllerService tableControler = new TableControllerService();
 		tableControler.onResult = this;
 		tableControler.getListSlice();
 		
@@ -140,7 +137,7 @@ public class SliceListViewFragment extends Fragment implements OnResultList {
 					
 					@Override
 					public void onClick(View v) {
-						TableController controler = new TableController();
+						TableControllerService controler = new TableControllerService();
 						controler.delete(listSlice.get(position));
 						listSlice.remove(position);
 						Toast.makeText(getActivity(),

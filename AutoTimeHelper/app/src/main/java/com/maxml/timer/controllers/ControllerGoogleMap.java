@@ -10,7 +10,7 @@ import com.maxml.timer.entity.Slice;
 public class ControllerGoogleMap {
 	
 	private Slice googleMapSlice;
-	private TableController controller = new TableController();
+	private TableControllerService controller = new TableControllerService();
 	private Point start = new Point();
 	private Date date = new Date();
 	

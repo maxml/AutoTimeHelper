@@ -11,7 +11,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.maxml.timer.R;
-import com.maxml.timer.controllers.TableController;
+import com.maxml.timer.controllers.TableControllerService;
 import com.maxml.timer.entity.Line;
 import com.maxml.timer.entity.Point;
 import com.maxml.timer.entity.Slice;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class ManualActivityFragment extends Fragment {
-	private TableController controller = new TableController();
+	private TableControllerService controller = new TableControllerService();
 	private String SELECT_ACTION = "Select an action!";
 	private Point point = new Point(1, 5);
 	private Line line = new Line(point, point, "sada");

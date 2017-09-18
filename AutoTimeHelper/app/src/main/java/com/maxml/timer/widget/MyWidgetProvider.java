@@ -9,20 +9,18 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 
 import com.maxml.timer.R;
-import com.maxml.timer.controllers.TableController;
-import com.maxml.timer.entity.Slice;
+import com.maxml.timer.controllers.TableControllerService;
 import com.maxml.timer.util.SliceType;
 import com.maxml.timer.util.TimerConstatnts;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
 public class MyWidgetProvider extends AppWidgetProvider {
 
-    private static TableController controller;
-//    private static TableController controller = new TableController();
+    private static TableControllerService controller;
+//    private static TableControllerService controller = new TableControllerService();
 
     @Override
     public void onUpdate(Context context,
@@ -34,7 +32,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
                 context.getPackageName(),
                 R.layout.widget_layout);
 
-        controller = new TableController();
+        controller = new TableControllerService();
 
         // register for button event
 
@@ -58,9 +56,9 @@ public class MyWidgetProvider extends AppWidgetProvider {
         pushWidgetUpdate(context, remoteViews);
     }
 
-    public static PendingIntent buildButtonPendingIntent(Context context,
-                                                         SliceType type) {
+    public static PendingIntent buildButtonPendingIntent(Context context, SliceType type) {
 
+/*
         if (controller.getTable().getList().isEmpty()) {
             Slice start = new Slice();
             start.setStartDate(new Date());
@@ -78,6 +76,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
         widgetstart.setType(type);
 
         slices.add(widgetstart);
+*/
         return updateWidget(context);
     }
 
