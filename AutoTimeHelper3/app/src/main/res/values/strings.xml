@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Auto Time Helper</string>
+    <string name="user_name">User Name</string>
+    <string name="drawer_open">Menu Opened</string>
+    <string name="drawer_close">Menu Closed</string>
+    <string name="menu_template">My page</string>
+    <string name="manual_activity">Manual Activity</string>
+    <string name="settings">Settings</string>
+    <string name="info_result">Result</string>
+    <string name="map">Map</string>
+    <string name="stop">STOP</string>
+    <string name="call">CALL</string>
+    <string name="work">WORK</string>
+    <string name="walk">WALK</string>
+    <string name="rest">REST</string>
+    <string name="textViewStartDate">textViewStartDate</string>
+    <string name="textViewEndDate">textViewEndDate</string>
+    <string name="duration">duration</string>
+    <string name="description">Description</string>
+    <string name="notification_title">AutoTimeHelper</string>
+    <string name="notification_text">some message</string>
+    <string name="ongoing_call_description">ongoing call</string>
+    <string name="incoming_call_description">incoming call</string>
+    <string name="widget_default_text">Ничего не выбрано</string>
+    <string name="widget_call_text">Дзвонок</string>
+    <string name="call_number_widget">Из виджета</string>
+    <string name="widget_walk_text">В пути</string>
+    <string name="widget_work_text">Работа</string>
+    <string name="widget_rest_text">Отдых</string>
+    <string name="calendar">Calendar</string>
+    <string name="home">Home page</string>
+
+</resources>

@@ -2,12 +2,185 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d42e00b4-591f-44fd-9bdc-eae97d44ea1e" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AutoTimeHelper/.gitignore" afterPath="$PROJECT_DIR$/AutoTimeHelper/.gitignore" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AutoTimeHelper/app/build.gradle" afterPath="$PROJECT_DIR$/AutoTimeHelper/app/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AutoTimeHelper/app/src/main/java/com/maxml/timer/api/SliceCRUD.java" afterPath="$PROJECT_DIR$/AutoTimeHelper/app/src/main/java/com/maxml/timer/api/SliceCRUD.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AutoTimeHelper/app/src/main/java/com/maxml/timer/util/Constants.java" afterPath="$PROJECT_DIR$/AutoTimeHelper/app/src/main/java/com/maxml/timer/util/Constants.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AutoTimeHelper/build.gradle" afterPath="$PROJECT_DIR$/AutoTimeHelper/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AutoTimeHelper/settings.gradle" afterPath="$PROJECT_DIR$/AutoTimeHelper/settings.gradle" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-hdpi/appwidget_dark_bg.9.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-hdpi/appwidget_dark_bg_focused.9.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-hdpi/appwidget_dark_bg_pressed.9.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-hdpi/drawer_shadow.9.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-hdpi/ic_contact_picture.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-hdpi/ic_group.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-hdpi/ic_launcher.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-hdpi/ic_map.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-hdpi/ic_person.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-hdpi/ic_search.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-hdpi/ic_settings.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-hdpi/ic_work_running_grey.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-hdpi/ic_work_running_noback.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-hdpi/work_running_grey.9.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-ldpi/backgroudn.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-mdpi/appwidget_dark_bg.9.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-mdpi/appwidget_dark_bg_focused.9.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-mdpi/appwidget_dark_bg_pressed.9.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-mdpi/backgroudn.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-mdpi/drawer_shadow.9.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-mdpi/ic_contact_picture.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-mdpi/ic_group.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-mdpi/ic_launcher.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-mdpi/ic_map.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-mdpi/ic_person.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-mdpi/ic_search.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-mdpi/ic_settings.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-mdpi/ic_work_running_grey.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-mdpi/ic_work_running_noback.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-mdpi/work_running_grey.9.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-nodpi/header_bg.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-xhdpi/backgroudn.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-xhdpi/drawer_shadow.9.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-xhdpi/ic_contact_picture.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-xhdpi/ic_group.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-xhdpi/ic_launcher.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-xhdpi/ic_map.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-xhdpi/ic_person.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-xhdpi/ic_search.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-xhdpi/ic_settings.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-xhdpi/ic_work_running_grey.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-xhdpi/ic_work_running_noback.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-xhdpi/work_running_grey.9.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-xxhdpi/backgroudn.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-xxhdpi/drawer_shadow.9.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-xxhdpi/ic_contact_picture.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-xxhdpi/ic_group.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-xxhdpi/ic_launcher.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-xxhdpi/ic_map.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-xxhdpi/ic_person.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-xxhdpi/ic_search.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-xxhdpi/ic_settings.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-xxhdpi/ic_work_running_grey.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-xxhdpi/ic_work_running_noback.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable-xxhdpi/work_running_grey.9.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable/circle.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable/ic_sync_button.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable/widget.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/AutoTimeHelper3.iml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/app.iml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/build.gradle" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/google-services.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/proguard-rules.pro" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/androidTest/java/com/maxml/timer/ApplicationTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/AndroidManifest.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/App.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/MainActivity.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/MyLog.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/api/CallEventCRUD.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/api/PointCRUD.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/api/RestEventCRUD.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/api/TableCRUD.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/api/UserAPI.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/api/WalkEventCRUD.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/api/WorkEventCRUD.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/controllers/NotificationHelper.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/controllers/TableControllerService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/entity/Coordinates.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/entity/Line.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/entity/Point.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/entity/Table.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/entity/User.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/entity/actions/BaseAction.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/entity/actions/CallAction.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/entity/actions/RestAction.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/entity/actions/WalkAction.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/entity/actions/WorkAction.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/entity/eventBus/ActionMessage.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/entity/eventBus/CallMessage.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/entity/eventBus/GpsMessage.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/entity/eventBus/UiMessage.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/entity/eventBus/dbMessage/CalendarDbMessage.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/entity/eventBus/dbMessage/DbMessage.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/entity/eventBus/dbMessage/DbResultMessage.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/googlemap/GPSTracker.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/receivers/CallReceiver.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/receivers/MyWidgetIntentReceiver.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/receivers/NetworkReceiver.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/ui/activity/CalendarActivity.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/ui/activity/CreateUserActivity.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/ui/activity/ForgotPasswordActivity.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/ui/activity/LoginActivity.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/ui/elements/DrawerItem.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/ui/elements/DrawerItemAdapter.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/ui/elements/DrawerMenu.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/ui/elements/ScrimInsetsFrameLayout.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/ui/fragments/ActionListViewFragment.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/ui/fragments/CalendarFragment.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/ui/fragments/CollectionPagerAdapter.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/ui/fragments/GoogleMapFragment.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/ui/fragments/HomeFragment.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/ui/fragments/MainUserPageFragment.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/ui/fragments/SettingsFragment.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/ui/fragments/TablesFragment.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/util/Constants.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/util/DialogFactory.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/util/FragmentUtils.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/util/ManagerAdapter.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/util/NetworkStatus.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/util/SharedPrefUtils.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/util/SliceType.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/util/TimerConstatnts.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/util/Utils.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/java/com/maxml/timer/widget/MyWidgetProvider.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable/blue_button.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable/button_call.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable/button_pressed.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable/button_rest.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable/button_walk.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable/button_work.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable/green_button.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable/my_layout_shape_colored.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable/my_layout_shape_stroked.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable/my_layout_shape_toast.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable/my_rounded_button_shape.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable/my_rounded_button_shape_dark.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable/red_button.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/drawable/yellow_button.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/layout-v21/drawer_header.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/layout/activity_calendar.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/layout/activity_google_map.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/layout/activity_main.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/layout/activity_main_user_page.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/layout/activity_tables.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/layout/activity_user_settings.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/layout/create_user.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/layout/drawer_divider.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/layout/drawer_header.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/layout/drawer_menu.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/layout/forgot_password.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/layout/fragment_calendar.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/layout/fragment_tables.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/layout/item.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/layout/item_list.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/layout/listview_fragment.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/layout/login_activity.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/layout/manual_activity_fragment.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/layout/popup.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/layout/slice_listview.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/layout/update_item_listview.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/layout/widget_layout.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/menu/drawer_menu.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/menu/main.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/menu/popup_menu.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/values-v11/styles.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/values-v14/styles.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/values-v21/styles.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/values-w820dp/dimens.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/values/attrs.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/values/colors.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/values/dimens.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/values/strings.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/values/styles.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/app/src/main/res/xml/demo_widget_provider.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/build.gradle" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/gradlew" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/gradlew.bat" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AutoTimeHelper3/settings.gradle" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="AutoTimeHelper.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -31,17 +204,57 @@
         <entry file="file://$PROJECT_DIR$/AutoTimeHelper/app/src/main/java/com/maxml/timer/App.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MainActivity.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="MainActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/AutoTimeHelper/app/src/main/java/com/maxml/timer/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="18">
-              <caret line="49" column="0" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
+            <state relative-caret-position="16">
+              <caret line="49" column="0" lean-forward="false" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/AutoTimeHelper/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/AutoTimeHelper/app/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/AutoTimeHelper2.0/app/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/AutoTimeHelper2.0/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -80,19 +293,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="552" />
-    <option name="width" value="1368" />
-    <option name="height" value="1053" />
-  </component>
-  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
-    <OptionsSetting value="true" id="Add" />
-    <OptionsSetting value="true" id="Remove" />
-    <OptionsSetting value="true" id="Checkout" />
-    <OptionsSetting value="true" id="Update" />
-    <OptionsSetting value="true" id="Status" />
-    <OptionsSetting value="true" id="Edit" />
-    <ConfirmationsSetting value="0" id="Add" />
-    <ConfirmationsSetting value="0" id="Remove" />
+    <option name="x" value="244" />
+    <option name="y" value="44" />
+    <option name="width" value="1282" />
+    <option name="height" value="1009" />
   </component>
   <component name="ProjectReloadState">
     <option name="STATE" value="0" />
@@ -112,7 +316,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
@@ -135,10 +338,45 @@
               <option name="myItemId" value="AutoTimeHelper" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Auto Time Helper" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AutoTimeHelper" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Auto Time Helper" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AutoTimeHelper2.0" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AutoTimeHelper" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Auto Time Helper" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AutoTimeHelper2.0" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
       <pane id="AndroidView">
         <subPane>
           <PATH>
@@ -149,6 +387,8 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -158,8 +398,20 @@
     <property name="MemberChooser.sorted" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="MemberChooser.copyJavadoc" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/AutoTimeHelper" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="FullScreen" value="false" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
   </component>
   <component name="RunManager">
     <configuration default="true" type="Application" factoryName="Application">
@@ -309,25 +561,28 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="552" y="0" width="1368" height="1053" extended-state="4" />
-    <editor active="false" />
+    <frame x="244" y="44" width="1282" height="1009" extended-state="0" />
+    <editor active="true" />
     <layout>
+      <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32522124" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22441861" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24886535" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26860842" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Fabric" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Fabric" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Device File Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
+      <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -336,11 +591,11 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Memory Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -366,15 +621,15 @@
     <entry file="file://$PROJECT_DIR$/AutoTimeHelper/app/src/main/java/com/maxml/timer/App.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/AutoTimeHelper/app/src/main/java/com/maxml/timer/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="352">
+          <caret line="49" column="0" lean-forward="false" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -382,15 +637,15 @@
     <entry file="file://$PROJECT_DIR$/AutoTimeHelper/app/src/main/java/com/maxml/timer/App.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/AutoTimeHelper/app/src/main/java/com/maxml/timer/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="352">
+          <caret line="49" column="0" lean-forward="false" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -398,7 +653,7 @@
     <entry file="file://$PROJECT_DIR$/AutoTimeHelper/app/src/main/java/com/maxml/timer/App.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -406,7 +661,7 @@
     <entry file="file://$PROJECT_DIR$/AutoTimeHelper/app/src/main/java/com/maxml/timer/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
-          <caret line="49" column="0" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -414,7 +669,7 @@
     <entry file="file://$PROJECT_DIR$/AutoTimeHelper/app/src/main/java/com/maxml/timer/App.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -422,7 +677,7 @@
     <entry file="file://$PROJECT_DIR$/AutoTimeHelper/app/src/main/java/com/maxml/timer/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <caret line="49" column="0" lean-forward="false" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -430,7 +685,7 @@
     <entry file="file://$PROJECT_DIR$/AutoTimeHelper/app/src/main/java/com/maxml/timer/App.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -438,7 +693,7 @@
     <entry file="file://$PROJECT_DIR$/AutoTimeHelper/app/src/main/java/com/maxml/timer/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -446,15 +701,63 @@
     <entry file="file://$PROJECT_DIR$/AutoTimeHelper/app/src/main/java/com/maxml/timer/App.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/AutoTimeHelper/app/src/main/java/com/maxml/timer/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="18">
-          <caret line="49" column="0" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AutoTimeHelper/app/src/main/java/com/maxml/timer/App.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AutoTimeHelper/app/src/main/java/com/maxml/timer/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="16">
+          <caret line="49" column="0" lean-forward="false" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AutoTimeHelper/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AutoTimeHelper/app/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AutoTimeHelper2.0/app/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AutoTimeHelper2.0/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>

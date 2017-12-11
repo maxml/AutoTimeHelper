@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5sp"
+    android:background="@color/backGroundGrey"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="@string/widget_default_text"
+            android:textColor="@color/primary_text"
+            android:textSize="24sp"
+            android:textStyle="normal" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/contentContainer"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal"
+        android:padding="8dp" >
+
+        <Button
+            android:id="@+id/butCall"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="8dp"
+            android:layout_weight="1.38"
+            android:background="@drawable/button_call"
+            android:padding="8dp"
+            android:text="@string/call"
+            android:textColor="@color/primary_text" />
+
+        <Button
+            android:id="@+id/butWork"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/button_work"
+            android:padding="8dp"
+            android:text="@string/work"
+            android:textColor="@color/primary_text" />
+
+        <Button
+            android:id="@+id/butRest"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_rest"
+            android:padding="8dp"
+            android:text="@string/rest"
+            android:textColor="@color/primary_text" />
+
+        <Button
+            android:id="@+id/butWalk"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/button_walk"
+            android:padding="8dp"
+            android:text="@string/walk"
+            android:textColor="@color/primary_text" />
+    </LinearLayout>
+
+</LinearLayout>

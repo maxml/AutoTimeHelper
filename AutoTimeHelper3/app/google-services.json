@@ -1,0 +1,58 @@
+{
+  "project_info": {
+    "project_number": "424082586680",
+    "firebase_url": "https://autotimehelper.firebaseio.com",
+    "project_id": "autotimehelper",
+    "storage_bucket": "autotimehelper.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:424082586680:android:9c4bab89bdaae893",
+        "android_client_info": {
+          "package_name": "com.maxml.timer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "424082586680-8d9majrtu6kvmlr3b0bfbn0otr22p85q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.maxml.timer",
+            "certificate_hash": "a89f86d5c216b8051a9af4be3645decedd7aa1bd"
+          }
+        },
+        {
+          "client_id": "424082586680-mssh2a3dbju22v6v853s93fqn501fqf0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC58Z8bjVsT_axLoESvXe5_NByVLw_AlaY"
+        },
+        {
+          "current_key": "AIzaSyCFnKZ0b-9T6Oh1nhzeZThPrxknJOoekZM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "424082586680-mssh2a3dbju22v6v853s93fqn501fqf0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
