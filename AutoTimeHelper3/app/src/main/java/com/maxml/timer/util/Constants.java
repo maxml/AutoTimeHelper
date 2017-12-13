@@ -65,4 +65,5 @@ public class Constants {
     public static final String EVENT_STOP = "stopEvent";
     public static final String EVENT_WAY_COORDINATES = "wayCoordinates";
     public static final String EVENT_NEW_ACTION_STATUS = "newActionStatus";
+    public static final String COLUMN_DAY_COUNT = "dayCount";
 }

@@ -18,10 +18,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.maxml.timer.controllers.TableControllerService;
+import com.maxml.timer.controllers.GeneralService;
 import com.maxml.timer.entity.User;
 import com.maxml.timer.ui.fragments.CalendarFragment;
-import com.maxml.timer.ui.fragments.GoogleMapFragment;
 import com.maxml.timer.ui.fragments.HomeFragment;
 import com.maxml.timer.ui.fragments.SettingsFragment;
 import com.maxml.timer.ui.fragments.ActionListViewFragment;
@@ -72,9 +71,9 @@ public class MainActivity extends AppCompatActivity
 
     private void initService() {
         // if service not instant yet, start one
-        if (!Utils.isServiceRunning(this, TableControllerService.class)) {
+        if (!Utils.isServiceRunning(this, GeneralService.class)) {
             MyLog.d("start new service instance");
-            Intent serviceIntent = new Intent(this, TableControllerService.class);
+            Intent serviceIntent = new Intent(this, GeneralService.class);
             startService(serviceIntent);
         }
 

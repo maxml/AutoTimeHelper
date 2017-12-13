@@ -15,7 +15,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+    <!--<uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />-->
 
     <!-- IMPORTANT: Change "com.parse.starter.permission.C2D_MESSAGE" in the lines below -->
     <!-- to match your app's package name + ".permission.C2D_MESSAGE". -->
@@ -97,7 +97,7 @@
         </receiver>
 
         <activity android:name=".ui.activity.CalendarActivity"></activity>
-        <service android:name=".controllers.TableControllerService" />
+        <service android:name=".controllers.GeneralService" />
         <service android:name=".googlemap.GPSTracker" />
     </application>
 

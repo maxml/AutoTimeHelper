@@ -9,16 +9,11 @@ import android.support.annotation.Nullable;
 
 import com.maxml.timer.MyLog;
 import com.maxml.timer.R;
-import com.maxml.timer.api.CallEventCRUD;
-import com.maxml.timer.api.RestEventCRUD;
+import com.maxml.timer.api.ActionCRUD;
+import com.maxml.timer.api.PathCRUD;
 import com.maxml.timer.api.TableCRUD;
-import com.maxml.timer.api.WalkEventCRUD;
-import com.maxml.timer.api.WorkEventCRUD;
 import com.maxml.timer.entity.Coordinates;
-import com.maxml.timer.entity.actions.CallAction;
-import com.maxml.timer.entity.actions.RestAction;
-import com.maxml.timer.entity.actions.WalkAction;
-import com.maxml.timer.entity.actions.WorkAction;
+import com.maxml.timer.entity.actions.Action;
 import com.maxml.timer.entity.eventBus.CallMessage;
 import com.maxml.timer.entity.eventBus.UiMessage;
 import com.maxml.timer.entity.eventBus.dbMessage.DbMessage;
@@ -27,6 +22,7 @@ import com.maxml.timer.entity.eventBus.GpsMessage;
 import com.maxml.timer.entity.eventBus.ActionMessage;
 import com.maxml.timer.googlemap.GPSTracker;
 import com.maxml.timer.util.Constants;
+import com.maxml.timer.util.Utils;
 import com.maxml.timer.widget.MyWidgetProvider;
 
 import org.greenrobot.eventbus.EventBus;
@@ -34,25 +30,25 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import permissions.dispatcher.NeedsPermission;
 
-public class TableControllerService extends Service {
+public class GeneralService extends Service {
 
     // db
-    private WalkEventCRUD walkCRUD;
-    private WorkEventCRUD workCRUD;
-    private RestEventCRUD restCRUD;
-    private CallEventCRUD callCRUD;
+//    private WalkEventCRUD walkCRUD;
+//    private WorkEventCRUD workCRUD;
+//    private RestEventCRUD restCRUD;
+//    private CallEventCRUD callCRUD;
+
+    private ActionCRUD actionCRUD;
     private TableCRUD tableCRUD;
+    private PathCRUD pathCRUD;
     // entity
-    private static CallAction call;
-    private static RestAction rest;
-    private static WorkAction work;
-    private static WalkAction walk;
-//    private String actionStatus;
-//    private String lastStatus;
+    private Map<String, Action> actions = new HashMap<>();
 
     private List<String> stateStack = new ArrayList<>();
 
@@ -145,11 +141,11 @@ public class TableControllerService extends Service {
                 break;
 
             case Constants.EVENT_CALL_ONGOING_ANSWERED:
-                startCallEvent(event.getPhoneNumber());
+                startCallEvent();
                 break;
 
             case Constants.EVENT_CALL_INCOMING_ANSWERED:
-                startCallEvent(event.getPhoneNumber());
+                startCallEvent();
                 break;
 
             // simple logic for both events
@@ -174,6 +170,7 @@ public class TableControllerService extends Service {
     public void onWidgetEvent(ActionMessage event) {
         switch (event.getMessage()) {
             case Constants.EVENT_WALK_ACTION:
+                Action walk = actions.get(Constants.EVENT_WALK_ACTION);
                 if (walk == null) {
                     // start gps tracking
                     EventBus.getDefault().post(new GpsMessage(Constants.EVENT_START));
@@ -187,6 +184,7 @@ public class TableControllerService extends Service {
                 break;
 
             case Constants.EVENT_WORK_ACTION:
+                Action work = actions.get(Constants.EVENT_WORK_ACTION);
                 if (work == null) {
                     startWorkEvent();
                 } else {
@@ -195,6 +193,7 @@ public class TableControllerService extends Service {
                 break;
 
             case Constants.EVENT_REST_ACTION:
+                Action rest = actions.get(Constants.EVENT_REST_ACTION);
                 if (rest == null) {
                     startRestEvent();
                 } else {
@@ -203,8 +202,9 @@ public class TableControllerService extends Service {
                 break;
 
             case Constants.EVENT_CALL_ACTION:
+                Action call = actions.get(Constants.EVENT_CALL_ACTION);
                 if (call == null) {
-                    startCallEvent(getString(R.string.call_number_widget));
+                    startCallEvent();
                 } else {
                     endCallEvent();
                 }
@@ -213,8 +213,15 @@ public class TableControllerService extends Service {
     }
 
     private void startRestEvent() {
-        rest = new RestAction();
+        // create action entity
+        Action rest = new Action();
+        rest.setType(Constants.EVENT_REST_ACTION);
         rest.setStartDate(new Date());
+        rest.setDayCount(Utils.getDayCount(new Date()));
+        String dayCount_type = rest.getDayCount()+"_"+rest.getType();
+        rest.setDayCount_type(dayCount_type);
+        // add it to temp map
+        actions.put(Constants.EVENT_REST_ACTION, rest);
         // add to stack trace
         stateStack.add(Constants.EVENT_REST_ACTION);
         // update status
@@ -222,10 +229,15 @@ public class TableControllerService extends Service {
     }
 
     private void endRestEvent() {
+        Action rest = actions.get(Constants.EVENT_REST_ACTION);
+        if (rest == null){
+            startRestEvent();
+            return;
+        }
         rest.setEndDate(new Date());
-        restCRUD.create(rest);
+        actionCRUD.create(rest, null);
         // clear temp entity
-        rest = null;
+        actions.remove(Constants.EVENT_REST_ACTION);
         // delete from stacktrace
         stateStack.remove(Constants.EVENT_REST_ACTION);
         // set previous action status
@@ -234,8 +246,15 @@ public class TableControllerService extends Service {
     }
 
     private void startWorkEvent() {
-        work = new WorkAction();
+        // create action entity
+        Action work = new Action();
+        work.setType(Constants.EVENT_WORK_ACTION);
         work.setStartDate(new Date());
+        work.setDayCount(Utils.getDayCount(new Date()));
+        String dayCount_type = work.getDayCount()+"_"+work.getType();
+        work.setDayCount_type(dayCount_type);
+        // add it to temp map
+        actions.put(Constants.EVENT_WORK_ACTION, work);
         // add to stack trace
         stateStack.add(Constants.EVENT_WORK_ACTION);
         // update status
@@ -243,10 +262,15 @@ public class TableControllerService extends Service {
     }
 
     private void endWorkEvent() {
+        Action work = actions.get(Constants.EVENT_WORK_ACTION);
+        if (work == null){
+            startWorkEvent();
+            return;
+        }
         work.setEndDate(new Date());
-        workCRUD.create(work);
+        actionCRUD.create(work, null);
         // clear temp entity
-        work = null;
+        actions.remove(Constants.EVENT_WORK_ACTION);
         // delete from stacktrace
         stateStack.remove(Constants.EVENT_WORK_ACTION);
         // set previous action status
@@ -254,32 +278,16 @@ public class TableControllerService extends Service {
         updateStatus(lastStatus);
     }
 
-    private void startWalkEvent() {
-        walk = new WalkAction();
-        walk.setStartDate(new Date());
-        // add to stack trace
-        stateStack.add(Constants.EVENT_WALK_ACTION);
-        // update status
-        updateStatus(getString(R.string.widget_walk_text));
-    }
-
-    private void endWalkEvent(List<Coordinates> coordinates) {
-        walk.setEndDate(new Date());
-        walk.setPath(coordinates);
-        walkCRUD.create(walk);
-        // clear temp entity
-        walk = null;
-        // delete from stacktrace
-        stateStack.remove(Constants.EVENT_WALK_ACTION);
-        // set previous action status
-        String lastStatus = getLastStatus();
-        updateStatus(lastStatus);
-    }
-
-    private void startCallEvent(String callNumber) {
-        call = new CallAction();
+    private void startCallEvent() {
+        // create action entity
+        Action call = new Action();
+        call.setType(Constants.EVENT_CALL_ACTION);
         call.setStartDate(new Date());
-        call.setDescription(getString(R.string.ongoing_call_description) + " " + callNumber);
+        call.setDayCount(Utils.getDayCount(new Date()));
+        String dayCount_type = call.getDayCount()+"_"+call.getType();
+        call.setDayCount_type(dayCount_type);
+        // add it to temp map
+        actions.put(Constants.EVENT_CALL_ACTION, call);
         // add to stack trace
         stateStack.add(Constants.EVENT_CALL_ACTION);
         // update status
@@ -287,16 +295,56 @@ public class TableControllerService extends Service {
     }
 
     private void endCallEvent() {
+        Action call = actions.get(Constants.EVENT_CALL_ACTION);
+        if (call == null){
+            startCallEvent();
+            return;
+        }
         call.setEndDate(new Date());
-        callCRUD.create(call, null);
+        actionCRUD.create(call,null);
         // clear temp entity
-        call = null;
+        actions.remove(Constants.EVENT_CALL_ACTION);
         // delete from stacktrace
         stateStack.remove(Constants.EVENT_CALL_ACTION);
         // set previous action status
         String lastStatus = getLastStatus();
         updateStatus(lastStatus);
     }
+
+    private void startWalkEvent() {
+        // create action entity
+        Action call = new Action();
+        call.setType(Constants.EVENT_CALL_ACTION);
+        call.setStartDate(new Date());
+        call.setDayCount(Utils.getDayCount(new Date()));
+        String dayCount_type = call.getDayCount()+"_"+call.getType();
+        call.setDayCount_type(dayCount_type);
+        // add it to temp map
+        actions.put(Constants.EVENT_CALL_ACTION, call);
+        // add to stack trace
+        stateStack.add(Constants.EVENT_CALL_ACTION);
+        // update status
+        updateStatus(getString(R.string.widget_call_text));
+    }
+
+    private void endWalkEvent(List<Coordinates> coordinates) {
+        Action walk = actions.get(Constants.EVENT_WALK_ACTION);
+        if (walk == null){
+            startWorkEvent();
+            return;
+        }
+        walk.setEndDate(new Date());
+        actionCRUD.create(walk,null);
+//        pathCRUD.create(coordinates);
+        // clear temp entity
+        actions.remove(Constants.EVENT_CALL_ACTION);
+        // delete from stacktrace
+        stateStack.remove(Constants.EVENT_CALL_ACTION);
+        // set previous action status
+        String lastStatus = getLastStatus();
+        updateStatus(lastStatus);
+    }
+
 
     private String getLastStatus() {
         if (stateStack.size() == 0) {
@@ -321,11 +369,9 @@ public class TableControllerService extends Service {
 
 
     private void initCRUD() {
-        walkCRUD = new WalkEventCRUD();
-        workCRUD = new WorkEventCRUD();
-        callCRUD = new CallEventCRUD();
-        restCRUD = new RestEventCRUD();
         tableCRUD = new TableCRUD();
+        actionCRUD = new ActionCRUD();
+        pathCRUD = new PathCRUD();
     }
 
     @Override

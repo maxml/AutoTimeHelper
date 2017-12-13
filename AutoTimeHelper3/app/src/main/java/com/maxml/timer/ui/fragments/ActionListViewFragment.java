@@ -1,33 +1,16 @@
 package com.maxml.timer.ui.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.ActionBar.LayoutParams;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.maxml.timer.MainActivity;
 import com.maxml.timer.R;
-import com.maxml.timer.controllers.TableControllerService;
-import com.maxml.timer.util.ManagerAdapter;
-import com.maxml.timer.util.SliceType;
-
-import java.text.SimpleDateFormat;
 
 public class ActionListViewFragment extends Fragment {
 	
@@ -55,7 +38,7 @@ public class ActionListViewFragment extends Fragment {
 //		super.onCreate(savedInstanceState);
 ///*
 //
-//		TableControllerService tableControler = new TableControllerService();
+//		GeneralService tableControler = new GeneralService();
 //		tableControler.onResult = this;
 //		tableControler.getListSlice();
 //
@@ -136,7 +119,7 @@ public class ActionListViewFragment extends Fragment {
 //
 //					@Override
 //					public void onClick(View v) {
-//						TableControllerService controler = new TableControllerService();
+//						GeneralService controler = new GeneralService();
 //						controler.delete(listSlice.get(position));
 //						listSlice.remove(position);
 //						Toast.makeText(getActivity(),

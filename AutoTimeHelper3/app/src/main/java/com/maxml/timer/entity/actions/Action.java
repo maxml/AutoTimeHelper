@@ -1,15 +1,20 @@
 package com.maxml.timer.entity.actions;
 
+import com.maxml.timer.util.Utils;
+
 import java.util.Date;
 
-abstract class BaseAction {
+public class Action {
     private String id;
+    private String type;
+    private long dayCount;
+    private String dayCount_type;
     private Date startDate;
     private Date endDate;
     private String description;
     private boolean deleted = false;
 
-    public BaseAction() {
+    public Action() {
     }
 
     public String getId() {
@@ -18,6 +23,31 @@ abstract class BaseAction {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public long getDayCount() {
+        return dayCount;
+    }
+
+    public void setDayCount(long dayCount) {
+        this.dayCount = dayCount;
+
+    }
+
+    public String getDayCount_type() {
+        return dayCount_type;
+    }
+
+    public void setDayCount_type(String dayCount_type) {
+        this.dayCount_type = dayCount_type;
     }
 
     public Date getStartDate() {

@@ -72,9 +72,9 @@ public class UserAPI {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         MyLog.d("createUserWithEmail:onComplete:" + task.isSuccessful());
 
-                       if (!task.isSuccessful()) {
+                        if (!task.isSuccessful()) {
                             handler.sendEmptyMessage(Constants.RESULT_FALSE);
-                        }else {
+                        } else {
                             handler.sendEmptyMessage(Constants.RESULT_OK);
                         }
                     }
@@ -90,7 +90,7 @@ public class UserAPI {
 
                         if (!task.isSuccessful()) {
                             handler.sendEmptyMessage(Constants.RESULT_FALSE);
-                        }else {
+                        } else {
                             handler.sendEmptyMessage(Constants.RESULT_OK);
                         }
                     }
@@ -112,6 +112,14 @@ public class UserAPI {
         return user;
     }
 
+    public static String getCurrentUserId() {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            return FirebaseAuth.getInstance().getCurrentUser().getUid();
+        } else {
+            return "";
+        }
+    }
+
     public void sentPassword(String email) {
         mAuth.sendPasswordResetEmail(email)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -120,11 +128,12 @@ public class UserAPI {
                         if (task.isSuccessful()) {
                             MyLog.d("Email sent.");
                             handler.sendEmptyMessage(Constants.RESULT_OK);
-                        }else {
+                        } else {
                             handler.sendEmptyMessage(Constants.RESULT_FALSE);
                         }
                     }
-                });    }
+                });
+    }
 
     public void updateName(final String name, final String id) {
         Log.d("UserAPI", "start updateName");

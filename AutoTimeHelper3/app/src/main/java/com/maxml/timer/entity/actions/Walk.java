@@ -3,20 +3,18 @@ package com.maxml.timer.entity.actions;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 import com.maxml.timer.entity.Coordinates;
-import com.maxml.timer.entity.Line;
 import com.maxml.timer.util.Constants;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @IgnoreExtraProperties
-public class WalkAction extends BaseAction {
+public class Walk extends Action {
     private List<Coordinates> path = new ArrayList<>();
 
-    public WalkAction() {
+    public Walk() {
         super();
     }
 

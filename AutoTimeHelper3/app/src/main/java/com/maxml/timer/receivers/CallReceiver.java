@@ -5,16 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.telephony.TelephonyManager;
 
-import com.maxml.timer.entity.actions.CallAction;
 import com.maxml.timer.entity.eventBus.CallMessage;
 import com.maxml.timer.util.Constants;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.Date;
-
 public class CallReceiver extends BroadcastReceiver {
-    private CallAction call = new CallAction();
 
     private static int lastState = TelephonyManager.CALL_STATE_IDLE;
     private static boolean isIncoming = false;
@@ -61,22 +57,14 @@ public class CallReceiver extends BroadcastReceiver {
                 break;
 
             case TelephonyManager.CALL_STATE_OFFHOOK:
-                String phoneNumber;
                 if (lastState != TelephonyManager.CALL_STATE_RINGING) {
                     // outgoing call answered
                     isIncoming = false;
-                    // todo test
-                    phoneNumber = intent.getExtras().getString("android.intent.extra.phone_number");
-                    EventBus.getDefault().post(
-                            new CallMessage(Constants.EVENT_CALL_ONGOING_ANSWERED, phoneNumber)
-                    );
+                    EventBus.getDefault().post(new CallMessage(Constants.EVENT_CALL_ONGOING_ANSWERED));
                 } else {
                     // incoming call answered
                     isIncoming = true;
-                    phoneNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
-                    EventBus.getDefault().post(
-                            new CallMessage(Constants.EVENT_CALL_INCOMING_ANSWERED, phoneNumber)
-                    );
+                    EventBus.getDefault().post(new CallMessage(Constants.EVENT_CALL_INCOMING_ANSWERED));
                 }
                 break;
         }

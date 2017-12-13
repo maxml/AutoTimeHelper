@@ -1,19 +1,16 @@
 package com.maxml.timer.entity;
 
-import com.maxml.timer.entity.actions.CallAction;
-import com.maxml.timer.entity.actions.RestAction;
-import com.maxml.timer.entity.actions.WalkAction;
-import com.maxml.timer.entity.actions.WorkAction;
+import com.maxml.timer.entity.actions.Action;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Table {
     private long day;
-    private List<CallAction> callList;
-    private List<WorkAction> workList;
-    private List<WalkAction> walkList;
-    private List<RestAction> restList;
+    private List<Action> callList;
+    private List<Action> workList;
+    private List<Action> walkList;
+    private List<Action> restList;
 
     public Table() {
         callList = new ArrayList<>();
@@ -22,25 +19,16 @@ public class Table {
         restList = new ArrayList<>();
     }
 
-    public Table(long day, List<CallAction> callList,
-                 List<WorkAction> workList, List<WalkAction> walkList, List<RestAction> restList) {
-        this.day = day;
-        this.callList = callList;
-        this.workList = workList;
-        this.walkList = walkList;
-        this.restList = restList;
-    }
-
-    public void addCall(CallAction call){
+    public void addCall(Action call){
         callList.add(call);
     }
-    public void addWork(WorkAction work){
+    public void addWork(Action work){
         workList.add(work);
     }
-    public void addRest(RestAction rest){
+    public void addRest(Action rest){
         restList.add(rest);
     }
-    public void addWalk(WalkAction walk){
+    public void addWalk(Action walk){
         walkList.add(walk);
     }
 
@@ -52,35 +40,35 @@ public class Table {
         this.day = day;
     }
 
-    public List<CallAction> getCallList() {
+    public List<Action> getCallList() {
         return callList;
     }
 
-    public void setCallList(List<CallAction> callList) {
+    public void setCallList(List<Action> callList) {
         this.callList = callList;
     }
 
-    public List<WorkAction> getWorkList() {
+    public List<Action> getWorkList() {
         return workList;
     }
 
-    public void setWorkList(List<WorkAction> workList) {
+    public void setWorkList(List<Action> workList) {
         this.workList = workList;
     }
 
-    public List<WalkAction> getWalkList() {
+    public List<Action> getWalkList() {
         return walkList;
     }
 
-    public void setWalkList(List<WalkAction> walkList) {
+    public void setWalkList(List<Action> walkList) {
         this.walkList = walkList;
     }
 
-    public List<RestAction> getRestList() {
+    public List<Action> getRestList() {
         return restList;
     }
 
-    public void setRestList(List<RestAction> restList) {
+    public void setRestList(List<Action> restList) {
         this.restList = restList;
     }
 }

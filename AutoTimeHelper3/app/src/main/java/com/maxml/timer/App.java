@@ -20,7 +20,7 @@ public class App extends MultiDexApplication {
 
 //		NetworkStatus.isNetworkAvailable(this);
 
-        //	TableControllerService table = new TableControllerService();
+        //	GeneralService table = new GeneralService();
 
         //	table.getListSlice();
     }
