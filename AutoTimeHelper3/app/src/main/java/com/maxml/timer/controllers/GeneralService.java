@@ -38,20 +38,7 @@ import permissions.dispatcher.NeedsPermission;
 
 public class GeneralService extends Service {
 
-    // db
-//    private WalkEventCRUD walkCRUD;
-//    private WorkEventCRUD workCRUD;
-//    private RestEventCRUD restCRUD;
-//    private CallEventCRUD callCRUD;
-
-    private ActionCRUD actionCRUD;
-    private TableCRUD tableCRUD;
-    private PathCRUD pathCRUD;
-    // entity
-    private Map<String, Action> actions = new HashMap<>();
-
-    private List<String> stateStack = new ArrayList<>();
-
+    private ActionController controller;
 
     @Nullable
     @Override
@@ -74,7 +61,7 @@ public class GeneralService extends Service {
         // start tracker service
         startGpsTracker();
 
-        initCRUD();
+        controller = new ActionController(this);
     }
 
     @NeedsPermission(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -122,14 +109,7 @@ public class GeneralService extends Service {
      */
     @Subscribe()
     public void onReceiveDbRequest(DbMessage message) {
-        switch (message.getMessage()) {
-            case Constants.EVENT_TABLE_DATE_REQUEST:
-                Date date = (Date) message.getData();
-                // change message msg name to receiver constant
-                message.setMessage(Constants.EVENT_TABLE_DATE_RESULT);
-                tableCRUD.read(date, message);
-                break;
-        }
+        controller.onReceiveDbRequest(message);
     }
 
     @Subscribe()
@@ -141,17 +121,17 @@ public class GeneralService extends Service {
                 break;
 
             case Constants.EVENT_CALL_ONGOING_ANSWERED:
-                startCallEvent();
+                controller.startCallEvent();
                 break;
 
             case Constants.EVENT_CALL_INCOMING_ANSWERED:
-                startCallEvent();
+                controller.startCallEvent();
                 break;
 
             // simple logic for both events
             case Constants.EVENT_CALL_INCOMING_ENDED:
             case Constants.EVENT_CALL_ONGOING_ENDED:
-                endCallEvent();
+                controller.endCallEvent();
                 break;
         }
     }
@@ -161,7 +141,7 @@ public class GeneralService extends Service {
         switch (event.getMessage()) {
             case Constants.EVENT_WAY_COORDINATES:
                 List<Coordinates> coordinates = (List<Coordinates>) event.getData();
-                endWalkEvent(coordinates);
+                controller.endWalkEvent(coordinates);
                 break;
         }
     }
@@ -170,208 +150,21 @@ public class GeneralService extends Service {
     public void onWidgetEvent(ActionMessage event) {
         switch (event.getMessage()) {
             case Constants.EVENT_WALK_ACTION:
-                Action walk = actions.get(Constants.EVENT_WALK_ACTION);
-                if (walk == null) {
-                    // start gps tracking
-                    EventBus.getDefault().post(new GpsMessage(Constants.EVENT_START));
-                    // create walk action
-                    startWalkEvent();
-                } else {
-                    // stop gps tracking
-                    EventBus.getDefault().post(new GpsMessage(Constants.EVENT_STOP));
-                    // get result in onGpsEvent method
-                }
+                controller.walkActionEvent();
                 break;
 
             case Constants.EVENT_WORK_ACTION:
-                Action work = actions.get(Constants.EVENT_WORK_ACTION);
-                if (work == null) {
-                    startWorkEvent();
-                } else {
-                    endWorkEvent();
-                }
+                controller.workActionEvent();
                 break;
 
             case Constants.EVENT_REST_ACTION:
-                Action rest = actions.get(Constants.EVENT_REST_ACTION);
-                if (rest == null) {
-                    startRestEvent();
-                } else {
-                    endRestEvent();
-                }
+                controller.restActionEvent();
                 break;
 
             case Constants.EVENT_CALL_ACTION:
-                Action call = actions.get(Constants.EVENT_CALL_ACTION);
-                if (call == null) {
-                    startCallEvent();
-                } else {
-                    endCallEvent();
-                }
+                controller.callActionEvent();
                 break;
         }
-    }
-
-    private void startRestEvent() {
-        // create action entity
-        Action rest = new Action();
-        rest.setType(Constants.EVENT_REST_ACTION);
-        rest.setStartDate(new Date());
-        rest.setDayCount(Utils.getDayCount(new Date()));
-        String dayCount_type = rest.getDayCount()+"_"+rest.getType();
-        rest.setDayCount_type(dayCount_type);
-        // add it to temp map
-        actions.put(Constants.EVENT_REST_ACTION, rest);
-        // add to stack trace
-        stateStack.add(Constants.EVENT_REST_ACTION);
-        // update status
-        updateStatus(getString(R.string.widget_rest_text));
-    }
-
-    private void endRestEvent() {
-        Action rest = actions.get(Constants.EVENT_REST_ACTION);
-        if (rest == null){
-            startRestEvent();
-            return;
-        }
-        rest.setEndDate(new Date());
-        actionCRUD.create(rest, null);
-        // clear temp entity
-        actions.remove(Constants.EVENT_REST_ACTION);
-        // delete from stacktrace
-        stateStack.remove(Constants.EVENT_REST_ACTION);
-        // set previous action status
-        String lastStatus = getLastStatus();
-        updateStatus(lastStatus);
-    }
-
-    private void startWorkEvent() {
-        // create action entity
-        Action work = new Action();
-        work.setType(Constants.EVENT_WORK_ACTION);
-        work.setStartDate(new Date());
-        work.setDayCount(Utils.getDayCount(new Date()));
-        String dayCount_type = work.getDayCount()+"_"+work.getType();
-        work.setDayCount_type(dayCount_type);
-        // add it to temp map
-        actions.put(Constants.EVENT_WORK_ACTION, work);
-        // add to stack trace
-        stateStack.add(Constants.EVENT_WORK_ACTION);
-        // update status
-        updateStatus(getString(R.string.widget_work_text));
-    }
-
-    private void endWorkEvent() {
-        Action work = actions.get(Constants.EVENT_WORK_ACTION);
-        if (work == null){
-            startWorkEvent();
-            return;
-        }
-        work.setEndDate(new Date());
-        actionCRUD.create(work, null);
-        // clear temp entity
-        actions.remove(Constants.EVENT_WORK_ACTION);
-        // delete from stacktrace
-        stateStack.remove(Constants.EVENT_WORK_ACTION);
-        // set previous action status
-        String lastStatus = getLastStatus();
-        updateStatus(lastStatus);
-    }
-
-    private void startCallEvent() {
-        // create action entity
-        Action call = new Action();
-        call.setType(Constants.EVENT_CALL_ACTION);
-        call.setStartDate(new Date());
-        call.setDayCount(Utils.getDayCount(new Date()));
-        String dayCount_type = call.getDayCount()+"_"+call.getType();
-        call.setDayCount_type(dayCount_type);
-        // add it to temp map
-        actions.put(Constants.EVENT_CALL_ACTION, call);
-        // add to stack trace
-        stateStack.add(Constants.EVENT_CALL_ACTION);
-        // update status
-        updateStatus(getString(R.string.widget_call_text));
-    }
-
-    private void endCallEvent() {
-        Action call = actions.get(Constants.EVENT_CALL_ACTION);
-        if (call == null){
-            startCallEvent();
-            return;
-        }
-        call.setEndDate(new Date());
-        actionCRUD.create(call,null);
-        // clear temp entity
-        actions.remove(Constants.EVENT_CALL_ACTION);
-        // delete from stacktrace
-        stateStack.remove(Constants.EVENT_CALL_ACTION);
-        // set previous action status
-        String lastStatus = getLastStatus();
-        updateStatus(lastStatus);
-    }
-
-    private void startWalkEvent() {
-        // create action entity
-        Action call = new Action();
-        call.setType(Constants.EVENT_CALL_ACTION);
-        call.setStartDate(new Date());
-        call.setDayCount(Utils.getDayCount(new Date()));
-        String dayCount_type = call.getDayCount()+"_"+call.getType();
-        call.setDayCount_type(dayCount_type);
-        // add it to temp map
-        actions.put(Constants.EVENT_CALL_ACTION, call);
-        // add to stack trace
-        stateStack.add(Constants.EVENT_CALL_ACTION);
-        // update status
-        updateStatus(getString(R.string.widget_call_text));
-    }
-
-    private void endWalkEvent(List<Coordinates> coordinates) {
-        Action walk = actions.get(Constants.EVENT_WALK_ACTION);
-        if (walk == null){
-            startWorkEvent();
-            return;
-        }
-        walk.setEndDate(new Date());
-        actionCRUD.create(walk,null);
-//        pathCRUD.create(coordinates);
-        // clear temp entity
-        actions.remove(Constants.EVENT_CALL_ACTION);
-        // delete from stacktrace
-        stateStack.remove(Constants.EVENT_CALL_ACTION);
-        // set previous action status
-        String lastStatus = getLastStatus();
-        updateStatus(lastStatus);
-    }
-
-
-    private String getLastStatus() {
-        if (stateStack.size() == 0) {
-            return getString(R.string.widget_default_text);
-        } else {
-            return stateStack.get(stateStack.size() - 1);
-        }
-    }
-
-    private void updateStatus(String status) {
-        EventBus.getDefault().post(new UiMessage(Constants.EVENT_NEW_ACTION_STATUS, status));
-        updateWidgetStatus(status);
-        NotificationHelper.updateNotification(this, status);
-    }
-
-    private void updateWidgetStatus(String status) {
-        Intent intent = new Intent(this, MyWidgetProvider.class);
-        intent.setAction(Constants.WIDGET_UPDATE_ACTION_STATUS);
-        intent.putExtra(Constants.WIDGET_EXTRA, status);
-        sendBroadcast(intent);
-    }
-
-
-    private void initCRUD() {
-        tableCRUD = new TableCRUD();
-        actionCRUD = new ActionCRUD();
-        pathCRUD = new PathCRUD();
     }
 
     @Override

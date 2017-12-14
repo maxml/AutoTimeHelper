@@ -3,11 +3,17 @@ package com.maxml.timer;
 import android.app.Application;
 import android.support.multidex.MultiDexApplication;
 
+import com.maxml.timer.controllers.ActionController;
+
 public class App extends MultiDexApplication {
+
+    private ActionController controller;
 
     @Override
     public void onCreate() {
         super.onCreate();
+
+        controller = ActionController.build(this);
 
 //        Parse.enableLocalDatastore(this);
 //

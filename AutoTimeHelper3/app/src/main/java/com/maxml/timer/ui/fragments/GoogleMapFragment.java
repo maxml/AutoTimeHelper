@@ -20,7 +20,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.maxml.timer.R;
 import com.maxml.timer.entity.Coordinates;
 import com.maxml.timer.entity.Line;
-import com.maxml.timer.entity.actions.WalkAction;
+import com.maxml.timer.entity.actions.Action;
 import com.maxml.timer.entity.eventBus.GpsMessage;
 import com.maxml.timer.util.Constants;
 
@@ -40,7 +40,7 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
 
     public List<Object> list = new ArrayList<>();
     public List<Line> listLine = new ArrayList<>();
-    public static List<WalkAction> walkActions = new ArrayList<>();
+    public static List<Action> walkActions = new ArrayList<>();
 
     private Coordinates point;
     private Coordinates pointRadius;
