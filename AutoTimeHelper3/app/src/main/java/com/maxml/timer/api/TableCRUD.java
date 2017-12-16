@@ -1,15 +1,19 @@
 package com.maxml.timer.api;
 
+import android.content.Context;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.maxml.timer.controllers.Controller;
+import com.maxml.timer.entity.DbReturnData;
 import com.maxml.timer.entity.Table;
 import com.maxml.timer.entity.actions.Action;
-import com.maxml.timer.entity.eventBus.dbMessage.DbMessage;
-import com.maxml.timer.entity.eventBus.dbMessage.DbResultMessage;
+import com.maxml.timer.entity.eventBus.DbMessage;
 import com.maxml.timer.util.Constants;
+import com.maxml.timer.util.EventType;
 import com.maxml.timer.util.Utils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -19,59 +23,24 @@ import java.util.Date;
 public class TableCRUD {
 
     private DatabaseReference actionRef;
+    private EventBus dbEventBus;
 
-    public TableCRUD() {
+    public TableCRUD(Context context) {
+        Controller controller = new Controller(context);
+        dbEventBus = controller.getEventBus(EventType.DB_EVENT_BUS);
         actionRef = FirebaseDatabase.getInstance().getReference()
                 .child(Constants.USER_DATABASE_PATH)
                 .child(UserAPI.getCurrentUserId());
     }
 
-//    public void create(WalkAction walkAction) {
-//        Log.i("Slice", " Slice starting create");
-//
-//        // get Firebase id
-//        String dbId = actionRef.push().getKey();
-//        walkAction.setId(dbId);
-//
-//        // create update map
-//        Map<String, Object> data = new HashMap<>();
-//
-//        // put data for sort by day
-//        long dayCount = Utils.getDayCount(walkAction.getStartDate());
-//        if (dayCount == -1) {
-//            EventBus.getDefault().post(new DbResultMessage(Constants.EVENT_DB_RESULT_ERROR));
-//            return;
-//        }
-//        data.put("/" + Constants.SORT_BY_DATE_PATH
-//                + "/" + dayCount
-//                + "/" + Constants.WALK_DATABASE_PATH, dbId);
-//
-//        // put data for call db
-//        data.put("/" + Constants.WALK_DATABASE_PATH, walkAction);
-//
-//        try {
-//            actionRef.updateChildren(data).addOnCompleteListener(new OnCompleteListener<Void>() {
-//                @Override
-//                public void onComplete(@NonNull Task<Void> task) {
-//                    if (task.isSuccessful()) {
-//                        EventBus.getDefault().post(new DbResultMessage(Constants.EVENT_DB_RESULT_OK));
-//                    } else {
-//                        EventBus.getDefault().post(new DbResultMessage(Constants.EVENT_DB_RESULT_ERROR));
-//                    }
-//                }
-//            });
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-    public void read(final Date date, DbMessage messageForResult) {
-        read(Utils.getDayCount(date), messageForResult);
+    public void read(final Date date, DbReturnData returnData) {
+        read(Utils.getDayCount(date), returnData);
     }
 
-    public void read(final long dayCount, final DbMessage messageForResult) {
+    public void read(final long dayCount, final DbReturnData returnData) {
+        // check valid date
         if (dayCount == 0) {
-            EventBus.getDefault().post(new DbResultMessage(Constants.EVENT_DB_RESULT_ERROR, messageForResult));
+            dbEventBus.post(new DbMessage(Constants.EVENT_DB_RESULT_ERROR, returnData));
             return;
         }
 
@@ -80,11 +49,16 @@ public class TableCRUD {
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+                        // create result message
+                        DbMessage resultMessage = new DbMessage(Constants.EVENT_DB_RESULT_OK, returnData);
+                        // get result data
                         Table table = new Table();
                         table.setDay(dayCount);
-                        messageForResult.setData(table);
+                        resultMessage.setData(table);
+
                         if (!dataSnapshot.exists()) {
-                            EventBus.getDefault().post(new DbResultMessage(Constants.EVENT_DB_RESULT_OK, messageForResult));
+                            // add data for feedback
+                            dbEventBus.post(resultMessage);
                             return;
                         }
 
@@ -105,12 +79,12 @@ public class TableCRUD {
                                     break;
                             }
                         }
-                        EventBus.getDefault().post(new DbResultMessage(Constants.EVENT_DB_RESULT_OK, messageForResult));
+                        dbEventBus.post(resultMessage);
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                        EventBus.getDefault().post(new DbResultMessage(Constants.EVENT_DB_RESULT_ERROR, messageForResult));
+                        dbEventBus.post(new DbMessage(Constants.EVENT_DB_RESULT_ERROR, returnData));
                     }
                 });
     }

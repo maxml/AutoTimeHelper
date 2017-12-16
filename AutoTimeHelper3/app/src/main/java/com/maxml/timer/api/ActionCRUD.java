@@ -1,5 +1,6 @@
 package com.maxml.timer.api;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -7,12 +8,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.maxml.timer.controllers.Controller;
+import com.maxml.timer.entity.DbReturnData;
 import com.maxml.timer.entity.User;
 import com.maxml.timer.entity.actions.Action;
-import com.maxml.timer.entity.eventBus.dbMessage.DbMessage;
-import com.maxml.timer.entity.eventBus.dbMessage.DbResultMessage;
+import com.maxml.timer.entity.eventBus.DbMessage;
+import com.maxml.timer.entity.eventBus.EventMessage;
 import com.maxml.timer.util.Constants;
-import com.maxml.timer.util.Utils;
+import com.maxml.timer.util.EventType;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -21,9 +24,12 @@ import java.util.Map;
 
 public class ActionCRUD {
 
+    private EventBus eventBus;
     private DatabaseReference actionRef;
 
-    public ActionCRUD() {
+    public ActionCRUD(Context context) {
+        Controller controller = new Controller(context);
+        eventBus = controller.getEventBus(EventType.DB_EVENT_BUS);
         User user = UserAPI.getCurrentUser();
         if (actionRef == null && user != null) {
             actionRef = FirebaseDatabase.getInstance().getReference()
@@ -32,26 +38,25 @@ public class ActionCRUD {
         }
     }
 
-    public void create(Action action, final DbMessage messageForResult) {
+    public void create(Action action, final DbReturnData returnData) {
         Log.i("Slice", " Slice starting create");
-
         // get Firebase id
-        final String dbId = actionRef.push().getKey();
+        String dbId = actionRef.push().getKey();
         action.setId(dbId);
 
         actionRef.child(dbId).setValue(action).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    EventBus.getDefault().post(new DbResultMessage(Constants.EVENT_DB_RESULT_OK));
+                    eventBus.post(new DbMessage(Constants.EVENT_DB_RESULT_OK, returnData));
                 } else {
-                    EventBus.getDefault().post(new DbResultMessage(Constants.EVENT_DB_RESULT_ERROR));
+                    eventBus.post(new DbMessage(Constants.EVENT_DB_RESULT_ERROR, returnData));
                 }
             }
         });
     }
 
-
+/*
     private void saveIdAndDay(long dayCount, String id) {
         // create update map
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
@@ -61,13 +66,14 @@ public class ActionCRUD {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    EventBus.getDefault().post(new DbResultMessage(Constants.EVENT_DB_RESULT_OK));
+                    eventBus.post(new DbMessage(Constants.EVENT_DB_RESULT_OK));
                 } else {
-                    EventBus.getDefault().post(new DbResultMessage(Constants.EVENT_DB_RESULT_ERROR));
+                    eventBus.post(new DbMessage(Constants.EVENT_DB_RESULT_ERROR));
                 }
             }
         });
     }
+*/
 
 
 //    public void read(String id, final DbMessage messageForResult) {

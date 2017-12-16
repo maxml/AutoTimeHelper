@@ -1,5 +1,6 @@
 package com.maxml.timer.api;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -7,62 +8,43 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.maxml.timer.controllers.Controller;
+import com.maxml.timer.entity.Coordinates;
+import com.maxml.timer.entity.DbReturnData;
 import com.maxml.timer.entity.User;
 import com.maxml.timer.entity.actions.Action;
-import com.maxml.timer.entity.eventBus.dbMessage.DbMessage;
-import com.maxml.timer.entity.eventBus.dbMessage.DbResultMessage;
+import com.maxml.timer.entity.eventBus.DbMessage;
 import com.maxml.timer.util.Constants;
+import com.maxml.timer.util.EventType;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
-public class PathCRUD {
+public class CoordinatesCRUD {
 
-    private DatabaseReference actionRef;
+    private EventBus eventBus;
+    private DatabaseReference pathRef;
 
-    public PathCRUD() {
+    public CoordinatesCRUD(Context context) {
+        Controller controller = new Controller(context);
+        eventBus = controller.getEventBus(EventType.DB_EVENT_BUS);
         User user = UserAPI.getCurrentUser();
-        if (actionRef == null && user != null) {
-            actionRef = FirebaseDatabase.getInstance().getReference()
-                    .child(Constants.USER_DATABASE_PATH)
-                    .child(user.getId());
+        if (pathRef == null && user != null) {
+            pathRef = FirebaseDatabase.getInstance().getReference()
+                    .child(Constants.WALK_DATABASE_PATH);
         }
     }
 
-    public void create(Action action, final DbMessage messageForResult) {
+    public void create(String walkActionId, List<Coordinates> coordinates, final DbReturnData returnData) {
         Log.i("Slice", " Slice starting create");
-
-        // get Firebase id
-        final String dbId = actionRef.push().getKey();
-        action.setId(dbId);
-
-        actionRef.child(dbId).setValue(action).addOnCompleteListener(new OnCompleteListener<Void>() {
+        pathRef.child(walkActionId).setValue(coordinates).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    EventBus.getDefault().post(new DbResultMessage(Constants.EVENT_DB_RESULT_OK));
+                    eventBus.post(new DbMessage(Constants.EVENT_DB_RESULT_OK, returnData));
                 } else {
-                    EventBus.getDefault().post(new DbResultMessage(Constants.EVENT_DB_RESULT_ERROR));
-                }
-            }
-        });
-    }
-
-
-    private void saveIdAndDay(long dayCount, String id) {
-        // create update map
-        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-        Map<String, Object> data = new HashMap<>();
-        data.put("/" + Constants.CALL_DATABASE_PATH + "/" + id, dayCount);
-        rootRef.updateChildren(data).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    EventBus.getDefault().post(new DbResultMessage(Constants.EVENT_DB_RESULT_OK));
-                } else {
-                    EventBus.getDefault().post(new DbResultMessage(Constants.EVENT_DB_RESULT_ERROR));
+                    eventBus.post(new DbMessage(Constants.EVENT_DB_RESULT_ERROR, returnData));
                 }
             }
         });
@@ -74,7 +56,7 @@ public class PathCRUD {
 //            EventBus.getDefault().post(new DbResultMessage(Constants.EVENT_DB_RESULT_ERROR));
 //            return;
 //        }
-//        actionRef.child(Constants.CALL_DATABASE_PATH)
+//        pathRef.child(Constants.CALL_DATABASE_PATH)
 //                .orderByKey()
 //                .equalTo(id)
 //                .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -101,7 +83,7 @@ public class PathCRUD {
 //            EventBus.getDefault().post(new DbResultMessage(Constants.EVENT_DB_RESULT_ERROR));
 //            return;
 //        }
-//        actionRef.child(Utils.getDayCount(date) + "")
+//        pathRef.child(Utils.getDayCount(date) + "")
 //                .child(Constants.CALL_DATABASE_PATH)
 //                .addListenerForSingleValueEvent(new ValueEventListener() {
 //                    @Override
@@ -136,7 +118,7 @@ public class PathCRUD {
 //            return;
 //        }
 //
-//        actionRef.child(Constants.CALL_DATABASE_PATH)
+//        pathRef.child(Constants.CALL_DATABASE_PATH)
 //                .child(id)
 //                .updateChildren(changes).addOnCompleteListener(new OnCompleteListener<Void>() {
 //            @Override
@@ -156,14 +138,14 @@ public class PathCRUD {
 //            return;
 //        }
 //        final String id = call.getId();
-//        actionRef.child(Constants.CALL_DATABASE_PATH)
+//        pathRef.child(Constants.CALL_DATABASE_PATH)
 //                .child(id)
 //                .removeValue()
 //                .addOnCompleteListener(new OnCompleteListener<Void>() {
 //                    @Override
 //                    public void onComplete(@NonNull Task<Void> task) {
 //                        if (task.isSuccessful()) {
-//                            actionRef.child(Constants.SORT_BY_DATE_PATH)
+//                            pathRef.child(Constants.SORT_BY_DATE_PATH)
 //                                    .child(Utils.getDayCount(call.getStartDate()) + "")
 //                                    .child(Constants.CALL_DATABASE_PATH)
 //                                    .child(id)
@@ -201,7 +183,7 @@ public class PathCRUD {
 //            }
 //        }
 //        // update items from updateList in DB
-//        actionRef.updateChildren(updateList).addOnCompleteListener(new OnCompleteListener<Void>() {
+//        pathRef.updateChildren(updateList).addOnCompleteListener(new OnCompleteListener<Void>() {
 //            @Override
 //            public void onComplete(@NonNull Task<Void> task) {
 //                if (task.isSuccessful()) {

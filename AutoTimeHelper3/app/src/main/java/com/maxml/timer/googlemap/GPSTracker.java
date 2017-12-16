@@ -13,8 +13,9 @@ import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
 
+import com.maxml.timer.controllers.Controller;
 import com.maxml.timer.entity.Coordinates;
-import com.maxml.timer.entity.eventBus.GpsMessage;
+import com.maxml.timer.entity.eventBus.EventMessage;
 import com.maxml.timer.util.Constants;
 
 import org.greenrobot.eventbus.EventBus;
@@ -37,6 +38,8 @@ public class GPSTracker extends Service implements LocationListener {
 
     private Location location;
     private LocationManager locationManager;
+    private Controller controller;
+    private EventBus eventBus;
 
     private double latitude;
     private double longitude;
@@ -49,24 +52,26 @@ public class GPSTracker extends Service implements LocationListener {
     @Override
     public void onCreate() {
         super.onCreate();
-        EventBus.getDefault().register(this);
+        controller = new Controller(this);
+        eventBus = controller.getEventBus(Controller.EventType.GPS_EVENT_BUS);
+        eventBus.register(this);
         initLocationListener();
     }
 
     @Subscribe()
-    public void onGpsEvent(GpsMessage event) {
+    public void onGpsEvent(EventMessage event) {
         switch (event.getMessage()) {
             case Constants.EVENT_START:
-                if (wayCoordinates.size() == 0){
+                if (wayCoordinates.size() == 0) {
                     return;
                 }
-                Coordinates lastCoordinate = wayCoordinates.get(wayCoordinates.size()-1);
+                Coordinates lastCoordinate = wayCoordinates.get(wayCoordinates.size() - 1);
                 wayCoordinates = new ArrayList<>();
                 wayCoordinates.add(lastCoordinate);
                 break;
 
             case Constants.EVENT_STOP:
-                EventBus.getDefault().post(new GpsMessage(Constants.EVENT_WAY_COORDINATES, wayCoordinates));
+                eventBus.post(new EventMessage(Constants.EVENT_WAY_COORDINATES, wayCoordinates));
                 break;
         }
     }
@@ -74,7 +79,7 @@ public class GPSTracker extends Service implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-        EventBus.getDefault().post(new GpsMessage(Constants.EVENT_LOCATION_CHANGE, location));
+        eventBus.post(new EventMessage(Constants.EVENT_LOCATION_CHANGE, location));
 
         Coordinates point = new Coordinates();
         point.setLatitude(location.getLatitude());
@@ -191,7 +196,6 @@ public class GPSTracker extends Service implements LocationListener {
                 dialog.cancel();
             }
         });
-
         alertDialog.show();
     }
 
@@ -213,8 +217,8 @@ public class GPSTracker extends Service implements LocationListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().unregister(this);
+        if (eventBus != null && eventBus.isRegistered(this)) {
+            eventBus.unregister(this);
         }
     }
 }

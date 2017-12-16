@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 
 import com.maxml.timer.R;
-import com.maxml.timer.entity.eventBus.ActionMessage;
 import com.maxml.timer.ui.activity.LoginActivity;
 import com.maxml.timer.util.Constants;
 

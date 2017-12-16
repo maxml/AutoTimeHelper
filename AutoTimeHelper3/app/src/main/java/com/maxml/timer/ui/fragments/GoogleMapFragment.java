@@ -21,7 +21,6 @@ import com.maxml.timer.R;
 import com.maxml.timer.entity.Coordinates;
 import com.maxml.timer.entity.Line;
 import com.maxml.timer.entity.actions.Action;
-import com.maxml.timer.entity.eventBus.GpsMessage;
 import com.maxml.timer.util.Constants;
 
 import org.greenrobot.eventbus.EventBus;

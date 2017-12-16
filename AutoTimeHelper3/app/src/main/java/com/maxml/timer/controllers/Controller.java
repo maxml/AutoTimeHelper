@@ -5,14 +5,15 @@ import android.content.Intent;
 
 import com.maxml.timer.R;
 import com.maxml.timer.api.ActionCRUD;
-import com.maxml.timer.api.PathCRUD;
+import com.maxml.timer.api.CoordinatesCRUD;
 import com.maxml.timer.api.TableCRUD;
 import com.maxml.timer.entity.Coordinates;
+import com.maxml.timer.entity.DbReturnData;
 import com.maxml.timer.entity.actions.Action;
-import com.maxml.timer.entity.eventBus.GpsMessage;
-import com.maxml.timer.entity.eventBus.UiMessage;
-import com.maxml.timer.entity.eventBus.dbMessage.DbMessage;
+import com.maxml.timer.entity.eventBus.EventMessage;
+import com.maxml.timer.entity.eventBus.DbMessage;
 import com.maxml.timer.util.Constants;
+import com.maxml.timer.util.EventType;
 import com.maxml.timer.util.Utils;
 import com.maxml.timer.widget.MyWidgetProvider;
 
@@ -28,7 +29,7 @@ import java.util.Map;
  * Created by nazar on 12.12.17.
  */
 
-public class ActionController {
+public class Controller {
 
     private static Map<EventType, EventBus> eventBuses = new HashMap<>();
     private Context context;
@@ -36,30 +37,25 @@ public class ActionController {
     // db
     private ActionCRUD actionCRUD;
     private TableCRUD tableCRUD;
-    private PathCRUD pathCRUD;
+    private CoordinatesCRUD coordinatesCRUD;
 
     private Map<String, Action> actions = new HashMap<>();
     private List<String> stateStack = new ArrayList<>();
 
-    public void saveWalkedPath(List<Coordinates> coordinates) {
-        endWalkEvent(coordinates);
-    }
 
-    public enum EventType {
-        DB_EVENT_BUS, UI_EVENT_BUS
-    }
-
-
-    public ActionController(Context context) {
+    public Controller(Context context) {
         this.context = context;
 
         initCRUD();
     }
 
-    public static ActionController build(Context context) {
-        ActionController entity = new ActionController(context);
+    public static Controller build(Context context) {
+        Controller entity = new Controller(context);
+        entity.addEventBus(EventType.DB_EVENT_BUS, EventBus.builder().build());
         entity.addEventBus(EventType.DB_EVENT_BUS, EventBus.builder().build());
         entity.addEventBus(EventType.UI_EVENT_BUS, EventBus.builder().build());
+        entity.addEventBus(EventType.ACTION_EVENT_BUS, EventBus.builder().build());
+        entity.addEventBus(EventType.GPS_EVENT_BUS, EventBus.builder().build());
         return entity;
     }
 
@@ -99,30 +95,26 @@ public class ActionController {
         Action walk = actions.get(Constants.EVENT_WALK_ACTION);
         if (walk == null) {
             // start gps tracking
-            EventBus.getDefault().post(new GpsMessage(Constants.EVENT_START));
+            getEventBus(EventType.GPS_EVENT_BUS).post(new EventMessage(Constants.EVENT_START));
             // create walk action
             startWalkEvent();
         } else {
             // stop gps tracking
-            EventBus.getDefault().post(new GpsMessage(Constants.EVENT_STOP));
-            // get result in onGpsEvent method
+            getEventBus(EventType.GPS_EVENT_BUS).post(new EventMessage(Constants.EVENT_STOP));
         }
     }
-
 
     public void onReceiveDbRequest(DbMessage message) {
         switch (message.getMessage()) {
             case Constants.EVENT_TABLE_DATE_REQUEST:
                 Date date = (Date) message.getData();
-                // change message msg name to receiver constant
-                message.setMessage(Constants.EVENT_TABLE_DATE_RESULT);
-                tableCRUD.read(date, message);
+                DbReturnData returnData = message.getDbReturnData();
+                tableCRUD.read(date, returnData);
                 break;
         }
     }
 
-
-    private void startRestEvent() {
+    public void startRestEvent() {
         // create action entity
         Action rest = new Action();
         rest.setType(Constants.EVENT_REST_ACTION);
@@ -138,7 +130,7 @@ public class ActionController {
         updateStatus(context.getString(R.string.widget_rest_text));
     }
 
-    private void endRestEvent() {
+    public void endRestEvent() {
         Action rest = actions.get(Constants.EVENT_REST_ACTION);
         if (rest == null) {
             startRestEvent();
@@ -155,7 +147,7 @@ public class ActionController {
         updateStatus(lastStatus);
     }
 
-    private void startWorkEvent() {
+    public void startWorkEvent() {
         // create action entity
         Action work = new Action();
         work.setType(Constants.EVENT_WORK_ACTION);
@@ -171,7 +163,7 @@ public class ActionController {
         updateStatus(context.getString(R.string.widget_work_text));
     }
 
-    private void endWorkEvent() {
+    public void endWorkEvent() {
         Action work = actions.get(Constants.EVENT_WORK_ACTION);
         if (work == null) {
             startWorkEvent();
@@ -221,7 +213,7 @@ public class ActionController {
         updateStatus(lastStatus);
     }
 
-    private void startWalkEvent() {
+    public void startWalkEvent() {
         // create action entity
         Action call = new Action();
         call.setType(Constants.EVENT_CALL_ACTION);
@@ -245,7 +237,7 @@ public class ActionController {
         }
         walk.setEndDate(new Date());
         actionCRUD.create(walk, null);
-//        pathCRUD.create(coordinates);
+//        coordinatesCRUD.create(coordinates);
         // clear temp entity
         actions.remove(Constants.EVENT_CALL_ACTION);
         // delete from stacktrace
@@ -265,7 +257,7 @@ public class ActionController {
     }
 
     private void updateStatus(String status) {
-        EventBus.getDefault().post(new UiMessage(Constants.EVENT_NEW_ACTION_STATUS, status));
+        eventBuses.get(EventType.UI_EVENT_BUS).post(new EventMessage(Constants.EVENT_NEW_ACTION_STATUS, status));
         updateWidgetStatus(status);
         NotificationHelper.updateNotification(context, status);
     }
@@ -279,9 +271,9 @@ public class ActionController {
 
 
     private void initCRUD() {
-        tableCRUD = new TableCRUD();
-        actionCRUD = new ActionCRUD();
-        pathCRUD = new PathCRUD();
+        tableCRUD = new TableCRUD(context);
+        actionCRUD = new ActionCRUD(context);
+        coordinatesCRUD = new CoordinatesCRUD(context);
     }
 
 

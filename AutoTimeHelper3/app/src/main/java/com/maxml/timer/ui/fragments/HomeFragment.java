@@ -10,9 +10,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.maxml.timer.R;
-import com.maxml.timer.entity.Coordinates;
-import com.maxml.timer.entity.eventBus.ActionMessage;
-import com.maxml.timer.entity.eventBus.UiMessage;
+import com.maxml.timer.entity.eventBus.EventMessage;
 import com.maxml.timer.util.Constants;
 
 import org.greenrobot.eventbus.EventBus;
@@ -20,7 +18,6 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 public class HomeFragment extends Fragment {
     private TextView title;
@@ -50,7 +47,7 @@ public class HomeFragment extends Fragment {
     }
 
     @Subscribe()
-    public void onUiEvent(UiMessage event) {
+    public void onUiEvent(EventMessage event) {
         switch (event.getMessage()) {
             case Constants.EVENT_NEW_ACTION_STATUS:
                 title.setText(сharSequence());

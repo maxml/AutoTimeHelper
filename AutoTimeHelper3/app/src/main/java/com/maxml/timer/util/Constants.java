@@ -21,11 +21,7 @@ public class Constants {
 
     // firebase database
     public static final String USER_DATABASE_PATH = "users";
-    public static final String CALL_DATABASE_PATH  = "calls";
-    public static final String SORT_BY_DATE_PATH = "sortByDate";
-    public static final String REST_DATABASE_PATH = "rests";
     public static final String WALK_DATABASE_PATH = "walks";
-    public static final String WORK_DATABASE_PATH = "works";
 
     //  columns
     public static final String COLUMN_ID = "id";
@@ -38,7 +34,6 @@ public class Constants {
     // event bus
     public static final String EVENT_DB_RESULT_OK = "resultOk";
     public static final String EVENT_DB_RESULT_ERROR = "resultError";
-    public static final String EVENT_DB_RESULT_LIST = "resultList";
 
     public static final int NOTIFICATION_ID = 100;
 
