@@ -13,7 +13,7 @@ import com.maxml.timer.entity.Table;
 import com.maxml.timer.entity.actions.Action;
 import com.maxml.timer.entity.eventBus.DbMessage;
 import com.maxml.timer.util.Constants;
-import com.maxml.timer.util.EventType;
+import com.maxml.timer.util.EventBusType;
 import com.maxml.timer.util.Utils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -27,7 +27,7 @@ public class TableCRUD {
 
     public TableCRUD(Context context) {
         Controller controller = new Controller(context);
-        dbEventBus = controller.getEventBus(EventType.DB_EVENT_BUS);
+        dbEventBus = controller.getEventBus(EventBusType.DB);
         actionRef = FirebaseDatabase.getInstance().getReference()
                 .child(Constants.USER_DATABASE_PATH)
                 .child(UserAPI.getCurrentUserId());

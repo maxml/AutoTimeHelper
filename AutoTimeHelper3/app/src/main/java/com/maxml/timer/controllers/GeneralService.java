@@ -8,21 +8,16 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 
 import com.maxml.timer.MyLog;
-import com.maxml.timer.entity.Coordinates;
-import com.maxml.timer.entity.DbReturnData;
 import com.maxml.timer.entity.eventBus.EventMessage;
 import com.maxml.timer.entity.eventBus.DbMessage;
 import com.maxml.timer.googlemap.GPSTracker;
 import com.maxml.timer.util.Constants;
-import com.maxml.timer.util.EventType;
+import com.maxml.timer.util.EventBusType;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import permissions.dispatcher.NeedsPermission;
+
 public class GeneralService extends Service {
 
     private Controller controller;
@@ -61,96 +56,30 @@ public class GeneralService extends Service {
 
     @Subscribe()
     public void onReceiveEvent(DbMessage message) {
-        switch (message.getMessage()) {
-            /**
-         * get result from Db and send it to receivers
-         */
-            case Constants.EVENT_DB_RESULT_OK:
-                // get result data
-                Object data = message.getData();
-                // get data for return request
-                DbReturnData returnData = message.getDbReturnData();
-                // get EventBus for result
-                EventBus resultEventBus = controller.getEventBus(returnData.getEventType());
-                // send result
-                resultEventBus.post(new EventMessage(returnData.getResultRequest(), data));
-                break;
-
-            case Constants.EVENT_DB_RESULT_ERROR:
-                // get data for return request
-                DbReturnData dbReturnData = message.getDbReturnData();
-                // get EventBus for result
-                EventBus resEventBus = controller.getEventBus(dbReturnData.getEventType());
-                // send result with message name such as request message name
-                resEventBus.post(new EventMessage(Constants.EVENT_DB_RESULT_ERROR));
-                break;
-
-            /**
-             * incoming Db request
-             */
-            default:
-                controller.onReceiveDbRequest(message);
-                break;
-        }
-
+        controller.onReceiveDbMessage(message);
     }
 
     @Subscribe()
-    public void onReciveEvent(EventMessage event) {
-        switch (event.getMessage()) {
-            /** start actions*/
-            case Constants.EVENT_WALK_ACTION:
-                controller.walkActionEvent();
-                break;
-
-            case Constants.EVENT_WORK_ACTION:
-                controller.workActionEvent();
-                break;
-
-            case Constants.EVENT_REST_ACTION:
-                controller.restActionEvent();
-                break;
-
-            case Constants.EVENT_CALL_ACTION:
-                controller.callActionEvent();
-                break;
-
-            case Constants.EVENT_CALL_ONGOING_ANSWERED:
-                controller.startCallEvent();
-                break;
-
-            case Constants.EVENT_CALL_INCOMING_ANSWERED:
-                controller.startCallEvent();
-                break;
-
-            // simple logic for both events
-            case Constants.EVENT_CALL_INCOMING_ENDED:
-            case Constants.EVENT_CALL_ONGOING_ENDED:
-                controller.endCallEvent();
-                break;
-            /** end actions*/
-
-            case Constants.EVENT_WAY_COORDINATES:
-                List<Coordinates> coordinates = (ArrayList<Coordinates>) event.getData();
-                controller.endWalkEvent(coordinates);
-                break;
-        }
+    public void onReciveEvent(EventMessage message) {
+        controller.onReceiveEventMessage(message);
     }
 
     private void registerEventBus() {
-        controller.getEventBus(EventType.DB_EVENT_BUS).register(this);
-        controller.getEventBus(EventType.UI_EVENT_BUS).register(this);
-        controller.getEventBus(EventType.ACTION_EVENT_BUS).register(this);
-        controller.getEventBus(EventType.GPS_EVENT_BUS).register(this);
+        controller.getEventBus(EventBusType.DB).register(this);
+        controller.getEventBus(EventBusType.HOME_FRAGMENT).register(this);
+        controller.getEventBus(EventBusType.ACTION_EVENT).register(this);
+        controller.getEventBus(EventBusType.GPS).register(this);
+        controller.getEventBus(EventBusType.CONTROLLER).register(this);
     }
 
     @Override
     public void onDestroy() {
         MyLog.d("Service: onDestroy");
-        controller.getEventBus(EventType.DB_EVENT_BUS).unregister(this);
-        controller.getEventBus(EventType.UI_EVENT_BUS).unregister(this);
-        controller.getEventBus(EventType.ACTION_EVENT_BUS).unregister(this);
-        controller.getEventBus(EventType.GPS_EVENT_BUS).unregister(this);
+        controller.getEventBus(EventBusType.DB).unregister(this);
+        controller.getEventBus(EventBusType.HOME_FRAGMENT).unregister(this);
+        controller.getEventBus(EventBusType.ACTION_EVENT).unregister(this);
+        controller.getEventBus(EventBusType.GPS).unregister(this);
+        controller.getEventBus(EventBusType.CONTROLLER).unregister(this);
         super.onDestroy();
     }
 }

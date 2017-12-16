@@ -11,16 +11,14 @@ import android.widget.TextView;
 
 import com.maxml.timer.R;
 import com.maxml.timer.controllers.Controller;
-import com.maxml.timer.entity.DbReturnData;
 import com.maxml.timer.entity.Table;
 import com.maxml.timer.entity.eventBus.EventMessage;
 import com.maxml.timer.entity.eventBus.DbMessage;
 import com.maxml.timer.util.Constants;
-import com.maxml.timer.util.EventType;
+import com.maxml.timer.util.EventBusType;
 import com.maxml.timer.util.FragmentUtils;
 import com.maxml.timer.util.Utils;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Date;
@@ -41,8 +39,8 @@ public class CalendarFragment extends Fragment implements View.OnClickListener {
         initListener();
         // get current date
         Date selectedDate = new Date(calendarView.getDate());
-        DbMessage getTableMsg = new DbMessage(Constants.EVENT_TABLE_DATE_REQUEST, EventType.CALENDAR_FRG_EVENT_BUS,selectedDate);
-        controller.getEventBus(EventType.DB_EVENT_BUS).post(getTableMsg);
+        DbMessage getTableMsg = new DbMessage(Constants.EVENT_TABLE_DATE_REQUEST, EventBusType.CALENDAR_FRAGMENT,selectedDate);
+        controller.getEventBus(EventBusType.DB).post(getTableMsg);
         return view;
     }
 
@@ -63,9 +61,9 @@ public class CalendarFragment extends Fragment implements View.OnClickListener {
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int dayOfMonth) {
-                DbMessage getTableMsg = new DbMessage(Constants.EVENT_TABLE_DATE_REQUEST, EventType.CALENDAR_FRG_EVENT_BUS,
+                DbMessage getTableMsg = new DbMessage(Constants.EVENT_TABLE_DATE_REQUEST, EventBusType.CALENDAR_FRAGMENT,
                         Utils.getDate(dayOfMonth, month, year));
-                controller.getEventBus(EventType.DB_EVENT_BUS).post(getTableMsg);
+                controller.getEventBus(EventBusType.DB).post(getTableMsg);
             }
         });
     }
@@ -111,12 +109,12 @@ public class CalendarFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onStart() {
         super.onStart();
-        controller.getEventBus(EventType.CALENDAR_FRG_EVENT_BUS).register(this);
+        controller.getEventBus(EventBusType.CALENDAR_FRAGMENT).register(this);
     }
 
     @Override
     public void onStop() {
-        controller.getEventBus(EventType.CALENDAR_FRG_EVENT_BUS).unregister(this);
+        controller.getEventBus(EventBusType.CALENDAR_FRAGMENT).unregister(this);
         super.onStop();
     }
 }

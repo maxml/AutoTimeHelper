@@ -10,8 +10,10 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.maxml.timer.R;
+import com.maxml.timer.controllers.Controller;
 import com.maxml.timer.entity.eventBus.EventMessage;
 import com.maxml.timer.util.Constants;
+import com.maxml.timer.util.EventBusType;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -20,6 +22,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class HomeFragment extends Fragment {
+    private Controller controller;
+    private EventBus eventBusHomeFrg;
+    private EventBus eventBusAction;
     private TextView title;
     private TextView description;
     private ToggleButton butCall;
@@ -43,14 +48,17 @@ public class HomeFragment extends Fragment {
         description.setText(getString(R.string.widget_default_text));
         initListeners();
 
+        controller = new Controller(getContext());
+        eventBusHomeFrg = controller.getEventBus(EventBusType.HOME_FRAGMENT);
+        eventBusAction = controller.getEventBus(EventBusType.ACTION_EVENT);
         return view;
     }
 
     @Subscribe()
-    public void onUiEvent(EventMessage event) {
+    public void onReceiveEvent(EventMessage event) {
         switch (event.getMessage()) {
             case Constants.EVENT_NEW_ACTION_STATUS:
-                title.setText(сharSequence());
+                title.setText(charSequence());
                 String status = (String) event.getData();
                 description.setText(status);
                 break;
@@ -66,7 +74,7 @@ public class HomeFragment extends Fragment {
                 butWork.setChecked(false);
                 butWalk.setChecked(false);
                 butRest.setChecked(false);
-                EventBus.getDefault().post(new ActionMessage(Constants.EVENT_CALL_ACTION));
+                eventBusAction.post(new EventMessage(Constants.EVENT_CALL_ACTION));
             }
         });
 
@@ -77,7 +85,7 @@ public class HomeFragment extends Fragment {
                 butCall.setChecked(false);
                 butWalk.setChecked(false);
                 butRest.setChecked(false);
-                EventBus.getDefault().post(new ActionMessage(Constants.EVENT_WORK_ACTION));
+                eventBusAction.post(new EventMessage(Constants.EVENT_WORK_ACTION));
             }
         });
         butRest.setOnClickListener(new OnClickListener() {
@@ -87,7 +95,7 @@ public class HomeFragment extends Fragment {
                 butCall.setChecked(false);
                 butWalk.setChecked(false);
                 butWork.setChecked(false);
-                EventBus.getDefault().post(new ActionMessage(Constants.EVENT_REST_ACTION));
+                eventBusAction.post(new EventMessage(Constants.EVENT_REST_ACTION));
             }
         });
         butWalk.setOnClickListener(new OnClickListener() {
@@ -97,27 +105,27 @@ public class HomeFragment extends Fragment {
                 butCall.setChecked(false);
                 butRest.setChecked(false);
                 butWork.setChecked(false);
-                EventBus.getDefault().post(new ActionMessage(Constants.EVENT_WALK_ACTION));
+                eventBusAction.post(new EventMessage(Constants.EVENT_WALK_ACTION));
             }
         });
 
 	}
 	
-	public String сharSequence() {
+	public String charSequence() {
 		SimpleDateFormat sdf = new SimpleDateFormat("kk:mm:ss");
-		String currentDateandTime = "Start at:" + sdf.format(new Date());
-		return currentDateandTime;
+		String currentDateAndTime = "Start at:" + sdf.format(new Date());
+		return currentDateAndTime;
 	}
 
     @Override
     public void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
+        eventBusHomeFrg.register(this);
     }
 
     @Override
     public void onStop() {
-        EventBus.getDefault().unregister(this);
+        eventBusHomeFrg.unregister(this);
         super.onStop();
     }
 }

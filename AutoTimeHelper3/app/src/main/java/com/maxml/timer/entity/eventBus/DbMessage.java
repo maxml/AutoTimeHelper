@@ -1,7 +1,7 @@
 package com.maxml.timer.entity.eventBus;
 
 import com.maxml.timer.entity.DbReturnData;
-import com.maxml.timer.util.EventType;
+import com.maxml.timer.util.EventBusType;
 
 /**
  * Created by nazar on 04.12.17.
@@ -12,14 +12,14 @@ public class DbMessage {
     private DbReturnData dbReturnData;
     private Object data;
 
-    public DbMessage(String message, EventType resultEventType) {
+    public DbMessage(String message, EventBusType resultEventBusType) {
         this.message = message;
-        this.dbReturnData = new DbReturnData(message, resultEventType);
+        this.dbReturnData = new DbReturnData(message, resultEventBusType);
     }
 
-    public DbMessage(String message, EventType resultEventType, Object data) {
+    public DbMessage(String message, EventBusType resultEventBusType, Object data) {
         this.message = message;
-        this.dbReturnData = new DbReturnData(message, resultEventType);
+        this.dbReturnData = new DbReturnData(message, resultEventBusType);
         this.data = data;
     }
     public DbMessage(String message, DbReturnData dbReturnData) {

@@ -48,6 +48,7 @@ public class Constants {
     public static final String EVENT_CALL_INCOMING_ANSWERED = "incomingCallAnswered";
     public static final String EVENT_TABLE_DATE_REQUEST = "tableDate";
     public static final String EVENT_TABLE_DATE_RESULT = "getTable";
+    public static final String EVENT_SAVE_COORDINATES = "saveCoordinates";
     public static final String ACTION_WIDGET_RECEIVER = "clickWidgetButton";
     public static final String WIDGET_EXTRA = "widgetExtra";
 
@@ -61,4 +62,5 @@ public class Constants {
     public static final String EVENT_WAY_COORDINATES = "wayCoordinates";
     public static final String EVENT_NEW_ACTION_STATUS = "newActionStatus";
     public static final String COLUMN_DAY_COUNT = "dayCount";
+    public static final String EVENT_WALK_ACTION_SAVED = "walkActionSaved";
 }

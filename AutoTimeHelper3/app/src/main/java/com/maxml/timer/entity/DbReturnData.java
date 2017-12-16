@@ -1,6 +1,6 @@
 package com.maxml.timer.entity;
 
-import com.maxml.timer.util.EventType;
+import com.maxml.timer.util.EventBusType;
 
 /**
  * Created by nazar on 16.12.17.
@@ -8,18 +8,18 @@ import com.maxml.timer.util.EventType;
 
 public class DbReturnData {
     private String resultRequest;
-    private EventType eventType;
+    private EventBusType eventBusType;
 
-    public DbReturnData(String resultRequest, EventType eventType) {
+    public DbReturnData(String resultRequest, EventBusType eventBusType) {
         this.resultRequest = resultRequest;
-        this.eventType = eventType;
+        this.eventBusType = eventBusType;
     }
 
     public String getResultRequest() {
         return resultRequest;
     }
 
-    public EventType getEventType() {
-        return eventType;
+    public EventBusType getEventBusType() {
+        return eventBusType;
     }
 }

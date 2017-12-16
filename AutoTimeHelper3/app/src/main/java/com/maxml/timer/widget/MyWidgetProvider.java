@@ -9,15 +9,22 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 
 import com.maxml.timer.R;
+import com.maxml.timer.controllers.Controller;
+import com.maxml.timer.entity.eventBus.EventMessage;
 import com.maxml.timer.ui.activity.LoginActivity;
 import com.maxml.timer.util.Constants;
+import com.maxml.timer.util.EventBusType;
 
 import org.greenrobot.eventbus.EventBus;
 
 public class MyWidgetProvider extends AppWidgetProvider {
+    private Controller controller;
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+        if (controller == null) {
+            controller = new Controller(context);
+        }
         // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
             updateWidget(context, appWidgetManager, appWidgetId);
@@ -41,21 +48,22 @@ public class MyWidgetProvider extends AppWidgetProvider {
                 context.startActivity(new Intent(context, LoginActivity.class));
                 return;
             }
+            EventBus eventBus = controller.getEventBus(EventBusType.ACTION_EVENT);
             switch (message) {
                 case Constants.EVENT_WORK_ACTION:
-                    EventBus.getDefault().post(new ActionMessage(Constants.EVENT_WORK_ACTION));
+                    eventBus.post(new EventMessage(Constants.EVENT_WORK_ACTION));
                     break;
 
                 case Constants.EVENT_WALK_ACTION:
-                    EventBus.getDefault().post(new ActionMessage(Constants.EVENT_WALK_ACTION));
+                    eventBus.post(new EventMessage(Constants.EVENT_WALK_ACTION));
                     break;
 
                 case Constants.EVENT_REST_ACTION:
-                    EventBus.getDefault().post(new ActionMessage(Constants.EVENT_REST_ACTION));
+                    eventBus.post(new EventMessage(Constants.EVENT_REST_ACTION));
                     break;
 
                 case Constants.EVENT_CALL_ACTION:
-                    EventBus.getDefault().post(new ActionMessage(Constants.EVENT_CALL_ACTION));
+                    eventBus.post(new EventMessage(Constants.EVENT_CALL_ACTION));
                     break;
             }
         }

@@ -12,10 +12,9 @@ import com.maxml.timer.controllers.Controller;
 import com.maxml.timer.entity.Coordinates;
 import com.maxml.timer.entity.DbReturnData;
 import com.maxml.timer.entity.User;
-import com.maxml.timer.entity.actions.Action;
 import com.maxml.timer.entity.eventBus.DbMessage;
 import com.maxml.timer.util.Constants;
-import com.maxml.timer.util.EventType;
+import com.maxml.timer.util.EventBusType;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -28,7 +27,7 @@ public class CoordinatesCRUD {
 
     public CoordinatesCRUD(Context context) {
         Controller controller = new Controller(context);
-        eventBus = controller.getEventBus(EventType.DB_EVENT_BUS);
+        eventBus = controller.getEventBus(EventBusType.DB);
         User user = UserAPI.getCurrentUser();
         if (pathRef == null && user != null) {
             pathRef = FirebaseDatabase.getInstance().getReference()

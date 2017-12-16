@@ -17,6 +17,7 @@ import com.maxml.timer.controllers.Controller;
 import com.maxml.timer.entity.Coordinates;
 import com.maxml.timer.entity.eventBus.EventMessage;
 import com.maxml.timer.util.Constants;
+import com.maxml.timer.util.EventBusType;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -53,7 +54,7 @@ public class GPSTracker extends Service implements LocationListener {
     public void onCreate() {
         super.onCreate();
         controller = new Controller(this);
-        eventBus = controller.getEventBus(Controller.EventType.GPS_EVENT_BUS);
+        eventBus = controller.getEventBus(EventBusType.GPS);
         eventBus.register(this);
         initLocationListener();
     }

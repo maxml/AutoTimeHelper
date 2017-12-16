@@ -13,7 +13,7 @@ import com.maxml.timer.entity.actions.Action;
 import com.maxml.timer.entity.eventBus.EventMessage;
 import com.maxml.timer.entity.eventBus.DbMessage;
 import com.maxml.timer.util.Constants;
-import com.maxml.timer.util.EventType;
+import com.maxml.timer.util.EventBusType;
 import com.maxml.timer.util.Utils;
 import com.maxml.timer.widget.MyWidgetProvider;
 
@@ -31,7 +31,7 @@ import java.util.Map;
 
 public class Controller {
 
-    private static Map<EventType, EventBus> eventBuses = new HashMap<>();
+    private static Map<EventBusType, EventBus> eventBuses = new HashMap<>();
     private Context context;
 
     // db
@@ -51,19 +51,106 @@ public class Controller {
 
     public static Controller build(Context context) {
         Controller entity = new Controller(context);
-        entity.addEventBus(EventType.DB_EVENT_BUS, EventBus.builder().build());
-        entity.addEventBus(EventType.DB_EVENT_BUS, EventBus.builder().build());
-        entity.addEventBus(EventType.UI_EVENT_BUS, EventBus.builder().build());
-        entity.addEventBus(EventType.ACTION_EVENT_BUS, EventBus.builder().build());
-        entity.addEventBus(EventType.GPS_EVENT_BUS, EventBus.builder().build());
+        entity.addEventBus(EventBusType.DB, EventBus.builder().build());
+        entity.addEventBus(EventBusType.CONTROLLER, EventBus.builder().build());
+        entity.addEventBus(EventBusType.HOME_FRAGMENT, EventBus.builder().build());
+        entity.addEventBus(EventBusType.ACTION_EVENT, EventBus.builder().build());
+        entity.addEventBus(EventBusType.GPS, EventBus.builder().build());
         return entity;
     }
 
-    public EventBus getEventBus(EventType type) {
+    public void onReceiveDbMessage(DbMessage message) {
+        switch (message.getMessage()) {
+            /**
+             * get result from Db and send it to receivers
+             */
+            case Constants.EVENT_DB_RESULT_OK:
+                // get data for return request
+                DbReturnData returnData = message.getDbReturnData();
+                if (returnData == null) {
+                    return;
+                }
+                // get result data
+                Object data = message.getData();
+                // get EventBus for result
+                EventBus resultEventBus = getEventBus(returnData.getEventBusType());
+                // send result
+                resultEventBus.post(new EventMessage(returnData.getResultRequest(), data));
+                break;
+
+            case Constants.EVENT_DB_RESULT_ERROR:
+                // get data for return request
+                DbReturnData dbReturnData = message.getDbReturnData();
+                if (dbReturnData == null) {
+                    return;
+                }
+                // get EventBus for result
+                EventBus resEventBus = getEventBus(dbReturnData.getEventBusType());
+                // send result with message name such as request message name
+                resEventBus.post(new EventMessage(Constants.EVENT_DB_RESULT_ERROR));
+                break;
+
+
+            case Constants.EVENT_TABLE_DATE_REQUEST:
+                Date date = (Date) message.getData();
+                tableCRUD.read(date, message.getDbReturnData());
+                break;
+        }
+    }
+
+    public void onReceiveEventMessage(EventMessage message) {
+        switch (message.getMessage()) {
+            /** start actions*/
+            case Constants.EVENT_WALK_ACTION:
+                walkActionEvent();
+                break;
+
+            case Constants.EVENT_WORK_ACTION:
+                workActionEvent();
+                break;
+
+            case Constants.EVENT_REST_ACTION:
+                restActionEvent();
+                break;
+
+            case Constants.EVENT_CALL_ACTION:
+                callActionEvent();
+                break;
+
+            case Constants.EVENT_CALL_ONGOING_ANSWERED:
+                startCallEvent();
+                break;
+
+            case Constants.EVENT_CALL_INCOMING_ANSWERED:
+                startCallEvent();
+                break;
+
+            // simple logic for both events
+            case Constants.EVENT_CALL_INCOMING_ENDED:
+            case Constants.EVENT_CALL_ONGOING_ENDED:
+                endCallEvent();
+                break;
+            /** end actions*/
+
+//            case Constants.EVENT_WALK_ACTION_SAVED:
+//                // stop gps tracking
+//                getEventBus(EventBusType.GPS).post(new EventMessage(Constants.EVENT_STOP));
+//                break;
+//
+//            case Constants.EVENT_WAY_COORDINATES:
+//                List<Coordinates> coordinates = (ArrayList<Coordinates>) message.getData();
+//                coordinatesCRUD.(coordinates);
+//                break;
+        }
+
+    }
+
+
+    public EventBus getEventBus(EventBusType type) {
         return eventBuses.get(type);
     }
 
-    public void restActionEvent() {
+    private void restActionEvent() {
         Action rest = actions.get(Constants.EVENT_REST_ACTION);
         if (rest == null) {
             startRestEvent();
@@ -72,7 +159,7 @@ public class Controller {
         }
     }
 
-    public void callActionEvent() {
+    private void callActionEvent() {
         Action call = actions.get(Constants.EVENT_CALL_ACTION);
         if (call == null) {
             startCallEvent();
@@ -82,7 +169,7 @@ public class Controller {
     }
 
 
-    public void workActionEvent() {
+    private void workActionEvent() {
         Action work = actions.get(Constants.EVENT_WORK_ACTION);
         if (work == null) {
             startWorkEvent();
@@ -91,30 +178,20 @@ public class Controller {
         }
     }
 
-    public void walkActionEvent() {
+    private void walkActionEvent() {
         Action walk = actions.get(Constants.EVENT_WALK_ACTION);
         if (walk == null) {
             // start gps tracking
-            getEventBus(EventType.GPS_EVENT_BUS).post(new EventMessage(Constants.EVENT_START));
+            getEventBus(EventBusType.GPS).post(new EventMessage(Constants.EVENT_START));
             // create walk action
             startWalkEvent();
         } else {
-            // stop gps tracking
-            getEventBus(EventType.GPS_EVENT_BUS).post(new EventMessage(Constants.EVENT_STOP));
+            // save walt action
+            endWalkEvent();
         }
     }
 
-    public void onReceiveDbRequest(DbMessage message) {
-        switch (message.getMessage()) {
-            case Constants.EVENT_TABLE_DATE_REQUEST:
-                Date date = (Date) message.getData();
-                DbReturnData returnData = message.getDbReturnData();
-                tableCRUD.read(date, returnData);
-                break;
-        }
-    }
-
-    public void startRestEvent() {
+    private void startRestEvent() {
         // create action entity
         Action rest = new Action();
         rest.setType(Constants.EVENT_REST_ACTION);
@@ -130,7 +207,7 @@ public class Controller {
         updateStatus(context.getString(R.string.widget_rest_text));
     }
 
-    public void endRestEvent() {
+    private void endRestEvent() {
         Action rest = actions.get(Constants.EVENT_REST_ACTION);
         if (rest == null) {
             startRestEvent();
@@ -147,7 +224,7 @@ public class Controller {
         updateStatus(lastStatus);
     }
 
-    public void startWorkEvent() {
+    private void startWorkEvent() {
         // create action entity
         Action work = new Action();
         work.setType(Constants.EVENT_WORK_ACTION);
@@ -163,7 +240,7 @@ public class Controller {
         updateStatus(context.getString(R.string.widget_work_text));
     }
 
-    public void endWorkEvent() {
+    private void endWorkEvent() {
         Action work = actions.get(Constants.EVENT_WORK_ACTION);
         if (work == null) {
             startWorkEvent();
@@ -180,7 +257,7 @@ public class Controller {
         updateStatus(lastStatus);
     }
 
-    public void startCallEvent() {
+    private void startCallEvent() {
         // create action entity
         Action call = new Action();
         call.setType(Constants.EVENT_CALL_ACTION);
@@ -196,7 +273,7 @@ public class Controller {
         updateStatus(context.getString(R.string.widget_call_text));
     }
 
-    public void endCallEvent() {
+    private void endCallEvent() {
         Action call = actions.get(Constants.EVENT_CALL_ACTION);
         if (call == null) {
             startCallEvent();
@@ -213,7 +290,7 @@ public class Controller {
         updateStatus(lastStatus);
     }
 
-    public void startWalkEvent() {
+    private void startWalkEvent() {
         // create action entity
         Action call = new Action();
         call.setType(Constants.EVENT_CALL_ACTION);
@@ -229,15 +306,17 @@ public class Controller {
         updateStatus(context.getString(R.string.widget_call_text));
     }
 
-    public void endWalkEvent(List<Coordinates> coordinates) {
+    private void endWalkEvent() {
         Action walk = actions.get(Constants.EVENT_WALK_ACTION);
         if (walk == null) {
             startWorkEvent();
             return;
         }
         walk.setEndDate(new Date());
-        actionCRUD.create(walk, null);
-//        coordinatesCRUD.create(coordinates);
+        // add return data, after complete CRUD create method result will sent to
+        // EventBus "CONTROLLER" with message "EVENT_SAVE_COORDINATES"
+        DbReturnData returnData = new DbReturnData(Constants.EVENT_WALK_ACTION_SAVED, EventBusType.CONTROLLER);
+        actionCRUD.create(walk, returnData);
         // clear temp entity
         actions.remove(Constants.EVENT_CALL_ACTION);
         // delete from stacktrace
@@ -257,7 +336,7 @@ public class Controller {
     }
 
     private void updateStatus(String status) {
-        eventBuses.get(EventType.UI_EVENT_BUS).post(new EventMessage(Constants.EVENT_NEW_ACTION_STATUS, status));
+        eventBuses.get(EventBusType.HOME_FRAGMENT).post(new EventMessage(Constants.EVENT_NEW_ACTION_STATUS, status));
         updateWidgetStatus(status);
         NotificationHelper.updateNotification(context, status);
     }
@@ -277,7 +356,7 @@ public class Controller {
     }
 
 
-    private void addEventBus(EventType type, EventBus eventBus) {
+    private void addEventBus(EventBusType type, EventBus eventBus) {
         eventBuses.put(type, eventBus);
     }
 

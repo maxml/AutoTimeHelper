@@ -13,14 +13,10 @@ import com.maxml.timer.entity.DbReturnData;
 import com.maxml.timer.entity.User;
 import com.maxml.timer.entity.actions.Action;
 import com.maxml.timer.entity.eventBus.DbMessage;
-import com.maxml.timer.entity.eventBus.EventMessage;
 import com.maxml.timer.util.Constants;
-import com.maxml.timer.util.EventType;
+import com.maxml.timer.util.EventBusType;
 
 import org.greenrobot.eventbus.EventBus;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class ActionCRUD {
 
@@ -29,7 +25,7 @@ public class ActionCRUD {
 
     public ActionCRUD(Context context) {
         Controller controller = new Controller(context);
-        eventBus = controller.getEventBus(EventType.DB_EVENT_BUS);
+        eventBus = controller.getEventBus(EventBusType.DB);
         User user = UserAPI.getCurrentUser();
         if (actionRef == null && user != null) {
             actionRef = FirebaseDatabase.getInstance().getReference()
