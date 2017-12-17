@@ -60,7 +60,7 @@ public class GeneralService extends Service {
     }
 
     @Subscribe()
-    public void onReciveEvent(EventMessage message) {
+    public void onReceiveEvent(EventMessage message) {
         controller.onReceiveEventMessage(message);
     }
 

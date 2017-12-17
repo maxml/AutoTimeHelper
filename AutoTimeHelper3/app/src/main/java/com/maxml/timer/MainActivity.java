@@ -76,7 +76,6 @@ public class MainActivity extends AppCompatActivity
             Intent serviceIntent = new Intent(this, GeneralService.class);
             startService(serviceIntent);
         }
-
     }
 
     private void initDrawer() {

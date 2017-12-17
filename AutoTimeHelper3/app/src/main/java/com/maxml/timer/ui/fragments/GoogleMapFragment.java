@@ -21,6 +21,7 @@ import com.maxml.timer.R;
 import com.maxml.timer.entity.Coordinates;
 import com.maxml.timer.entity.Line;
 import com.maxml.timer.entity.actions.Action;
+import com.maxml.timer.entity.eventBus.EventMessage;
 import com.maxml.timer.util.Constants;
 
 import org.greenrobot.eventbus.EventBus;
@@ -69,7 +70,7 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     @Subscribe()
-    public void onGpsEvent(GpsMessage event) {
+    public void onGpsEvent(EventMessage event) {
         switch (event.getMessage()) {
             case Constants.EVENT_LOCATION_CHANGE:
                 Location location = (Location) event.getData();

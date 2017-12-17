@@ -8,6 +8,7 @@ import android.telephony.TelephonyManager;
 import com.maxml.timer.controllers.Controller;
 import com.maxml.timer.entity.eventBus.EventMessage;
 import com.maxml.timer.util.Constants;
+import com.maxml.timer.util.EventBusType;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -21,7 +22,7 @@ public class CallReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (controller == null){
             controller = new Controller(context);
-            eventBus = controller.getEventBus(Controller.EventType.ACTION_EVENT_BUS);
+            eventBus = controller.getEventBus(EventBusType.ACTION_EVENT);
         }
         int state = 0;
         String stateStr = intent.getExtras().getString(TelephonyManager.EXTRA_STATE);
