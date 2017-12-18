@@ -4,7 +4,9 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -18,13 +20,15 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.maxml.timer.api.UserAPI;
 import com.maxml.timer.controllers.GeneralService;
 import com.maxml.timer.entity.User;
 import com.maxml.timer.ui.fragments.CalendarFragment;
 import com.maxml.timer.ui.fragments.HomeFragment;
+import com.maxml.timer.ui.fragments.MainUserPageFragment;
 import com.maxml.timer.ui.fragments.SettingsFragment;
 import com.maxml.timer.ui.fragments.ActionListViewFragment;
-import com.maxml.timer.ui.fragments.TablesFragment;
+import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.FragmentUtils;
 import com.maxml.timer.util.SharedPrefUtils;
 import com.maxml.timer.util.Utils;
@@ -39,6 +43,8 @@ public class MainActivity extends AppCompatActivity
     private ProgressBar progressBar;
     private ActionBarDrawerToggle drawerToggle;
     private Toolbar toolbar;
+
+    private User user;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -108,7 +114,7 @@ public class MainActivity extends AppCompatActivity
 
         nv.setNavigationItemSelectedListener(this);
 
-        User user = SharedPrefUtils.getCurrentUser(this);
+        user = SharedPrefUtils.getCurrentUser(this);
         if (user.getEmail() != null && !user.getEmail().isEmpty()) {
             if (user.getUsername() != null) {
                 name.setText(user.getUsername());
@@ -121,7 +127,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void setupFragment(Fragment fragment) {
-
         FragmentUtils.setFragment(this, fragment, FRAGMENT_TAG);
     }
 
@@ -139,7 +144,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.person:
                 MyLog.d("Select person");
-                setupFragment(new TablesFragment());
+                setupFragment(new MainUserPageFragment());
                 break;
             case R.id.search:
                 MyLog.d("Select search");
@@ -175,5 +180,40 @@ public class MainActivity extends AppCompatActivity
                 })
                 .create()
                 .show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.REQUEST_CODE_TAKE_PHOTO) {
+            if (resultCode == RESULT_OK) {
+                if (data != null && data.getData() != null) {
+                    loadImageFromCamera(data);
+                } else if (ImageManager.fPhoto != null) {
+                    loadImageFromGallery();
+                }
+            }
+        }
+    }
+
+    private void loadImageFromCamera(Intent data) {
+        if (FragmentUtils.getCurrentFragment(this) instanceof MainUserPageFragment) {
+            ((MainUserPageFragment) FragmentUtils.getCurrentFragment(this)).updateImage(data.getData());
+        }
+
+        user.setPhoto(data.getData().toString());
+        UserAPI user = new UserAPI(this, new Handler());
+        user.updatePhoto(data.getData());
+    }
+
+    private void loadImageFromGallery() {
+        if (FragmentUtils.getCurrentFragment(this) instanceof MainUserPageFragment) {
+            ((MainUserPageFragment) FragmentUtils.getCurrentFragment(this))
+                    .updateImage(Uri.fromFile(ImageManager.fPhoto));
+        }
+
+        user.setPhoto(Uri.decode(ImageManager.fPhoto.toString()));
+        UserAPI user = new UserAPI(this, new Handler());
+        user.updatePhoto(Uri.fromFile(ImageManager.fPhoto));
     }
 }

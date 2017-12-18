@@ -13,6 +13,8 @@ public class Constants {
     public static final int RESULT_FALSE = 0;
     public static final String SHARED_USER = "SHARED_USER";
 
+    public static final int REQUEST_CODE_TAKE_PHOTO = 101;
+
     // handler
 //    public static final int DB_RESULT_OK = 1;
 //    public static final int DB_RESULT_ENTITY = 2;

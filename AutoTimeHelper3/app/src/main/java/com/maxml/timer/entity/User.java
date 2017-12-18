@@ -6,17 +6,17 @@ public class User {
 	private String id;
 	private String username;
 	private String email;
-	private Uri photo;
+	private String photoUri;
 
 	public User() {
 	}
 
-	public Uri getPhoto() {
-		return photo;
+	public  String getPhoto() {
+		return photoUri;
 	}
 
-	public void setPhoto(Uri photo) {
-		this.photo = photo;
+	public void setPhoto(String photoUri) {
+		this.photoUri = photoUri;
 	}
 
 	public String getId() {
