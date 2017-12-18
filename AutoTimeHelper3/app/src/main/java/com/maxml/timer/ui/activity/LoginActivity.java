@@ -13,11 +13,14 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.maxml.timer.MainActivity;
+import com.maxml.timer.MyLog;
 import com.maxml.timer.R;
 import com.maxml.timer.api.UserAPI;
+import com.maxml.timer.controllers.GeneralService;
 import com.maxml.timer.entity.User;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.SharedPrefUtils;
+import com.maxml.timer.util.Utils;
 
 /**
  * Created by Lantar on 22.04.2015.
@@ -98,6 +101,7 @@ public class LoginActivity extends Activity {
     }
 
     public void loginOk() {
+        initService();
         User user = userAPI.getCurrentUser();
         SharedPrefUtils.saveCurrentUser(this, user);
         Toast.makeText(getApplicationContext(), "Logined", Toast.LENGTH_SHORT).show();
@@ -106,6 +110,16 @@ public class LoginActivity extends Activity {
         startActivity(intent);
         finish();
     }
+
+    private void initService() {
+        // if service not instant yet, start one
+        if (!Utils.isServiceRunning(this, GeneralService.class)) {
+            MyLog.d("start new service instance");
+            Intent serviceIntent = new Intent(this, GeneralService.class);
+            startService(serviceIntent);
+        }
+    }
+
 
     @Override
     protected void onStart() {

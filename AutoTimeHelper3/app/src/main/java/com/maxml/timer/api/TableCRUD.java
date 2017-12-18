@@ -1,6 +1,5 @@
 package com.maxml.timer.api;
 
-import android.content.Context;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -11,36 +10,32 @@ import com.maxml.timer.controllers.Controller;
 import com.maxml.timer.entity.DbReturnData;
 import com.maxml.timer.entity.Table;
 import com.maxml.timer.entity.actions.Action;
-import com.maxml.timer.entity.eventBus.DbMessage;
 import com.maxml.timer.util.Constants;
-import com.maxml.timer.util.EventBusType;
 import com.maxml.timer.util.Utils;
 
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.Date;
 
 public class TableCRUD {
 
     private DatabaseReference actionRef;
-    private EventBus dbEventBus;
+    private Controller controller;
 
-    public TableCRUD(Context context) {
-        Controller controller = new Controller(context);
-        dbEventBus = controller.getEventBus(EventBusType.DB);
+    public TableCRUD(Controller controller) {
+        this.controller = controller;
         actionRef = FirebaseDatabase.getInstance().getReference()
                 .child(Constants.USER_DATABASE_PATH)
                 .child(UserAPI.getCurrentUserId());
     }
 
-    public void read(final Date date, DbReturnData returnData) {
-        read(Utils.getDayCount(date), returnData);
+    public void read(final Date date) {
+        read(Utils.getDayCount(date));
     }
 
-    public void read(final long dayCount, final DbReturnData returnData) {
+    public void read(final long dayCount) {
         // check valid date
         if (dayCount == 0) {
-            dbEventBus.post(new DbMessage(Constants.EVENT_DB_RESULT_ERROR, returnData));
+            controller.sendDbResultError();
             return;
         }
 
@@ -49,16 +44,12 @@ public class TableCRUD {
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        // create result message
-                        DbMessage resultMessage = new DbMessage(Constants.EVENT_DB_RESULT_OK, returnData);
                         // get result data
                         Table table = new Table();
                         table.setDay(dayCount);
-                        resultMessage.setData(table);
 
                         if (!dataSnapshot.exists()) {
-                            // add data for feedback
-                            dbEventBus.post(resultMessage);
+                            controller.sendTableFromDb(table);
                             return;
                         }
 
@@ -79,12 +70,12 @@ public class TableCRUD {
                                     break;
                             }
                         }
-                        dbEventBus.post(resultMessage);
+                        controller.sendTableFromDb(table);
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                        dbEventBus.post(new DbMessage(Constants.EVENT_DB_RESULT_ERROR, returnData));
+                        controller.sendDbResultError();
                     }
                 });
     }

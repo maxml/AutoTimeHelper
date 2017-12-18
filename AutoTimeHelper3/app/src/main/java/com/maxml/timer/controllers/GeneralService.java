@@ -8,12 +8,11 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 
 import com.maxml.timer.MyLog;
-import com.maxml.timer.entity.eventBus.EventMessage;
-import com.maxml.timer.entity.eventBus.DbMessage;
+import com.maxml.timer.entity.eventBus.Events;
 import com.maxml.timer.googlemap.GPSTracker;
 import com.maxml.timer.util.Constants;
-import com.maxml.timer.util.EventBusType;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import permissions.dispatcher.NeedsPermission;
@@ -21,6 +20,8 @@ import permissions.dispatcher.NeedsPermission;
 public class GeneralService extends Service {
 
     private Controller controller;
+    private EventBus serviceEventBus;
+    private EventBus widgetEventBus;
 
     @Nullable
     @Override
@@ -29,12 +30,17 @@ public class GeneralService extends Service {
     }
 
     @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        MyLog.d("Service: onStartCommand");
+        return START_STICKY;
+    }
+
+    @Override
     public void onCreate() {
         super.onCreate();
         MyLog.d("Service: onCreate");
-        controller = new Controller(this);
-        // register EventBus
-        registerEventBus();
+        serviceEventBus = new EventBus();
+        controller = Controller.build(this, serviceEventBus);
         // start service as foreground
         Notification notification = NotificationHelper.getDefaultNotification(this);
         startForeground(Constants.NOTIFICATION_ID, notification);
@@ -42,44 +48,61 @@ public class GeneralService extends Service {
         startGpsTracker();
     }
 
-
     @NeedsPermission(Manifest.permission.ACCESS_FINE_LOCATION)
     void startGpsTracker() {
         startService(new Intent(this, GPSTracker.class));
     }
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        MyLog.d("Service: onStartCommand");
-        return START_STICKY;
+
+    @Subscribe()
+    public void onEventBusControll(Events.EventBusControl event) {
+        String message = event.getMessage();
+        switch (message) {
+            case Constants.EVENT_REGISTER_EVENT_BUS:
+                registerEventBus(event.getEventBus());
+                break;
+            case Constants.EVENT_UNREGISTER_EVENT_BUS:
+                unregisterEventBus(event.getEventBus());
+                break;
+            case Constants.EVENT_SET_WIDGET_EVENT_BUS:
+                widgetEventBus = event.getEventBus();
+                break;
+        }
     }
 
     @Subscribe()
-    public void onReceiveEvent(DbMessage message) {
-        controller.onReceiveDbMessage(message);
+    public void onReceiveWigetEvent(Events.WidgetEvent event) {
+        controller.onReceiveWidgetEvent(event);
     }
 
     @Subscribe()
-    public void onReceiveEvent(EventMessage message) {
-        controller.onReceiveEventMessage(message);
+    public void onReceiveCallEvent(Events.CallEvent event) {
+        controller.onReceiveCallEvent(event);
     }
 
-    private void registerEventBus() {
-        controller.getEventBus(EventBusType.DB).register(this);
-        controller.getEventBus(EventBusType.HOME_FRAGMENT).register(this);
-        controller.getEventBus(EventBusType.ACTION_EVENT).register(this);
-        controller.getEventBus(EventBusType.GPS).register(this);
-        controller.getEventBus(EventBusType.CONTROLLER).register(this);
+    @Subscribe()
+    public void onReceiveInfoEvent(Events.GPS event) {
+//        controller.onReceiveWidgetEvent(event);
     }
 
     @Override
     public void onDestroy() {
         MyLog.d("Service: onDestroy");
-        controller.getEventBus(EventBusType.DB).unregister(this);
-        controller.getEventBus(EventBusType.HOME_FRAGMENT).unregister(this);
-        controller.getEventBus(EventBusType.ACTION_EVENT).unregister(this);
-        controller.getEventBus(EventBusType.GPS).unregister(this);
-        controller.getEventBus(EventBusType.CONTROLLER).unregister(this);
+        serviceEventBus.unregister(this);
+        widgetEventBus.unregister(this);
         super.onDestroy();
     }
+
+    private void registerEventBus(EventBus eventBus) {
+        if (eventBus != null && !eventBus.isRegistered(this)) {
+            eventBus.register(this);
+        }
+    }
+
+    private void unregisterEventBus(EventBus eventBus) {
+        if (eventBus != null && eventBus.isRegistered(this)) {
+            eventBus.unregister(this);
+        }
+    }
 }
+

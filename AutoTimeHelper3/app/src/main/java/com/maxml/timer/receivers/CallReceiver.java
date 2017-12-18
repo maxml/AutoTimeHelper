@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.telephony.TelephonyManager;
 
 import com.maxml.timer.controllers.Controller;
-import com.maxml.timer.entity.eventBus.EventMessage;
+import com.maxml.timer.entity.eventBus.Events;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.EventBusType;
 
@@ -21,8 +21,8 @@ public class CallReceiver extends BroadcastReceiver {
 
     public void onReceive(Context context, Intent intent) {
         if (controller == null){
-            controller = new Controller(context);
-            eventBus = controller.getEventBus(EventBusType.ACTION_EVENT);
+            eventBus = new EventBus();
+            controller = new Controller(context,eventBus);
         }
         int state = 0;
         String stateStr = intent.getExtras().getString(TelephonyManager.EXTRA_STATE);
@@ -46,14 +46,14 @@ public class CallReceiver extends BroadcastReceiver {
             case TelephonyManager.CALL_STATE_IDLE:
                 if (lastState == TelephonyManager.CALL_STATE_RINGING) {
                     // ring but not pick up, MISSING CALL
-                    eventBus.post(new EventMessage(Constants.EVENT_CALL_MISSING));
+                    eventBus.post(new Events.CallEvent(Constants.EVENT_CALL_MISSING));
                 } else {
                     if (isIncoming) {
                         //INCOMING CALL ENDED
-                        eventBus.post(new EventMessage(Constants.EVENT_CALL_INCOMING_ENDED));
+                        eventBus.post(new Events.CallEvent(Constants.EVENT_CALL_INCOMING_ENDED));
                     } else {
                         //ONGOING CALL ENDED
-                        eventBus.post(new EventMessage(Constants.EVENT_CALL_ONGOING_ENDED));
+                        eventBus.post(new Events.CallEvent(Constants.EVENT_CALL_ONGOING_ENDED));
                     }
                 }
                 break;
@@ -61,18 +61,18 @@ public class CallReceiver extends BroadcastReceiver {
             case TelephonyManager.CALL_STATE_RINGING:
                 // RINGING INCOMING CALL
                 isIncoming = true;
-                eventBus.post(new EventMessage(Constants.EVENT_CALL_RINGING));
+                eventBus.post(new Events.CallEvent(Constants.EVENT_CALL_RINGING));
                 break;
 
             case TelephonyManager.CALL_STATE_OFFHOOK:
                 if (lastState != TelephonyManager.CALL_STATE_RINGING) {
                     // outgoing call answered
                     isIncoming = false;
-                    eventBus.post(new EventMessage(Constants.EVENT_CALL_ONGOING_ANSWERED));
+                    eventBus.post(new Events.CallEvent(Constants.EVENT_CALL_ONGOING_ANSWERED));
                 } else {
                     // incoming call answered
                     isIncoming = true;
-                    eventBus.post(new EventMessage(Constants.EVENT_CALL_INCOMING_ANSWERED));
+                    eventBus.post(new Events.CallEvent(Constants.EVENT_CALL_INCOMING_ANSWERED));
                 }
                 break;
         }

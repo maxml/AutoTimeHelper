@@ -11,9 +11,8 @@ import android.widget.ToggleButton;
 
 import com.maxml.timer.R;
 import com.maxml.timer.controllers.Controller;
-import com.maxml.timer.entity.eventBus.EventMessage;
+import com.maxml.timer.entity.eventBus.Events;
 import com.maxml.timer.util.Constants;
-import com.maxml.timer.util.EventBusType;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -22,11 +21,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class HomeFragment extends Fragment {
+
+    private EventBus eventBus;
     private Controller controller;
-    private EventBus eventBusHomeFrg;
-    private EventBus eventBusAction;
-    private TextView title;
-    private TextView description;
+    private TextView actionDate;
+    private TextView actionStatuse;
     private ToggleButton butCall;
     private ToggleButton butWork;
     private ToggleButton butRest;
@@ -41,30 +40,52 @@ public class HomeFragment extends Fragment {
         butWork = (ToggleButton) view.findViewById(R.id.butWork);
         butRest = (ToggleButton) view.findViewById(R.id.butRest);
         butWalk = (ToggleButton) view.findViewById(R.id.butWalk);
-        title = (TextView) view.findViewById(R.id.title);
-        description = (TextView) view.findViewById(R.id.description);
-
-        title.setText(getString(R.string.widget_default_text));
-        description.setText(getString(R.string.widget_default_text));
+        actionDate = (TextView) view.findViewById(R.id.title);
+        actionStatuse = (TextView) view.findViewById(R.id.description);
+        eventBus = new EventBus();
+        controller = new Controller(getContext(), eventBus);
         initListeners();
-
-        controller = new Controller(getContext());
-        eventBusHomeFrg = controller.getEventBus(EventBusType.HOME_FRAGMENT);
-        eventBusAction = controller.getEventBus(EventBusType.ACTION_EVENT);
         return view;
     }
 
     @Subscribe()
-    public void onReceiveEvent(EventMessage event) {
-        switch (event.getMessage()) {
-            case Constants.EVENT_NEW_ACTION_STATUS:
-                title.setText(charSequence());
-                String status = (String) event.getData();
-                description.setText(status);
-                break;
+    public void onReceiveStatusEvent(Events.ActionStatus event) {
+        actionStatuse.setText(event.getActionStatus());
+        Date time = event.getActionTime();
+        if (time == null) {
+            actionDate.setText(getString(R.string.widget_default_text));
+        } else {
+            actionDate.setText(charSequence(time));
         }
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+
+        refreshActionStatus();
+        eventBus.register(this);
+        controller.registerEventBus(eventBus);
+    }
+
+    @Override
+    public void onStop() {
+        controller.unregisterEventBus(eventBus);
+        eventBus.unregister(this);
+        super.onStop();
+    }
+
+    private void refreshActionStatus() {
+        String action = controller.getActionStatus();
+        Date time = controller.getActionTime();
+        actionStatuse.setText(action);
+        if (time == null) {
+            actionDate.setText(getString(R.string.widget_default_text));
+        } else {
+            actionDate.setText(charSequence(time));
+        }
+    }
 
     private void initListeners() {
         butCall.setOnClickListener(new OnClickListener() {
@@ -74,10 +95,9 @@ public class HomeFragment extends Fragment {
                 butWork.setChecked(false);
                 butWalk.setChecked(false);
                 butRest.setChecked(false);
-                eventBusAction.post(new EventMessage(Constants.EVENT_CALL_ACTION));
+                controller.callActionEvent();
             }
         });
-
         butWork.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -85,7 +105,7 @@ public class HomeFragment extends Fragment {
                 butCall.setChecked(false);
                 butWalk.setChecked(false);
                 butRest.setChecked(false);
-                eventBusAction.post(new EventMessage(Constants.EVENT_WORK_ACTION));
+                controller.workActionEvent();
             }
         });
         butRest.setOnClickListener(new OnClickListener() {
@@ -95,7 +115,7 @@ public class HomeFragment extends Fragment {
                 butCall.setChecked(false);
                 butWalk.setChecked(false);
                 butWork.setChecked(false);
-                eventBusAction.post(new EventMessage(Constants.EVENT_REST_ACTION));
+                controller.restActionEvent();
             }
         });
         butWalk.setOnClickListener(new OnClickListener() {
@@ -105,28 +125,17 @@ public class HomeFragment extends Fragment {
                 butCall.setChecked(false);
                 butRest.setChecked(false);
                 butWork.setChecked(false);
-                eventBusAction.post(new EventMessage(Constants.EVENT_WALK_ACTION));
+                controller.walkActionEvent();
             }
         });
 
-	}
-	
-	public String charSequence() {
-		SimpleDateFormat sdf = new SimpleDateFormat("kk:mm:ss");
-		String currentDateAndTime = "Start at:" + sdf.format(new Date());
-		return currentDateAndTime;
-	}
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        eventBusHomeFrg.register(this);
     }
 
-    @Override
-    public void onStop() {
-        eventBusHomeFrg.unregister(this);
-        super.onStop();
+    private String charSequence(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("kk:mm:ss");
+        String currentDateAndTime = "Start at:" + sdf.format(date);
+        return currentDateAndTime;
     }
+
 }
 

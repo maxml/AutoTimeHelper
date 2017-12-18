@@ -46,7 +46,7 @@ public class Constants {
     public static final String EVENT_CALL_RINGING = "incomingCallRinging";
     public static final String EVENT_CALL_ONGOING_ANSWERED = "ongoingCallAnswered";
     public static final String EVENT_CALL_INCOMING_ANSWERED = "incomingCallAnswered";
-    public static final String EVENT_TABLE_DATE_REQUEST = "tableDate";
+    public static final String REQUEST_TABLE_DATE = "tableDate";
     public static final String EVENT_TABLE_DATE_RESULT = "getTable";
     public static final String EVENT_SAVE_COORDINATES = "saveCoordinates";
     public static final String ACTION_WIDGET_RECEIVER = "clickWidgetButton";
@@ -57,10 +57,13 @@ public class Constants {
     public static final String EVENT_WALK_ACTION = "walk";
     public static final String WIDGET_UPDATE_ACTION_STATUS = "updateActionStatus";
     public static final String EVENT_LOCATION_CHANGE = "locationChange";
-    public static final String EVENT_START = "startEvent";
-    public static final String EVENT_STOP = "stopEvent";
+    public static final String EVENT_GPS_START = "startGpsEvent";
+    public static final String EVENT_GPS_STOP = "stopGpsEvent";
     public static final String EVENT_WAY_COORDINATES = "wayCoordinates";
-    public static final String EVENT_NEW_ACTION_STATUS = "newActionStatus";
+    public static final String EVENT_ACTION_STATUS = "newActionStatus";
     public static final String COLUMN_DAY_COUNT = "dayCount";
     public static final String EVENT_WALK_ACTION_SAVED = "walkActionSaved";
+    public static final String EVENT_REGISTER_EVENT_BUS = "registerEventBus";
+    public static final String EVENT_UNREGISTER_EVENT_BUS = "unregisterEventBus";
+    public static final String EVENT_SET_WIDGET_EVENT_BUS = "setCurrentEventBusAsWidget";
 }

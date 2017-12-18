@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity
         initDrawer();
         if (savedInstanceState == null)
             setupFragment(new ActionListViewFragment());
-        initService();
+//        initService();
 
         setHomeFragment();
     }
@@ -69,14 +69,14 @@ public class MainActivity extends AppCompatActivity
         FragmentUtils.setFragment(this, new HomeFragment());
     }
 
-    private void initService() {
-        // if service not instant yet, start one
-        if (!Utils.isServiceRunning(this, GeneralService.class)) {
-            MyLog.d("start new service instance");
-            Intent serviceIntent = new Intent(this, GeneralService.class);
-            startService(serviceIntent);
-        }
-    }
+//    private void initService() {
+//        // if service not instant yet, start one
+//        if (!Utils.isServiceRunning(this, GeneralService.class)) {
+//            MyLog.d("start new service instance");
+//            Intent serviceIntent = new Intent(this, GeneralService.class);
+//            startService(serviceIntent);
+//        }
+//    }
 
     private void initDrawer() {
         drawerToggle = new ActionBarDrawerToggle(

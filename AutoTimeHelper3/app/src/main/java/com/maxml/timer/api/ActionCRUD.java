@@ -1,6 +1,5 @@
 package com.maxml.timer.api;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -12,20 +11,17 @@ import com.maxml.timer.controllers.Controller;
 import com.maxml.timer.entity.DbReturnData;
 import com.maxml.timer.entity.User;
 import com.maxml.timer.entity.actions.Action;
-import com.maxml.timer.entity.eventBus.DbMessage;
 import com.maxml.timer.util.Constants;
-import com.maxml.timer.util.EventBusType;
 
 import org.greenrobot.eventbus.EventBus;
 
 public class ActionCRUD {
 
-    private EventBus eventBus;
+    private Controller controller;
     private DatabaseReference actionRef;
 
-    public ActionCRUD(Context context) {
-        Controller controller = new Controller(context);
-        eventBus = controller.getEventBus(EventBusType.DB);
+    public ActionCRUD(Controller controller) {
+        this.controller = controller;
         User user = UserAPI.getCurrentUser();
         if (actionRef == null && user != null) {
             actionRef = FirebaseDatabase.getInstance().getReference()
@@ -34,7 +30,7 @@ public class ActionCRUD {
         }
     }
 
-    public void create(Action action, final DbReturnData returnData) {
+    public void create(Action action) {
         Log.i("Slice", " Slice starting create");
         // get Firebase id
         String dbId = actionRef.push().getKey();
@@ -44,9 +40,9 @@ public class ActionCRUD {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    eventBus.post(new DbMessage(Constants.EVENT_DB_RESULT_OK, returnData));
+                    controller.sendDbResultOk();
                 } else {
-                    eventBus.post(new DbMessage(Constants.EVENT_DB_RESULT_ERROR, returnData));
+                    controller.sendDbResultError();
                 }
             }
         });
@@ -62,9 +58,9 @@ public class ActionCRUD {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    eventBus.post(new DbMessage(Constants.EVENT_DB_RESULT_OK));
+                    controller.post(new DbMessage(Constants.EVENT_DB_RESULT_OK));
                 } else {
-                    eventBus.post(new DbMessage(Constants.EVENT_DB_RESULT_ERROR));
+                    controller.post(new DbMessage(Constants.EVENT_DB_RESULT_ERROR));
                 }
             }
         });

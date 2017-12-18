@@ -15,7 +15,7 @@ import android.util.Log;
 
 import com.maxml.timer.controllers.Controller;
 import com.maxml.timer.entity.Coordinates;
-import com.maxml.timer.entity.eventBus.EventMessage;
+import com.maxml.timer.entity.eventBus.Events;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.EventBusType;
 
@@ -53,16 +53,16 @@ public class GPSTracker extends Service implements LocationListener {
     @Override
     public void onCreate() {
         super.onCreate();
-        controller = new Controller(this);
-        eventBus = controller.getEventBus(EventBusType.GPS);
+        eventBus = new EventBus();
+        controller = new Controller(this, eventBus);
         eventBus.register(this);
         initLocationListener();
     }
 
     @Subscribe()
-    public void onGpsEvent(EventMessage event) {
+    public void onGpsEvent(Events.GPS event) {
         switch (event.getMessage()) {
-            case Constants.EVENT_START:
+            case Constants.EVENT_GPS_START:
                 if (wayCoordinates.size() == 0) {
                     return;
                 }
@@ -71,8 +71,8 @@ public class GPSTracker extends Service implements LocationListener {
                 wayCoordinates.add(lastCoordinate);
                 break;
 
-            case Constants.EVENT_STOP:
-                eventBus.post(new EventMessage(Constants.EVENT_WAY_COORDINATES, wayCoordinates));
+            case Constants.EVENT_GPS_STOP:
+//                eventBus.post(new Events.GPS(Constants.EVENT_WAY_COORDINATES, wayCoordinates));
                 break;
         }
     }
@@ -80,7 +80,7 @@ public class GPSTracker extends Service implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-        eventBus.post(new EventMessage(Constants.EVENT_LOCATION_CHANGE, location));
+//        eventBus.post(new EventMessage(Constants.EVENT_LOCATION_CHANGE, location));
 
         Coordinates point = new Coordinates();
         point.setLatitude(location.getLatitude());
@@ -100,54 +100,6 @@ public class GPSTracker extends Service implements LocationListener {
     }
 
 
-    @SuppressLint("MissingPermission")
-    private void initLocationListener() {
-        Log.d("TAG", "initLocationListener() CALLED");
-        try {
-            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-
-            isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-
-            isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-
-            if (!isGPSEnabled && !isNetworkEnabled) {
-
-            } else {
-                this.canGetLocation = true;
-
-                if (isNetworkEnabled) {
-                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME,
-                            MIN_DISTANCE_UPDATES, this);
-
-                    if (locationManager != null) {
-                        location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                        if (location != null) {
-                            latitude = location.getLatitude();
-                            longitude = location.getLongitude();
-                        }
-                    }
-                }
-
-                if (isGPSEnabled) {
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME,
-                            MIN_DISTANCE_UPDATES, this);
-
-                    if (locationManager != null) {
-                        location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-                        if (location != null) {
-                            latitude = location.getLatitude();
-                            longitude = location.getLongitude();
-                        }
-
-                    }
-                }
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public void stopUsingGPS() {
         if (locationManager != null) {
@@ -217,9 +169,60 @@ public class GPSTracker extends Service implements LocationListener {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         if (eventBus != null && eventBus.isRegistered(this)) {
             eventBus.unregister(this);
+            controller.unregisterEventBus(eventBus);
+        }
+        super.onDestroy();
+    }
+
+    @SuppressLint("MissingPermission")
+    private void initLocationListener() {
+        Log.d("TAG", "initLocationListener() CALLED");
+        try {
+            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+            isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+            isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+            if (!isGPSEnabled && !isNetworkEnabled) {
+
+            } else {
+                this.canGetLocation = true;
+
+                if (isNetworkEnabled) {
+                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME,
+                            MIN_DISTANCE_UPDATES, this);
+
+                    if (locationManager != null) {
+                        location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                        if (location != null) {
+                            latitude = location.getLatitude();
+                            longitude = location.getLongitude();
+                        }
+                    }
+                }
+
+                if (isGPSEnabled) {
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME,
+                            MIN_DISTANCE_UPDATES, this);
+
+                    if (locationManager != null) {
+                        location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+                        if (location != null) {
+                            latitude = location.getLatitude();
+                            longitude = location.getLongitude();
+                        }
+
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
+
 }

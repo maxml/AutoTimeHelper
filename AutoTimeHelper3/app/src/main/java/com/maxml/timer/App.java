@@ -6,13 +6,13 @@ import com.maxml.timer.controllers.Controller;
 
 public class App extends MultiDexApplication {
 
-    private Controller controller;
+//    private Controller controller;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        controller = Controller.build(this);
+//        controller = Controller.build();
 
 //        Parse.enableLocalDatastore(this);
 //

@@ -7,13 +7,10 @@ import com.maxml.timer.R;
 import com.maxml.timer.api.ActionCRUD;
 import com.maxml.timer.api.CoordinatesCRUD;
 import com.maxml.timer.api.TableCRUD;
-import com.maxml.timer.entity.Coordinates;
-import com.maxml.timer.entity.DbReturnData;
+import com.maxml.timer.entity.Table;
 import com.maxml.timer.entity.actions.Action;
-import com.maxml.timer.entity.eventBus.EventMessage;
-import com.maxml.timer.entity.eventBus.DbMessage;
+import com.maxml.timer.entity.eventBus.Events;
 import com.maxml.timer.util.Constants;
-import com.maxml.timer.util.EventBusType;
 import com.maxml.timer.util.Utils;
 import com.maxml.timer.widget.MyWidgetProvider;
 
@@ -31,7 +28,8 @@ import java.util.Map;
 
 public class Controller {
 
-    private static Map<EventBusType, EventBus> eventBuses = new HashMap<>();
+    private static EventBus serviceEventBus;
+    private EventBus entityEventBus;
     private Context context;
 
     // db
@@ -42,65 +40,65 @@ public class Controller {
     private Map<String, Action> actions = new HashMap<>();
     private List<String> stateStack = new ArrayList<>();
 
-
-    public Controller(Context context) {
+    public Controller(Context context, EventBus entityEventBus) {
         this.context = context;
+        this.entityEventBus = entityEventBus;
 
         initCRUD();
+        // register entity EventBus
+        registerEventBus(entityEventBus);
     }
 
-    public static Controller build(Context context) {
-        Controller entity = new Controller(context);
-        entity.addEventBus(EventBusType.DB, EventBus.builder().build());
-        entity.addEventBus(EventBusType.CONTROLLER, EventBus.builder().build());
-        entity.addEventBus(EventBusType.HOME_FRAGMENT, EventBus.builder().build());
-        entity.addEventBus(EventBusType.ACTION_EVENT, EventBus.builder().build());
-        entity.addEventBus(EventBusType.GPS, EventBus.builder().build());
-        return entity;
+    public static Controller build(Context context, EventBus eventBus) {
+        serviceEventBus = eventBus;
+        return new Controller(context, eventBus);
     }
 
-    public void onReceiveDbMessage(DbMessage message) {
-        switch (message.getMessage()) {
-            /**
-             * get result from Db and send it to receivers
-             */
-            case Constants.EVENT_DB_RESULT_OK:
-                // get data for return request
-                DbReturnData returnData = message.getDbReturnData();
-                if (returnData == null) {
-                    return;
-                }
-                // get result data
-                Object data = message.getData();
-                // get EventBus for result
-                EventBus resultEventBus = getEventBus(returnData.getEventBusType());
-                // send result
-                resultEventBus.post(new EventMessage(returnData.getResultRequest(), data));
+    /********************* START DB TOOLS **************************/
+    public void sendDbResultOk() {
+        entityEventBus.post(new Events.DbResult(Constants.EVENT_DB_RESULT_OK));
+    }
+
+    public void sendDbResultError() {
+        entityEventBus.post(new Events.DbResult(Constants.EVENT_DB_RESULT_ERROR));
+    }
+
+    public void getTableFromDb(Date date) {
+        tableCRUD.read(date);
+    }
+
+    public void sendTableFromDb(Table table) {
+        entityEventBus.post(table);
+    }
+
+    /********************* END DB TOOLS **************************/
+
+
+    public void onReceiveCallEvent(Events.CallEvent event) {
+        switch (event.getCallState()) {
+            case Constants.EVENT_CALL_ONGOING_ANSWERED:
+                startCallEvent();
                 break;
 
-            case Constants.EVENT_DB_RESULT_ERROR:
-                // get data for return request
-                DbReturnData dbReturnData = message.getDbReturnData();
-                if (dbReturnData == null) {
-                    return;
-                }
-                // get EventBus for result
-                EventBus resEventBus = getEventBus(dbReturnData.getEventBusType());
-                // send result with message name such as request message name
-                resEventBus.post(new EventMessage(Constants.EVENT_DB_RESULT_ERROR));
+            case Constants.EVENT_CALL_INCOMING_ANSWERED:
+                startCallEvent();
                 break;
 
-
-            case Constants.EVENT_TABLE_DATE_REQUEST:
-                Date date = (Date) message.getData();
-                tableCRUD.read(date, message.getDbReturnData());
+            // simple logic for both events
+            case Constants.EVENT_CALL_INCOMING_ENDED:
+            case Constants.EVENT_CALL_ONGOING_ENDED:
+                endCallEvent();
                 break;
         }
     }
 
-    public void onReceiveEventMessage(EventMessage message) {
-        switch (message.getMessage()) {
-            /** start actions*/
+
+    public void onReceiveWidgetEvent(Events.WidgetEvent event) {
+        switch (event.getMessage()) {
+            case Constants.EVENT_SET_WIDGET_EVENT_BUS:
+                serviceEventBus.post(new Events.EventBusControl(Constants.EVENT_SET_WIDGET_EVENT_BUS, entityEventBus));
+                break;
+
             case Constants.EVENT_WALK_ACTION:
                 walkActionEvent();
                 break;
@@ -116,41 +114,51 @@ public class Controller {
             case Constants.EVENT_CALL_ACTION:
                 callActionEvent();
                 break;
-
-            case Constants.EVENT_CALL_ONGOING_ANSWERED:
-                startCallEvent();
-                break;
-
-            case Constants.EVENT_CALL_INCOMING_ANSWERED:
-                startCallEvent();
-                break;
-
-            // simple logic for both events
-            case Constants.EVENT_CALL_INCOMING_ENDED:
-            case Constants.EVENT_CALL_ONGOING_ENDED:
-                endCallEvent();
-                break;
-            /** end actions*/
+        }
+    }
 
 //            case Constants.EVENT_WALK_ACTION_SAVED:
 //                // stop gps tracking
-//                getEventBus(EventBusType.GPS).post(new EventMessage(Constants.EVENT_STOP));
+//                getEventBus(EventBusType.GPS).post(new EventMessage(Constants.EVENT_GPS_STOP));
 //                break;
 //
 //            case Constants.EVENT_WAY_COORDINATES:
 //                List<Coordinates> coordinates = (ArrayList<Coordinates>) message.getData();
 //                coordinatesCRUD.(coordinates);
 //                break;
+
+    public void registerEventBus(EventBus entityEventBus) {
+        serviceEventBus.post(new Events.EventBusControl(Constants.EVENT_REGISTER_EVENT_BUS, entityEventBus));
+    }
+
+    public void unregisterEventBus(EventBus entityEventBus) {
+        serviceEventBus.post(new Events.EventBusControl(Constants.EVENT_UNREGISTER_EVENT_BUS, entityEventBus));
+    }
+
+    public String getActionStatus() {
+        if (stateStack.size() == 0) {
+            return context.getString(R.string.widget_default_text);
+        } else {
+            return stateStack.get(stateStack.size() - 1);
         }
-
     }
 
 
-    public EventBus getEventBus(EventBusType type) {
-        return eventBuses.get(type);
+    public Date getActionTime() {
+        if (stateStack.size() == 0) {
+            return null;
+        }
+        String status = getActionStatus();
+        Action action = actions.get(status);
+        if (action == null) {
+            return null;
+        } else {
+            return action.getStartDate();
+        }
     }
 
-    private void restActionEvent() {
+
+    public void restActionEvent() {
         Action rest = actions.get(Constants.EVENT_REST_ACTION);
         if (rest == null) {
             startRestEvent();
@@ -159,7 +167,7 @@ public class Controller {
         }
     }
 
-    private void callActionEvent() {
+    public void callActionEvent() {
         Action call = actions.get(Constants.EVENT_CALL_ACTION);
         if (call == null) {
             startCallEvent();
@@ -169,7 +177,7 @@ public class Controller {
     }
 
 
-    private void workActionEvent() {
+    public void workActionEvent() {
         Action work = actions.get(Constants.EVENT_WORK_ACTION);
         if (work == null) {
             startWorkEvent();
@@ -178,11 +186,11 @@ public class Controller {
         }
     }
 
-    private void walkActionEvent() {
+    public void walkActionEvent() {
         Action walk = actions.get(Constants.EVENT_WALK_ACTION);
         if (walk == null) {
             // start gps tracking
-            getEventBus(EventBusType.GPS).post(new EventMessage(Constants.EVENT_START));
+            serviceEventBus.post(new Events.GPS(Constants.EVENT_GPS_START));
             // create walk action
             startWalkEvent();
         } else {
@@ -204,7 +212,7 @@ public class Controller {
         // add to stack trace
         stateStack.add(Constants.EVENT_REST_ACTION);
         // update status
-        updateStatus(context.getString(R.string.widget_rest_text));
+        updateStatus(context.getString(R.string.widget_rest_text), rest.getStartDate());
     }
 
     private void endRestEvent() {
@@ -214,14 +222,13 @@ public class Controller {
             return;
         }
         rest.setEndDate(new Date());
-        actionCRUD.create(rest, null);
+        actionCRUD.create(rest);
         // clear temp entity
         actions.remove(Constants.EVENT_REST_ACTION);
         // delete from stacktrace
         stateStack.remove(Constants.EVENT_REST_ACTION);
         // set previous action status
-        String lastStatus = getLastStatus();
-        updateStatus(lastStatus);
+        updateStatus(getActionStatus(), getActionTime());
     }
 
     private void startWorkEvent() {
@@ -237,7 +244,7 @@ public class Controller {
         // add to stack trace
         stateStack.add(Constants.EVENT_WORK_ACTION);
         // update status
-        updateStatus(context.getString(R.string.widget_work_text));
+        updateStatus(context.getString(R.string.widget_work_text), work.getStartDate());
     }
 
     private void endWorkEvent() {
@@ -247,14 +254,13 @@ public class Controller {
             return;
         }
         work.setEndDate(new Date());
-        actionCRUD.create(work, null);
+        actionCRUD.create(work);
         // clear temp entity
         actions.remove(Constants.EVENT_WORK_ACTION);
         // delete from stacktrace
         stateStack.remove(Constants.EVENT_WORK_ACTION);
         // set previous action status
-        String lastStatus = getLastStatus();
-        updateStatus(lastStatus);
+        updateStatus(getActionStatus(), getActionTime());
     }
 
     private void startCallEvent() {
@@ -270,7 +276,7 @@ public class Controller {
         // add to stack trace
         stateStack.add(Constants.EVENT_CALL_ACTION);
         // update status
-        updateStatus(context.getString(R.string.widget_call_text));
+        updateStatus(context.getString(R.string.widget_call_text), call.getStartDate());
     }
 
     private void endCallEvent() {
@@ -280,63 +286,51 @@ public class Controller {
             return;
         }
         call.setEndDate(new Date());
-        actionCRUD.create(call, null);
+        actionCRUD.create(call);
         // clear temp entity
         actions.remove(Constants.EVENT_CALL_ACTION);
         // delete from stacktrace
         stateStack.remove(Constants.EVENT_CALL_ACTION);
         // set previous action status
-        String lastStatus = getLastStatus();
-        updateStatus(lastStatus);
+        updateStatus(getActionStatus(), getActionTime());
     }
 
     private void startWalkEvent() {
         // create action entity
-        Action call = new Action();
-        call.setType(Constants.EVENT_CALL_ACTION);
-        call.setStartDate(new Date());
-        call.setDayCount(Utils.getDayCount(new Date()));
-        String dayCount_type = call.getDayCount() + "_" + call.getType();
-        call.setDayCount_type(dayCount_type);
+        Action walk = new Action();
+        walk.setType(Constants.EVENT_WALK_ACTION);
+        walk.setStartDate(new Date());
+        walk.setDayCount(Utils.getDayCount(new Date()));
+        String dayCount_type = walk.getDayCount() + "_" + walk.getType();
+        walk.setDayCount_type(dayCount_type);
         // add it to temp map
-        actions.put(Constants.EVENT_CALL_ACTION, call);
+        actions.put(Constants.EVENT_WALK_ACTION, walk);
         // add to stack trace
-        stateStack.add(Constants.EVENT_CALL_ACTION);
+        stateStack.add(Constants.EVENT_WALK_ACTION);
         // update status
-        updateStatus(context.getString(R.string.widget_call_text));
+        updateStatus(context.getString(R.string.widget_walk_text), walk.getStartDate());
     }
 
     private void endWalkEvent() {
         Action walk = actions.get(Constants.EVENT_WALK_ACTION);
         if (walk == null) {
-            startWorkEvent();
+            startWalkEvent();
             return;
         }
         walk.setEndDate(new Date());
-        // add return data, after complete CRUD create method result will sent to
-        // EventBus "CONTROLLER" with message "EVENT_SAVE_COORDINATES"
-        DbReturnData returnData = new DbReturnData(Constants.EVENT_WALK_ACTION_SAVED, EventBusType.CONTROLLER);
-        actionCRUD.create(walk, returnData);
+        actionCRUD.create(walk);
         // clear temp entity
-        actions.remove(Constants.EVENT_CALL_ACTION);
+        actions.remove(Constants.EVENT_WALK_ACTION);
         // delete from stacktrace
-        stateStack.remove(Constants.EVENT_CALL_ACTION);
+        stateStack.remove(Constants.EVENT_WALK_ACTION);
         // set previous action status
-        String lastStatus = getLastStatus();
-        updateStatus(lastStatus);
+        updateStatus(getActionStatus(), getActionTime());
     }
 
 
-    private String getLastStatus() {
-        if (stateStack.size() == 0) {
-            return context.getString(R.string.widget_default_text);
-        } else {
-            return stateStack.get(stateStack.size() - 1);
-        }
-    }
-
-    private void updateStatus(String status) {
-        eventBuses.get(EventBusType.HOME_FRAGMENT).post(new EventMessage(Constants.EVENT_NEW_ACTION_STATUS, status));
+    private void updateStatus(String status, Date time) {
+        Events.ActionStatus statusEvent = new Events.ActionStatus(status, time);
+        entityEventBus.post(statusEvent);
         updateWidgetStatus(status);
         NotificationHelper.updateNotification(context, status);
     }
@@ -350,14 +344,8 @@ public class Controller {
 
 
     private void initCRUD() {
-        tableCRUD = new TableCRUD(context);
-        actionCRUD = new ActionCRUD(context);
-        coordinatesCRUD = new CoordinatesCRUD(context);
+        tableCRUD = new TableCRUD(this);
+        actionCRUD = new ActionCRUD(this);
+        coordinatesCRUD = new CoordinatesCRUD(this);
     }
-
-
-    private void addEventBus(EventBusType type, EventBus eventBus) {
-        eventBuses.put(type, eventBus);
-    }
-
 }

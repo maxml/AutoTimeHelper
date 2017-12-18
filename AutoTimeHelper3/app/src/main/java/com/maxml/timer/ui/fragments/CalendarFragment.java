@@ -8,17 +8,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.maxml.timer.R;
 import com.maxml.timer.controllers.Controller;
 import com.maxml.timer.entity.Table;
-import com.maxml.timer.entity.eventBus.EventMessage;
-import com.maxml.timer.entity.eventBus.DbMessage;
+import com.maxml.timer.entity.eventBus.Events;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.EventBusType;
 import com.maxml.timer.util.FragmentUtils;
 import com.maxml.timer.util.Utils;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Date;
@@ -26,6 +27,7 @@ import java.util.Date;
 public class CalendarFragment extends Fragment implements View.OnClickListener {
 
     private Controller controller;
+    private EventBus eventBus;
     private CalendarView calendarView;
     private TextView callsCount;
     private TextView restCount;
@@ -34,14 +36,72 @@ public class CalendarFragment extends Fragment implements View.OnClickListener {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_calendar, container, false);
-        controller = new Controller(getContext());
+        eventBus = new EventBus();
+        controller = new Controller(getContext(),eventBus);
         initUI(view);
         initListener();
+        return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // register EventBus
+        eventBus.register(this);
+        controller.registerEventBus(eventBus);
         // get current date
         Date selectedDate = new Date(calendarView.getDate());
-        DbMessage getTableMsg = new DbMessage(Constants.EVENT_TABLE_DATE_REQUEST, EventBusType.CALENDAR_FRAGMENT,selectedDate);
-        controller.getEventBus(EventBusType.DB).post(getTableMsg);
-        return view;
+        controller.getTableFromDb(selectedDate);
+    }
+
+
+    @Subscribe
+    public void receiveTableFromDb(Table table) {
+        if (table != null) {
+            updateUI(table);
+        }
+    }
+
+    @Subscribe()
+    public void getDbMessage(Events.DbResult result) {
+        switch (result.getResultStatus()) {
+            case Constants.EVENT_DB_RESULT_OK:
+                break;
+            case Constants.EVENT_DB_RESULT_ERROR:
+                Toast.makeText(getActivity(),R.string.db_error,Toast.LENGTH_LONG).show();
+                break;
+        }
+    }
+
+
+    private void updateUI(Table table) {
+        int calls = 0;
+        int work = 0;
+        int rests = 0;
+        int walks = 0;
+        if (table != null) {
+            calls = table.getCallList().size();
+            walks = table.getWalkList().size();
+            rests = table.getRestList().size();
+            work = table.getWorkList().size();
+        }
+        callsCount.setText(calls + "");
+        workCount.setText(work + "");
+        walkCount.setText(walks + "");
+        restCount.setText(rests + "");
+    }
+
+    @Override
+    public void onClick(View view) {
+        ActionListViewFragment sliceFragment = new ActionListViewFragment();
+        FragmentUtils.setFragment(getActivity(), sliceFragment);
+    }
+
+    @Override
+    public void onStop() {
+        controller.unregisterEventBus(eventBus);
+        eventBus.unregister(this);
+        super.onStop();
     }
 
 
@@ -61,60 +121,8 @@ public class CalendarFragment extends Fragment implements View.OnClickListener {
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int dayOfMonth) {
-                DbMessage getTableMsg = new DbMessage(Constants.EVENT_TABLE_DATE_REQUEST, EventBusType.CALENDAR_FRAGMENT,
-                        Utils.getDate(dayOfMonth, month, year));
-                controller.getEventBus(EventBusType.DB).post(getTableMsg);
+                controller.getTableFromDb(Utils.getDate(dayOfMonth, month, year));
             }
         });
-    }
-
-    @Subscribe()
-    public void getDbMessage(EventMessage message) {
-        switch (message.getMessage()) {
-            case Constants.EVENT_TABLE_DATE_RESULT:
-                Table table = (Table) message.getData();
-                updateUI(table);
-                break;
-
-            case Constants.EVENT_DB_RESULT_ERROR:
-                break;
-
-        }
-    }
-
-
-    private void updateUI(Table table) {
-        int calls = 0;
-        int work = 0;
-        int rests = 0;
-        int walks = 0;
-        if (table != null) {
-            calls = table.getCallList().size();
-            walks = table.getWalkList().size();
-            rests = table.getRestList().size();
-            work = table.getWorkList().size();
-        }
-        callsCount.setText(calls+"");
-        workCount.setText(work+"");
-        walkCount.setText(walks+"");
-        restCount.setText(rests+"");
-    }
-
-    @Override
-    public void onClick(View view) {
-        ActionListViewFragment sliceFragment = new ActionListViewFragment();
-        FragmentUtils.setFragment(getActivity(), sliceFragment);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        controller.getEventBus(EventBusType.CALENDAR_FRAGMENT).register(this);
-    }
-
-    @Override
-    public void onStop() {
-        controller.getEventBus(EventBusType.CALENDAR_FRAGMENT).unregister(this);
-        super.onStop();
     }
 }

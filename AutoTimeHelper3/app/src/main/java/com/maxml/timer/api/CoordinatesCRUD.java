@@ -1,6 +1,5 @@
 package com.maxml.timer.api;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -12,9 +11,7 @@ import com.maxml.timer.controllers.Controller;
 import com.maxml.timer.entity.Coordinates;
 import com.maxml.timer.entity.DbReturnData;
 import com.maxml.timer.entity.User;
-import com.maxml.timer.entity.eventBus.DbMessage;
 import com.maxml.timer.util.Constants;
-import com.maxml.timer.util.EventBusType;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -22,12 +19,11 @@ import java.util.List;
 
 public class CoordinatesCRUD {
 
-    private EventBus eventBus;
+    private Controller controller;
     private DatabaseReference pathRef;
 
-    public CoordinatesCRUD(Context context) {
-        Controller controller = new Controller(context);
-        eventBus = controller.getEventBus(EventBusType.DB);
+    public CoordinatesCRUD(Controller controller) {
+        this.controller = controller;
         User user = UserAPI.getCurrentUser();
         if (pathRef == null && user != null) {
             pathRef = FirebaseDatabase.getInstance().getReference()
@@ -35,15 +31,15 @@ public class CoordinatesCRUD {
         }
     }
 
-    public void create(String walkActionId, List<Coordinates> coordinates, final DbReturnData returnData) {
+    public void create(String walkActionId, List<Coordinates> coordinates) {
         Log.i("Slice", " Slice starting create");
         pathRef.child(walkActionId).setValue(coordinates).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    eventBus.post(new DbMessage(Constants.EVENT_DB_RESULT_OK, returnData));
+                    controller.sendDbResultOk();
                 } else {
-                    eventBus.post(new DbMessage(Constants.EVENT_DB_RESULT_ERROR, returnData));
+                    controller.sendDbResultError();
                 }
             }
         });
