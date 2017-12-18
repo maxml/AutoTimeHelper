@@ -23,6 +23,7 @@ import com.maxml.timer.R;
 import com.maxml.timer.api.UserAPI;
 import com.maxml.timer.ui.activity.LoginActivity;
 import com.maxml.timer.ui.elements.ScrimInsetsFrameLayout;
+import com.maxml.timer.util.Constants;
 import com.squareup.picasso.Picasso;
 
 public class MainUserPageFragment extends Fragment implements View.OnClickListener {
@@ -31,8 +32,10 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
     private BootstrapButton bChangeName;
     private BootstrapButton bChangeEmail;
     private BootstrapButton bOk;
+
     private EditText etSetName;
     private EditText etSetEmail;
+
     private ImageView ivUser;
 
     private UserAPI user;
@@ -67,7 +70,7 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
 
         etSetEmail.setText(user.getCurrentUser().getEmail());
         etSetName.setText(user.getCurrentUser().getUsername());
-        updateImage(user.getCurrentUser().getPhoto());
+        updateImage(Uri.parse(Uri.decode(user.getCurrentUser().getPhoto())));
 
         setListeners();
     }
@@ -100,9 +103,9 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
         } else if (id == R.id.b_change_picture) {
             ImageManager imageManager = new ImageManager(getActivity());
 
-            Intent intent = imageManager.createIntentForLoadImage(getActivity());
+            Intent intent = imageManager.createIntentForLoadImage();
             if (intent != null) {
-                getActivity().startActivityForResult(intent, ImageManager.REQUEST_CODE_TAKE_PHOTO);
+                getActivity().startActivityForResult(intent, Constants.REQUEST_CODE_TAKE_PHOTO);
             }
         } else if (id == R.id.b_ok) {
             bOk.setVisibility(View.GONE);

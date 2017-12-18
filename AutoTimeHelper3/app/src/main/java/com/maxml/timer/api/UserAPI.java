@@ -113,7 +113,7 @@ public class UserAPI {
         user.setId(objectId);
         user.setUsername(username);
         user.setEmail(email);
-        user.setPhoto(photo);
+        user.setPhoto(photo.toString());
         return user;
     }
 

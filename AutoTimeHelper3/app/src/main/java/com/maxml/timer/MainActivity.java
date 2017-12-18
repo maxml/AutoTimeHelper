@@ -4,11 +4,9 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -18,13 +16,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.HttpAuthHandler;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.maxml.timer.api.UserAPI;
-import com.maxml.timer.controllers.Controller;
 import com.maxml.timer.controllers.GeneralService;
 import com.maxml.timer.entity.User;
 import com.maxml.timer.ui.fragments.CalendarFragment;
@@ -32,14 +28,11 @@ import com.maxml.timer.ui.fragments.HomeFragment;
 import com.maxml.timer.ui.fragments.MainUserPageFragment;
 import com.maxml.timer.ui.fragments.SettingsFragment;
 import com.maxml.timer.ui.fragments.ActionListViewFragment;
-import com.maxml.timer.ui.fragments.TablesFragment;
-import com.maxml.timer.util.EventBusType;
+import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.FragmentUtils;
 import com.maxml.timer.util.SharedPrefUtils;
 import com.maxml.timer.util.Utils;
 import com.squareup.picasso.Picasso;
-
-import javax.xml.transform.sax.SAXResult;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -190,40 +183,37 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onActivityResult(int requestCode,int resultCode, Intent data){
-        super.onActivityResult(requestCode , resultCode , data);
-        switch (requestCode){
-            case ImageManager.REQUEST_CODE_TAKE_PHOTO:
-                if(resultCode == RESULT_OK) {
-                    if (data != null && data.getData() != null) {
-                        if (FragmentUtils.getCurrentFragment(this) instanceof MainUserPageFragment) {
-                            ((MainUserPageFragment) FragmentUtils.getCurrentFragment(this)).updateImage(data.getData());
-                        }
-
-                        user.setPhoto(data.getData());
-                        UserAPI user = new UserAPI(this, new Handler());
-                        user.updatePhoto(data.getData());
-                    } else if (ImageManager.mTempPhoto != null) {
-                        if (FragmentUtils.getCurrentFragment(this) instanceof MainUserPageFragment) {
-                            ((MainUserPageFragment) FragmentUtils.getCurrentFragment(this))
-                                    .updateImage(Uri.fromFile(ImageManager.mTempPhoto));
-                        }
-
-                        user.setPhoto(Uri.fromFile(ImageManager.mTempPhoto));
-                        UserAPI user = new UserAPI(this, new Handler());
-                        user.updatePhoto(Uri.fromFile(ImageManager.mTempPhoto));
-                    }
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.REQUEST_CODE_TAKE_PHOTO) {
+            if (resultCode == RESULT_OK) {
+                if (data != null && data.getData() != null) {
+                    loadImageFromCamera(data);
+                } else if (ImageManager.fPhoto != null) {
+                    loadImageFromGallery();
                 }
-                break;
+            }
         }
     }
-//
-//    private String getRealPathFromURI(Uri uri) {
-//        String[] projection = { MediaStore.Images.Media.DATA };
-//        Cursor cursor = managedQuery(uri, projection, null, null, null);
-//        int columnIndex = cursor
-//                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-//        cursor.moveToFirst();
-//        return cursor.getString(columnIndex);
-//    }
+
+    private void loadImageFromCamera(Intent data) {
+        if (FragmentUtils.getCurrentFragment(this) instanceof MainUserPageFragment) {
+            ((MainUserPageFragment) FragmentUtils.getCurrentFragment(this)).updateImage(data.getData());
+        }
+
+        user.setPhoto(data.getData().toString());
+        UserAPI user = new UserAPI(this, new Handler());
+        user.updatePhoto(data.getData());
+    }
+
+    private void loadImageFromGallery() {
+        if (FragmentUtils.getCurrentFragment(this) instanceof MainUserPageFragment) {
+            ((MainUserPageFragment) FragmentUtils.getCurrentFragment(this))
+                    .updateImage(Uri.fromFile(ImageManager.fPhoto));
+        }
+
+        user.setPhoto(Uri.decode(ImageManager.fPhoto.toString()));
+        UserAPI user = new UserAPI(this, new Handler());
+        user.updatePhoto(Uri.fromFile(ImageManager.fPhoto));
+    }
 }
