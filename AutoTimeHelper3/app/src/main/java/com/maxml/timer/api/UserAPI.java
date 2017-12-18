@@ -11,6 +11,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.maxml.timer.MyLog;
 import com.maxml.timer.entity.User;
 import com.maxml.timer.util.Constants;
@@ -97,6 +98,10 @@ public class UserAPI {
                 });
     }
 
+    public void logout() {
+        mAuth.signOut();
+    }
+
     public static User getCurrentUser() {
         User user = new User();
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -135,46 +140,32 @@ public class UserAPI {
                 });
     }
 
-    public void updateName(final String name, final String id) {
-        Log.d("UserAPI", "start updateName");
-//		ParseQuery<ParseUser> query = ParseUser.getQuery();
-//		query.whereEqualTo(USERNAME, ParseUser.getCurrentUser().getUsername());
-//		query.findInBackground(new FindCallback<ParseUser>() {
-//			public void done(List<ParseUser> objects, ParseException e) {
-//				if (e == null) {
-//					for (ParseUser parseUser : objects) {
-//						Log.d("UserAPI", "find object");
-//						if (parseUser.getId().equals(id)) {
-//							Log.d("UserAPI", "found, rename");
-//							ParseUser.getCurrentUser().put(USERNAME, name);
-//						}
-//					}
-//				} else {
-//					Log.d("UserAPI", "problem in updateName");
-//					e.printStackTrace();
-//				}
-//			}
-//		});
+    public void updateName(final String name) {
+        FirebaseUser user = mAuth.getCurrentUser();
+
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest
+                .Builder()
+                .setDisplayName(name)
+                .build();
+
+        user.updateProfile(profileUpdates);
     }
 
-    public void updateEmail(final String email, final String id) {
-        Log.d("UserAPI", "start updateEmail");
-//		ParseQuery<ParseUser> queryOne = ParseUser.getQuery();
-//		queryOne.whereEqualTo(EMAIL, email);
-//		queryOne.findInBackground(new FindCallback<ParseUser>() {
-//			public void done(List<ParseUser> objects, ParseException e) {
-//				if (e == null) {
-//					for (ParseUser parseUser : objects) {
-//						if (parseUser.getId().equals(id)) {
-//							ParseUser.getCurrentUser().put(EMAIL, email);
-//						}
-//					}
-//				} else {
-//					Log.d("UserAPI", "problem in updateEmail");
-//					e.printStackTrace();
-//				}
-//			}
-//		});
+    public void updateEmail(final String email) {
+        FirebaseUser user = mAuth.getCurrentUser();
+
+        user.updateEmail(email);
+    }
+
+    public void updatePhoto(Uri uri) {
+        FirebaseUser user = mAuth.getCurrentUser();
+
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest
+                .Builder()
+                .setPhotoUri(uri)
+                .build();
+
+        user.updateProfile(profileUpdates);
     }
 
 

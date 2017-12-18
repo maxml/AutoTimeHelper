@@ -1,125 +1,133 @@
 package com.maxml.timer.ui.fragments;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.maxml.timer.ImageManager;
 import com.maxml.timer.R;
 import com.maxml.timer.api.UserAPI;
+import com.maxml.timer.ui.activity.LoginActivity;
+import com.maxml.timer.ui.elements.ScrimInsetsFrameLayout;
+import com.squareup.picasso.Picasso;
 
-public class MainUserPageFragment extends Fragment {
+public class MainUserPageFragment extends Fragment implements View.OnClickListener {
 
-    private BootstrapButton btnChangePicture;
-    private BootstrapButton btnChangeName;
-    private BootstrapButton btnChangeEmail;
-    private BootstrapButton btnChangeOk;
-
+    private BootstrapButton bChangePicture;
+    private BootstrapButton bChangeName;
+    private BootstrapButton bChangeEmail;
+    private BootstrapButton bOk;
     private EditText etSetName;
     private EditText etSetEmail;
-    private UserAPI us;
+    private ImageView ivUser;
+
+    private UserAPI user;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        us= new UserAPI(getActivity(), new Handler());
-        return inflater.inflate(R.layout.activity_main_user_page, container, false);
+        user = new UserAPI(getActivity(), new Handler());
 
+        View rootView = inflater.inflate(R.layout.activity_main_user_page, container, false);
+
+        setUI(rootView);
+
+        return rootView;
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    private void setUI(View view) {
+        bChangeEmail = (BootstrapButton) view.findViewById(R.id.b_email);
+        bChangeName = (BootstrapButton) view.findViewById(R.id.b_name);
+        bChangePicture = (BootstrapButton) view.findViewById(R.id.b_change_picture);
+        bOk = (BootstrapButton) view.findViewById(R.id.b_ok);
 
-        btnChangeEmail = (BootstrapButton) getActivity().findViewById(R.id.btnEmail);
-        btnChangeName = buttonsAuthorisation(R.id.btnName);
-        btnChangePicture = buttonsAuthorisation(R.id.btnChangePicture);
-        btnChangeOk = buttonsAuthorisation(R.id.btnOk);
+        etSetName = (EditText) view.findViewById(R.id.tvName);
+        etSetEmail = (EditText) view.findViewById(R.id.tv_email);
 
-        etSetName = editTextAuthorisation(R.id.tvName);
-        etSetEmail = editTextAuthorisation(R.id.tvEmail);
-        etSetEmail.setText(us.getCurrentUser().getEmail());
-        etSetName.setText(us.getCurrentUser().getUsername());
-        etSetName.setEnabled(false);
-        etSetEmail.setEnabled(false);
+        ivUser = (ImageView) view.findViewById(R.id.iv_user);
 
+        etSetEmail.setText(user.getCurrentUser().getEmail());
+        etSetName.setText(user.getCurrentUser().getUsername());
+        updateImage(user.getCurrentUser().getPhoto());
 
-//		btnChangeEmail.setOnClickListener(new OnClickListener() {
-//			
-//			@Override
-//			public void onClick(View v) {
-////				etSetEmail.setEnabled(true);
-////				btnChangeOk.setVisibility(View.VISIBLE);
-//				btnChangeOk.setOnClickListener(new OnClickListener() {
-//					
-//					@Override
-//					public void onClick(View v) {
-////						etSetEmail.setEnabled(false);
-////						btnChangeOk.setVisibility(View.INVISIBLE);
-//						us.updateEmail(etSetEmail.getText().toString(), ParseUser.getCurrentUser()
-//								.getId());
-//					}
-//				});
-//			}
-//		});
-//		
-//		btnChangeName.setOnClickListener(new OnClickListener() {
-//			
-//			@Override
-//			public void onClick(View v) {
-//				etSetName.setEnabled(true);
-//				btnChangeOk.setVisibility(View.VISIBLE);
-//				btnChangeOk.setOnClickListener(new OnClickListener() {
-//					
-//					@Override
-//					public void onClick(View v) {
-//						etSetName.setEnabled(false);
-//						btnChangeOk.setVisibility(View.INVISIBLE);
-//						us.updateName(etSetName.getText().toString(), ParseUser.getCurrentUser().getId());
-//					}
-//				});
-//			}
-//		});
-//		
+        setListeners();
     }
 
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btnEmail:
-                //
-                etSetEmail.setEnabled(true);
-                btnChangeOk.setVisibility(View.VISIBLE);
-                break;
-            case R.id.btnName:
-                //
-                etSetName.setEnabled(true);
-                break;
-
-            case R.id.btnChangePicture:
-                //
-                break;
-
-            case R.id.btnOk:
-                //
-                etSetEmail.setEnabled(false);
-//                us.updateEmail(etSetEmail.getText().toString(), ParseUser.getCurrentUser()
-//                        .getId());
-//                us.updateName(etSetName.getText().toString(), ParseUser.getCurrentUser().getId());
-                break;
+    public void updateImage(Uri uri) {
+        if (uri != null) {
+            Picasso.with(getActivity())
+                    .load(uri)
+                    .into(ivUser);
         }
     }
 
-    private EditText editTextAuthorisation(int idintification) {
-        EditText et = (EditText) getActivity().findViewById(idintification);
-        return et;
+    private void setListeners() {
+        bChangePicture.setOnClickListener(this);
+        bChangeName.setOnClickListener(this);
+        bChangeEmail.setOnClickListener(this);
+        bOk.setOnClickListener(this);
     }
 
-    private BootstrapButton buttonsAuthorisation(int idintification) {
-        BootstrapButton btn = (BootstrapButton) getActivity().findViewById(idintification);
-        return btn;
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+
+        if (id == R.id.b_email) {
+            etSetEmail.setEnabled(true);
+            bOk.setVisibility(View.VISIBLE);
+        } else if (id == R.id.b_name) {
+            etSetName.setEnabled(true);
+            bOk.setVisibility(View.VISIBLE);
+        } else if (id == R.id.b_change_picture) {
+            ImageManager imageManager = new ImageManager(getActivity());
+
+            Intent intent = imageManager.createIntentForLoadImage(getActivity());
+            if (intent != null) {
+                getActivity().startActivityForResult(intent, ImageManager.REQUEST_CODE_TAKE_PHOTO);
+            }
+        } else if (id == R.id.b_ok) {
+            bOk.setVisibility(View.GONE);
+            etSetEmail.setEnabled(false);
+            etSetName.setEnabled(false);
+
+            user.updateEmail(etSetEmail.getText().toString());
+            user.updateName(etSetName.getText().toString());
+
+            Toast.makeText(getActivity(), "Saved", Toast.LENGTH_SHORT).show();
+        }
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.user_page_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.i_log_out) {
+            user.logout();
+            startActivity(new Intent(getActivity(), LoginActivity.class));
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

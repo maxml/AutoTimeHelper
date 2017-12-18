@@ -46,7 +46,7 @@ public class Controller {
     public Controller(Context context) {
         this.context = context;
 
-        initCRUD();
+//        initCRUD();
     }
 
     public static Controller build(Context context) {

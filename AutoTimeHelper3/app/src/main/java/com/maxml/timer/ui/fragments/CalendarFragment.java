@@ -39,7 +39,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener {
         initListener();
         // get current date
         Date selectedDate = new Date(calendarView.getDate());
-        DbMessage getTableMsg = new DbMessage(Constants.EVENT_TABLE_DATE_REQUEST, EventBusType.CALENDAR_FRAGMENT,selectedDate);
+        DbMessage getTableMsg = new DbMessage(Constants.EVENT_TABLE_DATE_REQUEST, EventBusType.CALENDAR_FRAGMENT, selectedDate);
         controller.getEventBus(EventBusType.DB).post(getTableMsg);
         return view;
     }
@@ -94,10 +94,10 @@ public class CalendarFragment extends Fragment implements View.OnClickListener {
             rests = table.getRestList().size();
             work = table.getWorkList().size();
         }
-        callsCount.setText(calls+"");
-        workCount.setText(work+"");
-        walkCount.setText(walks+"");
-        restCount.setText(rests+"");
+        callsCount.setText(calls + "");
+        workCount.setText(work + "");
+        walkCount.setText(walks + "");
+        restCount.setText(rests + "");
     }
 
     @Override

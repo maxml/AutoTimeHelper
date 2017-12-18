@@ -1,5 +1,6 @@
 package com.maxml.timer.entity.eventBus;
 
+import com.google.gson.Gson;
 import com.maxml.timer.entity.DbReturnData;
 import com.maxml.timer.util.EventBusType;
 
