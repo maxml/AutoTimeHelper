@@ -2,7 +2,9 @@ package com.maxml.timer.controllers;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 
+import com.maxml.timer.ImageManager;
 import com.maxml.timer.R;
 import com.maxml.timer.api.ActionCRUD;
 import com.maxml.timer.api.CoordinatesCRUD;
@@ -73,16 +75,32 @@ public class Controller {
         entityEventBus.post(table);
     }
 
-    public void updateEmail(String email) {
+    public void updateUserEmail(String email) {
         userAPI.updateEmail(email);
+    }
+
+    public void updateUserName(String name) {
+        userAPI.updateName(name);
+    }
+
+    public void updateUserPhoto(String uri) {
+        userAPI.updatePhoto(Uri.parse(uri));
     }
 
     public void createUser(String email, String password) {
         userAPI.create(email, password);
     }
 
+    public void sentUser() {
+        entityEventBus.post(userAPI);
+    }
+
     public void login(String email, String password) {
         userAPI.login(email, password);
+    }
+
+    public void logout() {
+        userAPI.logout();
     }
 
     public void forgotPassword(String email) {

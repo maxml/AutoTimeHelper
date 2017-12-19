@@ -152,6 +152,7 @@ public class UserAPI {
     }
 
     public void updateEmail(final String email) {
+        //TODO don`t work changing email
         FirebaseUser user = mAuth.getCurrentUser();
 
         user.updateEmail(email);
@@ -175,8 +176,8 @@ public class UserAPI {
 //            Log.d("User", "create user");
 //            create(user);
 //        } else {
-//            updateEmail(user.getEmail(), user.getId());
-//            updateName(user.getUsername(), user.getId());
+//            updateUserEmail(user.getEmail(), user.getId());
+//            updateUserName(user.getUsername(), user.getId());
 //        }
 //    }
 }

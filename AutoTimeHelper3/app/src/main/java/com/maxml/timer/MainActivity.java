@@ -6,7 +6,6 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -20,19 +19,20 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.maxml.timer.api.UserAPI;
-import com.maxml.timer.controllers.GeneralService;
+import com.maxml.timer.controllers.Controller;
 import com.maxml.timer.entity.User;
+import com.maxml.timer.ui.fragments.ActionListViewFragment;
 import com.maxml.timer.ui.fragments.CalendarFragment;
 import com.maxml.timer.ui.fragments.HomeFragment;
 import com.maxml.timer.ui.fragments.MainUserPageFragment;
 import com.maxml.timer.ui.fragments.SettingsFragment;
-import com.maxml.timer.ui.fragments.ActionListViewFragment;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.FragmentUtils;
 import com.maxml.timer.util.SharedPrefUtils;
-import com.maxml.timer.util.Utils;
 import com.squareup.picasso.Picasso;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -44,7 +44,8 @@ public class MainActivity extends AppCompatActivity
     private ActionBarDrawerToggle drawerToggle;
     private Toolbar toolbar;
 
-    private User user;
+    private Controller controller;
+    private EventBus eventBus;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -68,62 +69,9 @@ public class MainActivity extends AppCompatActivity
             setupFragment(new ActionListViewFragment());
 //        initService();
 
+        initController();
+
         setHomeFragment();
-    }
-
-    private void setHomeFragment() {
-        FragmentUtils.setFragment(this, new HomeFragment());
-    }
-
-//    private void initService() {
-//        // if service not instant yet, start one
-//        if (!Utils.isServiceRunning(this, GeneralService.class)) {
-//            MyLog.d("start new service instance");
-//            Intent serviceIntent = new Intent(this, GeneralService.class);
-//            startService(serviceIntent);
-//        }
-//    }
-
-    private void initDrawer() {
-        drawerToggle = new ActionBarDrawerToggle(
-                this,
-                drawerLayout,
-                toolbar,
-                R.string.drawer_open,
-                R.string.drawer_close) {
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                initDrawerHeader();
-            }
-        };
-
-        drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-        drawerLayout.setStatusBarBackground(R.color.primary_dark);
-        drawerLayout.addDrawerListener(drawerToggle);
-        drawerToggle.syncState();
-    }
-
-    private void initDrawerHeader() {
-
-        NavigationView nv = (NavigationView) findViewById(R.id.navigationView);
-        View header = nv.getHeaderView(0);
-
-        TextView name = (TextView) header.findViewById(R.id.user_name);
-        ImageView icon = (ImageView) header.findViewById(R.id.profile_image);
-
-        nv.setNavigationItemSelectedListener(this);
-
-        user = SharedPrefUtils.getCurrentUser(this);
-        if (user.getEmail() != null && !user.getEmail().isEmpty()) {
-            if (user.getUsername() != null) {
-                name.setText(user.getUsername());
-            } else name.setText(user.getEmail());
-            Picasso.with(this)
-                    .load(user.getPhoto())
-                    .placeholder(R.drawable.ic_contact_picture)
-                    .into(icon);
-        }
     }
 
     public void setupFragment(Fragment fragment) {
@@ -157,6 +105,89 @@ public class MainActivity extends AppCompatActivity
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onStart() {
+        eventBus.register(this);
+        controller.registerEventBus(eventBus);
+        controller.sentUser();
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        controller.unregisterEventBus(eventBus);
+        eventBus.unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe
+    public void onReceiveUser(User user) {
+        initDrawerHeader(user);
+    }
+
+
+    private void initController() {
+        eventBus = new org.greenrobot.eventbus.EventBus();
+        controller = new Controller(this, eventBus);
+    }
+
+    private void setHomeFragment() {
+        FragmentUtils.setFragment(this, new HomeFragment());
+    }
+
+//    private void initService() {
+//        // if service not instant yet, start one
+//        if (!Utils.isServiceRunning(this, GeneralService.class)) {
+//            MyLog.d("start new service instance");
+//            Intent serviceIntent = new Intent(this, GeneralService.class);
+//            startService(serviceIntent);
+//        }
+//    }
+
+    private void initDrawer() {
+        drawerToggle = new ActionBarDrawerToggle(
+                this,
+                drawerLayout,
+                toolbar,
+                R.string.drawer_open,
+                R.string.drawer_close) {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                controller.sentUser();
+            }
+        };
+
+        drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+        drawerLayout.setStatusBarBackground(R.color.primary_dark);
+        drawerLayout.addDrawerListener(drawerToggle);
+        drawerToggle.syncState();
+    }
+
+    private void initDrawerHeader(User user) {
+        if (user == null) {
+            return;
+        }
+        NavigationView nv = (NavigationView) findViewById(R.id.navigationView);
+        View header = nv.getHeaderView(0);
+
+        TextView name = (TextView) header.findViewById(R.id.user_name);
+        ImageView icon = (ImageView) header.findViewById(R.id.profile_image);
+
+        nv.setNavigationItemSelectedListener(this);
+
+        user = SharedPrefUtils.getCurrentUser(this);
+        if (user.getEmail() != null && !user.getEmail().isEmpty()) {
+            if (user.getUsername() != null) {
+                name.setText(user.getUsername());
+            } else name.setText(user.getEmail());
+            Picasso.with(this)
+                    .load(user.getPhoto())
+                    .placeholder(R.drawable.ic_contact_picture)
+                    .into(icon);
+        }
     }
 
     private void showProgressBar() {
@@ -201,9 +232,7 @@ public class MainActivity extends AppCompatActivity
             ((MainUserPageFragment) FragmentUtils.getCurrentFragment(this)).updateImage(data.getData());
         }
 
-        user.setPhoto(data.getData().toString());
-        UserAPI user = new UserAPI(this, new Handler());
-        user.updatePhoto(data.getData());
+        controller.updateUserPhoto(data.getData().toString());
     }
 
     private void loadImageFromGallery() {
@@ -212,8 +241,6 @@ public class MainActivity extends AppCompatActivity
                     .updateImage(Uri.fromFile(ImageManager.fPhoto));
         }
 
-        user.setPhoto(Uri.decode(ImageManager.fPhoto.toString()));
-        UserAPI user = new UserAPI(this, new Handler());
-        user.updatePhoto(Uri.fromFile(ImageManager.fPhoto));
+        controller.updateUserPhoto(ImageManager.fPhoto.toString());
     }
 }

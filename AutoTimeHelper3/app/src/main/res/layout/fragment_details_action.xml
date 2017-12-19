@@ -1,0 +1,122 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bootstrapbutton="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backGroundGrey">
+
+    <RelativeLayout xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        tools:context="com.maxml.timer.ui.fragments.DetailsActionFragment">
+
+        <Spinner
+            android:id="@+id/s_action"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:saveEnabled="false" />
+
+        <com.beardedhen.androidbootstrap.BootstrapEditText
+            android:id="@+id/bet_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/s_action"
+            android:layout_margin="8dp"
+            android:clickable="true"
+            android:cursorVisible="false"
+            android:ems="10"
+            android:enabled="false"
+            android:focusableInTouchMode="false"
+            android:gravity="center_vertical"
+            android:hint="Description"
+            android:inputType="none"
+            bootstrapbutton:roundedCorners="true" />
+
+        <LinearLayout
+            android:id="@+id/ll_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/bet_description"
+            android:layout_marginBottom="32dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <com.beardedhen.androidbootstrap.BootstrapEditText
+                android:id="@+id/bet_start_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:ems="10"
+                android:enabled="false"
+                android:hint="10:50"
+                bootstrapbutton:roundedCorners="true" />
+
+            <com.beardedhen.androidbootstrap.BootstrapEditText
+                android:id="@+id/bet_end_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:ems="10"
+                android:enabled="false"
+                android:gravity="center"
+                android:hint="11:00"
+                bootstrapbutton:roundedCorners="true" />
+
+        </LinearLayout>
+
+        <com.beardedhen.androidbootstrap.BootstrapButton
+            android:id="@+id/bb_change_action"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ll_time"
+            android:layout_margin="8dp"
+            android:enabled="true"
+            android:text="Change action"
+            bootstrapbutton:bootstrapBrand="primary"
+            bootstrapbutton:bootstrapSize="lg"
+            bootstrapbutton:roundedCorners="true" />
+
+        <com.beardedhen.androidbootstrap.BootstrapButton
+            android:id="@+id/bb_change_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/bb_change_action"
+            android:layout_margin="8dp"
+            android:enabled="true"
+            android:text="Change date"
+            bootstrapbutton:bootstrapBrand="primary"
+            bootstrapbutton:bootstrapSize="lg"
+            bootstrapbutton:roundedCorners="true" />
+
+        <com.beardedhen.androidbootstrap.BootstrapButton
+            android:id="@+id/bb_change_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/bb_change_date"
+            android:layout_margin="8dp"
+            android:enabled="true"
+            android:text="Change description"
+            bootstrapbutton:bootstrapBrand="primary"
+            bootstrapbutton:bootstrapSize="lg"
+            bootstrapbutton:roundedCorners="true" />
+
+        <com.beardedhen.androidbootstrap.BootstrapButton
+            android:id="@+id/bb_ok"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/bb_change_description"
+            android:layout_marginLeft="128dp"
+            android:layout_marginRight="128dp"
+            android:layout_marginTop="16dp"
+            android:enabled="true"
+            android:text="ok"
+            android:visibility="invisible"
+            bootstrapbutton:bootstrapBrand="primary"
+            bootstrapbutton:bootstrapSize="lg"
+            bootstrapbutton:roundedCorners="true" />
+
+    </RelativeLayout>
+</FrameLayout>

@@ -1,9 +1,5 @@
 package com.maxml.timer.util;
 
-/**
- * Created by nazar on 08.09.17.
- */
-
 public class Constants {
 
     public static final long MIN_DISTANCE_UPDATES = 5;

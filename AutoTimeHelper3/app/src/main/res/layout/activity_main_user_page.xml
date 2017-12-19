@@ -15,7 +15,7 @@
         android:src="@drawable/ic_work_running_grey" />
 
     <com.beardedhen.androidbootstrap.BootstrapEditText
-        android:id="@+id/tvName"
+        android:id="@+id/bet_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
@@ -29,7 +29,7 @@
     </com.beardedhen.androidbootstrap.BootstrapEditText>
 
     <com.beardedhen.androidbootstrap.BootstrapEditText
-        android:id="@+id/tv_email"
+        android:id="@+id/bet_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
@@ -41,7 +41,7 @@
         bootstrapbutton:roundedCorners="true" />
 
     <com.beardedhen.androidbootstrap.BootstrapButton
-        android:id="@+id/b_change_picture"
+        android:id="@+id/bb_change_picture"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
@@ -52,7 +52,7 @@
         bootstrapbutton:roundedCorners="true" />
 
     <com.beardedhen.androidbootstrap.BootstrapButton
-        android:id="@+id/b_name"
+        android:id="@+id/bb_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
@@ -63,7 +63,7 @@
         bootstrapbutton:roundedCorners="true" />
 
     <com.beardedhen.androidbootstrap.BootstrapButton
-        android:id="@+id/b_email"
+        android:id="@+id/bb_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
@@ -74,7 +74,7 @@
         bootstrapbutton:roundedCorners="true" />
 
     <com.beardedhen.androidbootstrap.BootstrapButton
-        android:id="@+id/b_ok"
+        android:id="@+id/bb_ok"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"

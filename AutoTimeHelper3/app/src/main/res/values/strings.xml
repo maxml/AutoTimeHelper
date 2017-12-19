@@ -33,4 +33,7 @@
     <string name="home">Home page</string>
     <string name="db_error">Ошыбка соединения</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>
