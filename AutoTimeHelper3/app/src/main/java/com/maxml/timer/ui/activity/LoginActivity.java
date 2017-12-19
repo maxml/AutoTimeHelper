@@ -16,11 +16,16 @@ import com.maxml.timer.MainActivity;
 import com.maxml.timer.MyLog;
 import com.maxml.timer.R;
 import com.maxml.timer.api.UserAPI;
+import com.maxml.timer.controllers.Controller;
 import com.maxml.timer.controllers.GeneralService;
 import com.maxml.timer.entity.User;
+import com.maxml.timer.entity.eventBus.Events;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.SharedPrefUtils;
 import com.maxml.timer.util.Utils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 /**
  * Created by Lantar on 22.04.2015.
@@ -28,8 +33,9 @@ import com.maxml.timer.util.Utils;
 public class LoginActivity extends Activity {
     protected static final int CONNECTION_OK = 1;
 
-    private Handler handler;
-    private UserAPI userAPI;
+    private EventBus eventBus;
+    private Controller controller;
+
     private TextView entLogin;
     private TextView entPassword;
     private ProgressBar progressBar;
@@ -40,8 +46,8 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.login_activity);
         Log.d("User", "start login activity");
 
-        initHandler();
-        userAPI = new UserAPI(this, handler);
+        eventBus = new EventBus();
+        controller = new Controller(this, eventBus);
 
         entLogin = (TextView) findViewById(R.id.textLogin);
         entPassword = (TextView) findViewById(R.id.textPassword);
@@ -50,27 +56,24 @@ public class LoginActivity extends Activity {
         boolean isLogged = FirebaseAuth.getInstance().getCurrentUser() != null;
         if (isLogged) {
             loginOk();
-            }
+        }
     }
 
-    private void initHandler() {
-        handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                switch (msg.what) {
-                    case Constants.RESULT_OK:
-                        // sign in successful
-                        progressBar.setVisibility(View.INVISIBLE);
-                        loginOk();
-                        break;
-                    case Constants.RESULT_FALSE:
-                        // sign in error
-                        progressBar.setVisibility(View.INVISIBLE);
-                        incorrect();
-                        break;
-                }
-            }
-        };
+
+    @Subscribe
+    public void onReceiveUserApiEvent(Events.DbResult event) {
+        switch (event.getResultStatus()) {
+            case Constants.EVENT_DB_RESULT_OK:
+                // sign in successful
+                progressBar.setVisibility(View.INVISIBLE);
+                loginOk();
+                break;
+            case Constants.EVENT_DB_RESULT_ERROR:
+                // sign in error
+                progressBar.setVisibility(View.INVISIBLE);
+                incorrect();
+                break;
+        }
     }
 
     public void onClick(View v) {
@@ -92,7 +95,7 @@ public class LoginActivity extends Activity {
 
     public void login() {
         progressBar.setVisibility(View.VISIBLE);
-        userAPI.login(entLogin.getText().toString(), entPassword.getText().toString());
+        controller.login(entLogin.getText().toString(), entPassword.getText().toString());
     }
 
     private void incorrect() {
@@ -102,7 +105,7 @@ public class LoginActivity extends Activity {
 
     public void loginOk() {
         initService();
-        User user = userAPI.getCurrentUser();
+        User user = UserAPI.getCurrentUser();
         SharedPrefUtils.saveCurrentUser(this, user);
         Toast.makeText(getApplicationContext(), "Logined", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, MainActivity.class);
@@ -124,12 +127,14 @@ public class LoginActivity extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
-        userAPI.attachListener();
+        eventBus.register(this);
+        controller.registerEventBus(eventBus);
     }
 
     @Override
     protected void onStop() {
-        userAPI.removeListener();
+        controller.unregisterEventBus(eventBus);
+        eventBus.unregister(this);
         super.onStop();
     }
 }

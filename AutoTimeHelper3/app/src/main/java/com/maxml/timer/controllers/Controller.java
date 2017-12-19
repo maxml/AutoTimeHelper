@@ -7,6 +7,7 @@ import com.maxml.timer.R;
 import com.maxml.timer.api.ActionCRUD;
 import com.maxml.timer.api.CoordinatesCRUD;
 import com.maxml.timer.api.TableCRUD;
+import com.maxml.timer.api.UserAPI;
 import com.maxml.timer.entity.Table;
 import com.maxml.timer.entity.actions.Action;
 import com.maxml.timer.entity.eventBus.Events;
@@ -36,6 +37,7 @@ public class Controller {
     private ActionCRUD actionCRUD;
     private TableCRUD tableCRUD;
     private CoordinatesCRUD coordinatesCRUD;
+    private UserAPI userAPI;
 
     private Map<String, Action> actions = new HashMap<>();
     private List<String> stateStack = new ArrayList<>();
@@ -69,6 +71,22 @@ public class Controller {
 
     public void sendTableFromDb(Table table) {
         entityEventBus.post(table);
+    }
+
+    public void updateEmail(String email) {
+        userAPI.updateEmail(email);
+    }
+
+    public void createUser(String email, String password) {
+        userAPI.create(email, password);
+    }
+
+    public void login(String email, String password) {
+        userAPI.login(email, password);
+    }
+
+    public void forgotPassword(String email) {
+        userAPI.sentPassword(email);
     }
 
     /********************* END DB TOOLS **************************/
@@ -347,5 +365,6 @@ public class Controller {
         tableCRUD = new TableCRUD(this);
         actionCRUD = new ActionCRUD(this);
         coordinatesCRUD = new CoordinatesCRUD(this);
+        userAPI = new UserAPI(context, this);
     }
 }

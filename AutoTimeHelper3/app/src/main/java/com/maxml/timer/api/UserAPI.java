@@ -1,8 +1,7 @@
 package com.maxml.timer.api;
 
-import android.app.Activity;
+import android.content.Context;
 import android.net.Uri;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -13,6 +12,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.maxml.timer.MyLog;
+import com.maxml.timer.controllers.Controller;
 import com.maxml.timer.entity.User;
 import com.maxml.timer.util.Constants;
 
@@ -21,13 +21,13 @@ public class UserAPI {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
-    private Activity activity;
-    private Handler handler = new Handler();
+    private Context context;
+    private Controller controller;
     private boolean isLogined = false;
 
-    public UserAPI(Activity activity, Handler handler) {
-        this.handler = handler;
-        this.activity = activity;
+    public UserAPI(Context context, Controller controller) {
+        this.controller = controller;
+        this.context = context;
         initAuth();
     }
 
@@ -63,20 +63,20 @@ public class UserAPI {
     public void create(String email, String password) {
         Log.d("User", "start method create in UserCRUD");
         if (email == null || password == null) {
-            handler.sendEmptyMessage(Constants.RESULT_FALSE);
+            controller.sendDbResultError();
             return;
         }
 
         mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         MyLog.d("createUserWithEmail:onComplete:" + task.isSuccessful());
 
                         if (!task.isSuccessful()) {
-                            handler.sendEmptyMessage(Constants.RESULT_FALSE);
+                            controller.sendDbResultError();
                         } else {
-                            handler.sendEmptyMessage(Constants.RESULT_OK);
+                            controller.sendDbResultOk();
                         }
                     }
                 });
@@ -84,15 +84,15 @@ public class UserAPI {
 
     public void login(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         MyLog.d("signInWithEmail:onComplete:" + task.isSuccessful());
 
                         if (!task.isSuccessful()) {
-                            handler.sendEmptyMessage(Constants.RESULT_FALSE);
+                            controller.sendDbResultError();
                         } else {
-                            handler.sendEmptyMessage(Constants.RESULT_OK);
+                            controller.sendDbResultOk();
                         }
                     }
                 });
@@ -132,9 +132,9 @@ public class UserAPI {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             MyLog.d("Email sent.");
-                            handler.sendEmptyMessage(Constants.RESULT_OK);
+                            controller.sendDbResultOk();
                         } else {
-                            handler.sendEmptyMessage(Constants.RESULT_FALSE);
+                            controller.sendDbResultError();
                         }
                     }
                 });

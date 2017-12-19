@@ -1,6 +1,7 @@
 package com.maxml.timer.ui.activity;
 
 import android.app.Activity;
+import android.app.usage.UsageEvents;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,8 +16,13 @@ import android.widget.Toast;
 import com.maxml.timer.MainActivity;
 import com.maxml.timer.R;
 import com.maxml.timer.api.UserAPI;
+import com.maxml.timer.controllers.Controller;
 import com.maxml.timer.entity.User;
+import com.maxml.timer.entity.eventBus.Events;
 import com.maxml.timer.util.Constants;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 public class CreateUserActivity extends Activity {
 
@@ -26,6 +32,9 @@ public class CreateUserActivity extends Activity {
     private TextView entEmail;
     private ProgressBar progressBar;
 
+    private Controller controller;
+    private EventBus eventBus;
+
     protected int CONNECTION_OK = 1;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +42,28 @@ public class CreateUserActivity extends Activity {
         setContentView(R.layout.create_user);
         Log.d("User", "start onCreate create user activity ");
 
+        eventBus = new EventBus();
+        controller = new Controller(this, eventBus);
+
         entLogin = (TextView) findViewById(R.id.textCreateLogin);
         entPassword = (TextView) findViewById(R.id.textCreatePassword);
         entRPassword = (TextView) findViewById(R.id.textRepeatPassword);
         entEmail = (TextView) findViewById(R.id.textCreateEmail);
         progressBar = (ProgressBar) findViewById(R.id.progressBar3);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        eventBus.register(this);
+        controller.registerEventBus(eventBus);
+    }
+
+    @Override
+    protected void onStop() {
+        eventBus.unregister(this);
+        controller.unregisterEventBus(eventBus);
+        super.onStop();
     }
 
     public void onClick(View v) {
@@ -71,23 +97,24 @@ public class CreateUserActivity extends Activity {
 
     }
 
+    @Subscribe
+    public void onReceiveUserAPIEvent(Events.DbResult event){
+        switch (event.getResultStatus()) {
+            case Constants.EVENT_DB_RESULT_OK:
+                progressBar.setVisibility(View.INVISIBLE);
+                authorisation();
+                break;
+            case Constants.EVENT_DB_RESULT_ERROR:
+                progressBar.setVisibility(View.INVISIBLE);
+                incorrect();
+                break;
+        }
+
+    }
+
     public void createUser() {
         Log.d("User", "create user");
         progressBar.setVisibility(View.VISIBLE);
-        UserAPI c = new UserAPI(this, new Handler() {
-            public void handleMessage(Message msg) {
-                switch (msg.what) {
-                    case Constants.RESULT_OK:
-                        progressBar.setVisibility(View.INVISIBLE);
-                        authorisation();
-                        break;
-                    case Constants.RESULT_FALSE:
-                        progressBar.setVisibility(View.INVISIBLE);
-                        incorrect();
-                        break;
-                }
-            }
-        });
-        c.create(entEmail.getText().toString(), entPassword.getText().toString());
+        controller.createUser(entEmail.getText().toString(), entPassword.getText().toString());
     }
 }
