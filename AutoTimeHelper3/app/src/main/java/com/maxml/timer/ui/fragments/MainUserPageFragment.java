@@ -68,8 +68,8 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
     }
 
     @Subscribe
-    public void onReceiveUser(User user){
-
+    public void onReceiveUser(User user) {
+        updateUI(user);
     }
 
     @Override
