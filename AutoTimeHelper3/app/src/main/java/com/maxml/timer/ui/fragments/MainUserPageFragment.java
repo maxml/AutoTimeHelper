@@ -117,7 +117,7 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
                 etSetName.setEnabled(false);
 
                 controller.updateEmail(etSetEmail.getText().toString());
-                user.updateName(etSetName.getText().toString());
+//                user.updateName(etSetName.getText().toString());
 
                 Toast.makeText(getActivity(), "Saved", Toast.LENGTH_SHORT).show();
                 break;
@@ -133,7 +133,7 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.i_log_out) {
-            user.logout();
+//            user.logout();
             startActivity(new Intent(getActivity(), LoginActivity.class));
         }
         return super.onOptionsItemSelected(item);
