@@ -29,6 +29,7 @@ import com.maxml.timer.util.Constants;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 public class MainUserPageFragment extends Fragment implements View.OnClickListener {
 
@@ -64,6 +65,11 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
         initUI(rootView);
         setListeners();
         return rootView;
+    }
+
+    @Subscribe
+    public void onReceiveUser(User user){
+
     }
 
     @Override
