@@ -67,6 +67,20 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        eventBus.register(this);
+        controller.registerEventBus(eventBus);
+    }
+
+    @Override
+    public void onStop() {
+        controller.unregisterEventBus(eventBus);
+        eventBus.unregister(this);
+        super.onStop();
+    }
+
+    @Override
     public void onClick(View v) {
         int id = v.getId();
 
