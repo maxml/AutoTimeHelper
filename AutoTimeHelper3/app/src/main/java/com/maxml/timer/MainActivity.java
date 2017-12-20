@@ -19,10 +19,12 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.maxml.timer.api.UserAPI;
 import com.maxml.timer.controllers.Controller;
 import com.maxml.timer.entity.User;
 import com.maxml.timer.ui.fragments.ActionListViewFragment;
 import com.maxml.timer.ui.fragments.CalendarFragment;
+import com.maxml.timer.ui.fragments.GoogleMapFragment;
 import com.maxml.timer.ui.fragments.HomeFragment;
 import com.maxml.timer.ui.fragments.MainUserPageFragment;
 import com.maxml.timer.ui.fragments.SettingsFragment;
@@ -82,16 +84,16 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.group:
-                MyLog.d("Select group");
+            case R.id.calendar:
+                MyLog.d("Select calendar");
                 setupFragment(new CalendarFragment());
                 break;
             case R.id.map:
-                MyLog.d("Select map");
+                MyLog.d("Select home");
                 setupFragment(new HomeFragment());
                 break;
-            case R.id.person:
-                MyLog.d("Select person");
+            case R.id.user:
+                MyLog.d("Select user");
                 setupFragment(new MainUserPageFragment());
                 break;
             case R.id.search:
@@ -123,8 +125,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Subscribe
-    public void onReceiveUser(User user) {
-        initDrawerHeader(user);
+    public void onReceiveUser(UserAPI userAPI) {
+        initDrawerHeader(userAPI.getCurrentUser());
     }
 
 
@@ -214,13 +216,15 @@ public class MainActivity extends AppCompatActivity
                 } else if (ImageManager.fPhoto != null) {
                     loadImageFromGallery();
                 }
+                controller.sentUser();
             }
         }
     }
 
     private void loadImageFromCamera(Intent data) {
         if (FragmentUtils.getCurrentFragment(this) instanceof MainUserPageFragment) {
-            ((MainUserPageFragment) FragmentUtils.getCurrentFragment(this)).updateImage(data.getData());
+            ((MainUserPageFragment) FragmentUtils.getCurrentFragment(this))
+                    .updateImage(data.getData());
         }
 
         controller.updateUserPhoto(data.getData().toString());
@@ -229,7 +233,7 @@ public class MainActivity extends AppCompatActivity
     private void loadImageFromGallery() {
         if (FragmentUtils.getCurrentFragment(this) instanceof MainUserPageFragment) {
             ((MainUserPageFragment) FragmentUtils.getCurrentFragment(this))
-                    .updateImage(Uri.fromFile(ImageManager.fPhoto));
+                    .updateImage(Uri.parse(ImageManager.fPhoto.toString()));
         }
 
         controller.updateUserPhoto(ImageManager.fPhoto.toString());

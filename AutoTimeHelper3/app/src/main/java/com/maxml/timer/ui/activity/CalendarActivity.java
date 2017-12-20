@@ -347,12 +347,12 @@ public class CalendarActivity extends AppCompatActivity implements EasyPermissio
         }
 
         /**
-         * Fetch a list of the next 10 events from the primary calendar.
+         * Fetch a list of the next 10 events from the primary is_calendar.
          * @return List of Strings describing returned events.
          * @throws IOException
          */
         private List<String> getDataFromApi() throws IOException {
-            // List the next 10 events from the primary calendar.
+            // List the next 10 events from the primary is_calendar.
             DateTime now = new DateTime(System.currentTimeMillis());
             List<String> eventStrings = new ArrayList<String>();
             Events events = mService.events().list("primary")

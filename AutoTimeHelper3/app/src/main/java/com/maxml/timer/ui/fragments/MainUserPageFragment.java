@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.maxml.timer.ImageManager;
 import com.maxml.timer.R;
+import com.maxml.timer.api.UserAPI;
 import com.maxml.timer.controllers.Controller;
 import com.maxml.timer.entity.User;
 import com.maxml.timer.ui.activity.LoginActivity;
@@ -62,8 +63,8 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
     }
 
     @Subscribe
-    public void onReceiveUser(User user) {
-        updateUI(user);
+    public void onReceiveUser(UserAPI userAPI) {
+        updateUI(userAPI.getCurrentUser());
     }
 
     @Override
@@ -161,6 +162,6 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
         }
         etEmail.setText(user.getEmail());
         etName.setText(user.getUsername());
-        updateImage(Uri.parse(Uri.decode(user.getPhoto())));
+        updateImage(Uri.parse(user.getPhoto()));
     }
 }

@@ -27,9 +27,6 @@ import com.maxml.timer.util.Utils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-/**
- * Created by Lantar on 22.04.2015.
- */
 public class LoginActivity extends Activity {
     protected static final int CONNECTION_OK = 1;
 

@@ -49,7 +49,7 @@ public class ImageManager {
         return null;
     }
 
-    public static File createTempImageFile(File storageDir) throws IOException {
+    public File createTempImageFile(File storageDir) throws IOException {
         String imageFileName = "profile_photo";
 
         return File.createTempFile(
@@ -59,7 +59,7 @@ public class ImageManager {
         );
     }
 
-    public static List<Intent> addIntentsToList(Context context, List<Intent> list, Intent intent) {
+    public List<Intent> addIntentsToList(Context context, List<Intent> list, Intent intent) {
         List<ResolveInfo> resInfo = context.getPackageManager().queryIntentActivities(intent, 0);
         for (ResolveInfo resolveInfo : resInfo) {
             String packageName = resolveInfo.activityInfo.packageName;
