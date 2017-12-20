@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.TimeUtils;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -27,10 +29,9 @@ import com.maxml.timer.util.Utils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-/**
- * Created by Lantar on 22.04.2015.
- */
-public class LoginActivity extends Activity {
+import java.util.concurrent.TimeUnit;
+
+public class LoginActivity extends AppCompatActivity {
     protected static final int CONNECTION_OK = 1;
 
     private EventBus eventBus;
@@ -45,6 +46,8 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
         Log.d("User", "start login activity");
+
+        initService();
 
         eventBus = new EventBus();
         controller = new Controller(this, eventBus);
@@ -61,7 +64,7 @@ public class LoginActivity extends Activity {
 
 
     @Subscribe
-    public void onReceiveUserApiEvent(Events.DbResult event) {
+    public void onReceiveUserApiEvent(Events.DbResult event, EventBus eventBus) {
         switch (event.getResultStatus()) {
             case Constants.EVENT_DB_RESULT_OK:
                 // sign in successful
@@ -127,14 +130,14 @@ public class LoginActivity extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
-        eventBus.register(this);
-        controller.registerEventBus(eventBus);
+//        eventBus.register(this);
+//        controller.registerEventBus(eventBus);
     }
 
     @Override
     protected void onStop() {
-        controller.unregisterEventBus(eventBus);
-        eventBus.unregister(this);
+//        controller.unregisterEventBus(eventBus);
+//        eventBus.unregister(this);
         super.onStop();
     }
 }

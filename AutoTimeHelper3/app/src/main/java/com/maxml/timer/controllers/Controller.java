@@ -50,7 +50,7 @@ public class Controller {
 
         initCRUD();
         // register entity EventBus
-        registerEventBus(entityEventBus);
+        registerEventBus(this.entityEventBus);
     }
 
     public static Controller build(Context context, EventBus eventBus) {
