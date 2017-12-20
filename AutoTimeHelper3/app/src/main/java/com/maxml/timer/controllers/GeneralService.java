@@ -19,7 +19,6 @@ import android.util.Log;
 import com.maxml.timer.MyLog;
 import com.maxml.timer.entity.Coordinates;
 import com.maxml.timer.entity.eventBus.Events;
-import com.maxml.timer.googlemap.GPSTracker;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.DialogFactory;
 
@@ -157,9 +156,9 @@ public class GeneralService extends Service implements LocationListener {
     @Override
     public void onDestroy() {
         MyLog.d("Service: onDestroy");
-        serviceEventBus.unregister(this);
-        widgetEventBus.unregister(this);
-        callEventBus.unregister(this);
+        unregisterEventBus(serviceEventBus);
+        unregisterEventBus(widgetEventBus);
+        unregisterEventBus(callEventBus);
         super.onDestroy();
     }
 

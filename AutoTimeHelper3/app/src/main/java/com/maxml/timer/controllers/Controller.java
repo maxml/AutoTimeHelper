@@ -48,10 +48,7 @@ public class Controller {
     public Controller(Context context, EventBus entityEventBus) {
         this.context = context;
         this.entityEventBus = entityEventBus;
-
         initCRUD();
-//        // register entity EventBus
-//        registerEventBus(this.entityEventBus);
     }
 
     public static Controller build(Context context, EventBus eventBus) {
