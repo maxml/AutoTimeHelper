@@ -29,6 +29,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
             if (controller == null) {
                 eventBus = new EventBus();
                 controller = new Controller(context,eventBus);
+                controller.registerEventBus(eventBus);
                 eventBus.post(new Events.WidgetEvent(Constants.EVENT_SET_WIDGET_EVENT_BUS));
             }
         }

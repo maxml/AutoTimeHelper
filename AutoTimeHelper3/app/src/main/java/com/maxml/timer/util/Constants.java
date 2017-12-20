@@ -64,4 +64,5 @@ public class Constants {
     public static final String EVENT_REGISTER_EVENT_BUS = "registerEventBus";
     public static final String EVENT_UNREGISTER_EVENT_BUS = "unregisterEventBus";
     public static final String EVENT_SET_WIDGET_EVENT_BUS = "setCurrentEventBusAsWidget";
+    public static final String EVENT_SET_CALL_EVENT_BUS = "setCallEventBus";
 }

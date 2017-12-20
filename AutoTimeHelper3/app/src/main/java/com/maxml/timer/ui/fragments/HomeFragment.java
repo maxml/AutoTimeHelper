@@ -62,8 +62,6 @@ public class HomeFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
-
         refreshActionStatus();
         eventBus.register(this);
         controller.registerEventBus(eventBus);

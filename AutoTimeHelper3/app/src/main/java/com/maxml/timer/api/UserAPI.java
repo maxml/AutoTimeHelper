@@ -43,7 +43,6 @@ public class UserAPI {
                 } else {
                     // User is signed out
                     MyLog.d("onAuthStateChanged:signed_out");
-
                 }
             }
         };

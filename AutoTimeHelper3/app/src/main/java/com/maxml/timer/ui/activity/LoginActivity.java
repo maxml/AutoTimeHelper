@@ -5,9 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.util.TimeUtils;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -29,9 +27,10 @@ import com.maxml.timer.util.Utils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.concurrent.TimeUnit;
-
-public class LoginActivity extends AppCompatActivity {
+/**
+ * Created by Lantar on 22.04.2015.
+ */
+public class LoginActivity extends Activity {
     protected static final int CONNECTION_OK = 1;
 
     private EventBus eventBus;
@@ -48,7 +47,6 @@ public class LoginActivity extends AppCompatActivity {
         Log.d("User", "start login activity");
 
         initService();
-
         eventBus = new EventBus();
         controller = new Controller(this, eventBus);
 
@@ -62,9 +60,22 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        eventBus.register(this);
+        controller.registerEventBus(eventBus);
+    }
+
+    @Override
+    protected void onStop() {
+        controller.unregisterEventBus(eventBus);
+        eventBus.unregister(this);
+        super.onStop();
+    }
 
     @Subscribe
-    public void onReceiveUserApiEvent(Events.DbResult event, EventBus eventBus) {
+    public void onReceiveUserApiEvent(Events.DbResult event) {
         switch (event.getResultStatus()) {
             case Constants.EVENT_DB_RESULT_OK:
                 // sign in successful
@@ -107,7 +118,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void loginOk() {
-        initService();
         User user = UserAPI.getCurrentUser();
         SharedPrefUtils.saveCurrentUser(this, user);
         Toast.makeText(getApplicationContext(), "Logined", Toast.LENGTH_SHORT).show();
@@ -127,17 +137,4 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-//        eventBus.register(this);
-//        controller.registerEventBus(eventBus);
-    }
-
-    @Override
-    protected void onStop() {
-//        controller.unregisterEventBus(eventBus);
-//        eventBus.unregister(this);
-        super.onStop();
-    }
 }

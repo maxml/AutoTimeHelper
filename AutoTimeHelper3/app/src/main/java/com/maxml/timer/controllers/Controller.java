@@ -10,6 +10,7 @@ import com.maxml.timer.api.ActionCRUD;
 import com.maxml.timer.api.CoordinatesCRUD;
 import com.maxml.timer.api.TableCRUD;
 import com.maxml.timer.api.UserAPI;
+import com.maxml.timer.entity.Coordinates;
 import com.maxml.timer.entity.Table;
 import com.maxml.timer.entity.actions.Action;
 import com.maxml.timer.entity.eventBus.Events;
@@ -49,8 +50,8 @@ public class Controller {
         this.entityEventBus = entityEventBus;
 
         initCRUD();
-        // register entity EventBus
-        registerEventBus(this.entityEventBus);
+//        // register entity EventBus
+//        registerEventBus(this.entityEventBus);
     }
 
     public static Controller build(Context context, EventBus eventBus) {
@@ -107,11 +108,21 @@ public class Controller {
         userAPI.sentPassword(email);
     }
 
+    public void savePath(List<Coordinates> coordinates) {
+// todo
+    }
+
+
     /********************* END DB TOOLS **************************/
 
 
     public void onReceiveCallEvent(Events.CallEvent event) {
         switch (event.getCallState()) {
+            case Constants.EVENT_SET_CALL_EVENT_BUS:
+                serviceEventBus.post(new Events.EventBusControl(Constants.EVENT_SET_CALL_EVENT_BUS, entityEventBus));
+                break;
+
+
             case Constants.EVENT_CALL_ONGOING_ANSWERED:
                 startCallEvent();
                 break;
