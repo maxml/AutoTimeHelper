@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
-import com.maxml.timer.ImageManager;
 import com.maxml.timer.R;
 import com.maxml.timer.api.ActionCRUD;
 import com.maxml.timer.api.CoordinatesCRUD;
@@ -194,6 +193,12 @@ public class Controller {
         } else {
             return stateStack.get(stateStack.size() - 1);
         }
+    }
+
+    public void dontMoveTimerOff() {
+// todo
+        serviceEventBus.post(new Events.GPS(Constants.EVENT_GPS_STOP));
+        restActionEvent();
     }
 
 

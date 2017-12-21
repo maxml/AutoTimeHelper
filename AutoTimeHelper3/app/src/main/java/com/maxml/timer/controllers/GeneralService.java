@@ -11,6 +11,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
@@ -41,9 +42,10 @@ public class GeneralService extends Service implements LocationListener {
     private EventBus widgetEventBus;
     private EventBus callEventBus;
 
-
-    boolean isGPSEnabled = false;
-    boolean isNetworkEnabled = false;
+    private Handler handler;
+    private int dontMoveTime = 0;/*in min*/
+    private boolean isGPSEnabled = false;
+    private boolean isNetworkEnabled = false;
     private LocationManager locationManager;
     private List<Coordinates> wayCoordinates = new ArrayList<>();
 
@@ -109,6 +111,7 @@ public class GeneralService extends Service implements LocationListener {
             case Constants.EVENT_GPS_START:
                 initLocationListener();
                 wayCoordinates = new ArrayList<>();
+                startTimer();
                 break;
 
             case Constants.EVENT_GPS_STOP:
@@ -159,7 +162,29 @@ public class GeneralService extends Service implements LocationListener {
         unregisterEventBus(serviceEventBus);
         unregisterEventBus(widgetEventBus);
         unregisterEventBus(callEventBus);
+        stopTimer();
         super.onDestroy();
+    }
+
+    private void startTimer() {
+        handler = new Handler();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                dontMoveTime++;
+                if (dontMoveTime >= Constants.WAY_DONT_MOVE_TIME) {
+                    controller.dontMoveTimerOff();
+                } else {
+                    handler.postDelayed(this, 60000);
+                }
+            }
+        });
+    }
+
+    private void stopTimer() {
+        if (handler != null) {
+            handler.removeCallbacksAndMessages(null);
+        }
     }
 
     private void stopUsingGPS() {
