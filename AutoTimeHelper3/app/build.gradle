@@ -62,6 +62,7 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'pub.devrel:easypermissions:0.3.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile group: 'com.j256.ormlite', name: 'ormlite-core', version: '4.23'
 
     compile 'com.github.hotchemi:permissionsdispatcher:3.0.1'
     annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:3.0.1'
