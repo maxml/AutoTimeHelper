@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.maxml.timer">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.google.android.providers.asf.permission.READ_GSERVICES" />
@@ -95,10 +97,13 @@
         <receiver android:name=".receivers.NetworkReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.wifi.STATE_CHANGE"></action>
+                <action android:name="android.net.wifi.SCAN_RESULTS"></action>
             </intent-filter>
         </receiver>
 
-        <activity android:name=".ui.activity.CalendarActivity"/>
+        <activity android:name=".ui.activity.CalendarActivity" />
+
         <service android:name=".controllers.GeneralService" />
         <service android:name=".googlemap.GPSTracker" />
     </application>
