@@ -3,6 +3,7 @@ package com.maxml.timer;
 import android.support.multidex.MultiDexApplication;
 
 import com.maxml.timer.controllers.Controller;
+import com.maxml.timer.database.HandlerFactory;
 
 public class App extends MultiDexApplication {
 
@@ -11,6 +12,7 @@ public class App extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        HandlerFactory.setHelper(this);
 
 //        controller = Controller.build();
 
@@ -28,5 +30,11 @@ public class App extends MultiDexApplication {
         //	GeneralService table = new GeneralService();
 
         //	table.getListSlice();
+    }
+
+    @Override
+    public void onTerminate() {
+        HandlerFactory.releaseHelper();
+        super.onTerminate();
     }
 }
