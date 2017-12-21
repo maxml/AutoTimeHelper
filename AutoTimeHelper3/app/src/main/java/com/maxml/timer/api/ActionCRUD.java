@@ -12,8 +12,6 @@ import com.maxml.timer.entity.User;
 import com.maxml.timer.entity.actions.Action;
 import com.maxml.timer.util.Constants;
 
-import org.greenrobot.eventbus.EventBus;
-
 public class ActionCRUD {
 
     private Controller controller;
@@ -45,6 +43,26 @@ public class ActionCRUD {
                 }
             }
         });
+    }
+
+    public void createWalkAction(Action walk) {
+        Log.i("Slice", " Slice starting create");
+        // get Firebase id
+        final String dbId = actionRef.push().getKey();
+        walk.setId(dbId);
+
+        actionRef.child(dbId).setValue(walk).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    controller.sendDbResultOk();
+                    controller.saveWalkPath(dbId);
+                } else {
+                    controller.sendDbResultError();
+                }
+            }
+        });
+
     }
 
 /*

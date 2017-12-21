@@ -42,6 +42,7 @@ public class Controller {
     private CoordinatesCRUD coordinatesCRUD;
     private UserAPI userAPI;
 
+    private String walkActionId;
     private Map<String, Action> actions = new HashMap<>();
     private List<String> stateStack = new ArrayList<>();
 
@@ -105,8 +106,16 @@ public class Controller {
         userAPI.sentPassword(email);
     }
 
+    public void saveWalkPath(String walkActionId) {
+        this.walkActionId = walkActionId;
+        serviceEventBus.post(new Events.GPS(Constants.EVENT_GPS_STOP));
+    }
+
     public void savePath(List<Coordinates> coordinates) {
-// todo
+        if (walkActionId != null) {
+            coordinatesCRUD.create(walkActionId, coordinates);
+        }
+        walkActionId = null;
     }
 
 
@@ -362,7 +371,7 @@ public class Controller {
             return;
         }
         walk.setEndDate(new Date());
-        actionCRUD.create(walk);
+        actionCRUD.createWalkAction(walk);
         // clear temp entity
         actions.remove(Constants.EVENT_WALK_ACTION);
         // delete from stacktrace
@@ -393,4 +402,5 @@ public class Controller {
         coordinatesCRUD = new CoordinatesCRUD(this);
         userAPI = new UserAPI(context, this);
     }
+
 }
