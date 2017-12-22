@@ -9,15 +9,15 @@ import android.widget.TextView;
 import com.maxml.timer.R;
 import com.maxml.timer.entity.actions.Action;
 import com.maxml.timer.util.Constants;
+import com.maxml.timer.util.Utils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-public class ActionnsAdapter extends RecyclerView.Adapter<ActionnsAdapter.ViewHolder> {
+public class ActionsAdapter extends RecyclerView.Adapter<ActionsAdapter.ViewHolder> {
     private List<Action> actionList = new ArrayList<>();
 
-    public ActionnsAdapter(List<Action> actionList) {
+    public ActionsAdapter(List<Action> actionList) {
         this.actionList = actionList;
     }
 
@@ -26,6 +26,11 @@ public class ActionnsAdapter extends RecyclerView.Adapter<ActionnsAdapter.ViewHo
         View rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_action, parent);
 
         return new ViewHolder(rootView);
+    }
+
+    public void swapData(List<Action> actionList) {
+        this.actionList = actionList;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -54,6 +59,7 @@ public class ActionnsAdapter extends RecyclerView.Adapter<ActionnsAdapter.ViewHo
         public void bind(Action action) {
             bindTvType(action.getType());
             tvDescription.setText(action.getDescription());
+            tvTime.setText(Utils.getTimeSubscribe(action.getStartDate(), action.getEndDate()));
         }
 
         public void bindTvType(String type) {

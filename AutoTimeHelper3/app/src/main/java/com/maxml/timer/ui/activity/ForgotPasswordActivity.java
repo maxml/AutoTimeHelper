@@ -18,9 +18,6 @@ import com.maxml.timer.util.Constants;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-/**
- * Created by Lantar on 22.04.2015.
- */
 public class ForgotPasswordActivity extends Activity {
 
     protected static final int CONNECTION_OK = 1;

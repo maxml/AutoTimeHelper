@@ -2,38 +2,40 @@ package com.maxml.timer.ui.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.maxml.timer.R;
+import com.maxml.timer.adapter.ActionsAdapter;
+import com.maxml.timer.controllers.Controller;
+import com.maxml.timer.entity.actions.Action;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class ActionListViewFragment extends Fragment {
-	
-	TextView titleText;
-	ProgressBar progressBar;
-	String LOG_TAG = "my_Log";
+
+	private ActionsAdapter aAdapter;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		
-		View view = inflater.inflate(R.layout.slice_listview, container, false);
+		View rootView = inflater.inflate(R.layout.slice_listview, container, false);
 		
-		view.setOnTouchListener(new OnTouchListener() {
-			public boolean onTouch(View v, MotionEvent event) {
-				
-				if (event.getAction() == MotionEvent.ACTION_MOVE) {
-					// do something
-				}
-				return true;
-			}
-		});
-		return inflater.inflate(R.layout.slice_listview, container, false);
+		initView(rootView);
+
+		return rootView;
 	}
-	
+
+	private void initView(View rootView) {
+		RecyclerView rvList = (RecyclerView) rootView.findViewById(R.id.rvList);
+
+		aAdapter = new ActionsAdapter(new ArrayList<Action>());
+		rvList.setAdapter(aAdapter);
+	}
+
+
 //	public void onActivityCreated(Bundle savedInstanceState) {
 //		super.onCreate(savedInstanceState);
 ///*

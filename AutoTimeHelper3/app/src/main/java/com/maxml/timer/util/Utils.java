@@ -23,13 +23,13 @@ public class Utils {
 
     public static Date getDate(String dayCount) {
         if (dayCount != null) {
-               try {
-                   long days = Long.valueOf(dayCount);
-                   long millis = days * 24*60*60* 1000;
-                   return new Date(millis);
-               } catch (NumberFormatException e){
-                   return null;
-               }
+            try {
+                long days = Long.valueOf(dayCount);
+                long millis = days * 24 * 60 * 60 * 1000;
+                return new Date(millis);
+            } catch (NumberFormatException e) {
+                return null;
+            }
 
         } else {
             return null;
@@ -41,6 +41,17 @@ public class Utils {
             long millis = date.getTime();
             return millis / 1000 / 60 / 60 / 24;
         } else return -1;
+    }
+
+    public static String getTimeSubscribe(Date startDate, Date endDate) {
+        int hour = (int) ((endDate.getTime() - startDate.getTime()) / 1000 / 60 / 60);
+        int minute = (int) (endDate.getTime() - startDate.getTime()) / 1000 / 60 % 60;
+
+        if (hour != 0) {
+            return hour + "." + minute;
+        } else {
+            return minute + "";
+        }
     }
 
     public static boolean isServiceRunning(Context context, Class<?> serviceClass) {
