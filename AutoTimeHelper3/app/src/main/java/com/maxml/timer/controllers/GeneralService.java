@@ -197,7 +197,7 @@ public class GeneralService extends Service implements LocationListener {
         }
     }
 
-    @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
+    @NeedsPermission({Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
     @SuppressLint("MissingPermission")
     private void initLocationListener() {
         Log.d("TAG", "initLocationListener() CALLED");
@@ -214,13 +214,11 @@ public class GeneralService extends Service implements LocationListener {
             if (isNetworkEnabled) {
                 locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME,
                         MIN_DISTANCE_UPDATES, this);
-
             }
 
             if (isGPSEnabled) {
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME,
                         MIN_DISTANCE_UPDATES, this);
-
             }
         }
     }

@@ -69,4 +69,7 @@ public class Constants {
     public static final String EVENT_SET_CALL_EVENT_BUS = "setCallEventBus";
     public static final String EVENT_SET_WIFI_EVENT_BUS = "setWifiEventBus";
     public static final int WAY_DONT_MOVE_TIME = 5;
+    public static final String EXTRA_ID_PATH = "extraIdPath";
+    public static final String EXTRA_LIST_ID_PATH = "extraListIdPath";
+    public static final String LOG = "appLog";
 }

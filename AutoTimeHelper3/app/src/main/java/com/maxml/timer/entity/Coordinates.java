@@ -5,6 +5,7 @@ import com.google.firebase.database.Exclude;
 import java.util.Date;
 
 public class Coordinates {
+	private String id;
 	private Date date;
 	private double latitude;
 	private double longitude;
@@ -20,6 +21,14 @@ public class Coordinates {
 		dist = radTOdeg(dist);
 		dist = dist * 1.609344 * 1000;
 		return (Math.abs(dist));
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public Date getDate() {

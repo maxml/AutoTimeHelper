@@ -1,19 +1,18 @@
 package com.maxml.timer.controllers;
 
-import android.app.backup.FileBackupHelper;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
-import com.maxml.timer.MyLog;
 import com.maxml.timer.R;
 import com.maxml.timer.api.ActionCRUD;
-import com.maxml.timer.api.CoordinatesCRUD;
+import com.maxml.timer.api.PathCRUD;
 import com.maxml.timer.api.TableCRUD;
 import com.maxml.timer.api.UserAPI;
-import com.maxml.timer.database.DatabaseHelper;
-import com.maxml.timer.database.HandlerFactory;
+import com.maxml.timer.database.DBFactory;
+import com.maxml.timer.database.WifiStateDao;
 import com.maxml.timer.entity.Coordinates;
+import com.maxml.timer.entity.Path;
 import com.maxml.timer.entity.Table;
 import com.maxml.timer.entity.WifiState;
 import com.maxml.timer.entity.actions.Action;
@@ -32,8 +31,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.datatype.DatatypeFactory;
-
 /**
  * Created by nazar on 12.12.17.
  */
@@ -47,9 +44,9 @@ public class Controller {
     // db
     private ActionCRUD actionCRUD;
     private TableCRUD tableCRUD;
-    private CoordinatesCRUD coordinatesCRUD;
+    private PathCRUD pathCRUD;
     private UserAPI userAPI;
-    private DatabaseHelper databaseHelper;
+    private WifiStateDao wifiStateDao;
 
     private String walkActionId;
     private Map<String, Action> actions = new HashMap<>();
@@ -75,6 +72,26 @@ public class Controller {
         entityEventBus.post(new Events.DbResult(Constants.EVENT_DB_RESULT_ERROR));
     }
 
+    public void getPathFromDb(List<String> listIdPath) {
+        try {
+            List<Path> result = pathCRUD.read(listIdPath);
+            entityEventBus.post(result);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            sendDbResultError();
+        }
+    }
+
+    public void getPathFromDb(String idPath) {
+        try {
+            Path path = pathCRUD.read(idPath);
+            entityEventBus.post(path);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            sendDbResultError();
+        }
+    }
+
     public void getTableFromDb(Date date) {
         tableCRUD.read(date);
     }
@@ -85,7 +102,7 @@ public class Controller {
 
     public void insertWifiInDb(WifiState wifiState) {
         try {
-            databaseHelper.getWifiStateDao().createOrUpdate(wifiState);
+            wifiStateDao.createOrUpdate(wifiState);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -130,16 +147,23 @@ public class Controller {
 
     public void savePath(List<Coordinates> coordinates) {
         if (walkActionId != null) {
-            coordinatesCRUD.create(walkActionId, coordinates);
+            try {
+                pathCRUD.save(new Path(walkActionId, coordinates));
+            } catch (SQLException e) {
+                e.printStackTrace();
+                sendDbResultError();
+            }
         }
         walkActionId = null;
     }
 
     public void wifiActivated(WifiState wifiState) {
         try {
-            int size = databaseHelper.getWifiStateDao().getWifiStateById(wifiState.getId()).size();
+            int size = wifiStateDao.getWifiStateById(wifiState.getId()).size();
+            // todo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            // why == 0?
             if (size == 0) {
-                databaseHelper.getWifiStateDao().create(wifiState);
+                wifiStateDao.create(wifiState);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -148,18 +172,19 @@ public class Controller {
 
     public void sendAllWifi() {
         try {
-            entityEventBus.post(databaseHelper.getWifiStateDao().getAllRoles());
+            // todo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//            entityEventBus.post(databaseHelper.getWifiStateDao().getAllRoles());
+            entityEventBus.post(wifiStateDao.getAllRoles());
         } catch (SQLException e) {
             e.printStackTrace();
-            entityEventBus.post(new ArrayList<>());
+//            entityEventBus.post(new ArrayList<>());
+            sendDbResultError();
         }
     }
 
     public boolean isCurrentWifi(int id) {
         return NetworkStatus.isWifiAvailable(context, id);
     }
-
-
     /********************* END DB TOOLS **************************/
 
 
@@ -225,7 +250,7 @@ public class Controller {
 //
 //            case Constants.EVENT_WAY_COORDINATES:
 //                List<Coordinates> coordinates = (ArrayList<Coordinates>) message.getData();
-//                coordinatesCRUD.(coordinates);
+//                pathCRUD.(coordinates);
 //                break;
 
     public void registerEventBus(EventBus entityEventBus) {
@@ -453,11 +478,12 @@ public class Controller {
     private void initCRUD() {
         tableCRUD = new TableCRUD(this);
         actionCRUD = new ActionCRUD(this);
-        coordinatesCRUD = new CoordinatesCRUD(this);
         userAPI = new UserAPI(context, this);
-
-        HandlerFactory.setHelper(context);
-        databaseHelper = HandlerFactory.getHelper();
+        try {
+            pathCRUD = DBFactory.getHelper().getPathCRUD();
+            wifiStateDao = DBFactory.getHelper().getWifiStateDao();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
-
 }

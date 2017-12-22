@@ -18,6 +18,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.maxml.timer.R;
+import com.maxml.timer.controllers.Controller;
 import com.maxml.timer.entity.Coordinates;
 import com.maxml.timer.entity.Line;
 import com.maxml.timer.entity.actions.Action;
@@ -34,12 +35,13 @@ import java.util.List;
 
 public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
 
-    public static final String LOG = "MyShit";
-
     private GoogleMap map;
+    private EventBus eventBus;
+    private Controller controller;
 
-    public List<Object> list = new ArrayList<>();
-    public List<Line> listLine = new ArrayList<>();
+    private String idPath;
+    private List<String> listIdPath;
+
     public static List<Action> walkActions = new ArrayList<>();
 
     private Coordinates point;
@@ -57,16 +59,31 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);
+        // init feedback bridge
+        eventBus = new EventBus();
+        controller = new Controller(getContext(), eventBus);
+        registerEventBus();
+        // get input data
+        Bundle argument = getArguments();
+        idPath = argument.getString(Constants.EXTRA_ID_PATH);
+        listIdPath = argument.getStringArrayList(Constants.EXTRA_LIST_ID_PATH);
+        // init map
         mapFragment.getMapAsync(this);
-
         return inflater.inflate(R.layout.activity_google_map, container, false);
-
     }
 
     @Override
     public void onMapReady(GoogleMap map) {
-        Log.d(LOG, "start method onMapReady");
+        Log.d(Constants.LOG, "start method onMapReady");
         this.map = map;
+        if (listIdPath != null){
+            controller.getPathFromDb(listIdPath);
+            return;
+        }
+        if (idPath != null){
+            controller.getPathFromDb(idPath);
+            return;
+        }
     }
 
     @Subscribe()
@@ -83,86 +100,30 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
     }
 
 
-    public void onLocationChanged(Location location) {
-        Log.d(LOG, "start method onLocationChanged");
-        point = new Coordinates();
-        point.setLatitude(location.getLatitude());
-        point.setLongitude(location.getLongitude());
-        point.setDate(new Date());
-
-        // Log.d(LOG, "current time = " + c);
-//		Log.d(LOG, "user " + ParseUser.getCurrentUser().getId());
-        if (pointRadius != null) {
-            Log.d(LOG, "point radius != null");
-            Log.d(LOG, "distance:" + Coordinates.getDistanceInMeter(pointRadius, point));
-
-            if (Coordinates.getDistanceInMeter(pointRadius, point) > Constants.MIN_DISTANCE_UPDATES) {
-                inRadius();
-            } else {
-                outTheRadius();
-            }
-        }
-        pointRadius = point;
-    }
-
-    private void inRadius() {
-        map.addMarker(new MarkerOptions().position(new LatLng(point.getLatitude(),
-                point.getLongitude())));
-        map.moveCamera(CameraUpdateFactory.newLatLng(new
-                LatLng(point.getLatitude(), point.getLongitude())));
-        map.animateCamera(CameraUpdateFactory.zoomTo(12), 2000, null);
-
-        lineAdd = map.addPolyline(new PolylineOptions()
-                .add(new LatLng(point.getLatitude(), point.getLongitude()),
-                        new LatLng(pointRadius.getLatitude(),
-                                pointRadius.getLongitude())).width(5).color(Color.RED));
-
-//        c = Calendar.getInstance();
-//        Date finishTime = c.getTime();
-//        Point finish = new Point(point.getLatitude(), point.getLongitude());
-//        Point start = new Point(pointRadius.getLatitude(), pointRadius.getLongitude());
-//        Line line = new Line(start, finish, UserAPI.getCurrentUser().getId());
-//        listLine.add(line);
-//        Slice slice = new Slice(ParseUser.getCurrentUser().getId(), line, starttime, finishTime,
-//                "walk time", SliceType.WALK);
-//        controllerGoogleMap.addSlice(slice);
-//        Log.d(LOG, "start = " + start.toString());
-//        Log.d(LOG, "finish = " + finish.toString());
-//        Log.d(LOG, " ---------------------------------------- ");
-//        walkActions.add(slice);
-//        starttime = finishTime;
-//        list.add(lineAdd);
-    }
-
-    private void outTheRadius() {
-        c = Calendar.getInstance();
-        Date finishtime = c.getTime();
-
-        Log.d(LOG, "he is standing now = true");
-
-//        Point finish = new Point(point.getLatitude(), point.getLongitude());
-//        Point start = new Point(pointRadius.getLatitude(), pointRadius.getLongitude());
-//        Line line = new Line(start, finish, ParseUser.getCurrentUser().getId());
-//        Slice slice = new Slice(ParseUser.getCurrentUser().getId(), line, starttime, finishtime,
-//                "rest time", SliceType.REST);
-//        controllerGoogleMap.addSlice(slice);
-//        Log.d(LOG, "start = " + start.toString());
-//        Log.d(LOG, "finish = " + finish.toString());
-//        Log.d(LOG, "slice = " + slice.toString());
-//        Log.d(LOG, " ---------------------------------------- ");
-//        walkActions.add(slice);
-//        starttime = finishtime;
-    }
-
     @Override
     public void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
+        registerEventBus();
     }
 
     @Override
     public void onStop() {
+        unregisterEventBus();
         super.onStop();
-        EventBus.getDefault().unregister(this);
+    }
+
+
+    private void registerEventBus() {
+        if (!eventBus.isRegistered(this)) {
+            eventBus.register(this);
+            controller.registerEventBus(eventBus);
+        }
+    }
+
+    private void unregisterEventBus() {
+        if (eventBus.isRegistered(this)) {
+            controller.unregisterEventBus(eventBus);
+            eventBus.unregister(this);
+        }
     }
 }
