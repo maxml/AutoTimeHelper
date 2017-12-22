@@ -1,9 +1,12 @@
 package com.maxml.timer;
 
+import android.accounts.AccountManager;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -177,10 +180,12 @@ public class MainActivity extends AppCompatActivity
             if (user.getUsername() != null) {
                 name.setText(user.getUsername());
             } else name.setText(user.getEmail());
-            Picasso.with(this)
-                    .load(user.getPhoto())
-                    .placeholder(R.drawable.ic_contact_picture)
-                    .into(icon);
+            if (user.getPhoto() != null && !user.getPhoto().equalsIgnoreCase("")) {
+                Picasso.with(this)
+                        .load(user.getPhoto())
+                        .placeholder(R.drawable.ic_contact_picture)
+                        .into(icon);
+            }
         }
     }
 
@@ -210,15 +215,66 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Constants.REQUEST_CODE_TAKE_PHOTO) {
-            if (resultCode == RESULT_OK) {
-                if (data != null && data.getData() != null) {
-                    loadImageFromCamera(data);
-                } else if (ImageManager.fPhoto != null) {
-                    loadImageFromGallery();
+        switch (requestCode) {
+            case Constants.REQUEST_CODE_TAKE_PHOTO:
+                if (resultCode == RESULT_OK) {
+                    if (data != null && data.getData() != null) {
+                        loadImageFromCamera(data);
+                    } else if (ImageManager.fPhoto != null) {
+                        loadImageFromGallery();
+                    }
+                    controller.sentUser();
                 }
-                controller.sentUser();
-            }
+                break;
+            case CalendarFragment.REQUEST_GOOGLE_PLAY_SERVICES:
+                if (resultCode != RESULT_OK) {
+                    showMessageInstallPlayService();
+                } else {
+                    resultCalendarFragment();
+                }
+                break;
+            case CalendarFragment.REQUEST_ACCOUNT_PICKER:
+                if (resultCode == RESULT_OK && data != null &&
+                        data.getExtras() != null) {
+                    String accountName =
+                            data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+                    if (accountName != null) {
+                        SharedPreferences settings =
+                                this.getPreferences(Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = settings.edit();
+                        editor.putString(CalendarFragment.PREF_ACCOUNT_NAME, accountName);
+                        editor.apply();
+                        setCredentialAccountName(accountName);
+                        resultCalendarFragment();
+                    }
+                }
+                break;
+            case CalendarFragment.REQUEST_AUTHORIZATION:
+                if (resultCode == RESULT_OK) {
+                    resultCalendarFragment();
+                }
+                break;
+        }
+    }
+
+    private void setCredentialAccountName(String accountName) {
+        if (FragmentUtils.getCurrentFragment(this) instanceof CalendarFragment) {
+            ((CalendarFragment) FragmentUtils.getCurrentFragment(this))
+                    .setCredentialAccountName(accountName);
+        }
+    }
+
+    private void showMessageInstallPlayService() {
+        if (FragmentUtils.getCurrentFragment(this) instanceof CalendarFragment) {
+            ((CalendarFragment) FragmentUtils.getCurrentFragment(this))
+                    .showMessageInstallPlayService();
+        }
+    }
+
+    public void resultCalendarFragment() {
+        if (FragmentUtils.getCurrentFragment(this) instanceof CalendarFragment) {
+            ((CalendarFragment) FragmentUtils.getCurrentFragment(this))
+                    .resultFromApi();
         }
     }
 

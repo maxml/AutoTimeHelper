@@ -1,7 +1,5 @@
 package com.maxml.timer.ui.fragments;
 
-import android.graphics.Color;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -9,28 +7,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.maxml.timer.R;
 import com.maxml.timer.controllers.Controller;
 import com.maxml.timer.entity.Coordinates;
 import com.maxml.timer.entity.Path;
-import com.maxml.timer.entity.actions.Action;
-import com.maxml.timer.entity.eventBus.Events;
 import com.maxml.timer.util.Constants;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {

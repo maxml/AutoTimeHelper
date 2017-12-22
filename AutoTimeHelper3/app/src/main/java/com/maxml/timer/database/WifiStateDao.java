@@ -19,16 +19,11 @@ public class WifiStateDao extends BaseDaoImpl<WifiState, Integer> {
         return this.queryForAll();
     }
 
-    public List<WifiState> getWifiStateById(int id) {
-        try {
-            QueryBuilder<WifiState, Integer> queryBuilder = queryBuilder();
-            queryBuilder.where().eq("id", id);
-            PreparedQuery<WifiState> preparedQuery = queryBuilder.prepare();
-            List<WifiState> list = query(preparedQuery);
-            return list;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        throw new RuntimeException("Error");
+    public List<WifiState> getWifiStateById(int id) throws SQLException {
+        QueryBuilder<WifiState, Integer> queryBuilder = queryBuilder();
+        queryBuilder.where().eq("id", id);
+        PreparedQuery<WifiState> preparedQuery = queryBuilder.prepare();
+        List<WifiState> list = query(preparedQuery);
+        return list;
     }
 }

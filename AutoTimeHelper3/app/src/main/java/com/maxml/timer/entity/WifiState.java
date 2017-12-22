@@ -6,7 +6,7 @@ import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "wifiStates")
 public class WifiState {
-    @DatabaseField(dataType = DataType.INTEGER, columnName = "id")
+    @DatabaseField(dataType = DataType.INTEGER, columnName = "id", id = true)
     private int id;
 
     @DatabaseField(canBeNull = false, dataType = DataType.STRING)
