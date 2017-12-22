@@ -98,7 +98,8 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.search:
                 MyLog.d("Select search");
-//                setupFragment(new GoogleMapFragment());
+                GoogleMapFragment fragment = new GoogleMapFragment();
+                setupFragment(fragment);
                 break;
             case R.id.setting:
                 MyLog.d("Select setting");

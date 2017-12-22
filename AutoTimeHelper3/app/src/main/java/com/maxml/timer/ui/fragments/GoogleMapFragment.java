@@ -20,7 +20,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.maxml.timer.R;
 import com.maxml.timer.controllers.Controller;
 import com.maxml.timer.entity.Coordinates;
-import com.maxml.timer.entity.Line;
+import com.maxml.timer.entity.Path;
 import com.maxml.timer.entity.actions.Action;
 import com.maxml.timer.entity.eventBus.Events;
 import com.maxml.timer.util.Constants;
@@ -39,17 +39,13 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
     private EventBus eventBus;
     private Controller controller;
 
+    // single path
     private String idPath;
+    private Polyline polyline;
+
+    // multi path
     private List<String> listIdPath;
-
-    public static List<Action> walkActions = new ArrayList<>();
-
-    private Coordinates point;
-    private Coordinates pointRadius;
-
-    private Polyline lineAdd;
-    private Calendar c = Calendar.getInstance();
-    private Date starttime = c.getTime();
+    private List<Polyline> polylines = new ArrayList<>();
 
 
     public GoogleMapFragment() {
@@ -76,29 +72,41 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap map) {
         Log.d(Constants.LOG, "start method onMapReady");
         this.map = map;
-        if (listIdPath != null){
+        if (listIdPath != null) {
             controller.getPathFromDb(listIdPath);
             return;
         }
-        if (idPath != null){
+        if (idPath != null) {
             controller.getPathFromDb(idPath);
             return;
         }
     }
 
     @Subscribe()
-    public void onGpsEvent(Events.GPS event) {
-        switch (event.getMessage()) {
-            case Constants.EVENT_LOCATION_CHANGE:
-//                Location location = (Location) event.getData();
-//                onLocationChanged(location);
-                break;
-
-            case Constants.EVENT_WAY_COORDINATES:
-                break;
+    public void onReceiveSinglePath(Path path) {
+        if (path == null || path.getCoordinates() == null) {
+            return;
         }
+        PolylineOptions polylineOptions = getPolylineOptions(path);
+        polyline = map.addPolyline(polylineOptions);
+        polyline.setClickable(true);
     }
 
+    @Subscribe()
+    public void onReceiveMultyPath(ArrayList<Path> paths) {
+        if (paths == null) {
+            return;
+        }
+        for (Path path : paths) {
+            if (path == null || path.getCoordinates() == null) {
+                continue;
+            }
+            PolylineOptions polylineOptions = getPolylineOptions(path);
+            Polyline polyline = map.addPolyline(polylineOptions);
+            polyline.setClickable(true);
+            polylines.add(polyline);
+        }
+    }
 
     @Override
     public void onStart() {
@@ -112,6 +120,14 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
         super.onStop();
     }
 
+    private PolylineOptions getPolylineOptions(Path path) {
+        List<Coordinates> coordinates = path.getCoordinates();
+        PolylineOptions polylineOptions = new PolylineOptions();
+        for (Coordinates coordinate : coordinates) {
+            polylineOptions.add(new LatLng(coordinate.getLatitude(), coordinate.getLongitude()));
+        }
+        return polylineOptions;
+    }
 
     private void registerEventBus() {
         if (!eventBus.isRegistered(this)) {
