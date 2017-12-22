@@ -36,6 +36,8 @@ public class Constants {
     public static final int NOTIFICATION_ID = 100;
 
 
+    public static final int WIFI_TYPE_HOME = 1;
+    public static final int WIFI_TYPE_WORK = 2;
 
     public static final String EVENT_CALL_ACTION = "call";
     public static final String EVENT_CALL_MISSING = "callMissing";
@@ -65,5 +67,6 @@ public class Constants {
     public static final String EVENT_UNREGISTER_EVENT_BUS = "unregisterEventBus";
     public static final String EVENT_SET_WIDGET_EVENT_BUS = "setCurrentEventBusAsWidget";
     public static final String EVENT_SET_CALL_EVENT_BUS = "setCallEventBus";
+    public static final String EVENT_SET_WIFI_EVENT_BUS = "setWifiEventBus";
     public static final int WAY_DONT_MOVE_TIME = 5;
 }

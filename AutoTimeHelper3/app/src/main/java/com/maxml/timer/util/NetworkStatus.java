@@ -8,15 +8,11 @@ import android.net.wifi.WifiManager;
 import android.widget.Toast;
 
 import com.maxml.timer.MyLog;
+import com.maxml.timer.entity.WifiState;
 
 public class NetworkStatus {
-    private Context context;
 
-    public NetworkStatus(Context context) {
-        this.context = context;
-    }
-
-    public boolean isNetworkAvailable() {
+    public static boolean isNetworkAvailable(Context context) {
         try {
             ConnectivityManager cm = (ConnectivityManager)
                     context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -31,7 +27,7 @@ public class NetworkStatus {
         return false;
     }
 
-    public boolean isWifiAvailable() {
+    public static boolean isWifiAvailable(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo mWifi = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         try {
@@ -41,16 +37,17 @@ public class NetworkStatus {
         }
     }
 
-    public String getNameCurrentWifi() {
+    public static boolean isWifiAvailable(Context context, int id) {
         WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-        MyLog.i(wifiInfo.getSSID()); //name
-        MyLog.i(wifiInfo.getBSSID()); //id
-        MyLog.i(wifiInfo.getIpAddress() + ""); //id
-        return "";
+
+        return id == wifiInfo.getIpAddress();
     }
 
-    public boolean isCurrentWifi(String name) {
-        return name.equalsIgnoreCase(getNameCurrentWifi());
+    public static WifiState getCurrentWifi(Context context) {
+        WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+
+        return new WifiState(wifiInfo.getIpAddress(), wifiInfo.getSSID());
     }
 }

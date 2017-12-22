@@ -13,7 +13,7 @@ import java.sql.SQLException;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "auto_time_helper.db";
-    private static final int DATABASE_VERSION = 10;
+    private static final int DATABASE_VERSION = 12;
 
     private WifiStateDao wifiStateDao;
 
@@ -24,20 +24,19 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase database, ConnectionSource connectionSource) {
         try {
-            TableUtils.clearTable(connectionSource, WifiState.class);
+            TableUtils.createTable(connectionSource, WifiState.class);
         } catch (SQLException e) {
             e.printStackTrace();
-            MyLog.i("---------------------4");
         }
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion) {
-//        try {
-//            TableUtils.dropTable(connectionSource, WifiState.class, false);
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            TableUtils.dropTable(connectionSource, WifiState.class, false);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         onCreate(database, connectionSource);
     }
 

@@ -48,8 +48,8 @@ public class ManagerAdapter extends ArrayAdapter {
 //        if (convertView == null) {
 //            LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 //
-////            convertView = mInflater.inflate(R.itemRootLayout.item_list, parent); // UnsupportedOperationException: addView(View, LayoutParams) is not supported in AdapterView
-//            convertView = mInflater.inflate(R.layout.item_list, null);
+////            convertView = mInflater.inflate(R.itemRootLayout.item_action, parent); // UnsupportedOperationException: addView(View, LayoutParams) is not supported in AdapterView
+//            convertView = mInflater.inflate(R.layout.item_action, null);
 //            // TODO: 28.02.2016 how to avoid null above or make studio agree with it ?
 //
 //            holder = new ViewHolder();

@@ -32,6 +32,7 @@ import java.util.List;
 
 import permissions.dispatcher.NeedsPermission;
 
+import static com.maxml.timer.util.Constants.COLUMN_DAY_COUNT;
 import static com.maxml.timer.util.Constants.MIN_DISTANCE_UPDATES;
 import static com.maxml.timer.util.Constants.MIN_TIME;
 
@@ -41,6 +42,7 @@ public class GeneralService extends Service implements LocationListener {
     private EventBus serviceEventBus;
     private EventBus widgetEventBus;
     private EventBus callEventBus;
+    private EventBus wifiEventBus;
 
     private Handler handler;
     private int dontMoveTime = 0;/*in min*/
@@ -74,7 +76,6 @@ public class GeneralService extends Service implements LocationListener {
         startForeground(Constants.NOTIFICATION_ID, notification);
     }
 
-
     @Subscribe()
     public void onEventBusControll(Events.EventBusControl event) {
         String message = event.getMessage();
@@ -91,6 +92,8 @@ public class GeneralService extends Service implements LocationListener {
             case Constants.EVENT_SET_CALL_EVENT_BUS:
                 callEventBus = event.getEventBus();
                 break;
+            case Constants.EVENT_SET_WIFI_EVENT_BUS:
+
         }
     }
 
@@ -162,6 +165,7 @@ public class GeneralService extends Service implements LocationListener {
         unregisterEventBus(serviceEventBus);
         unregisterEventBus(widgetEventBus);
         unregisterEventBus(callEventBus);
+        unregisterEventBus(wifiEventBus);
         stopTimer();
         super.onDestroy();
     }

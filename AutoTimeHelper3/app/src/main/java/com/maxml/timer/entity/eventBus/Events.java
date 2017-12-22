@@ -93,4 +93,16 @@ public class Events {
             return callState;
         }
     }
+
+    public static class WifiEvent {
+        public String wifiState;
+
+        public WifiEvent(String wifiState) {
+            this.wifiState = wifiState;
+        }
+
+        public String getWifiState() {
+            return wifiState;
+        }
+    }
 }

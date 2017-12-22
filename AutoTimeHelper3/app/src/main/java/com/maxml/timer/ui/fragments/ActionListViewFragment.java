@@ -55,7 +55,7 @@ public class ActionListViewFragment extends Fragment {
 //
 //		final ListView listMain = (ListView) getActivity().findViewById(R.id.listView);
 //
-//		final ManagerAdapter adapter = new ManagerAdapter(getActivity(), R.layout.item_list, listSlice);
+//		final ManagerAdapter adapter = new ManagerAdapter(getActivity(), R.layout.item_action, listSlice);
 //
 //		LayoutInflater layoutInflater = (LayoutInflater) getActivity().getApplication()
 //				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

@@ -20,7 +20,7 @@ public class CallReceiver extends BroadcastReceiver {
     private EventBus eventBus;
 
     public void onReceive(Context context, Intent intent) {
-       initController(context);
+        initController(context);
         int state = 0;
         String stateStr = intent.getExtras().getString(TelephonyManager.EXTRA_STATE);
         if (stateStr != null) {
@@ -36,9 +36,9 @@ public class CallReceiver extends BroadcastReceiver {
     }
 
     private void initController(Context context) {
-        if (controller == null){
+        if (controller == null) {
             eventBus = new EventBus();
-            controller = new Controller(context,eventBus);
+            controller = new Controller(context, eventBus);
             controller.registerEventBus(eventBus);
             eventBus.post(new Events.CallEvent(Constants.EVENT_SET_CALL_EVENT_BUS));
         }

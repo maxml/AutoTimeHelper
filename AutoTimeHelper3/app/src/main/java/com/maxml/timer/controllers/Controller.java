@@ -1,29 +1,38 @@
 package com.maxml.timer.controllers;
 
+import android.app.backup.FileBackupHelper;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
+import com.maxml.timer.MyLog;
 import com.maxml.timer.R;
 import com.maxml.timer.api.ActionCRUD;
 import com.maxml.timer.api.CoordinatesCRUD;
 import com.maxml.timer.api.TableCRUD;
 import com.maxml.timer.api.UserAPI;
+import com.maxml.timer.database.DatabaseHelper;
+import com.maxml.timer.database.HandlerFactory;
 import com.maxml.timer.entity.Coordinates;
 import com.maxml.timer.entity.Table;
+import com.maxml.timer.entity.WifiState;
 import com.maxml.timer.entity.actions.Action;
 import com.maxml.timer.entity.eventBus.Events;
 import com.maxml.timer.util.Constants;
+import com.maxml.timer.util.NetworkStatus;
 import com.maxml.timer.util.Utils;
 import com.maxml.timer.widget.MyWidgetProvider;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.xml.datatype.DatatypeFactory;
 
 /**
  * Created by nazar on 12.12.17.
@@ -40,6 +49,7 @@ public class Controller {
     private TableCRUD tableCRUD;
     private CoordinatesCRUD coordinatesCRUD;
     private UserAPI userAPI;
+    private DatabaseHelper databaseHelper;
 
     private String walkActionId;
     private Map<String, Action> actions = new HashMap<>();
@@ -71,6 +81,14 @@ public class Controller {
 
     public void sendTableFromDb(Table table) {
         entityEventBus.post(table);
+    }
+
+    public void insertWifiInDb(WifiState wifiState) {
+        try {
+            databaseHelper.getWifiStateDao().createOrUpdate(wifiState);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void updateUserEmail(String email) {
@@ -117,6 +135,30 @@ public class Controller {
         walkActionId = null;
     }
 
+    public void wifiActivated(WifiState wifiState) {
+        try {
+            int size = databaseHelper.getWifiStateDao().getWifiStateById(wifiState.getId()).size();
+            if (size == 0) {
+                databaseHelper.getWifiStateDao().create(wifiState);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendAllWifi() {
+        try {
+            entityEventBus.post(databaseHelper.getWifiStateDao().getAllRoles());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            entityEventBus.post(new ArrayList<>());
+        }
+    }
+
+    public boolean isCurrentWifi(int id) {
+        return NetworkStatus.isWifiAvailable(context, id);
+    }
+
 
     /********************* END DB TOOLS **************************/
 
@@ -144,6 +186,13 @@ public class Controller {
         }
     }
 
+    public void onReciveWifiEvent(Events.WifiEvent event) {
+        switch (event.getWifiState()) {
+            case Constants.EVENT_SET_WIFI_EVENT_BUS:
+                serviceEventBus.post(new Events.EventBusControl(Constants.EVENT_SET_WIFI_EVENT_BUS, entityEventBus));
+                break;
+        }
+    }
 
     public void onReceiveWidgetEvent(Events.WidgetEvent event) {
         switch (event.getMessage()) {
@@ -406,6 +455,9 @@ public class Controller {
         actionCRUD = new ActionCRUD(this);
         coordinatesCRUD = new CoordinatesCRUD(this);
         userAPI = new UserAPI(context, this);
+
+        HandlerFactory.setHelper(context);
+        databaseHelper = HandlerFactory.getHelper();
     }
 
 }
