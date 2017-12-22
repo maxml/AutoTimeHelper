@@ -12,7 +12,7 @@ public class DBFactory {
     private static DatabaseHelper databaseHelper;
 
     public static DatabaseHelper getHelper() {
-        return  databaseHelper;
+        return databaseHelper;
     }
 
     public static void setHelper(Context context) {

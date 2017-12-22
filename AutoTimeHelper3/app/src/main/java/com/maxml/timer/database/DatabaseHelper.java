@@ -7,9 +7,12 @@ import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.maxml.timer.MyLog;
+import com.maxml.timer.api.CoordinateCRUD;
 import com.maxml.timer.api.PathCRUD;
+import com.maxml.timer.entity.Coordinates;
 import com.maxml.timer.entity.Path;
 import com.maxml.timer.entity.WifiState;
+import com.maxml.timer.util.Constants;
 
 import java.sql.SQLException;
 
@@ -19,6 +22,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private WifiStateDao wifiStateDao;
     private PathCRUD pathCRUD;
+    private CoordinateCRUD coordinateCRUD;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -29,6 +33,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             TableUtils.createTable(connectionSource, WifiState.class);
             TableUtils.createTable(connectionSource, Path.class);
+            TableUtils.createTable(connectionSource, Coordinates.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -39,6 +44,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             TableUtils.dropTable(connectionSource, WifiState.class, true);
             TableUtils.dropTable(connectionSource, Path.class, true);
+            TableUtils.dropTable(connectionSource, Coordinates.class, true);
             onCreate(database, connectionSource);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -59,10 +65,18 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return pathCRUD;
     }
 
+    public CoordinateCRUD getCoordinateCRUD() throws SQLException {
+        if (coordinateCRUD == null) {
+            coordinateCRUD = new CoordinateCRUD(getConnectionSource(), Coordinates.class);
+        }
+        return coordinateCRUD;
+    }
+
     @Override
     public void close() {
         super.close();
         wifiStateDao = null;
         pathCRUD = null;
+        coordinateCRUD = null;
     }
 }

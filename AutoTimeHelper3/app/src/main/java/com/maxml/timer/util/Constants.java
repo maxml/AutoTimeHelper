@@ -72,4 +72,6 @@ public class Constants {
     public static final String EXTRA_ID_PATH = "extraIdPath";
     public static final String EXTRA_LIST_ID_PATH = "extraListIdPath";
     public static final String LOG = "appLog";
+    public static final String TABLE_PATH = "tablePath";
+    public static final String TABLE_COORDINATES = "tableCoordinates";
 }
