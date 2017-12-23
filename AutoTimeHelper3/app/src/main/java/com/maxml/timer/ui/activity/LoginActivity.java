@@ -61,12 +61,10 @@ public class LoginActivity extends Activity {
     protected void onStart() {
         super.onStart();
         eventBus.register(this);
-        controller.registerEventBus(eventBus);
     }
 
     @Override
     protected void onStop() {
-        controller.unregisterEventBus(eventBus);
         eventBus.unregister(this);
         super.onStop();
     }
