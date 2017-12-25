@@ -3,8 +3,6 @@ package com.maxml.timer.ui.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -47,9 +45,9 @@ public class LoginActivity extends Activity {
         eventBus = new EventBus();
         controller = new Controller(this, eventBus);
 
-        entLogin = (TextView) findViewById(R.id.textLogin);
-        entPassword = (TextView) findViewById(R.id.textPassword);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar4);
+        entLogin = (TextView) findViewById(R.id.et_login);
+        entPassword = (TextView) findViewById(R.id.et_password);
+        progressBar = (ProgressBar) findViewById(R.id.pb_load);
 
         boolean isLogged = FirebaseAuth.getInstance().getCurrentUser() != null;
         if (isLogged) {
@@ -87,19 +85,27 @@ public class LoginActivity extends Activity {
 
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btnLogin:
+            case R.id.b_login:
                 login();
                 break;
-            case R.id.btnSignIn:
+            case R.id.b_login_anonymously:
+                loginAsAnonymously();
+                break;
+            case R.id.b_sign_in:
                 Intent intent = new Intent(this, CreateUserActivity.class);
                 startActivity(intent);
 
                 break;
-            case R.id.btnForgotPass:
+            case R.id.b_forgot_password:
                 Intent intentForgot = new Intent(this, ForgotPasswordActivity.class);
                 startActivity(intentForgot);
                 break;
         }
+    }
+
+    public void loginAsAnonymously() {
+        progressBar.setVisibility(View.VISIBLE);
+        controller.loginAnonymoasly();
     }
 
     public void login() {

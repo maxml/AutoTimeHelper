@@ -64,7 +64,20 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
 
     @Subscribe
     public void onReceiveUser(UserAPI userAPI) {
-        updateUI(userAPI.getCurrentUser());
+        if (!userAPI.isAnymountly()) {
+            updateUI(userAPI.getCurrentUser());
+        } else {
+            disableAccess();
+
+            Toast.makeText(getContext(), "You are anonymously.\n Please, Sign In", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void disableAccess() {
+        bbChangeEmail.setEnabled(false);
+        bbChangeName.setEnabled(false);
+        bbChangePicture.setEnabled(false);
+        bbOk.setEnabled(false);
     }
 
     @Override

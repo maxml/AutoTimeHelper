@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.maxml.timer.api.UserAPI;
 import com.maxml.timer.controllers.Controller;
@@ -97,7 +98,8 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.user:
                 MyLog.d("Select user");
-                setupFragment(new MainUserPageFragment());
+                    setupFragment(new MainUserPageFragment());
+
                 break;
             case R.id.search:
                 MyLog.d("Select search");

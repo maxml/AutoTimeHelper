@@ -132,6 +132,10 @@ public class Controller {
         userAPI.login(email, password);
     }
 
+    public void loginAnonymoasly() {
+        userAPI.loginAnonymously();
+    }
+
     public void logout() {
         userAPI.logout();
     }
@@ -160,8 +164,6 @@ public class Controller {
     public void wifiActivated(WifiState wifiState) {
         try {
             int size = wifiStateDao.getWifiStateById(wifiState.getId()).size();
-            // todo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            // why == 0?
             if (size == 0) {
                 wifiStateDao.create(wifiState);
             }
@@ -173,12 +175,9 @@ public class Controller {
 
     public void sendAllWifi() {
         try {
-            // todo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//            entityEventBus.post(databaseHelper.getWifiStateDao().getAllRoles());
             entityEventBus.post(wifiStateDao.getAllRoles());
         } catch (SQLException e) {
             e.printStackTrace();
-//            entityEventBus.post(new ArrayList<>());
             sendDbResultError();
         }
     }

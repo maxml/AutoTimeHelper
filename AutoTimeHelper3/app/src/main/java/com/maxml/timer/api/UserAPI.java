@@ -97,6 +97,20 @@ public class UserAPI {
                 });
     }
 
+    public void loginAnonymously() {
+        mAuth.signInAnonymously()
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (!task.isSuccessful()) {
+                            controller.sendDbResultError();
+                        } else {
+                            controller.sendDbResultOk();
+                        }
+                    }
+                });
+    }
+
     public void logout() {
         mAuth.signOut();
     }
@@ -141,6 +155,10 @@ public class UserAPI {
                         }
                     }
                 });
+    }
+
+    public boolean isAnymountly() {
+        return getCurrentUser() != null;
     }
 
     public void updateName(final String name) {
