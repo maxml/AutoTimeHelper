@@ -132,7 +132,7 @@ public class Controller {
         userAPI.login(email, password);
     }
 
-    public void loginAnonymoasly() {
+    public void loginAnonymously() {
         userAPI.loginAnonymously();
     }
 

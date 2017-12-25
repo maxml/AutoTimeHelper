@@ -104,7 +104,7 @@ public class LoginActivity extends Activity {
 
     public void loginAsAnonymously() {
         progressBar.setVisibility(View.VISIBLE);
-        controller.loginAnonymoasly();
+        controller.loginAnonymously();
     }
 
     public void login() {

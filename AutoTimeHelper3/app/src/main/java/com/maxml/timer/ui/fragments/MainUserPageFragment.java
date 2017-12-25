@@ -64,7 +64,7 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
 
     @Subscribe
     public void onReceiveUser(UserAPI userAPI) {
-        if (!userAPI.isAnymountly()) {
+        if (!userAPI.isAnonymously()) {
             updateUI(userAPI.getCurrentUser());
         } else {
             disableAccessToUI();

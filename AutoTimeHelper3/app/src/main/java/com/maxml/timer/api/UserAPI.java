@@ -118,7 +118,9 @@ public class UserAPI {
     public static User getCurrentUser() {
         User user = new User();
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (firebaseUser == null) return null;
+        if (firebaseUser == null) {
+            return null;
+        }
         String objectId = firebaseUser.getUid();
         String username = firebaseUser.getDisplayName();
         String email = firebaseUser.getEmail();
@@ -157,8 +159,8 @@ public class UserAPI {
                 });
     }
 
-    public boolean isAnymountly() {
-        return getCurrentUser() != null;
+    public boolean isAnonymously() {
+        return getCurrentUser().getEmail() == null;
     }
 
     public void updateName(final String name) {
