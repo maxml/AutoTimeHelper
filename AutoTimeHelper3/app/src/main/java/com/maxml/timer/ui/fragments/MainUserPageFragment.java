@@ -67,13 +67,13 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
         if (!userAPI.isAnymountly()) {
             updateUI(userAPI.getCurrentUser());
         } else {
-            disableAccess();
+            disableAccessToUI();
 
             Toast.makeText(getContext(), "You are anonymously.\n Please, Sign In", Toast.LENGTH_LONG).show();
         }
     }
 
-    private void disableAccess() {
+    private void disableAccessToUI() {
         bbChangeEmail.setEnabled(false);
         bbChangeName.setEnabled(false);
         bbChangePicture.setEnabled(false);

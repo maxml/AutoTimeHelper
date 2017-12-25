@@ -94,7 +94,6 @@ public class LoginActivity extends Activity {
             case R.id.b_sign_in:
                 Intent intent = new Intent(this, CreateUserActivity.class);
                 startActivity(intent);
-
                 break;
             case R.id.b_forgot_password:
                 Intent intentForgot = new Intent(this, ForgotPasswordActivity.class);

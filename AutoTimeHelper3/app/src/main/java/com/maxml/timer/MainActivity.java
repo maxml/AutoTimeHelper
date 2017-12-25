@@ -98,8 +98,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.user:
                 MyLog.d("Select user");
-                    setupFragment(new MainUserPageFragment());
-
+                setupFragment(new MainUserPageFragment());
                 break;
             case R.id.search:
                 MyLog.d("Select search");
