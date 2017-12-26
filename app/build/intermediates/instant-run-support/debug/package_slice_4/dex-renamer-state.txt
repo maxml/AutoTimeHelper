@@ -1,0 +1,4 @@
+#Tue Dec 26 16:11:49 EET 2017
+base.0=/home/morozione/Programming/Android/work/AutoTimeHelper/app/build/intermediates/transforms/dexMerger/debug/24
+path.0=classes.dex
+renamed.0=classes.dex

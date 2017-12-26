@@ -1,0 +1,11 @@
+#Internal package file, do not edit.
+#Tue Dec 26 14:35:49 EET 2017
+1.base=/home/morozione/Programming/Android/work/AutoTimeHelper/app/build/intermediates/assets/debug
+0.baseType=DIRECTORY
+1.baseType=DIRECTORY
+count=2
+1.set=ASSET
+0.path=typicons-v207.ttf
+0.set=ASSET
+0.base=/home/morozione/Programming/Android/work/AutoTimeHelper/app/build/intermediates/assets/debug
+1.path=fontawesome-webfont-v440.ttf
