@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.maxml.timer.ImageManager;
+import com.maxml.timer.MyLog;
 import com.maxml.timer.R;
 import com.maxml.timer.api.UserAPI;
 import com.maxml.timer.controllers.Controller;
@@ -27,6 +28,8 @@ import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+
+import java.io.File;
 
 public class MainUserPageFragment extends Fragment implements View.OnClickListener {
 
@@ -107,7 +110,7 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
                 bbOk.setVisibility(View.VISIBLE);
                 break;
             case R.id.bb_change_picture:
-                ImageManager imageManager = new ImageManager(getActivity());
+                ImageManager imageManager = new ImageManager(getContext());
 
                 Intent intent = imageManager.createIntentForLoadImage();
                 if (intent != null) {
@@ -143,10 +146,19 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
     }
 
     public void updateImage(Uri uri) {
+        MyLog.i(uri.toString());
         if (uri != null) {
-            Picasso.with(getActivity())
-                    .load(uri)
-                    .into(ivUser);
+            if (uri.toString().contains("content")) {
+                Picasso.with(getActivity())
+                        .load(uri)
+                        .into(ivUser);
+            } else {
+                File file = new File(uri.toString());
+
+                Picasso.with(getActivity())
+                        .load(file)
+                        .into(ivUser);
+            }
         }
     }
 

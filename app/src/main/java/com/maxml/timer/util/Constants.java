@@ -74,4 +74,9 @@ public class Constants {
     public static final String LOG = "appLog";
     public static final String TABLE_PATH = "tablePath";
     public static final String TABLE_COORDINATES = "tableCoordinates";
+
+    public static final int REQUEST_AUTHORIZATION = 1001;
+    public static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
+    public static final int REQUEST_ACCOUNT_PICKER = 1000;
+
 }
