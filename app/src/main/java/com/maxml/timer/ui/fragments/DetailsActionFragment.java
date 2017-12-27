@@ -11,10 +11,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
-import com.maxml.timer.MyLog;
 import com.maxml.timer.R;
 import com.maxml.timer.controllers.Controller;
-import com.maxml.timer.entity.actions.Action;
+import com.maxml.timer.entity.Action;
 import com.maxml.timer.util.Constants;
 
 import org.greenrobot.eventbus.EventBus;

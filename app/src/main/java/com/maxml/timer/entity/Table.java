@@ -1,7 +1,5 @@
 package com.maxml.timer.entity;
 
-import com.maxml.timer.entity.actions.Action;
-
 import java.util.ArrayList;
 import java.util.List;
 

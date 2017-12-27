@@ -1,4 +1,4 @@
-package com.maxml.timer.entity.actions;
+package com.maxml.timer.entity;
 
 import com.maxml.timer.util.Utils;
 

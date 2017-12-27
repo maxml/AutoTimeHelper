@@ -1,4 +1,4 @@
-package com.maxml.timer.entity.eventBus;
+package com.maxml.timer.entity;
 
 import org.greenrobot.eventbus.EventBus;
 

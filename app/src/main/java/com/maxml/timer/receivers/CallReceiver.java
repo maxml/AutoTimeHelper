@@ -6,9 +6,8 @@ import android.content.Intent;
 import android.telephony.TelephonyManager;
 
 import com.maxml.timer.controllers.Controller;
-import com.maxml.timer.entity.eventBus.Events;
+import com.maxml.timer.entity.Events;
 import com.maxml.timer.util.Constants;
-import com.maxml.timer.util.EventBusType;
 
 import org.greenrobot.eventbus.EventBus;
 

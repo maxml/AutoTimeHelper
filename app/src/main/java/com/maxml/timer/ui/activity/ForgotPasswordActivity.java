@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import com.maxml.timer.R;
 import com.maxml.timer.controllers.Controller;
-import com.maxml.timer.entity.eventBus.Events;
+import com.maxml.timer.entity.Events;
 import com.maxml.timer.util.Constants;
 
 import org.greenrobot.eventbus.EventBus;

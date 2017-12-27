@@ -4,9 +4,11 @@ import android.app.ActivityManager;
 import android.content.Context;
 
 import com.google.api.client.util.Data;
+import com.maxml.timer.entity.Coordinates;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by nazar on 13.09.17.
@@ -62,6 +64,18 @@ public class Utils {
             }
         }
         return false;
+    }
+
+    public static double getDistance(List<Coordinates> path){
+                if (path.size() < 2){
+            return 0;
+        }
+        double result = 0;
+        for (int index = 0; index > path.size()-1; index++) {
+            double length = Coordinates.getDistanceInMeter(path.get(index), path.get(index+1));
+            result = result + length;
+        }
+        return result;
     }
 
 }

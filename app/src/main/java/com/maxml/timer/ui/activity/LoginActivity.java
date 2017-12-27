@@ -17,7 +17,7 @@ import com.maxml.timer.database.UserDAO;
 import com.maxml.timer.controllers.Controller;
 import com.maxml.timer.controllers.ReceiverService;
 import com.maxml.timer.entity.User;
-import com.maxml.timer.entity.eventBus.Events;
+import com.maxml.timer.entity.Events;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.SharedPrefUtils;
 import com.maxml.timer.util.Utils;

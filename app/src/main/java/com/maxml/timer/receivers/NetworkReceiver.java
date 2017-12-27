@@ -6,7 +6,7 @@ import android.content.Intent;
 
 import com.maxml.timer.controllers.Controller;
 import com.maxml.timer.entity.WifiState;
-import com.maxml.timer.entity.eventBus.Events;
+import com.maxml.timer.entity.Events;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.NetworkStatus;
 

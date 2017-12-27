@@ -11,7 +11,7 @@ import android.widget.RemoteViews;
 import com.maxml.timer.R;
 import com.maxml.timer.controllers.Controller;
 import com.maxml.timer.controllers.ReceiverService;
-import com.maxml.timer.entity.eventBus.Events;
+import com.maxml.timer.entity.Events;
 import com.maxml.timer.ui.activity.LoginActivity;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.Utils;

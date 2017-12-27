@@ -16,7 +16,7 @@ import android.util.Log;
 
 import com.maxml.timer.MyLog;
 import com.maxml.timer.entity.Coordinates;
-import com.maxml.timer.entity.eventBus.Events;
+import com.maxml.timer.entity.Events;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.DialogFactory;
 import com.maxml.timer.util.NotificationHelper;
