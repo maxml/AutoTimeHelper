@@ -1,52 +1,36 @@
-# Created by https://www.gitignore.io
+#built application files
+*.apk
+*.ap_
 
-### Eclipse ###
-*.pydevproject
-.metadata
-.gradle
+# files for the dex VM
+*.dex
+
+# Java class files
+*.class
+
+# generated files
 bin/
-tmp/
-*.tmp
-*.bak
-*.swp
-*~.nib
-local.properties
-*.properties
-.settings/
-.loadpath
 gen/
-project/MainProject/gen/
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Windows thumbnail db
+Thumbs.db
+
+# OSX files
+.DS_Store
 
 # Android Studio
 *.iml
 .idea
 #.idea/workspace.xml - remove # and delete .idea if it better suit your needs.
 .gradle
-build
+build/
 .navigation
 captures/
 output.json
 
-# Eclipse Core
-.project
-
-# External tool builders
-.externalToolBuilders/
-
-# Locally stored "Eclipse launch configurations"
-*.launch
-
-# CDT-specific
-.cproject
-
-# JDT-specific (Eclipse Java Development Tools)
-.classpath
-
-# PDT-specific
-.buildpath
-
-# sbteclipse plugin
-.target
-
-# TeXlipse plugin
-.texlipse
+#NDK
+obj/
+.externalNativeBuild
