@@ -1,23 +1,17 @@
 package com.maxml.timer.ui.activity;
 
 import android.app.Activity;
-import android.app.usage.UsageEvents;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.maxml.timer.MainActivity;
 import com.maxml.timer.R;
-import com.maxml.timer.api.UserAPI;
 import com.maxml.timer.controllers.Controller;
-import com.maxml.timer.entity.User;
 import com.maxml.timer.entity.eventBus.Events;
 import com.maxml.timer.util.Constants;
 

@@ -1,4 +1,4 @@
-package com.maxml.timer.api;
+package com.maxml.timer.database;
 
 
 import com.google.firebase.database.DataSnapshot;
@@ -15,16 +15,16 @@ import com.maxml.timer.util.Utils;
 
 import java.util.Date;
 
-public class TableCRUD {
+public class TableDAO {
 
     private DatabaseReference actionRef;
     private Controller controller;
 
-    public TableCRUD(Controller controller) {
+    public TableDAO(Controller controller) {
         this.controller = controller;
         actionRef = FirebaseDatabase.getInstance().getReference()
                 .child(Constants.USER_DATABASE_PATH)
-                .child(UserAPI.getCurrentUserId());
+                .child(UserDAO.getCurrentUserId());
     }
 
     public void read(final Date date) {

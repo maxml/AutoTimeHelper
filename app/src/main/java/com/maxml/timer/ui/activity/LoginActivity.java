@@ -13,9 +13,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.maxml.timer.MainActivity;
 import com.maxml.timer.MyLog;
 import com.maxml.timer.R;
-import com.maxml.timer.api.UserAPI;
+import com.maxml.timer.database.UserDAO;
 import com.maxml.timer.controllers.Controller;
-import com.maxml.timer.controllers.GeneralService;
+import com.maxml.timer.controllers.ReceiverService;
 import com.maxml.timer.entity.User;
 import com.maxml.timer.entity.eventBus.Events;
 import com.maxml.timer.util.Constants;
@@ -118,7 +118,7 @@ public class LoginActivity extends Activity {
     }
 
     public void loginOk() {
-        User user = UserAPI.getCurrentUser();
+        User user = UserDAO.getCurrentUser();
         SharedPrefUtils.saveCurrentUser(this, user);
         Toast.makeText(getApplicationContext(), "Logined", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, MainActivity.class);
@@ -129,9 +129,9 @@ public class LoginActivity extends Activity {
 
     private void initService() {
         // if service not instant yet, start one
-        if (!Utils.isServiceRunning(this, GeneralService.class)) {
+        if (!Utils.isServiceRunning(this, ReceiverService.class)) {
             MyLog.d("start new service instance");
-            Intent serviceIntent = new Intent(this, GeneralService.class);
+            Intent serviceIntent = new Intent(this, ReceiverService.class);
             startService(serviceIntent);
         }
     }

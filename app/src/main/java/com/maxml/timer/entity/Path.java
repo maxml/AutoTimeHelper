@@ -4,8 +4,7 @@ import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
-import com.maxml.timer.api.CoordinateCRUD;
-import com.maxml.timer.api.PathCRUD;
+import com.maxml.timer.database.PathDAO;
 import com.maxml.timer.util.Constants;
 
 import java.util.ArrayList;
@@ -17,7 +16,7 @@ import java.util.List;
  */
 
 
-@DatabaseTable(tableName = Constants.TABLE_PATH, daoClass = PathCRUD.class)
+@DatabaseTable(tableName = Constants.TABLE_PATH, daoClass = PathDAO.class)
 public class Path {
     @DatabaseField(dataType = DataType.STRING, id = true)
     private String walkActionId;

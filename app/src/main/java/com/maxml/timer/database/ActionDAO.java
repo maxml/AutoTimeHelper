@@ -1,4 +1,4 @@
-package com.maxml.timer.api;
+package com.maxml.timer.database;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -12,14 +12,14 @@ import com.maxml.timer.entity.User;
 import com.maxml.timer.entity.actions.Action;
 import com.maxml.timer.util.Constants;
 
-public class ActionCRUD {
+public class ActionDAO {
 
     private Controller controller;
     private DatabaseReference actionRef;
 
-    public ActionCRUD(Controller controller) {
+    public ActionDAO(Controller controller) {
         this.controller = controller;
-        User user = UserAPI.getCurrentUser();
+        User user = UserDAO.getCurrentUser();
         if (actionRef == null && user != null) {
             actionRef = FirebaseDatabase.getInstance().getReference()
                     .child(Constants.USER_DATABASE_PATH)

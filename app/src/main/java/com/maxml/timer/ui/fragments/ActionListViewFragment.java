@@ -40,7 +40,7 @@ public class ActionListViewFragment extends Fragment {
 //		super.onCreate(savedInstanceState);
 ///*
 //
-//		GeneralService tableControler = new GeneralService();
+//		ReceiverService tableControler = new ReceiverService();
 //		tableControler.onResult = this;
 //		tableControler.getListSlice();
 //
@@ -121,7 +121,7 @@ public class ActionListViewFragment extends Fragment {
 //
 //					@Override
 //					public void onClick(View v) {
-//						GeneralService controler = new GeneralService();
+//						ReceiverService controler = new ReceiverService();
 //						controler.delete(listSlice.get(position));
 //						listSlice.remove(position);
 //						Toast.makeText(getActivity(),

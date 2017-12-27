@@ -2,10 +2,8 @@ package com.maxml.timer.controllers;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.Service;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
@@ -13,7 +11,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -22,6 +19,7 @@ import com.maxml.timer.entity.Coordinates;
 import com.maxml.timer.entity.eventBus.Events;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.DialogFactory;
+import com.maxml.timer.util.NotificationHelper;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -32,11 +30,10 @@ import java.util.List;
 
 import permissions.dispatcher.NeedsPermission;
 
-import static com.maxml.timer.util.Constants.COLUMN_DAY_COUNT;
 import static com.maxml.timer.util.Constants.MIN_DISTANCE_UPDATES;
 import static com.maxml.timer.util.Constants.MIN_TIME;
 
-public class GeneralService extends Service implements LocationListener {
+public class ReceiverService extends Service implements LocationListener {
 
     private Controller controller;
     private EventBus serviceEventBus;
@@ -193,7 +190,7 @@ public class GeneralService extends Service implements LocationListener {
 
     private void stopUsingGPS() {
         if (locationManager != null) {
-            locationManager.removeUpdates(GeneralService.this);
+            locationManager.removeUpdates(ReceiverService.this);
         }
     }
 

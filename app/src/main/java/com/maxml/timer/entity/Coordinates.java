@@ -3,17 +3,13 @@ package com.maxml.timer.entity;
 import com.google.firebase.database.Exclude;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
-import com.maxml.timer.api.CoordinateCRUD;
-import com.maxml.timer.api.PathCRUD;
+import com.maxml.timer.database.CoordinateDAO;
 import com.maxml.timer.util.Constants;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 
-@DatabaseTable(tableName = Constants.TABLE_COORDINATES, daoClass = CoordinateCRUD.class)
+@DatabaseTable(tableName = Constants.TABLE_COORDINATES, daoClass = CoordinateDAO.class)
 public class Coordinates {
     @DatabaseField(canBeNull = false, dataType = DataType.STRING, generatedId = true)
     private long id;

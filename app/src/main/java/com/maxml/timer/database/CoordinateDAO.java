@@ -1,4 +1,4 @@
-package com.maxml.timer.api;
+package com.maxml.timer.database;
 
 import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.support.ConnectionSource;
@@ -9,9 +9,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CoordinateCRUD extends BaseDaoImpl<Coordinates, Integer> {
+public class CoordinateDAO extends BaseDaoImpl<Coordinates, Integer> {
 
-    public CoordinateCRUD(ConnectionSource connectionSource, Class<Coordinates> dataClass) throws SQLException {
+    public CoordinateDAO(ConnectionSource connectionSource, Class<Coordinates> dataClass) throws SQLException {
         super(connectionSource, dataClass);
     }
 }

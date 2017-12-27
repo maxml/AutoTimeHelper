@@ -4,12 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.widget.RemoteViews;
 
-import com.maxml.timer.R;
-import com.maxml.timer.util.SliceType;
 import com.maxml.timer.util.TimerConstatnts;
-import com.maxml.timer.widget.MyWidgetProvider;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,19 +27,19 @@ public class MyWidgetIntentReceiver extends BroadcastReceiver {
 //		remoteViews.setTextViewText(R.id.title, getTitle());
 //
 //		// re-registering for click listener
-//		remoteViews.setOnClickPendingIntent(R.id.butCall, MyWidgetProvider
+//		remoteViews.setOnClickPendingIntent(R.id.butCall, AutoTimeWidget
 //				.buildButtonPendingIntent(context, SliceType.CALL));
 //
-//		remoteViews.setOnClickPendingIntent(R.id.butRest, MyWidgetProvider
+//		remoteViews.setOnClickPendingIntent(R.id.butRest, AutoTimeWidget
 //				.buildButtonPendingIntent(context, SliceType.REST));
 //
-//		remoteViews.setOnClickPendingIntent(R.id.butWalk, MyWidgetProvider
+//		remoteViews.setOnClickPendingIntent(R.id.butWalk, AutoTimeWidget
 //				.buildButtonPendingIntent(context, SliceType.WALK));
 //
-//		remoteViews.setOnClickPendingIntent(R.id.butWork, MyWidgetProvider
+//		remoteViews.setOnClickPendingIntent(R.id.butWork, AutoTimeWidget
 //				.buildButtonPendingIntent(context, SliceType.WORK));
 //
-//		MyWidgetProvider.pushWidgetUpdate(context.getApplicationContext(),
+//		AutoTimeWidget.pushWidgetUpdate(context.getApplicationContext(),
 //				remoteViews);
 	}
 

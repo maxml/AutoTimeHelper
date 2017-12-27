@@ -1,4 +1,4 @@
-package com.maxml.timer.api;
+package com.maxml.timer.database;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -21,9 +21,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PathCRUD extends BaseDaoImpl<Path, String> {
+public class PathDAO extends BaseDaoImpl<Path, String> {
 
-    public PathCRUD(ConnectionSource connectionSource, Class<Path> dataClass) throws SQLException {
+    public PathDAO(ConnectionSource connectionSource, Class<Path> dataClass) throws SQLException {
         super(connectionSource, dataClass);
     }
 

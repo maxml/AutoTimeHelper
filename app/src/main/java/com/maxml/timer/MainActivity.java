@@ -21,9 +21,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.maxml.timer.api.UserAPI;
+import com.maxml.timer.database.UserDAO;
 import com.maxml.timer.controllers.Controller;
 import com.maxml.timer.entity.User;
 import com.maxml.timer.ui.fragments.ActionListViewFragment;
@@ -130,8 +129,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Subscribe
-    public void onReceiveUser(UserAPI userAPI) {
-        initDrawerHeader(userAPI.getCurrentUser());
+    public void onReceiveUser(UserDAO userDAO) {
+        initDrawerHeader(userDAO.getCurrentUser());
     }
 
 

@@ -21,7 +21,7 @@ public class CollectionPagerAdapter extends PagerAdapter {
 	
 	private static final int AMOUNT_OF_WEEK_DAYS = 3;
 	
-	// private GeneralService c = new GeneralService();
+	// private ReceiverService c = new ReceiverService();
 	
 	private Context ctx;
 	

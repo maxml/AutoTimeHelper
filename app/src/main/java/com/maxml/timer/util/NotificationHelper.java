@@ -1,4 +1,4 @@
-package com.maxml.timer.controllers;
+package com.maxml.timer.util;
 
 import android.app.Notification;
 import android.app.NotificationManager;

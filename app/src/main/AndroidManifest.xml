@@ -85,7 +85,7 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <receiver android:name=".widget.MyWidgetProvider">
+        <receiver android:name=".widget.AutoTimeWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -104,7 +104,7 @@
 
         <activity android:name=".ui.activity.CalendarActivity" />
 
-        <service android:name=".controllers.GeneralService" />
+        <service android:name=".controllers.ReceiverService" />
         <service android:name=".googlemap.GPSTracker" />
     </application>
 

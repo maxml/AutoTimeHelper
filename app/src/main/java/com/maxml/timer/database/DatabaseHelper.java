@@ -6,13 +6,9 @@ import android.database.sqlite.SQLiteDatabase;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import com.maxml.timer.MyLog;
-import com.maxml.timer.api.CoordinateCRUD;
-import com.maxml.timer.api.PathCRUD;
 import com.maxml.timer.entity.Coordinates;
 import com.maxml.timer.entity.Path;
 import com.maxml.timer.entity.WifiState;
-import com.maxml.timer.util.Constants;
 
 import java.sql.SQLException;
 
@@ -21,8 +17,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final int DATABASE_VERSION = 12;
 
     private WifiStateDao wifiStateDao;
-    private PathCRUD pathCRUD;
-    private CoordinateCRUD coordinateCRUD;
+    private PathDAO pathDAO;
+    private CoordinateDAO coordinateDAO;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -58,25 +54,25 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return wifiStateDao;
     }
 
-    public PathCRUD getPathCRUD() throws SQLException {
-        if (pathCRUD == null) {
-            pathCRUD = new PathCRUD(getConnectionSource(), Path.class);
+    public PathDAO getPathDAO() throws SQLException {
+        if (pathDAO == null) {
+            pathDAO = new PathDAO(getConnectionSource(), Path.class);
         }
-        return pathCRUD;
+        return pathDAO;
     }
 
-    public CoordinateCRUD getCoordinateCRUD() throws SQLException {
-        if (coordinateCRUD == null) {
-            coordinateCRUD = new CoordinateCRUD(getConnectionSource(), Coordinates.class);
+    public CoordinateDAO getCoordinateDAO() throws SQLException {
+        if (coordinateDAO == null) {
+            coordinateDAO = new CoordinateDAO(getConnectionSource(), Coordinates.class);
         }
-        return coordinateCRUD;
+        return coordinateDAO;
     }
 
     @Override
     public void close() {
         super.close();
         wifiStateDao = null;
-        pathCRUD = null;
-        coordinateCRUD = null;
+        pathDAO = null;
+        coordinateDAO = null;
     }
 }

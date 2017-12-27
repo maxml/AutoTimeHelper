@@ -8,10 +8,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
-import com.maxml.timer.MyLog;
 import com.maxml.timer.R;
 import com.maxml.timer.controllers.Controller;
-import com.maxml.timer.controllers.GeneralService;
+import com.maxml.timer.controllers.ReceiverService;
 import com.maxml.timer.entity.eventBus.Events;
 import com.maxml.timer.ui.activity.LoginActivity;
 import com.maxml.timer.util.Constants;
@@ -19,13 +18,13 @@ import com.maxml.timer.util.Utils;
 
 import org.greenrobot.eventbus.EventBus;
 
-public class MyWidgetProvider extends AppWidgetProvider {
+public class AutoTimeWidget extends AppWidgetProvider {
     private EventBus eventBus;
     private Controller controller;
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        if (!Utils.isServiceRunning(context, GeneralService.class)) {
+        if (!Utils.isServiceRunning(context, ReceiverService.class)) {
             if (controller == null) {
                 eventBus = new EventBus();
                 controller = new Controller(context,eventBus);
@@ -89,7 +88,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
 
     private void updateActionStatus(Context context, Intent intent) {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        ComponentName thisWidget = new ComponentName(context, MyWidgetProvider.class);
+        ComponentName thisWidget = new ComponentName(context, AutoTimeWidget.class);
         int[] appWidgetsIds = appWidgetManager.getAppWidgetIds(thisWidget);
         RemoteViews views = getRemoteView(context);
         String title = intent.getStringExtra(Constants.WIDGET_EXTRA);
@@ -105,28 +104,28 @@ public class MyWidgetProvider extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
 
         // create intent for button WORK
-        Intent activeWork = new Intent(context, MyWidgetProvider.class);
+        Intent activeWork = new Intent(context, AutoTimeWidget.class);
         activeWork.setAction(Constants.ACTION_WIDGET_RECEIVER);
         activeWork.putExtra(Constants.WIDGET_EXTRA, Constants.EVENT_WORK_ACTION);
         PendingIntent pendingWork = PendingIntent.getBroadcast(context, 1, activeWork,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
         // create intent for button REST
-        Intent activeRest = new Intent(context, MyWidgetProvider.class);
+        Intent activeRest = new Intent(context, AutoTimeWidget.class);
         activeRest.setAction(Constants.ACTION_WIDGET_RECEIVER);
         activeRest.putExtra(Constants.WIDGET_EXTRA, Constants.EVENT_REST_ACTION);
         PendingIntent pendingRest = PendingIntent.getBroadcast(context, 2, activeRest,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
         // create intent for button WALK
-        Intent activeWalk = new Intent(context, MyWidgetProvider.class);
+        Intent activeWalk = new Intent(context, AutoTimeWidget.class);
         activeWalk.setAction(Constants.ACTION_WIDGET_RECEIVER);
         activeWalk.putExtra(Constants.WIDGET_EXTRA, Constants.EVENT_WALK_ACTION);
         PendingIntent pendingWalk = PendingIntent.getBroadcast(context, 3, activeWalk,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
         // create intent for button CALL
-        Intent activeCall = new Intent(context, MyWidgetProvider.class);
+        Intent activeCall = new Intent(context, AutoTimeWidget.class);
         activeCall.setAction(Constants.ACTION_WIDGET_RECEIVER);
         activeCall.putExtra(Constants.WIDGET_EXTRA, Constants.EVENT_CALL_ACTION);
         PendingIntent pendingCall = PendingIntent.getBroadcast(context, 4, activeCall,

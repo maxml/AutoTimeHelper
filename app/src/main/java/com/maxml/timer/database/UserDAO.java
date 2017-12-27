@@ -1,4 +1,4 @@
-package com.maxml.timer.api;
+package com.maxml.timer.database;
 
 import android.content.Context;
 import android.net.Uri;
@@ -16,7 +16,7 @@ import com.maxml.timer.controllers.Controller;
 import com.maxml.timer.entity.User;
 import com.maxml.timer.util.Constants;
 
-public class UserAPI {
+public class UserDAO {
     // Firebase
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -25,7 +25,7 @@ public class UserAPI {
     private Controller controller;
     private boolean isLogined = false;
 
-    public UserAPI(Context context, Controller controller) {
+    public UserDAO(Context context, Controller controller) {
         this.controller = controller;
         this.context = context;
         initAuth();

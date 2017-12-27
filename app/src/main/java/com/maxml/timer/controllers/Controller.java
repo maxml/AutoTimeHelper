@@ -5,10 +5,10 @@ import android.content.Intent;
 import android.net.Uri;
 
 import com.maxml.timer.R;
-import com.maxml.timer.api.ActionCRUD;
-import com.maxml.timer.api.PathCRUD;
-import com.maxml.timer.api.TableCRUD;
-import com.maxml.timer.api.UserAPI;
+import com.maxml.timer.database.ActionDAO;
+import com.maxml.timer.database.PathDAO;
+import com.maxml.timer.database.TableDAO;
+import com.maxml.timer.database.UserDAO;
 import com.maxml.timer.database.DBFactory;
 import com.maxml.timer.database.WifiStateDao;
 import com.maxml.timer.entity.Coordinates;
@@ -19,8 +19,9 @@ import com.maxml.timer.entity.actions.Action;
 import com.maxml.timer.entity.eventBus.Events;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.NetworkStatus;
+import com.maxml.timer.util.NotificationHelper;
 import com.maxml.timer.util.Utils;
-import com.maxml.timer.widget.MyWidgetProvider;
+import com.maxml.timer.widget.AutoTimeWidget;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -42,10 +43,10 @@ public class Controller {
     private Context context;
 
     // db
-    private ActionCRUD actionCRUD;
-    private TableCRUD tableCRUD;
-    private PathCRUD pathCRUD;
-    private UserAPI userAPI;
+    private ActionDAO actionDAO;
+    private TableDAO tableDAO;
+    private PathDAO pathDAO;
+    private UserDAO userDAO;
     private WifiStateDao wifiStateDao;
 
     private String walkActionId;
@@ -74,7 +75,7 @@ public class Controller {
 
     public void getPathFromDb(List<String> listIdPath) {
         try {
-            List<Path> result = pathCRUD.read(listIdPath);
+            List<Path> result = pathDAO.read(listIdPath);
             entityEventBus.post(result);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -84,7 +85,7 @@ public class Controller {
 
     public void getPathFromDb(String idPath) {
         try {
-            Path path = pathCRUD.read(idPath);
+            Path path = pathDAO.read(idPath);
             entityEventBus.post(path);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -93,7 +94,7 @@ public class Controller {
     }
 
     public void getTableFromDb(Date date) {
-        tableCRUD.read(date);
+        tableDAO.read(date);
     }
 
     public void sendTableFromDb(Table table) {
@@ -109,39 +110,39 @@ public class Controller {
     }
 
     public void updateUserEmail(String email) {
-        userAPI.updateEmail(email);
+        userDAO.updateEmail(email);
     }
 
     public void updateUserName(String name) {
-        userAPI.updateName(name);
+        userDAO.updateName(name);
     }
 
     public void updateUserPhoto(String uri) {
-        userAPI.updatePhoto(Uri.parse(uri));
+        userDAO.updatePhoto(Uri.parse(uri));
     }
 
     public void createUser(String email, String password) {
-        userAPI.create(email, password);
+        userDAO.create(email, password);
     }
 
     public void sentUser() {
-        entityEventBus.post(userAPI);
+        entityEventBus.post(userDAO);
     }
 
     public void login(String email, String password) {
-        userAPI.login(email, password);
+        userDAO.login(email, password);
     }
 
     public void loginAnonymously() {
-        userAPI.loginAnonymously();
+        userDAO.loginAnonymously();
     }
 
     public void logout() {
-        userAPI.logout();
+        userDAO.logout();
     }
 
     public void forgotPassword(String email) {
-        userAPI.sentPassword(email);
+        userDAO.sentPassword(email);
     }
 
     public void saveWalkPath(String walkActionId) {
@@ -152,7 +153,7 @@ public class Controller {
     public void savePath(List<Coordinates> coordinates) {
         if (walkActionId != null) {
             try {
-                pathCRUD.save(new Path(walkActionId, coordinates));
+                pathDAO.save(new Path(walkActionId, coordinates));
             } catch (SQLException e) {
                 e.printStackTrace();
                 sendDbResultError();
@@ -250,7 +251,7 @@ public class Controller {
 //
 //            case Constants.EVENT_WAY_COORDINATES:
 //                List<Coordinates> coordinates = (ArrayList<Coordinates>) message.getData();
-//                pathCRUD.(coordinates);
+//                pathDAO.(coordinates);
 //                break;
 
     public void registerEventBus(EventBus entityEventBus) {
@@ -354,7 +355,7 @@ public class Controller {
             return;
         }
         rest.setEndDate(new Date());
-        actionCRUD.create(rest);
+        actionDAO.create(rest);
         // clear temp entity
         actions.remove(Constants.EVENT_REST_ACTION);
         // delete from stacktrace
@@ -386,7 +387,7 @@ public class Controller {
             return;
         }
         work.setEndDate(new Date());
-        actionCRUD.create(work);
+        actionDAO.create(work);
         // clear temp entity
         actions.remove(Constants.EVENT_WORK_ACTION);
         // delete from stacktrace
@@ -418,7 +419,7 @@ public class Controller {
             return;
         }
         call.setEndDate(new Date());
-        actionCRUD.create(call);
+        actionDAO.create(call);
         // clear temp entity
         actions.remove(Constants.EVENT_CALL_ACTION);
         // delete from stacktrace
@@ -450,7 +451,7 @@ public class Controller {
             return;
         }
         walk.setEndDate(new Date());
-        actionCRUD.createWalkAction(walk);
+        actionDAO.createWalkAction(walk);
         // clear temp entity
         actions.remove(Constants.EVENT_WALK_ACTION);
         // delete from stacktrace
@@ -468,7 +469,7 @@ public class Controller {
     }
 
     private void updateWidgetStatus(String status) {
-        Intent intent = new Intent(context, MyWidgetProvider.class);
+        Intent intent = new Intent(context, AutoTimeWidget.class);
         intent.setAction(Constants.WIDGET_UPDATE_ACTION_STATUS);
         intent.putExtra(Constants.WIDGET_EXTRA, status);
         context.sendBroadcast(intent);
@@ -476,11 +477,11 @@ public class Controller {
 
 
     private void initCRUD() {
-        tableCRUD = new TableCRUD(this);
-        actionCRUD = new ActionCRUD(this);
-        userAPI = new UserAPI(context, this);
+        tableDAO = new TableDAO(this);
+        actionDAO = new ActionDAO(this);
+        userDAO = new UserDAO(context, this);
         try {
-            pathCRUD = DBFactory.getHelper().getPathCRUD();
+            pathDAO = DBFactory.getHelper().getPathDAO();
             wifiStateDao = DBFactory.getHelper().getWifiStateDao();
         } catch (SQLException e) {
             e.printStackTrace();
