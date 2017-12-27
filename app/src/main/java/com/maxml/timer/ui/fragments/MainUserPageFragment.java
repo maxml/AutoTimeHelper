@@ -16,8 +16,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
-import com.maxml.timer.ImageManager;
-import com.maxml.timer.MyLog;
+import com.maxml.timer.util.ImageUtil;
 import com.maxml.timer.R;
 import com.maxml.timer.database.UserDAO;
 import com.maxml.timer.controllers.Controller;
@@ -110,9 +109,8 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
                 bbOk.setVisibility(View.VISIBLE);
                 break;
             case R.id.bb_change_picture:
-                ImageManager imageManager = new ImageManager(getContext());
 
-                Intent intent = imageManager.createIntentForLoadImage();
+                Intent intent = ImageUtil.createIntentForLoadImage(getActivity());
                 if (intent != null) {
                     getActivity().startActivityForResult(intent, Constants.REQUEST_CODE_TAKE_PHOTO);
                 }
@@ -146,7 +144,6 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
     }
 
     public void updateImage(Uri uri) {
-        MyLog.i(uri.toString());
         if (uri != null) {
             if (uri.toString().contains("content")) {
                 Picasso.with(getActivity())

@@ -13,7 +13,6 @@ import android.widget.Toast;
 import com.maxml.timer.R;
 import com.maxml.timer.controllers.Controller;
 import com.maxml.timer.entity.Table;
-import com.maxml.timer.entity.eventBus.Events;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.FragmentUtils;
 import com.maxml.timer.util.Utils;
@@ -22,6 +21,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Date;
+
+import static com.google.android.gms.games.Games.Events;
 
 /**
  * Created by morozione on 12/26/17.
@@ -61,17 +62,6 @@ public class MountCalendarFragment extends Fragment implements View.OnClickListe
     public void receiveTableFromDb(Table table) {
         if (table != null) {
             updateUI(table);
-        }
-    }
-
-    @Subscribe()
-    public void getDbMessage(Events.DbResult result) {
-        switch (result.getResultStatus()) {
-            case Constants.EVENT_DB_RESULT_OK:
-                break;
-            case Constants.EVENT_DB_RESULT_ERROR:
-                Toast.makeText(getActivity(), R.string.db_error, Toast.LENGTH_LONG).show();
-                break;
         }
     }
 

@@ -11,7 +11,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.maxml.timer.MyLog;
 import com.maxml.timer.controllers.Controller;
 import com.maxml.timer.entity.User;
 import com.maxml.timer.util.Constants;
@@ -39,10 +38,10 @@ public class UserDAO {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-                    MyLog.d("onAuthStateChanged:signed_in:" + user.getUid());
+                    Log.d( Constants.TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                 } else {
                     // User is signed out
-                    MyLog.d("onAuthStateChanged:signed_out");
+                    Log.d(Constants.TAG, "onAuthStateChanged:signed_out");
                 }
             }
         };
@@ -70,7 +69,7 @@ public class UserDAO {
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        MyLog.d("createUserWithEmail:onComplete:" + task.isSuccessful());
+                        Log.d(Constants.TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
 
                         if (!task.isSuccessful()) {
                             controller.sendDbResultError();
@@ -86,7 +85,7 @@ public class UserDAO {
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        MyLog.d("signInWithEmail:onComplete:" + task.isSuccessful());
+                        Log.d(Constants.TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
 
                         if (!task.isSuccessful()) {
                             controller.sendDbResultError();
@@ -150,7 +149,7 @@ public class UserDAO {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            MyLog.d("Email sent.");
+                            Log.d(Constants.TAG, "Email sent.");
                             controller.sendDbResultOk();
                         } else {
                             controller.sendDbResultError();
@@ -171,7 +170,17 @@ public class UserDAO {
                 .setDisplayName(name)
                 .build();
 
-        user.updateProfile(profileUpdates);
+        user.updateProfile(profileUpdates)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            controller.sendDbResultOk();
+                        } else {
+                            controller.sendDbResultError();
+                        }
+                    }
+                });
     }
 
     public void updateEmail(final String email) {
@@ -189,7 +198,17 @@ public class UserDAO {
                 .setPhotoUri(uri)
                 .build();
 
-        user.updateProfile(profileUpdates);
+        user.updateProfile(profileUpdates)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            controller.sendDbResultOk();
+                        } else {
+                            controller.sendDbResultError();
+                        }
+                    }
+                });
     }
 
 

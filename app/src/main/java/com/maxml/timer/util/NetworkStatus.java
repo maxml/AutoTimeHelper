@@ -5,9 +5,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.widget.Toast;
 
-import com.maxml.timer.MyLog;
 import com.maxml.timer.entity.WifiState;
 
 public class NetworkStatus {

@@ -9,9 +9,9 @@ import com.maxml.timer.entity.WifiState;
 import java.sql.SQLException;
 import java.util.List;
 
-public class WifiStateDao extends BaseDaoImpl<WifiState, Integer> {
+public class WifiStateDAO extends BaseDaoImpl<WifiState, Integer> {
 
-    public WifiStateDao(ConnectionSource connectionSource, Class<WifiState> dataClass) throws SQLException {
+    public WifiStateDAO(ConnectionSource connectionSource, Class<WifiState> dataClass) throws SQLException {
         super(connectionSource, dataClass);
     }
 

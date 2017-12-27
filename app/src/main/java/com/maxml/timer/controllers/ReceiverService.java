@@ -14,7 +14,6 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.maxml.timer.MyLog;
 import com.maxml.timer.entity.Coordinates;
 import com.maxml.timer.entity.Events;
 import com.maxml.timer.util.Constants;
@@ -57,14 +56,14 @@ public class ReceiverService extends Service implements LocationListener {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        MyLog.d("Service: onStartCommand");
+        Log.d(Constants.TAG, "Service: onStartCommand");
         return START_STICKY;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        MyLog.d("Service: onCreate");
+        Log.d(Constants.TAG, "Service: onCreate");
         serviceEventBus = new EventBus();
         controller = Controller.build(this, serviceEventBus);
         serviceEventBus.register(this);
@@ -158,7 +157,7 @@ public class ReceiverService extends Service implements LocationListener {
 
     @Override
     public void onDestroy() {
-        MyLog.d("Service: onDestroy");
+        Log.d(Constants.TAG, "Service: onDestroy");
         unregisterEventBus(serviceEventBus);
         unregisterEventBus(widgetEventBus);
         unregisterEventBus(callEventBus);

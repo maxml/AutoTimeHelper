@@ -10,7 +10,7 @@ import com.maxml.timer.database.PathDAO;
 import com.maxml.timer.database.TableDAO;
 import com.maxml.timer.database.UserDAO;
 import com.maxml.timer.database.DBFactory;
-import com.maxml.timer.database.WifiStateDao;
+import com.maxml.timer.database.WifiStateDAO;
 import com.maxml.timer.entity.Coordinates;
 import com.maxml.timer.entity.Path;
 import com.maxml.timer.entity.Table;
@@ -47,7 +47,7 @@ public class Controller {
     private TableDAO tableDAO;
     private PathDAO pathDAO;
     private UserDAO userDAO;
-    private WifiStateDao wifiStateDao;
+    private WifiStateDAO wifiStateDAO;
 
     private String walkActionId;
     private Map<String, Action> actions = new HashMap<>();
@@ -103,7 +103,7 @@ public class Controller {
 
     public void insertWifiInDb(WifiState wifiState) {
         try {
-            wifiStateDao.createOrUpdate(wifiState);
+            wifiStateDAO.createOrUpdate(wifiState);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -164,9 +164,9 @@ public class Controller {
 
     public void wifiActivated(WifiState wifiState) {
         try {
-            int size = wifiStateDao.getWifiStateById(wifiState.getId()).size();
+            int size = wifiStateDAO.getWifiStateById(wifiState.getId()).size();
             if (size == 0) {
-                wifiStateDao.create(wifiState);
+                wifiStateDAO.create(wifiState);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -176,7 +176,7 @@ public class Controller {
 
     public void sendAllWifi() {
         try {
-            entityEventBus.post(wifiStateDao.getAllRoles());
+            entityEventBus.post(wifiStateDAO.getAllRoles());
         } catch (SQLException e) {
             e.printStackTrace();
             sendDbResultError();
@@ -482,7 +482,7 @@ public class Controller {
         userDAO = new UserDAO(context, this);
         try {
             pathDAO = DBFactory.getHelper().getPathDAO();
-            wifiStateDao = DBFactory.getHelper().getWifiStateDao();
+            wifiStateDAO = DBFactory.getHelper().getWifiStateDAO();
         } catch (SQLException e) {
             e.printStackTrace();
         }

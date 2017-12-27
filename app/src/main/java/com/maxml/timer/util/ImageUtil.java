@@ -1,28 +1,23 @@
-package com.maxml.timer;
+package com.maxml.timer.util;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
-import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImageManager {
-    private Context context;
+public class ImageUtil {
 
     public static File fPhoto;
 
-    public ImageManager(Context context) {
-        this.context = context;
-    }
-
-    public Intent createIntentForLoadImage() {
+    public static Intent createIntentForLoadImage(Context context) {
         try {
             fPhoto = createTempImageFile(context.getExternalCacheDir());
 
@@ -45,12 +40,12 @@ public class ImageManager {
 
             return chooserIntent;
         } catch (IOException e) {
-            MyLog.e(e.getMessage());
+            Log.e(Constants.TAG, e.getMessage());
         }
         return null;
     }
 
-    public File createTempImageFile(File storageDir) throws IOException {
+    private static File createTempImageFile(File storageDir) throws IOException {
         String imageFileName = "profile_photo";
 
         return File.createTempFile(
@@ -60,7 +55,7 @@ public class ImageManager {
         );
     }
 
-    public List<Intent> addIntentsToList(Context context, List<Intent> list, Intent intent) {
+    private static List<Intent> addIntentsToList(Context context, List<Intent> list, Intent intent) {
         List<ResolveInfo> resInfo = context.getPackageManager().queryIntentActivities(intent, 0);
         for (ResolveInfo resolveInfo : resInfo) {
             String packageName = resolveInfo.activityInfo.packageName;

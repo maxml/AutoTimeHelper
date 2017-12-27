@@ -1,12 +1,9 @@
 package com.maxml.timer;
 
-import android.accounts.AccountManager;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -16,6 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -24,9 +22,9 @@ import android.widget.TextView;
 
 import com.maxml.timer.database.UserDAO;
 import com.maxml.timer.controllers.Controller;
+import com.maxml.timer.entity.Events;
 import com.maxml.timer.entity.User;
 import com.maxml.timer.ui.fragments.ActionListViewFragment;
-import com.maxml.timer.ui.fragments.CalendarFragment;
 import com.maxml.timer.ui.fragments.GoogleMapFragment;
 import com.maxml.timer.ui.fragments.HomeFragment;
 import com.maxml.timer.ui.fragments.MainUserPageFragment;
@@ -34,6 +32,7 @@ import com.maxml.timer.ui.fragments.MountCalendarFragment;
 import com.maxml.timer.ui.fragments.SettingsFragment;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.FragmentUtils;
+import com.maxml.timer.util.ImageUtil;
 import com.maxml.timer.util.SharedPrefUtils;
 import com.squareup.picasso.Picasso;
 
@@ -91,24 +90,24 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.calendar:
-                MyLog.d("Select calendar");
+                Log.d(Constants.TAG, "Select calendar");
                 setupFragment(new MountCalendarFragment());
                 break;
             case R.id.map:
-                MyLog.d("Select home");
+                Log.d(Constants.TAG, "Select home");
                 setupFragment(new HomeFragment());
                 break;
             case R.id.user:
-                MyLog.d("Select user");
+                Log.d(Constants.TAG, "Select user");
                 setupFragment(new MainUserPageFragment());
                 break;
             case R.id.search:
-                MyLog.d("Select search");
+                Log.d(Constants.TAG, "Select search");
                 GoogleMapFragment fragment = new GoogleMapFragment();
                 setupFragment(fragment);
                 break;
             case R.id.setting:
-                MyLog.d("Select setting");
+                Log.d(Constants.TAG, "Select setting");
                 setupFragment(new SettingsFragment());
                 break;
         }
@@ -134,6 +133,13 @@ public class MainActivity extends AppCompatActivity
     @Subscribe
     public void onReceiveUser(UserDAO userDAO) {
         initDrawerHeader(userDAO.getCurrentUser());
+    }
+
+    @Subscribe
+    public void onDatabaseUpdated(Events.DbResult event) {
+        if (event.getResultStatus().equalsIgnoreCase(Constants.EVENT_DB_RESULT_OK)) {
+            controller.sentUser();
+        }
     }
 
 
@@ -229,82 +235,52 @@ public class MainActivity extends AppCompatActivity
             case Constants.REQUEST_CODE_TAKE_PHOTO:
                 if (resultCode == RESULT_OK) {
                     if (data != null && data.getData() != null) {
-                        loadImageFromGalerry(data);
-                    } else if (ImageManager.fPhoto != null) {
+                        loadImageFromGallery(data);
+                    } else if (ImageUtil.fPhoto != null) {
                         loadImageFromCamera();
                     }
-                    controller.sentUser();
-                }
-                break;
-            case Constants.REQUEST_GOOGLE_PLAY_SERVICES:
-                if (resultCode != RESULT_OK) {
-                    showMessageInstallPlayService();
-                } else {
-                    resultCalendarFragment();
-                }
-                break;
-            case Constants.REQUEST_ACCOUNT_PICKER:
-                if (resultCode == RESULT_OK && data != null &&
-                        data.getExtras() != null) {
-                    String accountName =
-                            data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-                    if (accountName != null) {
-                        SharedPreferences settings =
-                                this.getPreferences(Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = settings.edit();
-                        editor.putString(CalendarFragment.PREF_ACCOUNT_NAME, accountName);
-                        editor.apply();
-                        setCredentialAccountName(accountName);
-                        resultCalendarFragment();
-                    }
-                }
-                break;
-            case Constants.REQUEST_AUTHORIZATION:
-                if (resultCode == RESULT_OK) {
-                    resultCalendarFragment();
+//                    controller.sentUser();
                 }
                 break;
         }
     }
 
-    private void setCredentialAccountName(String accountName) {
-        if (FragmentUtils.getCurrentFragment(this) instanceof CalendarFragment) {
-            ((CalendarFragment) FragmentUtils.getCurrentFragment(this))
-                    .setCredentialAccountName(accountName);
-        }
-    }
+//    private void setCredentialAccountName(String accountName) {
+//        if (FragmentUtils.getCurrentFragment(this) instanceof CalendarFragment) {
+//            ((CalendarFragment) FragmentUtils.getCurrentFragment(this))
+//                    .setCredentialAccountName(accountName);
+//        }
+//    }
 
-    private void showMessageInstallPlayService() {
-        if (FragmentUtils.getCurrentFragment(this) instanceof CalendarFragment) {
-            ((CalendarFragment) FragmentUtils.getCurrentFragment(this))
-                    .showMessageInstallPlayService();
-        }
-    }
+//    private void showMessageInstallPlayService() {
+//        if (FragmentUtils.getCurrentFragment(this) instanceof CalendarFragment) {
+//            ((CalendarFragment) FragmentUtils.getCurrentFragment(this))
+//                    .showMessageInstallPlayService();
+//        }
+//    }
+//
+//    public void resultCalendarFragment() {
+//        if (FragmentUtils.getCurrentFragment(this) instanceof CalendarFragment) {
+//            ((CalendarFragment) FragmentUtils.getCurrentFragment(this))
+//                    .resultFromApi();
+//        }
+//    }
 
-    public void resultCalendarFragment() {
-        if (FragmentUtils.getCurrentFragment(this) instanceof CalendarFragment) {
-            ((CalendarFragment) FragmentUtils.getCurrentFragment(this))
-                    .resultFromApi();
-        }
-    }
+    private void loadImageFromGallery(Intent data) {
+        controller.updateUserPhoto(data.getData().toString());
 
-    private void loadImageFromGalerry(Intent data) {
         if (FragmentUtils.getCurrentFragment(this) instanceof MainUserPageFragment) {
             ((MainUserPageFragment) FragmentUtils.getCurrentFragment(this))
                     .updateImage(data.getData());
         }
-
-        controller.updateUserPhoto(data.getData().toString());
-        controller.sentUser();
     }
 
     private void loadImageFromCamera() {
+        controller.updateUserPhoto(ImageUtil.fPhoto.toString());
+
         if (FragmentUtils.getCurrentFragment(this) instanceof MainUserPageFragment) {
             ((MainUserPageFragment) FragmentUtils.getCurrentFragment(this))
-                    .updateImage(Uri.parse(ImageManager.fPhoto.toString()));
+                    .updateImage(Uri.parse(ImageUtil.fPhoto.toString()));
         }
-
-        controller.updateUserPhoto(ImageManager.fPhoto.toString());
-        controller.sentUser();
     }
 }

@@ -1,4 +1,4 @@
-package com.maxml.timer.util;
+package com.maxml.timer.trash;
 
 /**
  * Created by nazar on 13.09.17.

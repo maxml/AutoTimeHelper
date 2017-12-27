@@ -2,6 +2,8 @@ package com.maxml.timer.util;
 
 public class Constants {
 
+    public static final String TAG = "LOG";
+
     public static final long MIN_DISTANCE_UPDATES = 5;
     public static final long MIN_TIME = 1000 * 20;
 
@@ -56,6 +58,7 @@ public class Constants {
     public static final String EVENT_REST_ACTION = "rest";
     public static final String EVENT_WALK_ACTION = "walk";
     public static final String WIDGET_UPDATE_ACTION_STATUS = "updateActionStatus";
+    public final static String WIDGET_UPDATE_ACTION = "com.javatechig.intent.action.UPDATE_WIDGET";
     public static final String EVENT_LOCATION_CHANGE = "locationChange";
     public static final String EVENT_GPS_START = "startGpsEvent";
     public static final String EVENT_GPS_STOP = "stopGpsEvent";

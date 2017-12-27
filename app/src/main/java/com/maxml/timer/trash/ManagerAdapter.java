@@ -1,4 +1,4 @@
-package com.maxml.timer.util;
+package com.maxml.timer.trash;
 
 import android.app.Activity;
 import android.content.Context;

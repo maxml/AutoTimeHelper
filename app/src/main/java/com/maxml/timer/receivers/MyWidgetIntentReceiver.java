@@ -5,7 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.maxml.timer.util.TimerConstatnts;
+import com.maxml.timer.util.Constants;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -14,7 +14,7 @@ public class MyWidgetIntentReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		if (intent.getAction().equals(TimerConstatnts.WIDGET_UPDATE_ACTION)) {
+		if (intent.getAction().equals(Constants.WIDGET_UPDATE_ACTION)) {
 			updateWidgetPictureAndButtonListener(context);
 		}
 	}

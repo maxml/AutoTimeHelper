@@ -16,7 +16,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "auto_time_helper.db";
     private static final int DATABASE_VERSION = 12;
 
-    private WifiStateDao wifiStateDao;
+    private WifiStateDAO wifiStateDAO;
     private PathDAO pathDAO;
     private CoordinateDAO coordinateDAO;
 
@@ -47,11 +47,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
-    public WifiStateDao getWifiStateDao() throws SQLException {
-        if (wifiStateDao == null) {
-            wifiStateDao = new WifiStateDao(getConnectionSource(), WifiState.class);
+    public WifiStateDAO getWifiStateDAO() throws SQLException {
+        if (wifiStateDAO == null) {
+            wifiStateDAO = new WifiStateDAO(getConnectionSource(), WifiState.class);
         }
-        return wifiStateDao;
+        return wifiStateDAO;
     }
 
     public PathDAO getPathDAO() throws SQLException {
@@ -71,7 +71,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     @Override
     public void close() {
         super.close();
-        wifiStateDao = null;
+        wifiStateDAO = null;
         pathDAO = null;
         coordinateDAO = null;
     }

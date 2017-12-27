@@ -11,7 +11,6 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.maxml.timer.MainActivity;
-import com.maxml.timer.MyLog;
 import com.maxml.timer.R;
 import com.maxml.timer.database.UserDAO;
 import com.maxml.timer.controllers.Controller;
@@ -130,7 +129,7 @@ public class LoginActivity extends Activity {
     private void initService() {
         // if service not instant yet, start one
         if (!Utils.isServiceRunning(this, ReceiverService.class)) {
-            MyLog.d("start new service instance");
+            Log.d(Constants.TAG, "start new service instance");
             Intent serviceIntent = new Intent(this, ReceiverService.class);
             startService(serviceIntent);
         }
