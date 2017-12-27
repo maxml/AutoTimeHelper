@@ -30,6 +30,7 @@ import com.maxml.timer.ui.fragments.CalendarFragment;
 import com.maxml.timer.ui.fragments.GoogleMapFragment;
 import com.maxml.timer.ui.fragments.HomeFragment;
 import com.maxml.timer.ui.fragments.MainUserPageFragment;
+import com.maxml.timer.ui.fragments.MountCalendarFragment;
 import com.maxml.timer.ui.fragments.SettingsFragment;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.FragmentUtils;
@@ -38,6 +39,8 @@ import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+
+import java.io.File;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -89,7 +92,7 @@ public class MainActivity extends AppCompatActivity
         switch (item.getItemId()) {
             case R.id.calendar:
                 MyLog.d("Select calendar");
-                setupFragment(new CalendarFragment());
+                setupFragment(new MountCalendarFragment());
                 break;
             case R.id.map:
                 MyLog.d("Select home");
@@ -181,10 +184,17 @@ public class MainActivity extends AppCompatActivity
                 name.setText(user.getUsername());
             } else name.setText(user.getEmail());
             if (user.getPhoto() != null && !user.getPhoto().equalsIgnoreCase("")) {
-                Picasso.with(this)
-                        .load(user.getPhoto())
-                        .placeholder(R.drawable.ic_contact_picture)
-                        .into(icon);
+                if (user.getPhoto().contains("content")) {
+                    Picasso.with(this)
+                            .load(user.getPhoto())
+                            .into(icon);
+                } else {
+                    File file = new File(user.getPhoto());
+
+                    Picasso.with(this)
+                            .load(file)
+                            .into(icon);
+                }
             }
         }
     }
@@ -219,21 +229,21 @@ public class MainActivity extends AppCompatActivity
             case Constants.REQUEST_CODE_TAKE_PHOTO:
                 if (resultCode == RESULT_OK) {
                     if (data != null && data.getData() != null) {
-                        loadImageFromCamera(data);
+                        loadImageFromGalerry(data);
                     } else if (ImageManager.fPhoto != null) {
-                        loadImageFromGallery();
+                        loadImageFromCamera();
                     }
                     controller.sentUser();
                 }
                 break;
-            case CalendarFragment.REQUEST_GOOGLE_PLAY_SERVICES:
+            case Constants.REQUEST_GOOGLE_PLAY_SERVICES:
                 if (resultCode != RESULT_OK) {
                     showMessageInstallPlayService();
                 } else {
                     resultCalendarFragment();
                 }
                 break;
-            case CalendarFragment.REQUEST_ACCOUNT_PICKER:
+            case Constants.REQUEST_ACCOUNT_PICKER:
                 if (resultCode == RESULT_OK && data != null &&
                         data.getExtras() != null) {
                     String accountName =
@@ -249,7 +259,7 @@ public class MainActivity extends AppCompatActivity
                     }
                 }
                 break;
-            case CalendarFragment.REQUEST_AUTHORIZATION:
+            case Constants.REQUEST_AUTHORIZATION:
                 if (resultCode == RESULT_OK) {
                     resultCalendarFragment();
                 }
@@ -278,21 +288,23 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void loadImageFromCamera(Intent data) {
+    private void loadImageFromGalerry(Intent data) {
         if (FragmentUtils.getCurrentFragment(this) instanceof MainUserPageFragment) {
             ((MainUserPageFragment) FragmentUtils.getCurrentFragment(this))
                     .updateImage(data.getData());
         }
 
         controller.updateUserPhoto(data.getData().toString());
+        controller.sentUser();
     }
 
-    private void loadImageFromGallery() {
+    private void loadImageFromCamera() {
         if (FragmentUtils.getCurrentFragment(this) instanceof MainUserPageFragment) {
             ((MainUserPageFragment) FragmentUtils.getCurrentFragment(this))
                     .updateImage(Uri.parse(ImageManager.fPhoto.toString()));
         }
 
         controller.updateUserPhoto(ImageManager.fPhoto.toString());
+        controller.sentUser();
     }
 }
