@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.maxml.timer.R;
-import com.maxml.timer.adapter.ActionsAdapter;
+import com.maxml.timer.ui.adapter.ActionsAdapter;
 import com.maxml.timer.entity.Action;
 
 import java.util.ArrayList;

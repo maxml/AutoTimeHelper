@@ -1,3 +1,3 @@
-# Referenced at /home/morozione/Programming/Android/work/AutoTimeHelper/app/build/intermediates/manifests/full/debug/AndroidManifest.xml:42
+# Referenced at /home/nazar/Android/AndroidStudio/AndroidStudioProjects/AutoTimeHelper/app/build/intermediates/manifests/full/debug/AndroidManifest.xml:42
 -keep class com.maxml.timer.App { <init>(...); }
 

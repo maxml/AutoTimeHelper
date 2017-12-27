@@ -1,4 +1,4 @@
-package com.maxml.timer.adapter;
+package com.maxml.timer.ui.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;

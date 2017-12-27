@@ -93,7 +93,7 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <receiver android:name="com.maxml.timer.widget.MyWidgetProvider" >
+        <receiver android:name="com.maxml.timer.widget.AutoTimeWidget" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -112,7 +112,7 @@
 
         <activity android:name="com.maxml.timer.ui.activity.CalendarActivity" />
 
-        <service android:name="com.maxml.timer.controllers.GeneralService" />
+        <service android:name="com.maxml.timer.controllers.ReceiverService" />
         <service android:name="com.maxml.timer.googlemap.GPSTracker" />
 
         <activity

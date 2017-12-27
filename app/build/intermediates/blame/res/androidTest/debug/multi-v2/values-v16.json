@@ -1,6 +1,21 @@
 {
     "logs": [
         {
+            "outputFile": "/home/nazar/Android/AndroidStudio/AndroidStudioProjects/AutoTimeHelper/app/build/intermediates/incremental/mergeDebugAndroidTestResources/merged.dir/values-v16/values-v16.xml",
+            "map": [
+                {
+                    "source": "/home/nazar/.gradle/caches/transforms-1/files-1.1/appcompat-v7-25.1.0.aar/dd89d1339144df288ea4d2b71cae2ad1/res/values-v16/values-v16.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "65",
+                        "endOffsets": "116"
+                    }
+                }
+            ]
+        },
+        {
             "outputFile": "/home/morozione/Programming/Android/work/AutoTimeHelper/app/build/intermediates/incremental/mergeDebugAndroidTestResources/merged.dir/values-v16/values-v16.xml",
             "map": [
                 {
