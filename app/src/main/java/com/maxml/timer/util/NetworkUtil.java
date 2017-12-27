@@ -5,10 +5,11 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.util.Log;
 
 import com.maxml.timer.entity.WifiState;
 
-public class NetworkStatus {
+public class NetworkUtil {
 
     public static boolean isNetworkAvailable(Context context) {
         try {
@@ -36,16 +37,20 @@ public class NetworkStatus {
     }
 
     public static boolean isWifiAvailable(Context context, int id) {
-        WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifiManager = (WifiManager) context
+                .getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
 
         return id == wifiInfo.getIpAddress();
     }
 
     public static WifiState getCurrentWifi(Context context) {
-        WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifiManager = (WifiManager) context
+                .getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
 
-        return new WifiState(wifiInfo.getIpAddress(), wifiInfo.getSSID());
+        Log.i(Constants.TAG, wifiInfo.getNetworkId() + " - " + wifiInfo.getBSSID() + " - " + wifiInfo.getIpAddress());
+
+        return new WifiState(wifiInfo.getNetworkId(), wifiInfo.getSSID());
     }
 }

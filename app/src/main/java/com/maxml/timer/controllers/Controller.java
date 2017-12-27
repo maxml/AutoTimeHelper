@@ -3,6 +3,7 @@ package com.maxml.timer.controllers;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 
 import com.maxml.timer.R;
 import com.maxml.timer.database.ActionDAO;
@@ -18,7 +19,7 @@ import com.maxml.timer.entity.WifiState;
 import com.maxml.timer.entity.Action;
 import com.maxml.timer.entity.Events;
 import com.maxml.timer.util.Constants;
-import com.maxml.timer.util.NetworkStatus;
+import com.maxml.timer.util.NetworkUtil;
 import com.maxml.timer.util.NotificationHelper;
 import com.maxml.timer.util.Utils;
 import com.maxml.timer.widget.AutoTimeWidget;
@@ -74,27 +75,19 @@ public class Controller {
     }
 
     public void getPathFromDb(List<String> listIdPath) {
-        try {
-            List<Path> result = pathDAO.read(listIdPath);
-            entityEventBus.post(result);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            sendDbResultError();
-        }
+        List<Path> result = pathDAO.getPathById(listIdPath);
+
+        entityEventBus.post(result);
     }
 
     public void getPathFromDb(String idPath) {
-        try {
-            Path path = pathDAO.read(idPath);
-            entityEventBus.post(path);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            sendDbResultError();
-        }
+        Path path = pathDAO.getPathById(idPath);
+
+        entityEventBus.post(path);
     }
 
     public void getTableFromDb(Date date) {
-        tableDAO.read(date);
+        tableDAO.getTableByData(date);
     }
 
     public void sendTableFromDb(Table table) {
@@ -152,40 +145,25 @@ public class Controller {
 
     public void savePath(List<Coordinates> coordinates) {
         if (walkActionId != null) {
-            try {
-                pathDAO.save(new Path(walkActionId, coordinates));
-            } catch (SQLException e) {
-                e.printStackTrace();
-                sendDbResultError();
-            }
+            pathDAO.insert(new Path(walkActionId, coordinates));
         }
         walkActionId = null;
     }
 
     public void wifiActivated(WifiState wifiState) {
-        try {
-            int size = wifiStateDAO.getWifiStateById(wifiState.getId()).size();
-            if (size == 0) {
-                wifiStateDAO.create(wifiState);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            sendDbResultError();
+        if (wifiStateDAO.getWifiStatesById(wifiState.getId()) == null) {
+            wifiStateDAO.insert(wifiState);
         }
     }
 
     public void sendAllWifi() {
-        try {
-            entityEventBus.post(wifiStateDAO.getAllRoles());
-        } catch (SQLException e) {
-            e.printStackTrace();
-            sendDbResultError();
-        }
+        entityEventBus.post(wifiStateDAO.getAllRoles());
     }
 
     public boolean isCurrentWifi(int id) {
-        return NetworkStatus.isWifiAvailable(context, id);
+        return NetworkUtil.isWifiAvailable(context, id);
     }
+
     /********************* END DB TOOLS **************************/
 
 
@@ -327,7 +305,7 @@ public class Controller {
             // create walk action
             startWalkEvent();
         } else {
-            // save walt action
+            // insert walt action
             endWalkEvent();
         }
     }
@@ -480,11 +458,7 @@ public class Controller {
         tableDAO = new TableDAO(this);
         actionDAO = new ActionDAO(this);
         userDAO = new UserDAO(context, this);
-        try {
-            pathDAO = DBFactory.getHelper().getPathDAO();
-            wifiStateDAO = DBFactory.getHelper().getWifiStateDAO();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        wifiStateDAO = DBFactory.getHelper().getWifiStateDAO();
+        pathDAO = DBFactory.getHelper().getPathDAO();
     }
 }

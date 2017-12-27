@@ -11,11 +11,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * Created by nazar on 22.12.17.
- */
-
-
 @DatabaseTable(tableName = Constants.TABLE_PATH, daoClass = PathDAO.class)
 public class Path {
     @DatabaseField(dataType = DataType.STRING, id = true)

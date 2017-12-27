@@ -29,7 +29,7 @@ public class ActionDAO {
 
     public void create(Action action) {
         Log.i("Slice", " Slice starting create");
-        // get Firebase id
+
         String dbId = actionRef.push().getKey();
         action.setId(dbId);
 
@@ -47,7 +47,7 @@ public class ActionDAO {
 
     public void createWalkAction(Action walk) {
         Log.i("Slice", " Slice starting create");
-        // get Firebase id
+
         final String dbId = actionRef.push().getKey();
         walk.setId(dbId);
 
@@ -62,7 +62,6 @@ public class ActionDAO {
                 }
             }
         });
-
     }
 
 /*
@@ -85,7 +84,7 @@ public class ActionDAO {
 */
 
 
-//    public void read(String id, final DbMessage messageForResult) {
+//    public void getPathById(String id, final DbMessage messageForResult) {
 //        if (id == null) {
 //            EventBus.getDefault().post(new DbResultMessage(Constants.EVENT_DB_RESULT_ERROR));
 //            return;
@@ -98,7 +97,7 @@ public class ActionDAO {
 //                    public void onDataChange(DataSnapshot dataSnapshot) {
 //                        if (dataSnapshot.exists()) {
 //                            String dayCount = dataSnapshot.getValue(String.class);
-//                            read(Utils.getDate(dayCount), messageForResult);
+//                            getPathById(Utils.getDate(dayCount), messageForResult);
 //                            return;
 //                        }
 //                        EventBus.getDefault().post(new DbResultMessage(Constants.EVENT_DB_RESULT_OK, messageForResult));
@@ -112,7 +111,7 @@ public class ActionDAO {
 //    }
 //
 //
-//    public void read(Date date, final DbMessage messageForResult) {
+//    public void getPathById(Date date, final DbMessage messageForResult) {
 //        if (date == null) {
 //            EventBus.getDefault().post(new DbResultMessage(Constants.EVENT_DB_RESULT_ERROR));
 //            return;
@@ -203,13 +202,13 @@ public class ActionDAO {
 //    }
 
 //    public void sync(Table table) {
-//        Log.i("Slice", "" + NetworkStatus.isConnected);
+//        Log.i("Slice", "" + NetworkUtil.isConnected);
 //
 //        Map<String, Object> updateList = new HashMap<>();
 //        Log.i("Slice", "Slice synchronized start");
 //        for (Slice slice : table.getList()) {
 //            // if slice already exist in DB it has no null id field
-//            // if field null - save new slice to DB
+//            // if field null - insert new slice to DB
 //            if (slice.getId() == null) {
 //                create(slice);
 //            } else {

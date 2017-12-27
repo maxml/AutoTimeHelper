@@ -11,7 +11,7 @@ import java.util.Date;
 
 @DatabaseTable(tableName = Constants.TABLE_COORDINATES, daoClass = CoordinateDAO.class)
 public class Coordinates {
-    @DatabaseField(canBeNull = false, dataType = DataType.STRING, generatedId = true)
+    @DatabaseField(canBeNull = false, generatedId = true)
     private long id;
     @DatabaseField(dataType = DataType.DATE)
     private Date date;

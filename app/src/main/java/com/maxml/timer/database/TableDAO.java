@@ -27,11 +27,11 @@ public class TableDAO {
                 .child(UserDAO.getCurrentUserId());
     }
 
-    public void read(final Date date) {
-        read(Utils.getDayCount(date));
+    public void getTableByData(final Date date) {
+        getTableByData(Utils.getDayCount(date));
     }
 
-    public void read(final long dayCount) {
+    public void getTableByData(final long dayCount) {
         // check valid date
         if (dayCount == 0) {
             controller.sendDbResultError();

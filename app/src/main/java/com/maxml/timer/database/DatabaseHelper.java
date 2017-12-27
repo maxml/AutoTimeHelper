@@ -14,7 +14,7 @@ import java.sql.SQLException;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "auto_time_helper.db";
-    private static final int DATABASE_VERSION = 12;
+    private static final int DATABASE_VERSION = 7;
 
     private WifiStateDAO wifiStateDAO;
     private PathDAO pathDAO;
@@ -47,24 +47,39 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
-    public WifiStateDAO getWifiStateDAO() throws SQLException {
+    public WifiStateDAO getWifiStateDAO() {
         if (wifiStateDAO == null) {
-            wifiStateDAO = new WifiStateDAO(getConnectionSource(), WifiState.class);
+            try {
+                wifiStateDAO = new WifiStateDAO(getConnectionSource(), WifiState.class);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
+
         return wifiStateDAO;
     }
 
-    public PathDAO getPathDAO() throws SQLException {
+    public PathDAO getPathDAO() {
         if (pathDAO == null) {
-            pathDAO = new PathDAO(getConnectionSource(), Path.class);
+            try {
+                pathDAO = new PathDAO(getConnectionSource(), Path.class);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
+
         return pathDAO;
     }
 
-    public CoordinateDAO getCoordinateDAO() throws SQLException {
+    public CoordinateDAO getCoordinateDAO() {
         if (coordinateDAO == null) {
-            coordinateDAO = new CoordinateDAO(getConnectionSource(), Coordinates.class);
+            try {
+                coordinateDAO = new CoordinateDAO(getConnectionSource(), Coordinates.class);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
+
         return coordinateDAO;
     }
 

@@ -7,7 +7,10 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.maxml.timer.entity.WifiState;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 public class WifiStateDAO extends BaseDaoImpl<WifiState, Integer> {
 
@@ -15,15 +18,30 @@ public class WifiStateDAO extends BaseDaoImpl<WifiState, Integer> {
         super(connectionSource, dataClass);
     }
 
-    public List<WifiState> getAllRoles() throws SQLException {
-        return this.queryForAll();
+    public List<WifiState> getAllRoles() {
+        try {
+            return this.queryForAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
     }
 
-    public List<WifiState> getWifiStateById(int id) throws SQLException {
-        QueryBuilder<WifiState, Integer> queryBuilder = queryBuilder();
-        queryBuilder.where().eq("id", id);
-        PreparedQuery<WifiState> preparedQuery = queryBuilder.prepare();
-        List<WifiState> list = query(preparedQuery);
-        return list;
+    @Nullable
+    public WifiState getWifiStatesById(int id) {
+        try {
+            return queryForId(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void insert(WifiState wifiState) {
+        try {
+            create(wifiState);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -3,10 +3,11 @@ package com.maxml.timer.entity;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.maxml.timer.util.Constants;
 
-@DatabaseTable(tableName = "wifiStates")
+@DatabaseTable(tableName = Constants.TABLE_WIFI_STATE)
 public class WifiState {
-    @DatabaseField(dataType = DataType.INTEGER, columnName = "id", id = true)
+    @DatabaseField(dataType = DataType.INTEGER, id = true)
     private int id;
 
     @DatabaseField(canBeNull = false, dataType = DataType.STRING)
