@@ -8,7 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.maxml.timer.R;
-import com.maxml.timer.controllers.Controller;
+import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.entity.Events;
 import com.maxml.timer.util.Constants;
 
@@ -20,13 +20,14 @@ public class ForgotPasswordActivity extends Activity {
     protected static final int CONNECTION_OK = 1;
     private TextView tvEmail;
     private ProgressBar progressBar;
-    private Controller controller;
+    private DbController dbController;
     private EventBus eventBus;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.forgot_password);
-
+        eventBus = new EventBus();
+        dbController = new DbController(this, eventBus);
         tvEmail = (TextView) findViewById(R.id.textFPEmail);
         progressBar = (ProgressBar) findViewById(R.id.progressBar2);
     }
@@ -35,12 +36,12 @@ public class ForgotPasswordActivity extends Activity {
     protected void onStart() {
         super.onStart();
         eventBus.register(this);
-        controller.registerEventBus(eventBus);
+        dbController.registerEventBus(eventBus);
     }
 
     @Override
     protected void onStop() {
-        controller.unregisterEventBus(eventBus);
+        dbController.unregisterEventBus(eventBus);
         eventBus.unregister(this);
         super.onStop();
     }
@@ -62,9 +63,8 @@ public class ForgotPasswordActivity extends Activity {
         }
     }
 
-
     public void onClick(View v) {
         progressBar.setVisibility(View.VISIBLE);
-     controller.forgotPassword(tvEmail.getText().toString());
+        dbController.forgotPassword(tvEmail.getText().toString());
     }
 }

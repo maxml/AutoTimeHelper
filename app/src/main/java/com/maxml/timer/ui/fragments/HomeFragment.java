@@ -10,7 +10,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.maxml.timer.R;
-import com.maxml.timer.controllers.Controller;
+import com.maxml.timer.controllers.ActionController;
 import com.maxml.timer.entity.Events;
 
 import org.greenrobot.eventbus.EventBus;
@@ -22,7 +22,7 @@ import java.util.Date;
 public class HomeFragment extends Fragment {
 
     private EventBus eventBus;
-    private Controller controller;
+    private ActionController actionController;
     private TextView actionDate;
     private TextView actionStatuse;
     private ToggleButton butCall;
@@ -42,7 +42,7 @@ public class HomeFragment extends Fragment {
         actionDate = (TextView) view.findViewById(R.id.title);
         actionStatuse = (TextView) view.findViewById(R.id.description);
         eventBus = new EventBus();
-        controller = new Controller(getContext(), eventBus);
+        actionController = new ActionController(getContext(), eventBus);
         initListeners();
         return view;
     }
@@ -63,19 +63,19 @@ public class HomeFragment extends Fragment {
         super.onStart();
         refreshActionStatus();
         eventBus.register(this);
-        controller.registerEventBus(eventBus);
+        actionController.registerEventBus(eventBus);
     }
 
     @Override
     public void onStop() {
-        controller.unregisterEventBus(eventBus);
+        actionController.unregisterEventBus(eventBus);
         eventBus.unregister(this);
         super.onStop();
     }
 
     private void refreshActionStatus() {
-        String action = controller.getActionStatus();
-        Date time = controller.getActionTime();
+        String action = actionController.getActionStatus();
+        Date time = actionController.getActionTime();
         actionStatuse.setText(action);
         if (time == null) {
             actionDate.setText(getString(R.string.widget_default_text));
@@ -92,7 +92,7 @@ public class HomeFragment extends Fragment {
                 butWork.setChecked(false);
                 butWalk.setChecked(false);
                 butRest.setChecked(false);
-                controller.callActionEvent();
+                actionController.callActionEvent();
             }
         });
         butWork.setOnClickListener(new OnClickListener() {
@@ -102,7 +102,7 @@ public class HomeFragment extends Fragment {
                 butCall.setChecked(false);
                 butWalk.setChecked(false);
                 butRest.setChecked(false);
-                controller.workActionEvent();
+                actionController.workActionEvent();
             }
         });
         butRest.setOnClickListener(new OnClickListener() {
@@ -112,7 +112,7 @@ public class HomeFragment extends Fragment {
                 butCall.setChecked(false);
                 butWalk.setChecked(false);
                 butWork.setChecked(false);
-                controller.restActionEvent();
+                actionController.restActionEvent();
             }
         });
         butWalk.setOnClickListener(new OnClickListener() {
@@ -122,7 +122,7 @@ public class HomeFragment extends Fragment {
                 butCall.setChecked(false);
                 butRest.setChecked(false);
                 butWork.setChecked(false);
-                controller.walkActionEvent();
+                actionController.walkActionEvent();
             }
         });
 

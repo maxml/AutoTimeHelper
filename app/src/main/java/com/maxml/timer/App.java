@@ -6,14 +6,14 @@ import com.maxml.timer.database.DBFactory;
 
 public class App extends MultiDexApplication {
 
-//    private Controller controller;
+//    private ActionController controller;
 
     @Override
     public void onCreate() {
         super.onCreate();
         DBFactory.setHelper(this);
 
-//        controller = Controller.build();
+//        controller = ActionController.build();
 
 //        Parse.enableLocalDatastore(this);
 //

@@ -72,9 +72,19 @@ public class Events {
 
     public static class DbResult {
         private String resultStatus;
+        private String actionId;
 
         public DbResult(String resultStatus) {
             this.resultStatus = resultStatus;
+        }
+
+        public DbResult(String resultStatus, String actionId) {
+            this.resultStatus = resultStatus;
+            this.actionId = actionId;
+        }
+
+        public String getActionId() {
+            return actionId;
         }
 
         public String getResultStatus() {

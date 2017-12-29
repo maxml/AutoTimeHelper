@@ -8,12 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.maxml.timer.R;
-import com.maxml.timer.controllers.Controller;
+import com.maxml.timer.controllers.ActionController;
+import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.entity.Table;
-import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.FragmentUtils;
 import com.maxml.timer.util.Utils;
 
@@ -22,14 +21,12 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Date;
 
-import static com.google.android.gms.games.Games.Events;
-
 /**
  * Created by morozione on 12/26/17.
  */
 
 public class MountCalendarFragment extends Fragment implements View.OnClickListener {
-    private Controller controller;
+    private DbController dbController;
     private EventBus eventBus;
     private CalendarView calendarView;
     private TextView callsCount;
@@ -40,7 +37,7 @@ public class MountCalendarFragment extends Fragment implements View.OnClickListe
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_calendar, container, false);
         eventBus = new EventBus();
-        controller = new Controller(getContext(), eventBus);
+        dbController = new DbController(getContext(), eventBus);
         initUI(view);
         initListener();
         return view;
@@ -51,10 +48,10 @@ public class MountCalendarFragment extends Fragment implements View.OnClickListe
         super.onStart();
         // register EventBus
         eventBus.register(this);
-        controller.registerEventBus(eventBus);
+        dbController.registerEventBus(eventBus);
         // get current date
         Date selectedDate = new Date(calendarView.getDate());
-        controller.getTableFromDb(selectedDate);
+        dbController.getTableFromDb(selectedDate);
     }
 
 
@@ -91,7 +88,7 @@ public class MountCalendarFragment extends Fragment implements View.OnClickListe
 
     @Override
     public void onStop() {
-        controller.unregisterEventBus(eventBus);
+        dbController.unregisterEventBus(eventBus);
         eventBus.unregister(this);
         super.onStop();
     }
@@ -113,7 +110,7 @@ public class MountCalendarFragment extends Fragment implements View.OnClickListe
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int dayOfMonth) {
-                controller.getTableFromDb(Utils.getDate(dayOfMonth, month, year));
+                dbController.getTableFromDb(Utils.getDate(dayOfMonth, month, year));
             }
         });
     }

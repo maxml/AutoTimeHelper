@@ -11,7 +11,8 @@ import android.widget.Toast;
 
 import com.maxml.timer.MainActivity;
 import com.maxml.timer.R;
-import com.maxml.timer.controllers.Controller;
+import com.maxml.timer.controllers.ActionController;
+import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.entity.Events;
 import com.maxml.timer.util.Constants;
 
@@ -26,7 +27,7 @@ public class CreateUserActivity extends Activity {
     private TextView entEmail;
     private ProgressBar progressBar;
 
-    private Controller controller;
+    private DbController dbController;
     private EventBus eventBus;
 
     protected int CONNECTION_OK = 1;
@@ -37,7 +38,7 @@ public class CreateUserActivity extends Activity {
         Log.d("User", "start onCreate create user activity ");
 
         eventBus = new EventBus();
-        controller = new Controller(this, eventBus);
+        dbController = new DbController(this, eventBus);
 
         entLogin = (TextView) findViewById(R.id.textCreateLogin);
         entPassword = (TextView) findViewById(R.id.textCreatePassword);
@@ -50,13 +51,13 @@ public class CreateUserActivity extends Activity {
     protected void onStart() {
         super.onStart();
         eventBus.register(this);
-        controller.registerEventBus(eventBus);
+        dbController.registerEventBus(eventBus);
     }
 
     @Override
     protected void onStop() {
         eventBus.unregister(this);
-        controller.unregisterEventBus(eventBus);
+        dbController.unregisterEventBus(eventBus);
         super.onStop();
     }
 
@@ -109,6 +110,6 @@ public class CreateUserActivity extends Activity {
     public void createUser() {
         Log.d("User", "create user");
         progressBar.setVisibility(View.VISIBLE);
-        controller.createUser(entEmail.getText().toString(), entPassword.getText().toString());
+        dbController.createUser(entEmail.getText().toString(), entPassword.getText().toString());
     }
 }

@@ -12,8 +12,9 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.maxml.timer.MainActivity;
 import com.maxml.timer.R;
+import com.maxml.timer.controllers.ActionController;
+import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.database.UserDAO;
-import com.maxml.timer.controllers.Controller;
 import com.maxml.timer.controllers.ReceiverService;
 import com.maxml.timer.entity.User;
 import com.maxml.timer.entity.Events;
@@ -28,7 +29,7 @@ public class LoginActivity extends Activity {
     protected static final int CONNECTION_OK = 1;
 
     private EventBus eventBus;
-    private Controller controller;
+    private DbController dbController;
 
     private TextView entLogin;
     private TextView entPassword;
@@ -42,7 +43,7 @@ public class LoginActivity extends Activity {
 
         initService();
         eventBus = new EventBus();
-        controller = new Controller(this, eventBus);
+        dbController = new DbController(this, eventBus);
 
         entLogin = (TextView) findViewById(R.id.et_login);
         entPassword = (TextView) findViewById(R.id.et_password);
@@ -103,12 +104,12 @@ public class LoginActivity extends Activity {
 
     public void loginAsAnonymously() {
         progressBar.setVisibility(View.VISIBLE);
-        controller.loginAnonymously();
+        dbController.loginAnonymously();
     }
 
     public void login() {
         progressBar.setVisibility(View.VISIBLE);
-        controller.login(entLogin.getText().toString(), entPassword.getText().toString());
+        dbController.login(entLogin.getText().toString(), entPassword.getText().toString());
     }
 
     private void incorrect() {

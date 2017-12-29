@@ -34,7 +34,8 @@ import static com.maxml.timer.util.Constants.MIN_TIME;
 
 public class ReceiverService extends Service implements LocationListener {
 
-    private Controller controller;
+    private ActionController actionController;
+    private DbController dbController;
     private EventBus serviceEventBus;
     private EventBus widgetEventBus;
     private EventBus callEventBus;
@@ -65,7 +66,8 @@ public class ReceiverService extends Service implements LocationListener {
         super.onCreate();
         Log.d(Constants.TAG, "Service: onCreate");
         serviceEventBus = new EventBus();
-        controller = Controller.build(this, serviceEventBus);
+        actionController = ActionController.build(this, serviceEventBus);
+        dbController = DbController.build(this, serviceEventBus);
         serviceEventBus.register(this);
         // start service as foreground
         Notification notification = NotificationHelper.getDefaultNotification(this);
@@ -94,13 +96,20 @@ public class ReceiverService extends Service implements LocationListener {
     }
 
     @Subscribe()
+    public void onReceiveDbEvent(Events.DbResult event) {
+        if (event.getResultStatus().equals(Constants.EVENT_WALK_ACTION_SAVED)) {
+            actionController.walkActionSaved(event.getActionId());
+        }
+    }
+
+    @Subscribe()
     public void onReceiveWigetEvent(Events.WidgetEvent event) {
-        controller.onReceiveWidgetEvent(event);
+        actionController.onReceiveWidgetEvent(event);
     }
 
     @Subscribe()
     public void onReceiveCallEvent(Events.CallEvent event) {
-        controller.onReceiveCallEvent(event);
+        actionController.onReceiveCallEvent(event);
     }
 
 
@@ -114,7 +123,7 @@ public class ReceiverService extends Service implements LocationListener {
                 break;
 
             case Constants.EVENT_GPS_STOP:
-                controller.savePath(wayCoordinates);
+                actionController.gpsStopEvent(wayCoordinates);
                 stopUsingGPS();
                 break;
         }
@@ -173,7 +182,7 @@ public class ReceiverService extends Service implements LocationListener {
             public void run() {
                 dontMoveTime++;
                 if (dontMoveTime >= Constants.WAY_DONT_MOVE_TIME) {
-                    controller.dontMoveTimerOff();
+                    actionController.dontMoveTimerOff();
                 } else {
                     handler.postDelayed(this, 60000);
                 }

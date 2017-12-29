@@ -11,7 +11,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.maxml.timer.controllers.Controller;
+import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.entity.User;
 import com.maxml.timer.util.Constants;
 
@@ -21,11 +21,10 @@ public class UserDAO {
     private FirebaseAuth.AuthStateListener mAuthListener;
 
     private Context context;
-    private Controller controller;
-    private boolean isLogined = false;
+    private DbController dbController;
 
-    public UserDAO(Context context, Controller controller) {
-        this.controller = controller;
+    public UserDAO(Context context, DbController dbController) {
+        this.dbController = dbController;
         this.context = context;
         initAuth();
     }
@@ -61,7 +60,7 @@ public class UserDAO {
     public void create(String email, String password) {
         Log.d("User", "start method create in UserCRUD");
         if (email == null || password == null) {
-            controller.sendDbResultError();
+            dbController.sendDbResultError();
             return;
         }
 
@@ -72,9 +71,9 @@ public class UserDAO {
                         Log.d(Constants.TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
 
                         if (!task.isSuccessful()) {
-                            controller.sendDbResultError();
+                            dbController.sendDbResultError();
                         } else {
-                            controller.sendDbResultOk();
+                            dbController.sendDbResultOk();
                         }
                     }
                 });
@@ -88,9 +87,9 @@ public class UserDAO {
                         Log.d(Constants.TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
 
                         if (!task.isSuccessful()) {
-                            controller.sendDbResultError();
+                            dbController.sendDbResultError();
                         } else {
-                            controller.sendDbResultOk();
+                            dbController.sendDbResultOk();
                         }
                     }
                 });
@@ -102,9 +101,9 @@ public class UserDAO {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (!task.isSuccessful()) {
-                            controller.sendDbResultError();
+                            dbController.sendDbResultError();
                         } else {
-                            controller.sendDbResultOk();
+                            dbController.sendDbResultOk();
                         }
                     }
                 });
@@ -150,9 +149,9 @@ public class UserDAO {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             Log.d(Constants.TAG, "Email sent.");
-                            controller.sendDbResultOk();
+                            dbController.sendDbResultOk();
                         } else {
-                            controller.sendDbResultError();
+                            dbController.sendDbResultError();
                         }
                     }
                 });
@@ -175,9 +174,9 @@ public class UserDAO {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            controller.sendDbResultOk();
+                            dbController.sendDbResultOk();
                         } else {
-                            controller.sendDbResultError();
+                            dbController.sendDbResultError();
                         }
                     }
                 });
@@ -203,9 +202,9 @@ public class UserDAO {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            controller.sendDbResultOk();
+                            dbController.sendDbResultOk();
                         } else {
-                            controller.sendDbResultError();
+                            dbController.sendDbResultError();
                         }
                     }
                 });

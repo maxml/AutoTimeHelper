@@ -14,7 +14,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.maxml.timer.R;
-import com.maxml.timer.controllers.Controller;
+import com.maxml.timer.controllers.ActionController;
+import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.entity.Coordinates;
 import com.maxml.timer.entity.Path;
 import com.maxml.timer.util.Constants;
@@ -29,7 +30,7 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap map;
     private EventBus eventBus;
-    private Controller controller;
+    private DbController dbController;
 
     // single path
     private String idPath;
@@ -49,7 +50,7 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
                 .findFragmentById(R.id.map);
         // init feedback bridge
         eventBus = new EventBus();
-        controller = new Controller(getContext(), eventBus);
+        dbController = new DbController(getContext(), eventBus);
         registerEventBus();
         // get input data
         Bundle argument = getArguments();
@@ -65,11 +66,11 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
         Log.d(Constants.LOG, "start method onMapReady");
         this.map = map;
         if (listIdPath != null) {
-            controller.getPathFromDb(listIdPath);
+            dbController.getPathFromDb(listIdPath);
             return;
         }
         if (idPath != null) {
-            controller.getPathFromDb(idPath);
+            dbController.getPathFromDb(idPath);
             return;
         }
     }
@@ -124,13 +125,13 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
     private void registerEventBus() {
         if (!eventBus.isRegistered(this)) {
             eventBus.register(this);
-            controller.registerEventBus(eventBus);
+            dbController.registerEventBus(eventBus);
         }
     }
 
     private void unregisterEventBus() {
         if (eventBus.isRegistered(this)) {
-            controller.unregisterEventBus(eventBus);
+            dbController.unregisterEventBus(eventBus);
             eventBus.unregister(this);
         }
     }

@@ -16,10 +16,11 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.maxml.timer.controllers.ActionController;
+import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.util.ImageUtil;
 import com.maxml.timer.R;
 import com.maxml.timer.database.UserDAO;
-import com.maxml.timer.controllers.Controller;
 import com.maxml.timer.entity.User;
 import com.maxml.timer.ui.activity.LoginActivity;
 import com.maxml.timer.util.Constants;
@@ -42,7 +43,7 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
 
     private ImageView ivUser;
 
-    private Controller controller;
+    private DbController dbController;
     private EventBus eventBus;
 
     @Override
@@ -56,7 +57,7 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
         View rootView = inflater.inflate(R.layout.activity_main_user_page, container, false);
 
         eventBus = new EventBus();
-        controller = new Controller(getContext(), eventBus);
+        dbController = new DbController(getContext(), eventBus);
 
         initUI(rootView);
         setListeners();
@@ -86,13 +87,13 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
     public void onStart() {
         super.onStart();
         eventBus.register(this);
-        controller.registerEventBus(eventBus);
-        controller.sentUser();
+        dbController.registerEventBus(eventBus);
+        dbController.sentUser();
     }
 
     @Override
     public void onStop() {
-        controller.unregisterEventBus(eventBus);
+        dbController.unregisterEventBus(eventBus);
         eventBus.unregister(this);
         super.onStop();
     }
@@ -120,8 +121,8 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
                 etEmail.setEnabled(false);
                 etName.setEnabled(false);
 
-                controller.updateUserEmail(etEmail.getText().toString());
-                controller.updateUserName(etName.getText().toString());
+                dbController.updateUserEmail(etEmail.getText().toString());
+                dbController.updateUserName(etName.getText().toString());
 
                 Toast.makeText(getActivity(), "Saved", Toast.LENGTH_SHORT).show();
                 break;
@@ -137,7 +138,7 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.i_log_out) {
-            controller.logout();
+            dbController.logout();
             startActivity(new Intent(getActivity(), LoginActivity.class));
         }
         return super.onOptionsItemSelected(item);

@@ -6,7 +6,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.maxml.timer.controllers.Controller;
+import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.entity.Table;
 import com.maxml.timer.entity.Action;
 import com.maxml.timer.util.Constants;
@@ -18,10 +18,10 @@ import java.util.Date;
 public class TableDAO {
 
     private DatabaseReference actionRef;
-    private Controller controller;
+    private DbController dbController;
 
-    public TableDAO(Controller controller) {
-        this.controller = controller;
+    public TableDAO(DbController dbController) {
+        this.dbController = dbController;
         actionRef = FirebaseDatabase.getInstance().getReference()
                 .child(Constants.USER_DATABASE_PATH)
                 .child(UserDAO.getCurrentUserId());
@@ -34,7 +34,7 @@ public class TableDAO {
     public void getTableByData(final long dayCount) {
         // check valid date
         if (dayCount == 0) {
-            controller.sendDbResultError();
+            dbController.sendDbResultError();
             return;
         }
 
@@ -48,7 +48,7 @@ public class TableDAO {
                         table.setDay(dayCount);
 
                         if (!dataSnapshot.exists()) {
-                            controller.sendTableFromDb(table);
+                            dbController.sendTableFromDb(table);
                             return;
                         }
 
@@ -69,12 +69,12 @@ public class TableDAO {
                                     break;
                             }
                         }
-                        controller.sendTableFromDb(table);
+                        dbController.sendTableFromDb(table);
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                        controller.sendDbResultError();
+                        dbController.sendDbResultError();
                     }
                 });
     }

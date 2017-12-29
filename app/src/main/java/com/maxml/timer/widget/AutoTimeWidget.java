@@ -9,7 +9,7 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 
 import com.maxml.timer.R;
-import com.maxml.timer.controllers.Controller;
+import com.maxml.timer.controllers.ActionController;
 import com.maxml.timer.controllers.ReceiverService;
 import com.maxml.timer.entity.Events;
 import com.maxml.timer.ui.activity.LoginActivity;
@@ -20,15 +20,15 @@ import org.greenrobot.eventbus.EventBus;
 
 public class AutoTimeWidget extends AppWidgetProvider {
     private EventBus eventBus;
-    private Controller controller;
+    private ActionController actionController;
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         if (!Utils.isServiceRunning(context, ReceiverService.class)) {
-            if (controller == null) {
+            if (actionController == null) {
                 eventBus = new EventBus();
-                controller = new Controller(context,eventBus);
-                controller.registerEventBus(eventBus);
+                actionController = new ActionController(context,eventBus);
+                actionController.registerEventBus(eventBus);
                 eventBus.post(new Events.WidgetEvent(Constants.EVENT_SET_WIDGET_EVENT_BUS));
             }
         }

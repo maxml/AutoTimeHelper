@@ -7,18 +7,18 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.maxml.timer.controllers.Controller;
+import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.entity.User;
 import com.maxml.timer.entity.Action;
 import com.maxml.timer.util.Constants;
 
 public class ActionDAO {
 
-    private Controller controller;
+    private DbController dbController;
     private DatabaseReference actionRef;
 
-    public ActionDAO(Controller controller) {
-        this.controller = controller;
+    public ActionDAO(DbController dbController) {
+        this.dbController = dbController;
         User user = UserDAO.getCurrentUser();
         if (actionRef == null && user != null) {
             actionRef = FirebaseDatabase.getInstance().getReference()
@@ -37,9 +37,9 @@ public class ActionDAO {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    controller.sendDbResultOk();
+                    dbController.sendDbResultOk();
                 } else {
-                    controller.sendDbResultError();
+                    dbController.sendDbResultError();
                 }
             }
         });
@@ -55,10 +55,9 @@ public class ActionDAO {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    controller.sendDbResultOk();
-                    controller.saveWalkPath(dbId);
+                    dbController.endSavingWalkAction(dbId);
                 } else {
-                    controller.sendDbResultError();
+                    dbController.sendDbResultError();
                 }
             }
         });
@@ -74,9 +73,9 @@ public class ActionDAO {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    controller.post(new DbMessage(Constants.EVENT_DB_RESULT_OK));
+                    dbController.post(new DbMessage(Constants.EVENT_DB_RESULT_OK));
                 } else {
-                    controller.post(new DbMessage(Constants.EVENT_DB_RESULT_ERROR));
+                    dbController.post(new DbMessage(Constants.EVENT_DB_RESULT_ERROR));
                 }
             }
         });

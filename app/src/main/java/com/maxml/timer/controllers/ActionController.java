@@ -3,7 +3,6 @@ package com.maxml.timer.controllers;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 
 import com.maxml.timer.R;
 import com.maxml.timer.database.ActionDAO;
@@ -37,135 +36,27 @@ import java.util.Map;
  * Created by nazar on 12.12.17.
  */
 
-public class Controller {
+public class ActionController {
 
     private static EventBus serviceEventBus;
     private EventBus entityEventBus;
     private Context context;
-
-    // db
-    private ActionDAO actionDAO;
-    private TableDAO tableDAO;
-    private PathDAO pathDAO;
-    private UserDAO userDAO;
-    private WifiStateDAO wifiStateDAO;
+    private DbController dbController;
 
     private String walkActionId;
     private Map<String, Action> actions = new HashMap<>();
     private List<String> stateStack = new ArrayList<>();
 
-    public Controller(Context context, EventBus entityEventBus) {
+    public ActionController(Context context, EventBus entityEventBus) {
         this.context = context;
         this.entityEventBus = entityEventBus;
-        initCRUD();
+        dbController = new DbController(context, entityEventBus);
     }
 
-    public static Controller build(Context context, EventBus eventBus) {
+    public static ActionController build(Context context, EventBus eventBus) {
         serviceEventBus = eventBus;
-        return new Controller(context, eventBus);
+        return new ActionController(context, eventBus);
     }
-
-    /********************* START DB TOOLS **************************/
-    public void sendDbResultOk() {
-        entityEventBus.post(new Events.DbResult(Constants.EVENT_DB_RESULT_OK));
-    }
-
-    public void sendDbResultError() {
-        entityEventBus.post(new Events.DbResult(Constants.EVENT_DB_RESULT_ERROR));
-    }
-
-    public void getPathFromDb(List<String> listIdPath) {
-        List<Path> result = pathDAO.getPathById(listIdPath);
-
-        entityEventBus.post(result);
-    }
-
-    public void getPathFromDb(String idPath) {
-        Path path = pathDAO.getPathById(idPath);
-
-        entityEventBus.post(path);
-    }
-
-    public void getTableFromDb(Date date) {
-        tableDAO.getTableByData(date);
-    }
-
-    public void sendTableFromDb(Table table) {
-        entityEventBus.post(table);
-    }
-
-    public void insertWifiInDb(WifiState wifiState) {
-        try {
-            wifiStateDAO.createOrUpdate(wifiState);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void updateUserEmail(String email) {
-        userDAO.updateEmail(email);
-    }
-
-    public void updateUserName(String name) {
-        userDAO.updateName(name);
-    }
-
-    public void updateUserPhoto(String uri) {
-        userDAO.updatePhoto(Uri.parse(uri));
-    }
-
-    public void createUser(String email, String password) {
-        userDAO.create(email, password);
-    }
-
-    public void sentUser() {
-        entityEventBus.post(userDAO);
-    }
-
-    public void login(String email, String password) {
-        userDAO.login(email, password);
-    }
-
-    public void loginAnonymously() {
-        userDAO.loginAnonymously();
-    }
-
-    public void logout() {
-        userDAO.logout();
-    }
-
-    public void forgotPassword(String email) {
-        userDAO.sentPassword(email);
-    }
-
-    public void saveWalkPath(String walkActionId) {
-        this.walkActionId = walkActionId;
-        serviceEventBus.post(new Events.GPS(Constants.EVENT_GPS_STOP));
-    }
-
-    public void savePath(List<Coordinates> coordinates) {
-        if (walkActionId != null) {
-            pathDAO.insert(new Path(walkActionId, coordinates));
-        }
-        walkActionId = null;
-    }
-
-    public void wifiActivated(WifiState wifiState) {
-        if (wifiStateDAO.getWifiStatesById(wifiState.getId()) == null) {
-            wifiStateDAO.insert(wifiState);
-        }
-    }
-
-    public void sendAllWifi() {
-        entityEventBus.post(wifiStateDAO.getAllRoles());
-    }
-
-    public boolean isCurrentWifi(int id) {
-        return NetworkUtil.isWifiAvailable(context, id);
-    }
-
-    /********************* END DB TOOLS **************************/
-
 
     public void onReceiveCallEvent(Events.CallEvent event) {
         switch (event.getCallState()) {
@@ -222,15 +113,17 @@ public class Controller {
         }
     }
 
-//            case Constants.EVENT_WALK_ACTION_SAVED:
-//                // stop gps tracking
-//                getEventBus(EventBusType.GPS).post(new EventMessage(Constants.EVENT_GPS_STOP));
-//                break;
-//
-//            case Constants.EVENT_WAY_COORDINATES:
-//                List<Coordinates> coordinates = (ArrayList<Coordinates>) message.getData();
-//                pathDAO.(coordinates);
-//                break;
+    public void gpsStopEvent(List<Coordinates> wayCoordinates) {
+        if (walkActionId != null) {
+            dbController.createPath(new Path(walkActionId, wayCoordinates));
+        }
+        walkActionId = null;
+    }
+
+    public void walkActionSaved(String walkActionId) {
+        this.walkActionId = walkActionId;
+        serviceEventBus.post(new Events.GPS(Constants.EVENT_GPS_STOP));
+    }
 
     public void registerEventBus(EventBus entityEventBus) {
         serviceEventBus.post(new Events.EventBusControl(Constants.EVENT_REGISTER_EVENT_BUS, entityEventBus));
@@ -249,7 +142,6 @@ public class Controller {
     }
 
     public void dontMoveTimerOff() {
-// todo
         serviceEventBus.post(new Events.GPS(Constants.EVENT_GPS_STOP));
         restActionEvent();
     }
@@ -333,7 +225,7 @@ public class Controller {
             return;
         }
         rest.setEndDate(new Date());
-        actionDAO.create(rest);
+        dbController.createAction(rest);
         // clear temp entity
         actions.remove(Constants.EVENT_REST_ACTION);
         // delete from stacktrace
@@ -365,7 +257,7 @@ public class Controller {
             return;
         }
         work.setEndDate(new Date());
-        actionDAO.create(work);
+        dbController.createAction(work);
         // clear temp entity
         actions.remove(Constants.EVENT_WORK_ACTION);
         // delete from stacktrace
@@ -397,7 +289,7 @@ public class Controller {
             return;
         }
         call.setEndDate(new Date());
-        actionDAO.create(call);
+        dbController.createAction(call);
         // clear temp entity
         actions.remove(Constants.EVENT_CALL_ACTION);
         // delete from stacktrace
@@ -429,7 +321,7 @@ public class Controller {
             return;
         }
         walk.setEndDate(new Date());
-        actionDAO.createWalkAction(walk);
+        dbController.createWalkAction(walk);
         // clear temp entity
         actions.remove(Constants.EVENT_WALK_ACTION);
         // delete from stacktrace
@@ -451,14 +343,5 @@ public class Controller {
         intent.setAction(Constants.WIDGET_UPDATE_ACTION_STATUS);
         intent.putExtra(Constants.WIDGET_EXTRA, status);
         context.sendBroadcast(intent);
-    }
-
-
-    private void initCRUD() {
-        tableDAO = new TableDAO(this);
-        actionDAO = new ActionDAO(this);
-        userDAO = new UserDAO(context, this);
-        wifiStateDAO = DBFactory.getHelper().getWifiStateDAO();
-        pathDAO = DBFactory.getHelper().getPathDAO();
     }
 }

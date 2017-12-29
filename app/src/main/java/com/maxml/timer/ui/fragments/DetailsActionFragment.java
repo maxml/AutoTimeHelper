@@ -12,7 +12,7 @@ import android.widget.Spinner;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.maxml.timer.R;
-import com.maxml.timer.controllers.Controller;
+import com.maxml.timer.controllers.ActionController;
 import com.maxml.timer.entity.Action;
 import com.maxml.timer.util.Constants;
 
@@ -36,7 +36,7 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
     private Action action;
     private ArrayAdapter<String> sAdapter;
 
-    private Controller controller;
+    private ActionController actionController;
     private EventBus eventBus;
 
     @Override
@@ -48,7 +48,7 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
         setListeners();
 
         eventBus = new EventBus();
-        controller = new Controller(getContext(), eventBus);
+        actionController = new ActionController(getContext(), eventBus);
 
         return rootView;
     }
@@ -56,14 +56,14 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
     @Override
     public void onStart() {
         eventBus.register(this);
-        controller.registerEventBus(eventBus);
+        actionController.registerEventBus(eventBus);
         super.onStart();
     }
 
     @Override
     public void onStop() {
         eventBus.unregister(this);
-        controller.unregisterEventBus(eventBus);
+        actionController.unregisterEventBus(eventBus);
         super.onStop();
     }
 
@@ -85,7 +85,7 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
                 sAction.setEnabled(false);
                 etDescription.setEnabled(false);
                 bbOk.setVisibility(View.INVISIBLE);
-                //TODO make updating data through controller
+                //TODO make updating data through actionController
                 break;
         }
     }

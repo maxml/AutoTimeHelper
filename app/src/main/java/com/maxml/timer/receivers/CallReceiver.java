@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.telephony.TelephonyManager;
 
-import com.maxml.timer.controllers.Controller;
+import com.maxml.timer.controllers.ActionController;
 import com.maxml.timer.entity.Events;
 import com.maxml.timer.util.Constants;
 
@@ -15,7 +15,7 @@ public class CallReceiver extends BroadcastReceiver {
 
     private static int lastState = TelephonyManager.CALL_STATE_IDLE;
     private static boolean isIncoming = false;
-    private Controller controller;
+    private ActionController actionController;
     private EventBus eventBus;
 
     public void onReceive(Context context, Intent intent) {
@@ -35,10 +35,10 @@ public class CallReceiver extends BroadcastReceiver {
     }
 
     private void initController(Context context) {
-        if (controller == null) {
+        if (actionController == null) {
             eventBus = new EventBus();
-            controller = new Controller(context, eventBus);
-            controller.registerEventBus(eventBus);
+            actionController = new ActionController(context, eventBus);
+            actionController.registerEventBus(eventBus);
             eventBus.post(new Events.CallEvent(Constants.EVENT_SET_CALL_EVENT_BUS));
         }
     }

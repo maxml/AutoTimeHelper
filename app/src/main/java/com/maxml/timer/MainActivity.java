@@ -20,8 +20,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.maxml.timer.controllers.ActionController;
+import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.database.UserDAO;
-import com.maxml.timer.controllers.Controller;
 import com.maxml.timer.entity.Events;
 import com.maxml.timer.entity.User;
 import com.maxml.timer.ui.fragments.ActionListViewFragment;
@@ -51,7 +52,7 @@ public class MainActivity extends AppCompatActivity
     private ActionBarDrawerToggle drawerToggle;
     private Toolbar toolbar;
 
-    private Controller controller;
+    private DbController dbController;
     private EventBus eventBus;
 
     @Override
@@ -118,14 +119,14 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         eventBus.register(this);
-        controller.registerEventBus(eventBus);
-        controller.sentUser();
+        dbController.registerEventBus(eventBus);
+        dbController.sentUser();
         super.onStart();
     }
 
     @Override
     protected void onStop() {
-        controller.unregisterEventBus(eventBus);
+        dbController.unregisterEventBus(eventBus);
         eventBus.unregister(this);
         super.onStop();
     }
@@ -138,14 +139,14 @@ public class MainActivity extends AppCompatActivity
     @Subscribe
     public void onDatabaseUpdated(Events.DbResult event) {
         if (event.getResultStatus().equalsIgnoreCase(Constants.EVENT_DB_RESULT_OK)) {
-            controller.sentUser();
+            dbController.sentUser();
         }
     }
 
 
     private void initController() {
         eventBus = new org.greenrobot.eventbus.EventBus();
-        controller = new Controller(this, eventBus);
+        dbController = new DbController(this, eventBus);
     }
 
     private void setHomeFragment() {
@@ -162,7 +163,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                controller.sentUser();
+                dbController.sentUser();
             }
         };
 
@@ -239,7 +240,7 @@ public class MainActivity extends AppCompatActivity
                     } else if (ImageUtil.fPhoto != null) {
                         loadImageFromCamera();
                     }
-//                    controller.sentUser();
+//                    dbController.sentUser();
                 }
                 break;
         }
@@ -267,7 +268,7 @@ public class MainActivity extends AppCompatActivity
 //    }
 
     private void loadImageFromGallery(Intent data) {
-        controller.updateUserPhoto(data.getData().toString());
+        dbController.updateUserPhoto(data.getData().toString());
 
         if (FragmentUtils.getCurrentFragment(this) instanceof MainUserPageFragment) {
             ((MainUserPageFragment) FragmentUtils.getCurrentFragment(this))
@@ -276,7 +277,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void loadImageFromCamera() {
-        controller.updateUserPhoto(ImageUtil.fPhoto.toString());
+        dbController.updateUserPhoto(ImageUtil.fPhoto.toString());
 
         if (FragmentUtils.getCurrentFragment(this) instanceof MainUserPageFragment) {
             ((MainUserPageFragment) FragmentUtils.getCurrentFragment(this))
