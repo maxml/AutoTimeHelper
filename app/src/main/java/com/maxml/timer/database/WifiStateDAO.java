@@ -12,7 +12,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-public class WifiStateDAO extends BaseDaoImpl<WifiState, Integer> {
+public class WifiStateDAO extends BaseDaoImpl<WifiState, String> {
 
     public WifiStateDAO(ConnectionSource connectionSource, Class<WifiState> dataClass) throws SQLException {
         super(connectionSource, dataClass);
@@ -28,7 +28,7 @@ public class WifiStateDAO extends BaseDaoImpl<WifiState, Integer> {
     }
 
     @Nullable
-    public WifiState getWifiStatesById(int id) {
+    public WifiState getWifiStatesById(String id) {
         try {
             return queryForId(id);
         } catch (SQLException e) {

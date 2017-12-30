@@ -7,8 +7,8 @@ import com.maxml.timer.util.Constants;
 
 @DatabaseTable(tableName = Constants.TABLE_WIFI_STATE)
 public class WifiState {
-    @DatabaseField(dataType = DataType.INTEGER, id = true)
-    private int id;
+    @DatabaseField(dataType = DataType.STRING, id = true)
+    private String id;
 
     @DatabaseField(canBeNull = false, dataType = DataType.STRING)
     private String name;
@@ -17,20 +17,18 @@ public class WifiState {
     private int type;
 
     public WifiState() {
-        id = 0;
-        name = "";
     }
 
-    public WifiState(int id, String name) {
+    public WifiState(String id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

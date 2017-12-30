@@ -49,8 +49,6 @@ public class NetworkUtil {
                 .getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
 
-        Log.i(Constants.TAG, wifiInfo.getNetworkId() + " - " + wifiInfo.getBSSID() + " - " + wifiInfo.getIpAddress());
-
-        return new WifiState(wifiInfo.getNetworkId(), wifiInfo.getSSID());
+        return new WifiState(wifiInfo.getBSSID(), wifiInfo.getSSID());
     }
 }

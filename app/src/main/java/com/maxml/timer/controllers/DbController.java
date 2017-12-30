@@ -3,6 +3,7 @@ package com.maxml.timer.controllers;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 
 import com.maxml.timer.R;
 import com.maxml.timer.database.ActionDAO;
@@ -152,9 +153,13 @@ public class DbController {
 
 
     public void wifiActivated(WifiState wifiState) {
+        Log.i(Constants.TAG, "wifiActivated: 1");
         if (wifiStateDAO.getWifiStatesById(wifiState.getId()) == null) {
             wifiStateDAO.insert(wifiState);
+
+            Log.i(Constants.TAG, "wifiActivated: 2");
         }
+        Log.i(Constants.TAG, "wifiActivated: " + wifiStateDAO.getAllRoles().size());
     }
 
     public void sendAllWifi() {
@@ -180,5 +185,5 @@ public class DbController {
         wifiStateDAO = DBFactory.getHelper().getWifiStateDAO();
         pathDAO = DBFactory.getHelper().getPathDAO();
     }
-
+//24 - 2c:ae:2b:74:f7:7b - 1177266368
 }
