@@ -1,7 +1,5 @@
 package com.maxml.timer.entity;
 
-import android.net.Uri;
-
 public class User {
 	private String id;
 	private String username;
@@ -53,5 +51,4 @@ public class User {
 																							 * +
 																							 */"]";
 	}
-
 }

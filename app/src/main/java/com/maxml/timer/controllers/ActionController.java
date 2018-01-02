@@ -32,10 +32,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by nazar on 12.12.17.
- */
-
 public class ActionController {
 
     private static EventBus serviceEventBus;
