@@ -95,7 +95,7 @@ public class AutoTimeWidget extends AppWidgetProvider {
         if (title == null || title.equals("")) {
             title = context.getString(R.string.widget_default_text);
         }
-        views.setTextViewText(R.id.title, title);
+        views.setTextViewText(R.id.tv_start_date, title);
         appWidgetManager.updateAppWidget(appWidgetsIds, views);
     }
 
@@ -136,10 +136,10 @@ public class AutoTimeWidget extends AppWidgetProvider {
         PendingIntent pendingActivity = PendingIntent.getActivity(context, 0, activeActivity, 0);
 
         // register actions
-        views.setOnClickPendingIntent(R.id.butWork, pendingWork);
-        views.setOnClickPendingIntent(R.id.butWalk, pendingWalk);
-        views.setOnClickPendingIntent(R.id.butRest, pendingRest);
-        views.setOnClickPendingIntent(R.id.butCall, pendingCall);
+        views.setOnClickPendingIntent(R.id.b_work, pendingWork);
+        views.setOnClickPendingIntent(R.id.b_walk, pendingWalk);
+        views.setOnClickPendingIntent(R.id.b_rest, pendingRest);
+        views.setOnClickPendingIntent(R.id.b_call, pendingCall);
         views.setOnClickPendingIntent(R.id.root, pendingActivity);
         return views;
     }

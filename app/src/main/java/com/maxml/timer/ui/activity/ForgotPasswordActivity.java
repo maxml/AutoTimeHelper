@@ -18,8 +18,10 @@ import org.greenrobot.eventbus.Subscribe;
 public class ForgotPasswordActivity extends Activity {
 
     protected static final int CONNECTION_OK = 1;
+
     private TextView tvEmail;
-    private ProgressBar progressBar;
+    private ProgressBar pbLoad;
+
     private DbController dbController;
     private EventBus eventBus;
 
@@ -29,7 +31,7 @@ public class ForgotPasswordActivity extends Activity {
         eventBus = new EventBus();
         dbController = new DbController(this, eventBus);
         tvEmail = (TextView) findViewById(R.id.textFPEmail);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar2);
+        pbLoad = (ProgressBar) findViewById(R.id.pb_load);
     }
 
     @Override
@@ -51,20 +53,20 @@ public class ForgotPasswordActivity extends Activity {
         switch (event.getResultStatus()) {
             case Constants.EVENT_DB_RESULT_OK:
                 // sign in successful
-                progressBar.setVisibility(View.INVISIBLE);
+                pbLoad.setVisibility(View.INVISIBLE);
                 Toast.makeText(getApplicationContext(),
                         "An email was successfully sent with reset instructions.", Toast.LENGTH_SHORT).show();
                 break;
             case Constants.EVENT_DB_RESULT_ERROR:
                 // sign in error
-                progressBar.setVisibility(View.INVISIBLE);
+                pbLoad.setVisibility(View.INVISIBLE);
                 Toast.makeText(getApplicationContext(), "Wrong email.", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
 
     public void onClick(View v) {
-        progressBar.setVisibility(View.VISIBLE);
+        pbLoad.setVisibility(View.VISIBLE);
         dbController.forgotPassword(tvEmail.getText().toString());
     }
 }

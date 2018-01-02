@@ -4,8 +4,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
+import android.os.RecoverySystem;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -20,10 +20,10 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.maxml.timer.controllers.ActionController;
 import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.database.UserDAO;
 import com.maxml.timer.entity.Events;
+import com.maxml.timer.entity.ShowProgressListener;
 import com.maxml.timer.entity.User;
 import com.maxml.timer.ui.fragments.ActionListViewFragment;
 import com.maxml.timer.ui.fragments.GoogleMapFragment;
@@ -43,12 +43,13 @@ import org.greenrobot.eventbus.Subscribe;
 import java.io.File;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, ShowProgressListener {
 
     private static final String FRAGMENT_TAG = "CURRENT_FRAGMENT";
 
     private DrawerLayout drawerLayout;
-    private ProgressBar progressBar;
+    private ProgressBar pbLoad
+            ;
     private ActionBarDrawerToggle drawerToggle;
     private Toolbar toolbar;
 
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        pbLoad = (ProgressBar) findViewById(R.id.pb_load);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -137,12 +138,20 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Subscribe
-    public void onDatabaseUpdated(Events.DbResult event) {
-        if (event.getResultStatus().equalsIgnoreCase(Constants.EVENT_DB_RESULT_OK)) {
-            dbController.sentUser();
+    public void onDatabaseEvent(Events.DbResult event) {
+        switch (event.getResultStatus()) {
+            case Constants.EVENT_DB_RESULT_OK:
+                if (FragmentUtils.getCurrentFragment(this) instanceof MainUserPageFragment) {
+                    ((MainUserPageFragment) FragmentUtils.getCurrentFragment(this))
+                            .updateUI();
+
+                    dbController.sentUser();
+
+                    hideProgressBar();
+                }
+                break;
         }
     }
-
 
     private void initController() {
         eventBus = new org.greenrobot.eventbus.EventBus();
@@ -206,12 +215,12 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void showProgressBar() {
-        progressBar.setVisibility(View.VISIBLE);
+    public void showProgressBar() {
+        pbLoad.setVisibility(View.VISIBLE);
     }
 
-    private void hideProgressBar() {
-        progressBar.setVisibility(View.INVISIBLE);
+    public void hideProgressBar() {
+        pbLoad.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -240,10 +249,19 @@ public class MainActivity extends AppCompatActivity
                     } else if (ImageUtil.fPhoto != null) {
                         loadImageFromCamera();
                     }
-//                    dbController.sentUser();
+                    showProgressBar();
+                    dbController.sentUser();
                 }
                 break;
         }
+    }
+
+    private void loadImageFromGallery(Intent data) {
+        dbController.updateUserPhoto(data.getData().toString());
+    }
+
+    private void loadImageFromCamera() {
+        dbController.updateUserPhoto(ImageUtil.fPhoto.toString());
     }
 
 //    private void setCredentialAccountName(String accountName) {
@@ -266,22 +284,4 @@ public class MainActivity extends AppCompatActivity
 //                    .resultFromApi();
 //        }
 //    }
-
-    private void loadImageFromGallery(Intent data) {
-        dbController.updateUserPhoto(data.getData().toString());
-
-        if (FragmentUtils.getCurrentFragment(this) instanceof MainUserPageFragment) {
-            ((MainUserPageFragment) FragmentUtils.getCurrentFragment(this))
-                    .updateImage(data.getData());
-        }
-    }
-
-    private void loadImageFromCamera() {
-        dbController.updateUserPhoto(ImageUtil.fPhoto.toString());
-
-        if (FragmentUtils.getCurrentFragment(this) instanceof MainUserPageFragment) {
-            ((MainUserPageFragment) FragmentUtils.getCurrentFragment(this))
-                    .updateImage(Uri.parse(ImageUtil.fPhoto.toString()));
-        }
-    }
 }

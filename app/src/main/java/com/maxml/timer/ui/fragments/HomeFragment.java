@@ -21,40 +21,53 @@ import java.util.Date;
 
 public class HomeFragment extends Fragment {
 
+    private TextView tvStartDate;
+    private TextView tvTitle;
+    private ToggleButton bCall;
+    private ToggleButton bWork;
+    private ToggleButton bRest;
+    private ToggleButton bWalk;
+
     private EventBus eventBus;
     private ActionController actionController;
-    private TextView actionDate;
-    private TextView actionStatuse;
-    private ToggleButton butCall;
-    private ToggleButton butWork;
-    private ToggleButton butRest;
-    private ToggleButton butWalk;
 
     public HomeFragment() {
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.manual_activity_fragment, container, false);
-        butCall = (ToggleButton) view.findViewById(R.id.butCall);
-        butWork = (ToggleButton) view.findViewById(R.id.butWork);
-        butRest = (ToggleButton) view.findViewById(R.id.butRest);
-        butWalk = (ToggleButton) view.findViewById(R.id.butWalk);
-        actionDate = (TextView) view.findViewById(R.id.title);
-        actionStatuse = (TextView) view.findViewById(R.id.description);
+        View rootView = inflater.inflate(R.layout.manual_activity_fragment, container, false);
+
+        initView(rootView);
+        registerEventBus();
+
+        initListeners();
+
+        return rootView;
+    }
+
+    private void registerEventBus() {
         eventBus = new EventBus();
         actionController = new ActionController(getContext(), eventBus);
-        initListeners();
-        return view;
+    }
+
+    private void initView(View view) {
+        bCall = (ToggleButton) view.findViewById(R.id.b_call);
+        bWork = (ToggleButton) view.findViewById(R.id.b_work);
+        bRest = (ToggleButton) view.findViewById(R.id.b_rest);
+        bWalk = (ToggleButton) view.findViewById(R.id.b_walk);
+
+        tvStartDate = (TextView) view.findViewById(R.id.tv_start_date);
+        tvTitle = (TextView) view.findViewById(R.id.tv_title);
     }
 
     @Subscribe()
     public void onReceiveStatusEvent(Events.ActionStatus event) {
-        actionStatuse.setText(event.getActionStatus());
+        tvTitle.setText(event.getActionStatus());
         Date time = event.getActionTime();
         if (time == null) {
-            actionDate.setText(getString(R.string.widget_default_text));
+            tvStartDate.setText(getString(R.string.widget_default_text));
         } else {
-            actionDate.setText(charSequence(time));
+            tvStartDate.setText(charSequence(time));
         }
     }
 
@@ -76,52 +89,52 @@ public class HomeFragment extends Fragment {
     private void refreshActionStatus() {
         String action = actionController.getActionStatus();
         Date time = actionController.getActionTime();
-        actionStatuse.setText(action);
+        tvTitle.setText(action);
         if (time == null) {
-            actionDate.setText(getString(R.string.widget_default_text));
+            tvStartDate.setText(getString(R.string.widget_default_text));
         } else {
-            actionDate.setText(charSequence(time));
+            tvStartDate.setText(charSequence(time));
         }
     }
 
     private void initListeners() {
-        butCall.setOnClickListener(new OnClickListener() {
+        bCall.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                butWork.setChecked(false);
-                butWalk.setChecked(false);
-                butRest.setChecked(false);
+                bWork.setChecked(false);
+                bWalk.setChecked(false);
+                bRest.setChecked(false);
                 actionController.callActionEvent();
             }
         });
-        butWork.setOnClickListener(new OnClickListener() {
+        bWork.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                butCall.setChecked(false);
-                butWalk.setChecked(false);
-                butRest.setChecked(false);
+                bCall.setChecked(false);
+                bWalk.setChecked(false);
+                bRest.setChecked(false);
                 actionController.workActionEvent();
             }
         });
-        butRest.setOnClickListener(new OnClickListener() {
+        bRest.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                butCall.setChecked(false);
-                butWalk.setChecked(false);
-                butWork.setChecked(false);
+                bCall.setChecked(false);
+                bWalk.setChecked(false);
+                bWork.setChecked(false);
                 actionController.restActionEvent();
             }
         });
-        butWalk.setOnClickListener(new OnClickListener() {
+        bWalk.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                butCall.setChecked(false);
-                butRest.setChecked(false);
-                butWork.setChecked(false);
+                bCall.setChecked(false);
+                bRest.setChecked(false);
+                bWork.setChecked(false);
                 actionController.walkActionEvent();
             }
         });

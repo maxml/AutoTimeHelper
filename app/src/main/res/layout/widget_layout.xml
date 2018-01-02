@@ -15,7 +15,7 @@
         android:padding="8dp">
 
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/tv_start_date"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical|center_horizontal"
@@ -34,7 +34,7 @@
         android:padding="8dp" >
 
         <Button
-            android:id="@+id/butCall"
+            android:id="@+id/b_call"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -46,7 +46,7 @@
             android:textColor="@color/primary_text" />
 
         <Button
-            android:id="@+id/butWork"
+            android:id="@+id/b_work"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
             android:textColor="@color/primary_text" />
 
         <Button
-            android:id="@+id/butRest"
+            android:id="@+id/b_rest"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -70,7 +70,7 @@
             android:textColor="@color/primary_text" />
 
         <Button
-            android:id="@+id/butWalk"
+            android:id="@+id/b_walk"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

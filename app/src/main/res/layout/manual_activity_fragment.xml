@@ -20,7 +20,7 @@
         android:padding="8dp">
 
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/tv_start_date"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginRight="@dimen/size_10"
@@ -31,7 +31,7 @@
             android:textStyle="normal" />
 
         <TextView
-            android:id="@+id/description"
+            android:id="@+id/tv_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -63,7 +63,7 @@
             android:padding="8dp" >
 
             <ToggleButton
-                android:id="@+id/butCall"
+                android:id="@+id/b_call"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
@@ -74,7 +74,7 @@
                 android:textOn="@string/stop" />
 
             <ToggleButton
-                android:id="@+id/butWork"
+                android:id="@+id/b_work"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -93,7 +93,7 @@
             android:padding="8dp" >
 
             <ToggleButton
-                android:id="@+id/butWalk"
+                android:id="@+id/b_walk"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
@@ -104,7 +104,7 @@
                 android:textOn="@string/stop" />
 
             <ToggleButton
-                android:id="@+id/butRest"
+                android:id="@+id/b_rest"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

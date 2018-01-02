@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -37,7 +38,7 @@ public class UserDAO {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-                    Log.d( Constants.TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    Log.d(Constants.TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                 } else {
                     // User is signed out
                     Log.d(Constants.TAG, "onAuthStateChanged:signed_out");
@@ -186,7 +187,17 @@ public class UserDAO {
         //TODO don`t work changing email
         FirebaseUser user = mAuth.getCurrentUser();
 
-        user.updateEmail(email);
+        user.updateEmail(email)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            dbController.sendDbResultOk();
+                        } else {
+                            dbController.sendDbResultError();
+                        }
+                    }
+                });
     }
 
     public void updatePhoto(Uri uri) {

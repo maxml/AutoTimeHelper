@@ -1,11 +1,13 @@
 package com.maxml.timer.ui.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -18,6 +20,7 @@ import com.maxml.timer.controllers.ActionController;
 import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.entity.Coordinates;
 import com.maxml.timer.entity.Path;
+import com.maxml.timer.entity.ShowProgressListener;
 import com.maxml.timer.util.Constants;
 
 import org.greenrobot.eventbus.EventBus;
@@ -27,7 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
-
     private GoogleMap map;
     private EventBus eventBus;
     private DbController dbController;
@@ -40,12 +42,21 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
     private List<String> listIdPath;
     private List<Polyline> polylines = new ArrayList<>();
 
+    private ShowProgressListener progressListener;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        progressListener = (ShowProgressListener) context;
+    }
 
     public GoogleMapFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.activity_google_map, container, false);
+
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);
         // init feedback bridge
@@ -58,7 +69,7 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
         listIdPath = argument.getStringArrayList(Constants.EXTRA_LIST_ID_PATH);
         // init map
         mapFragment.getMapAsync(this);
-        return inflater.inflate(R.layout.activity_google_map, container, false);
+        return rootView;
     }
 
     @Override
@@ -67,12 +78,15 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
         this.map = map;
         if (listIdPath != null) {
             dbController.getPathFromDb(listIdPath);
+            progressListener.showProgressBar();
             return;
         }
         if (idPath != null) {
             dbController.getPathFromDb(idPath);
+            progressListener.showProgressBar();
             return;
         }
+
     }
 
     @Subscribe()
@@ -83,6 +97,8 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
         PolylineOptions polylineOptions = getPolylineOptions(path);
         polyline = map.addPolyline(polylineOptions);
         polyline.setClickable(true);
+
+        progressListener.hideProgressBar();
     }
 
     @Subscribe()
@@ -99,6 +115,8 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
             polyline.setClickable(true);
             polylines.add(polyline);
         }
+
+        progressListener.hideProgressBar();
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.maxml.timer.ui.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,11 +14,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.maxml.timer.controllers.ActionController;
 import com.maxml.timer.controllers.DbController;
+import com.maxml.timer.entity.Events;
+import com.maxml.timer.entity.ShowProgressListener;
+import com.maxml.timer.util.FragmentUtils;
 import com.maxml.timer.util.ImageUtil;
 import com.maxml.timer.R;
 import com.maxml.timer.database.UserDAO;
@@ -37,14 +42,14 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
     private BootstrapButton bbChangeName;
     private BootstrapButton bbChangeEmail;
     private BootstrapButton bbOk;
-
     private EditText etName;
     private EditText etEmail;
-
     private ImageView ivUser;
 
     private DbController dbController;
     private EventBus eventBus;
+
+    private ShowProgressListener progressListener;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,16 +58,30 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        progressListener = (ShowProgressListener) context;
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_main_user_page, container, false);
 
-        eventBus = new EventBus();
-        dbController = new DbController(getContext(), eventBus);
+        registerEventBus();
 
         initUI(rootView);
         setListeners();
 
         return rootView;
+    }
+
+    private void registerEventBus() {
+        eventBus = new EventBus();
+        dbController = new DbController(getContext(), eventBus);
+    }
+
+    public void updateUI() {
+        dbController.sentUser();
     }
 
     @Subscribe
@@ -73,6 +92,21 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
             disableAccessToUI();
 
             Toast.makeText(getContext(), "You are anonymously.\n Please, Sign In", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Subscribe
+    public void onDatabaseEvent(Events.DbResult event) {
+        switch (event.getResultStatus()) {
+            case Constants.EVENT_DB_RESULT_OK:
+                progressListener.hideProgressBar();
+                break;
+            case Constants.EVENT_DB_RESULT_ERROR:
+                progressListener.hideProgressBar();
+                dbController.sentUser();
+
+                Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 
@@ -114,7 +148,9 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
                 Intent intent = ImageUtil.createIntentForLoadImage(getActivity());
                 if (intent != null) {
                     getActivity().startActivityForResult(intent, Constants.REQUEST_CODE_TAKE_PHOTO);
+                    progressListener.showProgressBar();
                 }
+                progressListener.hideProgressBar();
                 break;
             case R.id.bb_ok:
                 bbOk.setVisibility(View.GONE);
@@ -124,7 +160,7 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
                 dbController.updateUserEmail(etEmail.getText().toString());
                 dbController.updateUserName(etName.getText().toString());
 
-                Toast.makeText(getActivity(), "Saved", Toast.LENGTH_SHORT).show();
+                progressListener.showProgressBar();
                 break;
         }
     }
@@ -142,22 +178,6 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
             startActivity(new Intent(getActivity(), LoginActivity.class));
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public void updateImage(Uri uri) {
-        if (uri != null) {
-            if (uri.toString().contains("content")) {
-                Picasso.with(getActivity())
-                        .load(uri)
-                        .into(ivUser);
-            } else {
-                File file = new File(uri.toString());
-
-                Picasso.with(getActivity())
-                        .load(file)
-                        .into(ivUser);
-            }
-        }
     }
 
     private void setListeners() {
@@ -186,5 +206,21 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
         etEmail.setText(user.getEmail());
         etName.setText(user.getUsername());
         updateImage(Uri.parse(user.getPhoto()));
+    }
+
+    private void updateImage(Uri uri) {
+        if (uri != null) {
+            if (uri.toString().contains("content")) {
+                Picasso.with(getActivity())
+                        .load(uri)
+                        .into(ivUser);
+            } else {
+                File file = new File(uri.toString());
+
+                Picasso.with(getActivity())
+                        .load(file)
+                        .into(ivUser);
+            }
+        }
     }
 }

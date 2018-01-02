@@ -52,7 +52,7 @@ public class ActionsAdapter extends RecyclerView.Adapter<ActionsAdapter.ViewHold
             super(itemView);
 
             tvType = (TextView) itemView.findViewById(R.id.tv_type);
-            tvDescription = (TextView) itemView.findViewById(R.id.tv_description);
+            tvDescription = (TextView) itemView.findViewById(R.id.tv_title);
             tvTime = (TextView) itemView.findViewById(R.id.tv_time);
         }
 

@@ -1,6 +1,7 @@
 package com.maxml.timer.ui.fragments;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -8,12 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.maxml.timer.R;
 import com.maxml.timer.controllers.ActionController;
 import com.maxml.timer.entity.Action;
+import com.maxml.timer.entity.ShowProgressListener;
 import com.maxml.timer.util.Constants;
 
 import org.greenrobot.eventbus.EventBus;
@@ -26,18 +29,22 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
     private BootstrapButton bbChangeDescription;
     private BootstrapButton bbChangeData;
     private BootstrapButton bbOk;
-
     private EditText etDescription;
     private EditText etStartDate;
     private EditText etEndDate;
-
     private Spinner sAction;
 
     private Action action;
     private ArrayAdapter<String> sAdapter;
-
     private ActionController actionController;
     private EventBus eventBus;
+    private ShowProgressListener progressListener;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        progressListener = (ShowProgressListener) context;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -85,6 +92,7 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
                 sAction.setEnabled(false);
                 etDescription.setEnabled(false);
                 bbOk.setVisibility(View.INVISIBLE);
+                progressListener.showProgressBar();
                 //TODO make updating data through actionController
                 break;
         }

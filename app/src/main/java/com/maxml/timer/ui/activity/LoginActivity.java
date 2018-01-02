@@ -12,7 +12,6 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.maxml.timer.MainActivity;
 import com.maxml.timer.R;
-import com.maxml.timer.controllers.ActionController;
 import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.database.UserDAO;
 import com.maxml.timer.controllers.ReceiverService;
@@ -28,12 +27,12 @@ import org.greenrobot.eventbus.Subscribe;
 public class LoginActivity extends Activity {
     protected static final int CONNECTION_OK = 1;
 
-    private EventBus eventBus;
-    private DbController dbController;
-
     private TextView entLogin;
     private TextView entPassword;
-    private ProgressBar progressBar;
+    private ProgressBar pbLoad;
+
+    private EventBus eventBus;
+    private DbController dbController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +46,7 @@ public class LoginActivity extends Activity {
 
         entLogin = (TextView) findViewById(R.id.et_login);
         entPassword = (TextView) findViewById(R.id.et_password);
-        progressBar = (ProgressBar) findViewById(R.id.pb_load);
+        pbLoad = (ProgressBar) findViewById(R.id.pb_load);
 
         boolean isLogged = FirebaseAuth.getInstance().getCurrentUser() != null;
         if (isLogged) {
@@ -72,12 +71,12 @@ public class LoginActivity extends Activity {
         switch (event.getResultStatus()) {
             case Constants.EVENT_DB_RESULT_OK:
                 // sign in successful
-                progressBar.setVisibility(View.INVISIBLE);
+                pbLoad.setVisibility(View.INVISIBLE);
                 loginOk();
                 break;
             case Constants.EVENT_DB_RESULT_ERROR:
                 // sign in error
-                progressBar.setVisibility(View.INVISIBLE);
+                pbLoad.setVisibility(View.INVISIBLE);
                 incorrect();
                 break;
         }
@@ -103,12 +102,12 @@ public class LoginActivity extends Activity {
     }
 
     public void loginAsAnonymously() {
-        progressBar.setVisibility(View.VISIBLE);
+        pbLoad.setVisibility(View.VISIBLE);
         dbController.loginAnonymously();
     }
 
     public void login() {
-        progressBar.setVisibility(View.VISIBLE);
+        pbLoad.setVisibility(View.VISIBLE);
         dbController.login(entLogin.getText().toString(), entPassword.getText().toString());
     }
 
