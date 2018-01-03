@@ -1,4 +1,4 @@
-package com.maxml.timer.ui.fragments;
+package com.maxml.timer.trash;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,23 +15,23 @@ import java.util.ArrayList;
 
 public class ActionListViewFragment extends Fragment {
 
-	private ActionsAdapter aAdapter;
-
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		
-		View rootView = inflater.inflate(R.layout.slice_listview, container, false);
-		
-		initView(rootView);
-
-		return rootView;
-	}
-
-	private void initView(View rootView) {
-		RecyclerView rvList = (RecyclerView) rootView.findViewById(R.id.rvList);
-
-		aAdapter = new ActionsAdapter(new ArrayList<Action>());
-		rvList.setAdapter(aAdapter);
-	}
+//	private ActionsAdapter aAdapter;
+//
+//	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+//
+//		View rootView = inflater.inflate(R.layout.slice_listview, container, false);
+//
+//		initView(rootView);
+//
+//		return rootView;
+//	}
+//
+//	private void initView(View rootView) {
+//		RecyclerView rvList = (RecyclerView) rootView.findViewById(R.id.rvList);
+//
+//		aAdapter = new ActionsAdapter(new ArrayList<Action>());
+//		rvList.setAdapter(aAdapter);
+//	}
 
 
 //	public void onActivityCreated(Bundle savedInstanceState) {

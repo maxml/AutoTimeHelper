@@ -1,4 +1,4 @@
-package com.maxml.timer.ui.fragments;
+package com.maxml.timer.trash;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,7 +13,7 @@ import com.maxml.timer.R;
 public class TablesFragment extends Fragment {
 	// When requested, this adapter returns a ObjectFragment,
 	// representing an object in the collection.
-	CollectionPagerAdapter CollectionPagerAdapter;
+	com.maxml.timer.trash.CollectionPagerAdapter CollectionPagerAdapter;
 	ViewPager mViewPager;
 	
 	@Override

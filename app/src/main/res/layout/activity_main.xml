@@ -59,7 +59,7 @@
         app:menu="@menu/drawer_menu" />
 
     <!--
-        <com.maxml.timer.ui.elements.ScrimInsetsFrameLayout
+     com.maxml.timer.trash.elementsents.ScrimInsetsFrameLayout
             android:layout_width="250dp"
             android:layout_height="match_parent"
             android:layout_gravity="start"
@@ -71,7 +71,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#212121" />
-        </com.maxml.timer.ui.elements.ScrimInsetsFrameLayout>
+      com.maxml.timer.trash.elementsents.ScrimInsetsFrameLayout>
     -->
 
 </android.support.v4.widget.DrawerLayout>

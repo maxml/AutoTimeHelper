@@ -1,6 +1,5 @@
 package com.maxml.timer;
 
-import android.*;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -23,30 +22,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.maxml.timer.controllers.DbController;
-import com.maxml.timer.controllers.ReceiverService;
-import com.maxml.timer.database.UserDAO;
 import com.maxml.timer.entity.Events;
 import com.maxml.timer.entity.ShowProgressListener;
 import com.maxml.timer.entity.User;
-import com.maxml.timer.ui.fragments.ActionListViewFragment;
 import com.maxml.timer.ui.fragments.GoogleMapFragment;
 import com.maxml.timer.ui.fragments.HomeFragment;
 import com.maxml.timer.ui.fragments.MainUserPageFragment;
-import com.maxml.timer.ui.fragments.MounthCalendarFragment;
+import com.maxml.timer.ui.fragments.MonthCalendarFragment;
 import com.maxml.timer.ui.fragments.SettingsFragment;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.FragmentUtils;
 import com.maxml.timer.util.ImageUtil;
 import com.maxml.timer.util.NetworkUtil;
 import com.maxml.timer.util.SharedPrefUtils;
-import com.maxml.timer.util.Utils;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.io.File;
-import java.util.List;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -83,8 +77,6 @@ public class MainActivity extends AppCompatActivity
         checkLocationPermission();
 
         initDrawer();
-        if (savedInstanceState == null)
-            setupFragment(new ActionListViewFragment());
         initController();
         setHomeFragment();
     }
@@ -108,7 +100,7 @@ public class MainActivity extends AppCompatActivity
         switch (item.getItemId()) {
             case R.id.i_calendar:
                 Log.d(Constants.TAG, "Select calendar");
-                setupFragment(new MounthCalendarFragment());
+                setupFragment(new MonthCalendarFragment());
                 break;
             case R.id.i_home:
                 Log.d(Constants.TAG, "Select home");

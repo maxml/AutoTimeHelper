@@ -72,7 +72,7 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
             idPath = argument.getString(Constants.EXTRA_ID_PATH);
             listIdPath = argument.getStringArrayList(Constants.EXTRA_LIST_ID_PATH);
         } else {
-            // todo test data
+            // todo data for test fragment
             idPath = "-L1x9-4twC3flcTw9FX8";
         }
         // init map
