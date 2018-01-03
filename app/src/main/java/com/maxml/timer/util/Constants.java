@@ -4,14 +4,17 @@ public class Constants {
 
     public static final String TAG = "LOG";
 
-    public static final long MIN_DISTANCE_UPDATES = 5;
-    public static final long MIN_TIME = 1000 * 20;
+    public static final float MIN_DISTANCE_UPDATES = 0.2f;
+    public static final long MIN_TIME = 1000;
+//    public static final long MIN_DISTANCE_UPDATES = 5;
+//    public static final long MIN_TIME = 1000 * 20;
 
     public static final int RESULT_OK = 1;
     public static final int RESULT_FALSE = 0;
     public static final String SHARED_USER = "SHARED_USER";
 
     public static final int REQUEST_CODE_TAKE_PHOTO = 101;
+    public static final int REQUEST_LOCATION_PERMISSIONS = 102;
 
     // handler
 //    public static final int DB_RESULT_OK = 1;

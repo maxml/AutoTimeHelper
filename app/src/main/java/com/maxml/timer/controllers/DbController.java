@@ -1,12 +1,11 @@
 package com.maxml.timer.controllers;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 
-import com.maxml.timer.R;
 import com.maxml.timer.database.ActionDAO;
+import com.maxml.timer.database.CoordinateDAO;
 import com.maxml.timer.database.DBFactory;
 import com.maxml.timer.database.PathDAO;
 import com.maxml.timer.database.TableDAO;
@@ -20,18 +19,12 @@ import com.maxml.timer.entity.Table;
 import com.maxml.timer.entity.WifiState;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.NetworkUtil;
-import com.maxml.timer.util.NotificationHelper;
-import com.maxml.timer.util.Utils;
-import com.maxml.timer.widget.AutoTimeWidget;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by nazar on 12.12.17.
@@ -47,6 +40,7 @@ public class DbController {
     private ActionDAO actionDAO;
     private TableDAO tableDAO;
     private PathDAO pathDAO;
+    private CoordinateDAO coordinateDAO;
     private UserDAO userDAO;
     private WifiStateDAO wifiStateDAO;
 
@@ -123,8 +117,13 @@ public class DbController {
         userDAO.create(email, password);
     }
 
-    public void createPath(Path path) {
-        pathDAO.insert(path);
+    public void savePath(String pathId, List<Coordinates> coordinates) {
+        Path path = new Path(pathId);
+        for (Coordinates coordinate : coordinates) {
+            coordinate.setPath(path);
+        }
+        coordinateDAO.save(coordinates);
+        pathDAO.save(path);
     }
 
     public void sentUser() {
@@ -184,5 +183,6 @@ public class DbController {
         userDAO = new UserDAO(context, this);
         wifiStateDAO = DBFactory.getHelper().getWifiStateDAO();
         pathDAO = DBFactory.getHelper().getPathDAO();
+        coordinateDAO = DBFactory.getHelper().getCoordinateDAO();
     }
 }

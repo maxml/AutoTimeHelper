@@ -44,10 +44,10 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 public class CalendarFragment extends Fragment {
 
-    GoogleAccountCredential mCredential;
+    private GoogleAccountCredential mCredential;
     private TextView mOutputText;
     private Button mCallApiButton;
-    ProgressDialog mProgress;
+    private ProgressDialog mProgress;
 
     public static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
 

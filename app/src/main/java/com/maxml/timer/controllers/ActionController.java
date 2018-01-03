@@ -2,30 +2,19 @@ package com.maxml.timer.controllers;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 
 import com.maxml.timer.R;
-import com.maxml.timer.database.ActionDAO;
-import com.maxml.timer.database.PathDAO;
-import com.maxml.timer.database.TableDAO;
-import com.maxml.timer.database.UserDAO;
-import com.maxml.timer.database.DBFactory;
-import com.maxml.timer.database.WifiStateDAO;
 import com.maxml.timer.entity.Coordinates;
 import com.maxml.timer.entity.Path;
-import com.maxml.timer.entity.Table;
-import com.maxml.timer.entity.WifiState;
 import com.maxml.timer.entity.Action;
 import com.maxml.timer.entity.Events;
 import com.maxml.timer.util.Constants;
-import com.maxml.timer.util.NetworkUtil;
 import com.maxml.timer.util.NotificationHelper;
 import com.maxml.timer.util.Utils;
 import com.maxml.timer.widget.AutoTimeWidget;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -111,7 +100,7 @@ public class ActionController {
 
     public void gpsStopEvent(List<Coordinates> wayCoordinates) {
         if (walkActionId != null) {
-            dbController.createPath(new Path(walkActionId, wayCoordinates));
+            dbController.savePath(walkActionId, wayCoordinates);
         }
         walkActionId = null;
     }
@@ -193,7 +182,7 @@ public class ActionController {
             // create walk action
             startWalkEvent();
         } else {
-            // insert walt action
+            // save walt action
             endWalkEvent();
         }
     }

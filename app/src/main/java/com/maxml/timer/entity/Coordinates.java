@@ -19,7 +19,7 @@ public class Coordinates {
     private double latitude;
     @DatabaseField(dataType = DataType.DOUBLE)
     private double longitude;
-    @DatabaseField(foreign = true)
+    @DatabaseField(foreign = true, foreignAutoRefresh = true)
     private Path path;
 
     public Coordinates() {
@@ -65,6 +65,14 @@ public class Coordinates {
 
     public void setLongitude(double firstLong) {
         this.longitude = firstLong;
+    }
+
+    public Path getPath() {
+        return path;
+    }
+
+    public void setPath(Path path) {
+        this.path = path;
     }
 
     @Exclude

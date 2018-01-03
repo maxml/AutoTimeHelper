@@ -1,8 +1,13 @@
 package com.maxml.timer;
 
+import android.content.Intent;
 import android.support.multidex.MultiDexApplication;
+import android.util.Log;
 
+import com.maxml.timer.controllers.ReceiverService;
 import com.maxml.timer.database.DBFactory;
+import com.maxml.timer.util.Constants;
+import com.maxml.timer.util.Utils;
 
 public class App extends MultiDexApplication {
 
@@ -12,14 +17,6 @@ public class App extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         DBFactory.setHelper(this);
-
-//        controller = ActionController.build();
-
-//        Parse.enableLocalDatastore(this);
-//
-//        Parse.initialize(this, PSFKeys.PARSE_APPLICATION_ID, PSFKeys.PARSE_CLIENT_KEY);
-//
-//        ParseInstallation.getCurrentInstallation().saveInBackground();
 
 //		NetworkReceiver networkReceiver = new NetworkReceiver();
 //		networkReceiver.onReceive(this, new Intent());
@@ -36,4 +33,5 @@ public class App extends MultiDexApplication {
         DBFactory.releaseHelper();
         super.onTerminate();
     }
+
 }

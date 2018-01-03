@@ -35,5 +35,10 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="location_permissinons_not_garanted">Permissions not granted, your way not tracked</string>
+    <string name="toast_logged">Logged</string>
+    <string name="toast_incorrect_login_or_password">Incorrect login or password</string>
+    <string name="text_dialog_location_permission">Permissions for tracking your way</string>
+    <string name="toast_walk_without_path">This action don\'t have a path</string>
 
 </resources>

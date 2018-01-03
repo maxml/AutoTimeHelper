@@ -207,7 +207,7 @@ public class ActionDAO {
 //        Log.i("Slice", "Slice synchronized start");
 //        for (Slice slice : table.getList()) {
 //            // if slice already exist in DB it has no null id field
-//            // if field null - insert new slice to DB
+//            // if field null - save new slice to DB
 //            if (slice.getId() == null) {
 //                create(slice);
 //            } else {

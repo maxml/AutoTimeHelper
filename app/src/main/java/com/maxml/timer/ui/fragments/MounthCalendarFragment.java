@@ -25,7 +25,7 @@ import java.util.Date;
  * Created by morozione on 12/26/17.
  */
 
-public class MountCalendarFragment extends Fragment implements View.OnClickListener {
+public class MounthCalendarFragment extends Fragment implements View.OnClickListener {
     private DbController dbController;
     private EventBus eventBus;
     private CalendarView calendarView;
@@ -61,7 +61,6 @@ public class MountCalendarFragment extends Fragment implements View.OnClickListe
             updateUI(table);
         }
     }
-
 
     private void updateUI(Table table) {
         int calls = 0;

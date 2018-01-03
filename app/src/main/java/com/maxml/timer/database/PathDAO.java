@@ -16,7 +16,7 @@ public class PathDAO extends BaseDaoImpl<Path, String> {
         super(connectionSource, dataClass);
     }
 
-    public void insert(Path path) {
+    public void save(Path path) {
         try {
             create(path);
         } catch (SQLException e) {

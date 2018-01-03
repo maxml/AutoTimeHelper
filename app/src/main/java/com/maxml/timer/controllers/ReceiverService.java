@@ -1,11 +1,10 @@
 package com.maxml.timer.controllers;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
-import android.content.res.Configuration;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -13,8 +12,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.maxml.timer.R;
 import com.maxml.timer.entity.Coordinates;
 import com.maxml.timer.entity.Events;
 import com.maxml.timer.util.Constants;
@@ -28,8 +30,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import permissions.dispatcher.NeedsPermission;
-
 import static com.maxml.timer.util.Constants.MIN_DISTANCE_UPDATES;
 import static com.maxml.timer.util.Constants.MIN_TIME;
 
@@ -40,10 +40,9 @@ public class ReceiverService extends Service implements LocationListener {
     private EventBus serviceEventBus;
     private EventBus widgetEventBus;
     private EventBus callEventBus;
-    private EventBus wifiEventBus;
 
     private Handler handler;
-    private int dontMoveTime = 0;/*in min*/
+    private int dontMoveTimer = 0;/*in min*/
     private boolean isGPSEnabled = false;
     private boolean isNetworkEnabled = false;
     private LocationManager locationManager;
@@ -128,6 +127,7 @@ public class ReceiverService extends Service implements LocationListener {
         }
     }
 
+
     @Override
     public void onLocationChanged(Location location) {
         Coordinates point = new Coordinates();
@@ -169,7 +169,6 @@ public class ReceiverService extends Service implements LocationListener {
         unregisterEventBus(serviceEventBus);
         unregisterEventBus(widgetEventBus);
         unregisterEventBus(callEventBus);
-        unregisterEventBus(wifiEventBus);
         stopTimer();
         super.onDestroy();
     }
@@ -179,8 +178,8 @@ public class ReceiverService extends Service implements LocationListener {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                dontMoveTime++;
-                if (dontMoveTime >= Constants.WAY_DONT_MOVE_TIME) {
+                dontMoveTimer++;
+                if (dontMoveTimer >= Constants.WAY_DONT_MOVE_TIME) {
                     actionController.dontMoveTimerOff();
                 } else {
                     handler.postDelayed(this, 60000);
@@ -201,28 +200,28 @@ public class ReceiverService extends Service implements LocationListener {
         }
     }
 
-    @NeedsPermission({Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
-    @SuppressLint("MissingPermission")
-    private void initLocationListener() {
+    void initLocationListener() {
         Log.d("TAG", "initLocationListener() CALLED");
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-
         isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-
         isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // permission not granted
+            Toast.makeText(this, R.string.location_permissinons_not_garanted, Toast.LENGTH_LONG).show();
+            return;
+        }
 
         if (!isGPSEnabled && !isNetworkEnabled) {
             DialogFactory.showGpsSwitchAlert(this);
+            return;
+        }
+        if (isGPSEnabled) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, MIN_DISTANCE_UPDATES, this);
         } else {
-
             if (isNetworkEnabled) {
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME,
-                        MIN_DISTANCE_UPDATES, this);
-            }
-
-            if (isGPSEnabled) {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME,
-                        MIN_DISTANCE_UPDATES, this);
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE_UPDATES, this);
             }
         }
     }

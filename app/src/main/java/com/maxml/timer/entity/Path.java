@@ -1,5 +1,6 @@
 package com.maxml.timer.entity;
 
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
@@ -9,6 +10,7 @@ import com.maxml.timer.util.Constants;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @DatabaseTable(tableName = Constants.TABLE_PATH, daoClass = PathDAO.class)
@@ -16,14 +18,19 @@ public class Path {
     @DatabaseField(dataType = DataType.STRING, id = true)
     private String walkActionId;
     @ForeignCollectionField(eager = true)
-    private Collection<Coordinates> coordinates = new ArrayList<>();
+    private ForeignCollection<Coordinates> coordinates;
 
     public Path() {
     }
 
-    public Path(String walkActionId, List<Coordinates> coordinates) {
+    public Path(String walkActionId) {
         this.walkActionId = walkActionId;
-        this.coordinates = coordinates;
+    }
+
+    public ArrayList<Coordinates> getCoordinates() {
+        ArrayList<Coordinates> result = new ArrayList<>();
+        result.addAll(coordinates);
+        return result;
     }
 
     public String getWalkActionId() {
@@ -34,11 +41,4 @@ public class Path {
         this.walkActionId = walkActionId;
     }
 
-    public List<Coordinates> getCoordinates() {
-        return (List<Coordinates>) coordinates;
-    }
-
-    public void setCoordinates(List<Coordinates> coordinates) {
-        this.coordinates = coordinates;
-    }
 }

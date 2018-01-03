@@ -8,11 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.maxml.timer.R;
@@ -65,8 +68,13 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
         registerEventBus();
         // get input data
         Bundle argument = getArguments();
-        idPath = argument.getString(Constants.EXTRA_ID_PATH);
-        listIdPath = argument.getStringArrayList(Constants.EXTRA_LIST_ID_PATH);
+        if (argument != null) {
+            idPath = argument.getString(Constants.EXTRA_ID_PATH);
+            listIdPath = argument.getStringArrayList(Constants.EXTRA_LIST_ID_PATH);
+        } else {
+            // todo test data
+            idPath = "-L1x9-4twC3flcTw9FX8";
+        }
         // init map
         mapFragment.getMapAsync(this);
         return rootView;
@@ -76,38 +84,34 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap map) {
         Log.d(Constants.LOG, "start method onMapReady");
         this.map = map;
-        if (listIdPath != null) {
-            dbController.getPathFromDb(listIdPath);
-            progressListener.showProgressBar();
-            return;
-        }
-        if (idPath != null) {
-            dbController.getPathFromDb(idPath);
-            progressListener.showProgressBar();
-            return;
-        }
 
+        if (polyline == null && polylines.size() == 0) {
+            getDataFromDb();
+        }
     }
 
     @Subscribe()
     public void onReceiveSinglePath(Path path) {
         if (path == null || path.getCoordinates() == null) {
+            Toast.makeText(getActivity(), R.string.toast_walk_without_path, Toast.LENGTH_LONG).show();
             return;
         }
         PolylineOptions polylineOptions = getPolylineOptions(path);
         polyline = map.addPolyline(polylineOptions);
         polyline.setClickable(true);
-
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(polyline.getPoints().get(0),15.0f));
         progressListener.hideProgressBar();
     }
+
 
     @Subscribe()
     public void onReceiveMultyPath(ArrayList<Path> paths) {
         if (paths == null) {
+            Toast.makeText(getActivity(), R.string.toast_walk_without_path, Toast.LENGTH_LONG).show();
             return;
         }
         for (Path path : paths) {
-            if (path == null || path.getCoordinates() == null) {
+            if (path == null || path.getCoordinates() == null || path.getCoordinates().size() > 0) {
                 continue;
             }
             PolylineOptions polylineOptions = getPolylineOptions(path);
@@ -115,7 +119,11 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
             polyline.setClickable(true);
             polylines.add(polyline);
         }
-
+        if (polylines.size() > 0) {
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(polylines.get(0).getPoints().get(0),15.0f));
+        } else {
+            Toast.makeText(getActivity(), R.string.toast_walk_without_path, Toast.LENGTH_LONG).show();
+        }
         progressListener.hideProgressBar();
     }
 
@@ -135,9 +143,24 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
         List<Coordinates> coordinates = path.getCoordinates();
         PolylineOptions polylineOptions = new PolylineOptions();
         for (Coordinates coordinate : coordinates) {
-            polylineOptions.add(new LatLng(coordinate.getLatitude(), coordinate.getLongitude()));
+            LatLng point = new LatLng(coordinate.getLatitude(), coordinate.getLongitude());
+            polylineOptions.add(point);
+            map.addMarker( new MarkerOptions().position(point).title(coordinate.getDate().toString()));
         }
         return polylineOptions;
+    }
+
+    private void getDataFromDb() {
+        if (listIdPath != null) {
+            dbController.getPathFromDb(listIdPath);
+//            progressListener.showProgressBar();
+            return;
+        }
+        if (idPath != null) {
+            dbController.getPathFromDb(idPath);
+//            progressListener.showProgressBar();
+            return;
+        }
     }
 
     private void registerEventBus() {

@@ -40,7 +40,6 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.login_activity);
         Log.d("User", "start login activity");
 
-        initService();
         eventBus = new EventBus();
         dbController = new DbController(this, eventBus);
 
@@ -112,14 +111,15 @@ public class LoginActivity extends Activity {
     }
 
     private void incorrect() {
-        Toast.makeText(getApplicationContext(), "Incorrect login or password", Toast.LENGTH_SHORT)
+        Toast.makeText(getApplicationContext(), R.string.toast_incorrect_login_or_password, Toast.LENGTH_SHORT)
                 .show();
     }
 
     public void loginOk() {
+        initService();
         User user = UserDAO.getCurrentUser();
         SharedPrefUtils.saveCurrentUser(this, user);
-        Toast.makeText(getApplicationContext(), "Logined", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), R.string.toast_logged, Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
@@ -134,6 +134,4 @@ public class LoginActivity extends Activity {
             startService(serviceIntent);
         }
     }
-
-
 }
