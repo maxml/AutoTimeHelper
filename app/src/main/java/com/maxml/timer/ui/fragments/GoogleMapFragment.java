@@ -59,7 +59,7 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_google_map, container, false);
-
+        Log.d(Constants.LOG, "GoogleMapFragment method onCreateView");
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);
         // init feedback bridge
@@ -92,6 +92,7 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
 
     @Subscribe()
     public void onReceiveSinglePath(Path path) {
+        Log.d(Constants.LOG, "start method onReceiveSinglePath");
         if (path == null || path.getCoordinates() == null) {
             Toast.makeText(getActivity(), R.string.toast_walk_without_path, Toast.LENGTH_LONG).show();
             return;
@@ -105,7 +106,8 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
 
 
     @Subscribe()
-    public void onReceiveMultyPath(ArrayList<Path> paths) {
+    public void onReceiveMultiPath(ArrayList<Path> paths) {
+        Log.d(Constants.LOG, "start method onReceiveMultiPath");
         if (paths == null) {
             Toast.makeText(getActivity(), R.string.toast_walk_without_path, Toast.LENGTH_LONG).show();
             return;
@@ -151,14 +153,15 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void getDataFromDb() {
+        Log.d(Constants.LOG, "start method getDataFromDb");
         if (listIdPath != null) {
+            progressListener.showProgressBar();
             dbController.getPathFromDb(listIdPath);
-//            progressListener.showProgressBar();
             return;
         }
         if (idPath != null) {
+            progressListener.showProgressBar();
             dbController.getPathFromDb(idPath);
-//            progressListener.showProgressBar();
             return;
         }
     }

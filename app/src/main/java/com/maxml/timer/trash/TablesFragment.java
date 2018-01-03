@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.maxml.timer.R;
 
 public class TablesFragment extends Fragment {
+/*
 	// When requested, this adapter returns a ObjectFragment,
 	// representing an object in the collection.
 	com.maxml.timer.trash.CollectionPagerAdapter CollectionPagerAdapter;
@@ -39,5 +40,6 @@ public class TablesFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 	}
-	
+*/
+
 }
