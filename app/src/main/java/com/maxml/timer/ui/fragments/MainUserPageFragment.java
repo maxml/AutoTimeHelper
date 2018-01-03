@@ -68,7 +68,6 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
         View rootView = inflater.inflate(R.layout.activity_main_user_page, container, false);
 
         registerEventBus();
-
         initUI(rootView);
         setListeners();
 

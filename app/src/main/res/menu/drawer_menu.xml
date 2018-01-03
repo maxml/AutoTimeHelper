@@ -4,12 +4,12 @@
 
     <group android:id="@+id/group1">
         <item
-            android:id="@+id/calendar"
+            android:id="@+id/i_calendar"
             android:icon="@drawable/ic_calendar"
             android:title="@string/calendar" />
 
         <item
-            android:id="@+id/map"
+            android:id="@+id/i_home"
             android:icon="@drawable/ic_map"
             android:title="@string/home" />
     </group>
@@ -17,12 +17,12 @@
     <group android:id="@+id/group2">
 
         <item
-            android:id="@+id/user"
+            android:id="@+id/i_user"
             android:icon="@drawable/ic_person"
             android:title="@string/user" />
 
         <item
-            android:id="@+id/search"
+            android:id="@+id/i_map"
             android:icon="@drawable/ic_search"
             android:title="@string/search" />
     </group>
@@ -30,7 +30,7 @@
     <group android:id="@+id/group3">
 
         <item
-            android:id="@+id/setting"
+            android:id="@+id/i_setting"
             android:icon="@drawable/ic_settings"
             android:title="@string/settings" />
     </group>

@@ -1,6 +1,7 @@
 package com.maxml.timer;
 
 import android.app.AlertDialog;
+import android.app.usage.NetworkStatsManager;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.database.UserDAO;
@@ -34,6 +36,7 @@ import com.maxml.timer.ui.fragments.SettingsFragment;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.FragmentUtils;
 import com.maxml.timer.util.ImageUtil;
+import com.maxml.timer.util.NetworkUtil;
 import com.maxml.timer.util.SharedPrefUtils;
 import com.squareup.picasso.Picasso;
 
@@ -91,24 +94,23 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.calendar:
+            case R.id.i_calendar:
                 Log.d(Constants.TAG, "Select calendar");
                 setupFragment(new MountCalendarFragment());
                 break;
-            case R.id.map:
+            case R.id.i_home:
                 Log.d(Constants.TAG, "Select home");
                 setupFragment(new HomeFragment());
                 break;
-            case R.id.user:
+            case R.id.i_user:
                 Log.d(Constants.TAG, "Select user");
                 setupFragment(new MainUserPageFragment());
                 break;
-            case R.id.search:
-                Log.d(Constants.TAG, "Select search");
-                GoogleMapFragment fragment = new GoogleMapFragment();
-                setupFragment(fragment);
+            case R.id.i_map:
+                Log.d(Constants.TAG, "Select map");
+                setupFragment(new GoogleMapFragment());
                 break;
-            case R.id.setting:
+            case R.id.i_setting:
                 Log.d(Constants.TAG, "Select setting");
                 setupFragment(new SettingsFragment());
                 break;
@@ -244,13 +246,17 @@ public class MainActivity extends AppCompatActivity
         switch (requestCode) {
             case Constants.REQUEST_CODE_TAKE_PHOTO:
                 if (resultCode == RESULT_OK) {
-                    if (data != null && data.getData() != null) {
-                        loadImageFromGallery(data);
-                    } else if (ImageUtil.fPhoto != null) {
-                        loadImageFromCamera();
+                    if (NetworkUtil.isNetworkAvailable(this)) {
+                        if (data != null && data.getData() != null) {
+                            loadImageFromGallery(data);
+                        } else if (ImageUtil.fPhoto != null) {
+                            loadImageFromCamera();
+                        }
+                        showProgressBar();
+                        dbController.sentUser();
+                    } else {
+                        Toast.makeText(this, "No network", Toast.LENGTH_SHORT).show();
                     }
-                    showProgressBar();
-                    dbController.sentUser();
                 }
                 break;
         }

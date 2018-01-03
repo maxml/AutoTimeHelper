@@ -40,8 +40,7 @@ public class NotificationHelper {
                 .setLargeIcon(BitmapFactory.decodeResource(appContext.getResources(),
                         android.R.mipmap.sym_def_app_icon));
 
-        Notification notification = nb.build();
-        return notification;
+        return nb.build();
     }
 
     public static void updateNotification(Context context, String message) {

@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -64,7 +65,6 @@ public class ReceiverService extends Service implements LocationListener {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(Constants.TAG, "Service: onCreate");
         serviceEventBus = new EventBus();
         actionController = ActionController.build(this, serviceEventBus);
         dbController = DbController.build(this, serviceEventBus);
