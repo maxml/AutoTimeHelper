@@ -84,9 +84,9 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
     }
 
     @Subscribe
-    public void onReceiveUser(UserDAO userDAO) {
-        if (!userDAO.isAnonymously()) {
-            updateUI(userDAO.getCurrentUser());
+    public void onReceiveUser(User user) {
+        if (!user.isAnonymously()) {
+            updateUI(user);
         } else {
             disableAccessToUI();
 

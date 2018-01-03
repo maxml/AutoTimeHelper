@@ -124,9 +124,11 @@ public class UserDAO {
         String username = firebaseUser.getDisplayName();
         String email = firebaseUser.getEmail();
         Uri photo = firebaseUser.getPhotoUrl();
+        boolean isAnonymously = email == null;
         user.setId(objectId);
         user.setUsername(username);
         user.setEmail(email);
+        user.setAnonymously(isAnonymously);
         if (photo != null) {
             user.setPhoto(photo.toString());
         } else {
@@ -158,7 +160,7 @@ public class UserDAO {
                 });
     }
 
-    public boolean isAnonymously() {
+    private boolean isAnonymously() {
         return getCurrentUser().getEmail() == null;
     }
 

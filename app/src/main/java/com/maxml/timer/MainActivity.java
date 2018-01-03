@@ -135,8 +135,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Subscribe
-    public void onReceiveUser(UserDAO userDAO) {
-        initDrawerHeader(userDAO.getCurrentUser());
+    public void onReceiveUser(User user) {
+        initDrawerHeader(user);
     }
 
     @Subscribe

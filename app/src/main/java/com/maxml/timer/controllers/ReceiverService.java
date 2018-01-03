@@ -49,7 +49,6 @@ public class ReceiverService extends Service implements LocationListener {
     private LocationManager locationManager;
     private List<Coordinates> wayCoordinates = new ArrayList<>();
 
-
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {

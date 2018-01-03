@@ -128,7 +128,7 @@ public class DbController {
     }
 
     public void sentUser() {
-        entityEventBus.post(userDAO);
+        entityEventBus.post(userDAO.getCurrentUser());
     }
 
     public void login(String email, String password) {
@@ -185,5 +185,4 @@ public class DbController {
         wifiStateDAO = DBFactory.getHelper().getWifiStateDAO();
         pathDAO = DBFactory.getHelper().getPathDAO();
     }
-//24 - 2c:ae:2b:74:f7:7b - 1177266368
 }
