@@ -14,8 +14,7 @@
             android:id="@+id/s_action"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:saveEnabled="false" />
+            android:layout_margin="16dp"/>
 
         <com.beardedhen.androidbootstrap.BootstrapEditText
             android:id="@+id/bet_description"
@@ -24,13 +23,10 @@
             android:layout_below="@id/s_action"
             android:layout_margin="8dp"
             android:clickable="true"
-            android:cursorVisible="false"
             android:ems="10"
             android:enabled="false"
-            android:focusableInTouchMode="false"
             android:gravity="center_vertical"
             android:hint="Description"
-            android:inputType="none"
             bootstrapbutton:roundedCorners="true" />
 
         <LinearLayout
@@ -80,22 +76,10 @@
             bootstrapbutton:roundedCorners="true" />
 
         <com.beardedhen.androidbootstrap.BootstrapButton
-            android:id="@+id/bb_change_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/bb_change_action"
-            android:layout_margin="8dp"
-            android:enabled="true"
-            android:text="Change date"
-            bootstrapbutton:bootstrapBrand="primary"
-            bootstrapbutton:bootstrapSize="lg"
-            bootstrapbutton:roundedCorners="true" />
-
-        <com.beardedhen.androidbootstrap.BootstrapButton
             android:id="@+id/bb_change_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/bb_change_date"
+            android:layout_below="@id/bb_change_action"
             android:layout_margin="8dp"
             android:enabled="true"
             android:text="Change description"
@@ -104,10 +88,22 @@
             bootstrapbutton:roundedCorners="true" />
 
         <com.beardedhen.androidbootstrap.BootstrapButton
-            android:id="@+id/bb_ok"
+            android:id="@+id/bb_change_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/bb_change_description"
+            android:layout_margin="8dp"
+            android:enabled="true"
+            android:text="Change date"
+            bootstrapbutton:bootstrapBrand="primary"
+            bootstrapbutton:bootstrapSize="lg"
+            bootstrapbutton:roundedCorners="true" />
+
+        <com.beardedhen.androidbootstrap.BootstrapButton
+            android:id="@+id/bb_ok"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/bb_change_date"
             android:layout_marginLeft="128dp"
             android:layout_marginRight="128dp"
             android:layout_marginTop="16dp"

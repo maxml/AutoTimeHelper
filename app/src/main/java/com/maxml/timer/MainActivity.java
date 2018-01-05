@@ -17,19 +17,24 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.entity.Events;
+import com.maxml.timer.entity.ShowFragmentListener;
 import com.maxml.timer.entity.ShowProgressListener;
+import com.maxml.timer.entity.StatisticControl;
 import com.maxml.timer.entity.User;
+import com.maxml.timer.ui.fragments.DayCalendarFragment;
 import com.maxml.timer.ui.fragments.GoogleMapFragment;
 import com.maxml.timer.ui.fragments.HomeFragment;
 import com.maxml.timer.ui.fragments.MainUserPageFragment;
 import com.maxml.timer.ui.fragments.MonthCalendarFragment;
 import com.maxml.timer.ui.fragments.SettingsFragment;
+import com.maxml.timer.ui.fragments.WeekCalendarFragment;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.FragmentUtils;
 import com.maxml.timer.util.ImageUtil;
@@ -46,13 +51,15 @@ import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ShowProgressListener {
-
+        implements NavigationView.OnNavigationItemSelectedListener,
+        ShowProgressListener, StatisticControl, ShowFragmentListener {
 
     private DrawerLayout drawerLayout;
     private ProgressBar pbLoad;
     private ActionBarDrawerToggle drawerToggle;
     private Toolbar toolbar;
+    private LinearLayout statisticLayout;
+    private TextView eventTime;
 
     private DbController dbController;
     private EventBus eventBus;
@@ -65,6 +72,9 @@ public class MainActivity extends AppCompatActivity
         pbLoad = (ProgressBar) findViewById(R.id.pb_load);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        statisticLayout = (LinearLayout) findViewById(R.id.layoutStatistic);
+        eventTime = (TextView) findViewById(R.id.tvTime);
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         hideProgressBar();
@@ -81,37 +91,25 @@ public class MainActivity extends AppCompatActivity
         setHomeFragment();
     }
 
-    @AfterPermissionGranted(Constants.REQUEST_LOCATION_PERMISSIONS)
-    private void checkLocationPermission() {
-        String[] perms = {android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION};
-        if (!EasyPermissions.hasPermissions(this, perms)) {
-            // Do not have permissions, request them now
-            EasyPermissions.requestPermissions(this, getString(R.string.text_dialog_location_permission),
-                    Constants.REQUEST_LOCATION_PERMISSIONS, perms);
-        }
-    }
-
-    public void setupFragment(Fragment fragment) {
-        FragmentUtils.setFragment(this, fragment, fragment.getClass().getName());
-    }
-
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.i_calendar:
-                Log.d(Constants.TAG, "Select calendar");
-                setupFragment(new MonthCalendarFragment());
-                break;
             case R.id.i_home:
-                Log.d(Constants.TAG, "Select home");
                 setupFragment(new HomeFragment());
                 break;
+            case R.id.i_calendar_month:
+                setupFragment(new MonthCalendarFragment());
+                break;
+            case R.id.i_calendar_week:
+                setupFragment(new WeekCalendarFragment());
+                break;
+            case R.id.i_calendar_day:
+                setupFragment(new DayCalendarFragment());
+                break;
             case R.id.i_user:
-                Log.d(Constants.TAG, "Select user");
                 setupFragment(new MainUserPageFragment());
                 break;
             case R.id.i_map:
-                Log.d(Constants.TAG, "Select map");
                 setupFragment(new GoogleMapFragment());
                 break;
             case R.id.i_setting:
@@ -145,6 +143,67 @@ public class MainActivity extends AppCompatActivity
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
+
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setTitle("Really Exit?")
+                .setMessage("Are you sure you want to exit?")
+                .setNegativeButton(android.R.string.no, null)
+                .setPositiveButton(android.R.string.yes, new OnClickListener() {
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        MainActivity.super.onBackPressed();
+                    }
+                })
+                .create()
+                .show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case Constants.REQUEST_CODE_TAKE_PHOTO:
+                if (resultCode == RESULT_OK) {
+                    if (NetworkUtil.isNetworkAvailable(this)) {
+                        if (data != null && data.getData() != null) {
+                            loadImageFromGallery(data);
+                        } else if (ImageUtil.fPhoto != null) {
+                            loadImageFromCamera();
+                        }
+                        showProgressBar();
+                        dbController.sentUser();
+                    } else {
+                        Toast.makeText(this, "No network", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void showStatisticLayout() {
+        statisticLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideStatisticLayout() {
+        statisticLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void setEventTime(String time) {
+        String text = getString(R.string.statistic_text);
+        String displayText = text + " " + time;
+        eventTime.setText(displayText);
+    }
+
+    @Override
+    public void showFragment(Fragment fragment) {
+        setupFragment(fragment);
+    }
+
+
     @Subscribe
     public void onReceiveUser(User user) {
         initDrawerHeader(user);
@@ -164,6 +223,28 @@ public class MainActivity extends AppCompatActivity
                 }
                 break;
         }
+    }
+
+    @AfterPermissionGranted(Constants.REQUEST_LOCATION_PERMISSIONS)
+    private void checkLocationPermission() {
+        String[] perms = {android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION};
+        if (!EasyPermissions.hasPermissions(this, perms)) {
+            // Do not have permissions, request them now
+            EasyPermissions.requestPermissions(this, getString(R.string.text_dialog_location_permission),
+                    Constants.REQUEST_LOCATION_PERMISSIONS, perms);
+        }
+    }
+
+    public void showProgressBar() {
+        pbLoad.setVisibility(View.VISIBLE);
+    }
+
+    public void hideProgressBar() {
+        pbLoad.setVisibility(View.INVISIBLE);
+    }
+
+    public void setupFragment(Fragment fragment) {
+        FragmentUtils.setFragment(this, fragment, fragment.getClass().getName());
     }
 
     private void initController() {
@@ -228,51 +309,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void showProgressBar() {
-        pbLoad.setVisibility(View.VISIBLE);
-    }
-
-    public void hideProgressBar() {
-        pbLoad.setVisibility(View.INVISIBLE);
-    }
-
-    @Override
-    public void onBackPressed() {
-        new AlertDialog.Builder(this)
-                .setTitle("Really Exit?")
-                .setMessage("Are you sure you want to exit?")
-                .setNegativeButton(android.R.string.no, null)
-                .setPositiveButton(android.R.string.yes, new OnClickListener() {
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        MainActivity.super.onBackPressed();
-                    }
-                })
-                .create()
-                .show();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case Constants.REQUEST_CODE_TAKE_PHOTO:
-                if (resultCode == RESULT_OK) {
-                    if (NetworkUtil.isNetworkAvailable(this)) {
-                        if (data != null && data.getData() != null) {
-                            loadImageFromGallery(data);
-                        } else if (ImageUtil.fPhoto != null) {
-                            loadImageFromCamera();
-                        }
-                        showProgressBar();
-                        dbController.sentUser();
-                    } else {
-                        Toast.makeText(this, "No network", Toast.LENGTH_SHORT).show();
-                    }
-                }
-                break;
-        }
-    }
-
     private void loadImageFromGallery(Intent data) {
         dbController.updateUserPhoto(data.getData().toString());
     }
@@ -280,25 +316,4 @@ public class MainActivity extends AppCompatActivity
     private void loadImageFromCamera() {
         dbController.updateUserPhoto(ImageUtil.fPhoto.toString());
     }
-
-//    private void setCredentialAccountName(String accountName) {
-//        if (FragmentUtils.getCurrentFragment(this) instanceof CalendarFragment) {
-//            ((CalendarFragment) FragmentUtils.getCurrentFragment(this))
-//                    .setCredentialAccountName(accountName);
-//        }
-//    }
-
-//    private void showMessageInstallPlayService() {
-//        if (FragmentUtils.getCurrentFragment(this) instanceof CalendarFragment) {
-//            ((CalendarFragment) FragmentUtils.getCurrentFragment(this))
-//                    .showMessageInstallPlayService();
-//        }
-//    }
-//
-//    public void resultCalendarFragment() {
-//        if (FragmentUtils.getCurrentFragment(this) instanceof CalendarFragment) {
-//            ((CalendarFragment) FragmentUtils.getCurrentFragment(this))
-//                    .resultFromApi();
-//        }
-//    }
 }

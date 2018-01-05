@@ -15,8 +15,8 @@
         <android.support.design.widget.AppBarLayout
             android:id="@+id/app_bar_layout"
             android:layout_width="match_parent"
-            android:background="@color/backGroundGrey"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/backGroundGrey">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -43,6 +43,24 @@
             android:layout_alignParentBottom="true"
             android:layout_below="@+id/app_bar_layout" />
 
+        <LinearLayout
+            android:id="@+id/layoutStatistic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_alignParentBottom="true"
+            android:background="@color/backGroundGrey"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="5dp"
+                android:text="TextView"
+                android:textColor="@color/black_overlay" />
+        </LinearLayout>
     </RelativeLayout>
 
     <android.support.design.widget.NavigationView
@@ -73,5 +91,6 @@
                 android:background="#212121" />
       com.maxml.timer.trash.elementsents.ScrimInsetsFrameLayout>
     -->
+
 
 </android.support.v4.widget.DrawerLayout>

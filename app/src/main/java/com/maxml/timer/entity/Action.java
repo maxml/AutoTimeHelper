@@ -1,10 +1,12 @@
 package com.maxml.timer.entity;
 
+import android.support.annotation.NonNull;
+
 import com.maxml.timer.util.Utils;
 
 import java.util.Date;
 
-public class Action {
+public class Action implements Comparable<Action> {
     private String id;
     private String type;
     private long dayCount;
@@ -80,5 +82,14 @@ public class Action {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    @Override
+    public int compareTo(@NonNull Action a) {
+        if (a.getStartDate().before(startDate)) {
+            return 1;
+        } else {
+            return -1;
+        }
     }
 }

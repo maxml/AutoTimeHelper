@@ -3,6 +3,7 @@ package com.maxml.timer.ui.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,17 +12,25 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.maxml.timer.R;
 import com.maxml.timer.controllers.ActionController;
+import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.entity.Action;
+import com.maxml.timer.entity.Events;
 import com.maxml.timer.entity.ShowProgressListener;
+import com.maxml.timer.entity.Table;
+import com.maxml.timer.util.ActionConverter;
 import com.maxml.timer.util.Constants;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DetailsActionFragment extends Fragment implements View.OnClickListener {
 
@@ -34,16 +43,28 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
     private EditText etEndDate;
     private Spinner sAction;
 
-    private Action action;
     private ArrayAdapter<String> sAdapter;
-    private ActionController actionController;
     private EventBus eventBus;
+    private DbController dbController;
+    private Action action;
+
+    private ActionController actionController;
     private ShowProgressListener progressListener;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        progressListener = (ShowProgressListener) context;
+        if (context instanceof ShowProgressListener) {
+            progressListener = (ShowProgressListener) context;
+        }
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        registerEventBus();
+
+        dbController.getActionFromDb(getArguments().getString(Constants.EXTRA_ID_ACTION));
     }
 
     @Override
@@ -54,9 +75,6 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
         initUI(rootView);
         setListeners();
 
-        eventBus = new EventBus();
-        actionController = new ActionController(getContext(), eventBus);
-
         return rootView;
     }
 
@@ -64,6 +82,7 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
     public void onStart() {
         eventBus.register(this);
         actionController.registerEventBus(eventBus);
+        dbController.registerEventBus(eventBus);
         super.onStart();
     }
 
@@ -71,6 +90,7 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
     public void onStop() {
         eventBus.unregister(this);
         actionController.unregisterEventBus(eventBus);
+        dbController.unregisterEventBus(eventBus);
         super.onStop();
     }
 
@@ -93,9 +113,51 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
                 etDescription.setEnabled(false);
                 bbOk.setVisibility(View.INVISIBLE);
                 progressListener.showProgressBar();
-                //TODO make updating data through actionController
+
+                updateAction();
                 break;
         }
+    }
+
+    @Subscribe
+    public void receiveActionFromDb(Action action) {
+        this.action = action;
+        updateUI(action);
+    }
+
+    @Subscribe
+    public void onDatabaseEvent(Events.DbResult event) {
+        switch (event.getResultStatus()) {
+            case Constants.EVENT_DB_RESULT_OK:
+                progressListener.hideProgressBar();
+                break;
+            case Constants.EVENT_DB_RESULT_ERROR:
+                progressListener.hideProgressBar();
+
+                Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
+
+    private void updateAction() {
+        if (sAction.getSelectedItemPosition() == 0) {
+            action.setType(Constants.EVENT_CALL_ACTION);
+        } else if (sAction.getSelectedItemPosition() == 1) {
+            action.setType(Constants.EVENT_REST_ACTION);
+        } else if (sAction.getSelectedItemPosition() == 2) {
+            action.setType(Constants.EVENT_WALK_ACTION);
+        } else if (sAction.getSelectedItemPosition() == 3) {
+            action.setType(Constants.EVENT_WORK_ACTION);
+        }
+        action.setDescription(etDescription.getText().toString());
+
+        dbController.updateActionInDb(action);
+    }
+
+    private void registerEventBus() {
+        eventBus = new EventBus();
+        actionController = new ActionController(getContext(), eventBus);
+        dbController = new DbController(getContext(), eventBus);
     }
 
     private void initUI(View view) {
@@ -105,7 +167,9 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
         bbOk = (BootstrapButton) view.findViewById(R.id.bb_ok);
 
         sAction = (Spinner) view.findViewById(R.id.s_action);
+        sAction.setEnabled(false);
 
+        etDescription = (EditText) view.findViewById(R.id.bet_description);
         etStartDate = (EditText) view.findViewById(R.id.bet_start_date);
         etEndDate = (EditText) view.findViewById(R.id.bet_end_date);
 

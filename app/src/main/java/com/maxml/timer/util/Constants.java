@@ -40,7 +40,6 @@ public class Constants {
 
     public static final int NOTIFICATION_ID = 100;
 
-
     public static final int WIFI_TYPE_HOME = 1;
     public static final int WIFI_TYPE_WORK = 2;
 
@@ -76,6 +75,7 @@ public class Constants {
     public static final String EVENT_SET_WIFI_EVENT_BUS = "setWifiEventBus";
     public static final int WAY_DONT_MOVE_TIME = 5;
     public static final String EXTRA_ID_PATH = "extraIdPath";
+    public static final String EXTRA_ID_ACTION = "extraIdAction";
     public static final String EXTRA_LIST_ID_PATH = "extraListIdPath";
     public static final String LOG = "appLog";
 
@@ -83,8 +83,9 @@ public class Constants {
     public static final String TABLE_COORDINATES = "tableCoordinates";
     public static final String TABLE_WIFI_STATE = "wifiStates";
 
-    public static final int REQUEST_AUTHORIZATION = 1001;
-    public static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
-    public static final int REQUEST_ACCOUNT_PICKER = 1000;
+    public static final int ID_BUTTON_EDIT = 0;
+    public static final int ID_BUTTON_DELETE = 1;
+    public static final int ID_BUTTON_SPLIT = 2;
 
+    public static final int WEEK_COUNT_DAY = 7;
 }

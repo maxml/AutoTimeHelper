@@ -2,6 +2,7 @@ package com.maxml.timer.controllers;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.design.widget.TabLayout;
 import android.util.Log;
 
 import com.maxml.timer.database.ActionDAO;
@@ -25,10 +26,6 @@ import org.greenrobot.eventbus.EventBus;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
-
-/**
- * Created by nazar on 12.12.17.
- */
 
 public class DbController {
 
@@ -89,8 +86,28 @@ public class DbController {
         tableDAO.getTableByData(date);
     }
 
+    public void getTableFromDb(Date startDate, Date endDate) {
+        tableDAO.getTableByData(startDate, endDate);
+    }
+
+    public void getActionFromDb(String id) {
+        actionDAO.getActionFromDb(id);
+    }
+
     public void sendTableFromDb(Table table) {
         entityEventBus.post(table);
+    }
+
+    public void sendTableFromDb(List<Table> tableList) {
+        entityEventBus.post(tableList);
+    }
+
+    public void sendActionFromDb(Action action) {
+        entityEventBus.post(action);
+    }
+
+    public void updateActionInDb(Action action) {
+        actionDAO.updateActionInDb(action);
     }
 
     public void insertWifiInDb(WifiState wifiState) {

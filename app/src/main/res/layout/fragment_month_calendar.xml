@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="20dp"
+    tools:context="com.maxml.timer.ui.activity.CalendarActivity">
+
+    <CalendarView
+        android:id="@+id/cv_calendar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:firstDayOfWeek="2"
+        android:minDate="05/02/2017"
+        tools:layout_editor_absoluteX="17dp"
+        tools:layout_editor_absoluteY="-9dp" />
+
+</RelativeLayout>

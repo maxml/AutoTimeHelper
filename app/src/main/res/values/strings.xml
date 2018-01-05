@@ -41,4 +41,23 @@
     <string name="text_dialog_location_permission">Permissions for tracking your way</string>
     <string name="toast_walk_without_path">This action don\'t have a path</string>
 
+    <string name="action_settings">Settings</string>
+    <string name="drawable_menu_month">Month</string>
+    <string name="drawable_menu_week">Week</string>
+    <string name="drawable_menu_day">Day</string>
+    <string name="drawable_menu_group">Tools</string>
+    <string name="drawable_menu_login">login</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="action_default_description">not selected</string>
+    <string name="opyion_button_edit">Edit</string>
+    <string name="opyion_button_delete">Delete</string>
+    <string name="opyion_button_split">Split</string>
+    <string name="statistic_text">Events time:</string>
+
+    <string-array name="options_action">
+        <item>Edit</item>
+        <item>Delete</item>
+        <item>Split</item>
+    </string-array>
 </resources>

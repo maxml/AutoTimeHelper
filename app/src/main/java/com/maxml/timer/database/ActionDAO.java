@@ -5,12 +5,19 @@ import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.entity.User;
 import com.maxml.timer.entity.Action;
 import com.maxml.timer.util.Constants;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ActionDAO {
 
@@ -61,6 +68,41 @@ public class ActionDAO {
                 }
             }
         });
+    }
+
+    public void getActionFromDb(String id) {
+        actionRef.child(id)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Action action = dataSnapshot.getValue(Action.class);
+
+                        dbController.sendActionFromDb(action);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        dbController.sendDbResultError();
+                    }
+                });
+    }
+
+    public void updateActionInDb(Action action) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("description", action.getDescription());
+        map.put("type", action.getType());
+        actionRef.child(action.getId())
+                .updateChildren(map)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (!task.isSuccessful()) {
+                            dbController.sendDbResultError();
+                        } else {
+                            dbController.sendDbResultOk();
+                        }
+                    }
+                });
     }
 
 /*
