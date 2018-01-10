@@ -20,6 +20,7 @@ import com.maxml.timer.controllers.ActionController;
 import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.entity.Action;
 import com.maxml.timer.entity.Events;
+import com.maxml.timer.entity.ShowFragmentListener;
 import com.maxml.timer.entity.ShowProgressListener;
 import com.maxml.timer.entity.Table;
 import com.maxml.timer.util.ActionConverter;
@@ -37,6 +38,7 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
     private BootstrapButton bbChangeAction;
     private BootstrapButton bbChangeDescription;
     private BootstrapButton bbChangeData;
+    private BootstrapButton bbShowPathInMap;
     private BootstrapButton bbOk;
     private EditText etDescription;
     private EditText etStartDate;
@@ -50,12 +52,16 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
 
     private ActionController actionController;
     private ShowProgressListener progressListener;
+    private ShowFragmentListener fragmentListener;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof ShowProgressListener) {
             progressListener = (ShowProgressListener) context;
+        }
+        if (context instanceof ShowFragmentListener) {
+            fragmentListener = (ShowFragmentListener) context;
         }
     }
 
@@ -108,6 +114,15 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
             case R.id.bb_change_date:
 
                 break;
+            case R.id.bb_show_path_in_map:
+                GoogleMapFragment mapFragment = new GoogleMapFragment();
+
+                Bundle args = new Bundle();
+                args.putString(Constants.EXTRA_ID_PATH, action.getId());
+
+                mapFragment.setArguments(args);
+                fragmentListener.showFragment(mapFragment);
+                break;
             case R.id.bb_ok:
                 sAction.setEnabled(false);
                 etDescription.setEnabled(false);
@@ -123,6 +138,7 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
     public void receiveActionFromDb(Action action) {
         this.action = action;
         updateUI(action);
+        initUIbShow(getView());
     }
 
     @Subscribe
@@ -174,10 +190,17 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
         etEndDate = (EditText) view.findViewById(R.id.bet_end_date);
 
         sAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item,
-                new String[] {Constants.EVENT_CALL_ACTION, Constants.EVENT_REST_ACTION,
+                new String[]{Constants.EVENT_CALL_ACTION, Constants.EVENT_REST_ACTION,
                         Constants.EVENT_WALK_ACTION, Constants.EVENT_WORK_ACTION});
 
         sAction.setAdapter(sAdapter);
+    }
+
+    private void initUIbShow(View view) {
+        if (action.getType().equalsIgnoreCase(Constants.EVENT_WALK_ACTION)) {
+            bbShowPathInMap = (BootstrapButton) view.findViewById(R.id.bb_show_path_in_map);
+            bbShowPathInMap.setVisibility(View.VISIBLE);
+        }
     }
 
     private void setListeners() {

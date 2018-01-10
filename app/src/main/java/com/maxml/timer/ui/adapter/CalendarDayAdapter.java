@@ -23,8 +23,6 @@ import java.util.List;
 public class CalendarDayAdapter extends RecyclerView.Adapter<CalendarDayAdapter.DayViewHolder> {
     private int mExpandedPosition = -1;
 
-    private RecyclerView expandedRecyclerView;
-
     private Context context;
     private List<Action> list;
     private List<OptionButtons> optionList;

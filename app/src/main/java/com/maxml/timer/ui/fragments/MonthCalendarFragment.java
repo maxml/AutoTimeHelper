@@ -13,6 +13,8 @@ import android.widget.CalendarView;
 
 import com.maxml.timer.R;
 import com.maxml.timer.controllers.DbController;
+import com.maxml.timer.entity.Action;
+import com.maxml.timer.entity.ShowProgressListener;
 import com.maxml.timer.entity.StatisticControl;
 import com.maxml.timer.entity.Table;
 import com.maxml.timer.util.Constants;
@@ -20,13 +22,23 @@ import com.maxml.timer.util.Constants;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
 public class MonthCalendarFragment extends Fragment {
+    private List<Action> list = new ArrayList<>();
+
     private CalendarView cvCalendar;
 
     private EventBus eventBus;
     private DbController controller;
 
     private StatisticControl statisticControl;
+    private ShowProgressListener progressListener;
 
     @Override
     public void onAttach(Context context) {
@@ -34,12 +46,18 @@ public class MonthCalendarFragment extends Fragment {
         if (context instanceof StatisticControl) {
             statisticControl = (StatisticControl) context;
         }
+        if (context instanceof ShowProgressListener) {
+            progressListener = (ShowProgressListener) context;
+        }
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         registerEventBus();
+        controller.getTableFromDb(new Date(System.currentTimeMillis()));
+
+        progressListener.showProgressBar();
     }
 
     @Override
@@ -57,11 +75,6 @@ public class MonthCalendarFragment extends Fragment {
         super.onStart();
         eventBus.register(this);
         controller.registerEventBus(eventBus);
-        if (statisticControl != null) {
-            String time = getStatisticTime();
-            statisticControl.setEventTime(time);
-            statisticControl.showStatisticLayout();
-        }
     }
 
     @Override
@@ -76,12 +89,35 @@ public class MonthCalendarFragment extends Fragment {
 
     @Subscribe
     public void receiveTableFromDb(Table table) {
+        list.addAll(table.getWorkList());
+        list.addAll(table.getCallList());
+        list.addAll(table.getRestList());
+        list.addAll(table.getWalkList());
 
+        initStatistic();
+        progressListener.hideProgressBar();
     }
 
-    // todo
     public String getStatisticTime() {
-        return "00:00";
+        long timeInMillis = 0;
+        for (Action entity : list) {
+            Date startDate = entity.getStartDate();
+            Date endDate = entity.getEndDate();
+            long different = endDate.getTime() - startDate.getTime();
+            timeInMillis += different;
+        }
+        NumberFormat f = new DecimalFormat("00");
+        long hours = timeInMillis / 1000 / 60 / 60;
+        long min = timeInMillis / 1000 / 60 % 60;
+        return f.format(hours) + ":" + f.format(min);
+    }
+
+    private void initStatistic() {
+        if (statisticControl != null) {
+            String time = getStatisticTime();
+            statisticControl.setEventTime(time);
+            statisticControl.showStatisticLayout();
+        }
     }
 
     private void registerEventBus() {
@@ -98,7 +134,11 @@ public class MonthCalendarFragment extends Fragment {
         cvCalendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int dayOfMonth) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(year, month, dayOfMonth);
 
+                controller.getTableFromDb(new Date(calendar.getTimeInMillis()));
+                progressListener.showProgressBar();
             }
         });
     }

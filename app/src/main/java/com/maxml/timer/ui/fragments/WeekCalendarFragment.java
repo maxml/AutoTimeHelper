@@ -22,6 +22,7 @@ import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.dialog.OptionActionDialog;
 import com.maxml.timer.entity.Action;
 import com.maxml.timer.entity.ActionWeek;
+import com.maxml.timer.entity.Events;
 import com.maxml.timer.entity.ShowFragmentListener;
 import com.maxml.timer.entity.ShowProgressListener;
 import com.maxml.timer.entity.StatisticControl;
@@ -71,11 +72,13 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
         super.onCreate(savedInstanceState);
         registerEventBus();
 
-        Date startDate = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24 * Constants.WEEK_COUNT_DAY);
-        Date endDate = new Date(System.currentTimeMillis());
-        controller.getTableFromDb(startDate, endDate);
-
         progressListener.showProgressBar();
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getActionsFromDb();
     }
 
     @Override
@@ -127,6 +130,10 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
             fragment.setArguments(args);
 
             fragmentListener.showFragment(fragment);
+        } else if (position == Constants.ID_BUTTON_DELETE) {
+            controller.removeActionInDb(idEvent);
+
+            progressListener.showProgressBar();
         }
     }
 
@@ -157,6 +164,26 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
         initStatistic(actions);
 
         progressListener.hideProgressBar();
+    }
+
+    @Subscribe
+    public void onDatabaseEvent(Events.DbResult event) {
+        switch (event.getResultStatus()) {
+            case Constants.EVENT_DB_RESULT_OK:
+                getActionsFromDb();
+                break;
+            case Constants.EVENT_DB_RESULT_ERROR:
+                progressListener.hideProgressBar();
+
+                Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
+
+    private void getActionsFromDb() {
+        Date startDate = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24 * Constants.WEEK_COUNT_DAY);
+        Date endDate = new Date(System.currentTimeMillis());
+        controller.getTableFromDb(startDate, endDate);
     }
 
     private void registerEventBus() {

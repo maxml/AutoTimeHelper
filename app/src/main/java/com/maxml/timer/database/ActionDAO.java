@@ -105,6 +105,26 @@ public class ActionDAO {
                 });
     }
 
+    public void removeAction(String id) {
+        actionRef.child(id).removeValue(
+                new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        databaseReference.removeValue()
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            dbController.sendDbResultOk();
+                                        } else {
+                                            dbController.sendDbResultError();
+                                        }
+                                    }
+                                });
+                    }
+                });
+    }
+
 /*
     private void saveIdAndDay(long dayCount, String id) {
         // create update map

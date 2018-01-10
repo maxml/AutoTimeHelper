@@ -2,7 +2,6 @@ package com.maxml.timer.controllers;
 
 import android.content.Context;
 import android.net.Uri;
-import android.support.design.widget.TabLayout;
 import android.util.Log;
 
 import com.maxml.timer.database.ActionDAO;
@@ -92,6 +91,10 @@ public class DbController {
 
     public void getActionFromDb(String id) {
         actionDAO.getActionFromDb(id);
+    }
+
+    public void removeActionInDb(String id) {
+        actionDAO.removeAction(id);
     }
 
     public void sendTableFromDb(Table table) {

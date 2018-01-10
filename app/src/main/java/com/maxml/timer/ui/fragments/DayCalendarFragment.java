@@ -9,8 +9,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.maxml.timer.R;
+import com.maxml.timer.entity.Events;
 import com.maxml.timer.ui.adapter.CalendarDayAdapter;
 import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.entity.Action;
@@ -62,7 +64,12 @@ public class DayCalendarFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         registerEventBus();
+    }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        adapter.swapData(new ArrayList<Action>());
         controller.getTableFromDb(new Date(System.currentTimeMillis()));
         progressListener.showProgressBar();
     }
@@ -73,9 +80,10 @@ public class DayCalendarFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_day_calendar, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
 
-        initTestOptionButtons();
+        initOptionButtons();
 
         initRecyclerView();
+
         return view;
     }
 
@@ -108,8 +116,24 @@ public class DayCalendarFragment extends Fragment {
         progressListener.hideProgressBar();
     }
 
+    @Subscribe
+    public void onDatabaseEvent(Events.DbResult event) {
+        switch (event.getResultStatus()) {
+            case Constants.EVENT_DB_RESULT_OK:
+                adapter.swapData(new ArrayList<Action>());
+                controller.getTableFromDb(new Date(System.currentTimeMillis()));
+                break;
+            case Constants.EVENT_DB_RESULT_ERROR:
+                progressListener.hideProgressBar();
+
+                Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
+
     private void updateUI() {
         adapter.swapData(list);
+
         initStatistic();
     }
 
@@ -152,13 +176,17 @@ public class DayCalendarFragment extends Fragment {
                     fragment.setArguments(args);
 
                     fragmentListener.showFragment(fragment);
+                } else if (optionType == OptionButtons.DELETE) {
+                    controller.removeActionInDb(item.getId());
+
+                    progressListener.showProgressBar();
                 }
             }
         });
         recyclerView.setAdapter(adapter);
     }
 
-    private void initTestOptionButtons() {
+    private void initOptionButtons() {
         options.add(OptionButtons.DELETE);
         options.add(OptionButtons.SPLIT);
         options.add(OptionButtons.EDIT);
