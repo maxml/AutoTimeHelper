@@ -64,12 +64,12 @@ public class DayCalendarFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         registerEventBus();
+        initOptionButtons();
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        adapter.swapData(new ArrayList<Action>());
         controller.getTableFromDb(new Date(System.currentTimeMillis()));
         progressListener.showProgressBar();
     }
@@ -79,8 +79,6 @@ public class DayCalendarFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_day_calendar, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-
-        initOptionButtons();
 
         initRecyclerView();
 
@@ -101,6 +99,8 @@ public class DayCalendarFragment extends Fragment {
         if (statisticControl != null) {
             statisticControl.hideStatisticLayout();
         }
+
+        list.clear();
         super.onStop();
     }
 
@@ -120,7 +120,7 @@ public class DayCalendarFragment extends Fragment {
     public void onDatabaseEvent(Events.DbResult event) {
         switch (event.getResultStatus()) {
             case Constants.EVENT_DB_RESULT_OK:
-                adapter.swapData(new ArrayList<Action>());
+                list.clear();
                 controller.getTableFromDb(new Date(System.currentTimeMillis()));
                 break;
             case Constants.EVENT_DB_RESULT_ERROR:
@@ -166,7 +166,7 @@ public class DayCalendarFragment extends Fragment {
 
     private void initRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new CalendarDayAdapter(getContext(), list, options, new CalendarDayAdapter.OnClickOption() {
+        adapter = new CalendarDayAdapter(getContext(), new ArrayList<Action>(), options, new CalendarDayAdapter.OnClickOption() {
             @Override
             public void onClick(OptionButtons optionType, Action item) {
                 if (optionType == OptionButtons.EDIT) {

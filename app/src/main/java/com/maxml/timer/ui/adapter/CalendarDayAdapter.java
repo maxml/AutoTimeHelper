@@ -16,6 +16,7 @@ import com.maxml.timer.util.OptionButtons;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
@@ -119,6 +120,7 @@ public class CalendarDayAdapter extends RecyclerView.Adapter<CalendarDayAdapter.
                         } else {
                             mExpandedPosition = position;
                         }
+                        notifyItemRemoved(position);
                         TransitionManager.beginDelayedTransition(rvOptions);
                         notifyDataSetChanged();
                     }

@@ -89,6 +89,7 @@ public class MonthCalendarFragment extends Fragment {
 
     @Subscribe
     public void receiveTableFromDb(Table table) {
+        list.clear();
         list.addAll(table.getWorkList());
         list.addAll(table.getCallList());
         list.addAll(table.getRestList());
