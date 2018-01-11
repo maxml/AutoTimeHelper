@@ -25,6 +25,13 @@
                 android:layout_alignParentTop="true"
                 app:titleTextColor="@color/primary_text" />
 
+            <CalendarView
+                android:id="@+id/cv_calendar"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                />
+
             <ProgressBar
                 android:id="@+id/pb_load"
                 style="@style/Widget.AppCompat.ProgressBar.Horizontal"

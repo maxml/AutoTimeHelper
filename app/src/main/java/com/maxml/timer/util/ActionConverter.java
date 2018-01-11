@@ -27,8 +27,8 @@ public class ActionConverter {
             startData.setTimeInMillis(action.getStartDate().getTime());
             Calendar endData = Calendar.getInstance();
             endData.setTimeInMillis(action.getEndDate().getTime());
-            if (endData.getTimeInMillis() - startData.getTimeInMillis() < 1000 * 60 * 60) {
-                endData.setTimeInMillis(startData.getTimeInMillis() + (1000 * 60 * 60));
+            if (endData.getTimeInMillis() - startData.getTimeInMillis() < 1000 * 60 * 50) {
+                endData.setTimeInMillis(startData.getTimeInMillis() + (1000 * 60 * 50));
             }
 
             String description = (action.getDescription() == null) ? "" : action.getDescription();

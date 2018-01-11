@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/i_v_month_calendar"
+        android:icon="@drawable/calendar_icon"
+        android:title="Month"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/i_v_current_day"
+        android:icon="@drawable/current_day"
+        android:title="current"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/i_v_change_view"
+        android:icon="@drawable/ic_week"
+        android:title="change view"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/i_v_refresh"
+        android:title="refresh" />
+
+</menu>

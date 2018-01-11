@@ -1,17 +1,22 @@
 package com.maxml.timer.ui.fragments;
 
 
+import android.app.ActionBar;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.RectF;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CalendarView;
 import android.widget.Toast;
 
 import com.alamkanak.weekview.MonthLoader;
@@ -43,12 +48,16 @@ import java.util.List;
 public class WeekCalendarFragment extends Fragment implements WeekView.EventClickListener,
         MonthLoader.MonthChangeListener, WeekView.EventLongPressListener, OptionActionDialog.OnDialogItemClickListener {
 
-    private List<WeekViewEvent> list = new ArrayList<>();
     private WeekView weekView;
+    private CalendarView cvCalendar;
+    private Toolbar toolbar;
+
+    private List<WeekViewEvent> list = new ArrayList<>();
+    private int[] calendarViews = {1, 3, 5};
+    private int currentCalendarView;
 
     private EventBus eventBus;
     private DbController controller;
-
     private StatisticControl statisticControl;
     private ShowFragmentListener fragmentListener;
     private ShowProgressListener progressListener;
@@ -71,6 +80,7 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         registerEventBus();
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -79,6 +89,7 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
         View rootView = inflater.inflate(R.layout.fragment_week_calendar, container, false);
 
         initView(rootView);
+        setListeners();
 
         return rootView;
     }
@@ -101,19 +112,26 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
             statisticControl.hideStatisticLayout();
         }
 
+        cvCalendar.setVisibility(View.GONE);
         progressListener.hideProgressBar();
         super.onStop();
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        toolbar.setTitle(R.string.app_name);
+    }
+
+    @Override
     public void onEventLongPress(WeekViewEvent event, RectF eventRect) {
-        DialogFragment dialog = OptionActionDialog.getInstance(this, ((ActionWeek) event).getActionId());
-        dialog.show(getFragmentManager(), "dialog option");
+
     }
 
     @Override
     public void onEventClick(WeekViewEvent event, RectF eventRect) {
-
+        DialogFragment dialog = OptionActionDialog.getInstance(this, ((ActionWeek) event).getActionId());
+        dialog.show(getFragmentManager(), "dialog option");
     }
 
     @Override
@@ -141,6 +159,37 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
 
             progressListener.showProgressBar();
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.calendar_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.i_v_change_view:
+                weekView.setNumberOfVisibleDays(getNextCurrentCalendarView());
+                break;
+            case R.id.i_v_current_day:
+                weekView.goToToday();
+                break;
+            case R.id.i_v_month_calendar:
+                if (cvCalendar.getVisibility() == View.GONE) {
+                    cvCalendar.setVisibility(View.VISIBLE);
+                    cvCalendar.setDate(weekView.getFirstVisibleDay().getTimeInMillis());
+                } else {
+                    cvCalendar.setVisibility(View.GONE);
+                }
+                break;
+            case R.id.i_v_refresh:
+                loadActions();
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Subscribe
@@ -195,14 +244,33 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
 
     private void initView(View rootView) {
         weekView = (WeekView) rootView.findViewById(R.id.weekView);
+        cvCalendar = (CalendarView) getActivity().findViewById(R.id.cv_calendar);
+        toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.name_calendar_fragment);
+
         weekView.setMonthChangeListener(this);
         weekView.setOnEventClickListener(this);
         weekView.setEventLongPressListener(this);
+        weekView.setShowNowLine(true);
         weekView.setNumberOfVisibleDays(1);
     }
 
+    private void setListeners() {
+        cvCalendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView calendarView, int i, int i1, int i2) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.YEAR, i);
+                calendar.set(Calendar.MONTH, i1);
+                calendar.set(Calendar.DAY_OF_MONTH, i2);
+
+                weekView.goToDate(calendar);
+            }
+        });
+    }
+
     private void updateUI() {
-        weekView.notifyDatasetChanged();
+        weekView.notifyDataSetChanged();
     }
 
     private void initStatistic(List<Action> list) {
@@ -227,5 +295,13 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
         long hours = timeInMillis / 1000 / 60 / 60;
         long min = timeInMillis / 1000 / 60 % 60;
         return f.format(hours) + ":" + f.format(min);
+    }
+
+    private int getNextCurrentCalendarView() {
+        currentCalendarView++;
+        if (currentCalendarView >= calendarViews.length) {
+            currentCalendarView = 0;
+        }
+        return calendarViews[currentCalendarView];
     }
 }

@@ -55,6 +55,7 @@
     <string name="opyion_button_split">Split</string>
     <string name="statistic_text">Work time:</string>
     <string name="warning_about_anonymously">You are anonymously.  Please, Sign In</string>
+    <string name="name_calendar_fragment">Calendar</string>
 
     <string-array name="options_action">
         <item>Edit</item>

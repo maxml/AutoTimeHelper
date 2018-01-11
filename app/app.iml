@@ -109,7 +109,6 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/split-apk" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/splits-support" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/symbols" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/transforms" />
       <excludeFolder url="file://$MODULE_DIR$/build/outputs" />
       <excludeFolder url="file://$MODULE_DIR$/build/tmp" />
@@ -160,7 +159,6 @@
     <orderEntry type="library" name="com.google.android.gms:play-services-games-9.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="com.android.support:multidex-instrumentation-1.0.2" level="project" />
     <orderEntry type="library" name="com.j256.ormlite:ormlite-core:5.0@jar" level="project" />
-    <orderEntry type="library" name="com.github.alamkanak:android-week-view-1.2.6" level="project" />
     <orderEntry type="library" name="com.squareup.picasso:picasso:2.5.2@jar" level="project" />
     <orderEntry type="library" name="org.greenrobot:eventbus:3.0.0@jar" level="project" />
     <orderEntry type="library" name="com.android.support:appcompat-v7-24.0.0" level="project" />
@@ -198,5 +196,6 @@
     <orderEntry type="library" name="com.google.android.gms:play-services-ads-9.0.0" level="project" />
     <orderEntry type="library" name="com.google.android.gms:play-services-location-9.0.0" level="project" />
     <orderEntry type="library" name="com.google.android.gms:play-services-maps-9.0.0" level="project" />
+    <orderEntry type="module" module-name="weekview" />
   </component>
 </module>
