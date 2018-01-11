@@ -40,6 +40,7 @@ public class ReceiverService extends Service implements LocationListener {
     private EventBus serviceEventBus;
     private EventBus widgetEventBus;
     private EventBus callEventBus;
+    private EventBus wifiEventBus;
 
     private Handler handler;
     private int dontMoveTimer = 0;/*in min*/
@@ -89,7 +90,8 @@ public class ReceiverService extends Service implements LocationListener {
                 callEventBus = event.getEventBus();
                 break;
             case Constants.EVENT_SET_WIFI_EVENT_BUS:
-
+                wifiEventBus = event.getEventBus();
+                break;
         }
     }
 
@@ -109,7 +111,6 @@ public class ReceiverService extends Service implements LocationListener {
     public void onReceiveCallEvent(Events.CallEvent event) {
         actionController.onReceiveCallEvent(event);
     }
-
 
     @Subscribe()
     public void onGpsEvent(Events.GPS event) {

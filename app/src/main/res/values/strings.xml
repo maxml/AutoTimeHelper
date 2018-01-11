@@ -23,7 +23,7 @@
     <string name="notification_text">some message</string>
     <string name="ongoing_call_description">ongoing call</string>
     <string name="incoming_call_description">incoming call</string>
-    <string name="widget_default_text">Ничего не выбрано</string>
+    <string name="widget_default_text">don`t change</string>
     <string name="widget_call_text">Дзвонок</string>
     <string name="call_number_widget">Из виджета</string>
     <string name="widget_walk_text">В пути</string>
@@ -53,7 +53,8 @@
     <string name="opyion_button_edit">Edit</string>
     <string name="opyion_button_delete">Delete</string>
     <string name="opyion_button_split">Split</string>
-    <string name="statistic_text">Events time:</string>
+    <string name="statistic_text">Work time:</string>
+    <string name="warning_about_anonymously">You are anonymously.  Please, Sign In</string>
 
     <string-array name="options_action">
         <item>Edit</item>

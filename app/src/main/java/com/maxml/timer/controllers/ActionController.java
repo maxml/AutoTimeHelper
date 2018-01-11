@@ -49,7 +49,6 @@ public class ActionController {
                 serviceEventBus.post(new Events.EventBusControl(Constants.EVENT_SET_CALL_EVENT_BUS, entityEventBus));
                 break;
 
-
             case Constants.EVENT_CALL_ONGOING_ANSWERED:
                 startCallEvent();
                 break;
@@ -66,10 +65,16 @@ public class ActionController {
         }
     }
 
-    public void onReciveWifiEvent(Events.WifiEvent event) {
+    public void onReceiveWifiEvent(Events.WifiEvent event) {
         switch (event.getWifiState()) {
             case Constants.EVENT_SET_WIFI_EVENT_BUS:
                 serviceEventBus.post(new Events.EventBusControl(Constants.EVENT_SET_WIFI_EVENT_BUS, entityEventBus));
+                break;
+            case Constants.EVENT_WIFI_ENABLE:
+                startWifiEvent();
+                break;
+            case Constants.EVENT_WIFI_DISABLE:
+                endWifiEvent();
                 break;
         }
     }
@@ -187,6 +192,15 @@ public class ActionController {
         }
     }
 
+
+    private void startWifiEvent() {
+        //TODO
+    }
+
+    private void endWifiEvent() {
+        //TODO
+    }
+
     private void startRestEvent() {
         // create action entity
         Action rest = new Action();
@@ -200,7 +214,7 @@ public class ActionController {
         // add to stack trace
         stateStack.add(Constants.EVENT_REST_ACTION);
         // update status
-        updateStatus(context.getString(R.string.widget_rest_text), rest.getStartDate());
+        updateStatus(Constants.EVENT_REST_ACTION, rest.getStartDate());
     }
 
     private void endRestEvent() {
@@ -232,7 +246,7 @@ public class ActionController {
         // add to stack trace
         stateStack.add(Constants.EVENT_WORK_ACTION);
         // update status
-        updateStatus(context.getString(R.string.widget_work_text), work.getStartDate());
+        updateStatus(Constants.EVENT_WORK_ACTION, work.getStartDate());
     }
 
     private void endWorkEvent() {
@@ -264,7 +278,7 @@ public class ActionController {
         // add to stack trace
         stateStack.add(Constants.EVENT_CALL_ACTION);
         // update status
-        updateStatus(context.getString(R.string.widget_call_text), call.getStartDate());
+        updateStatus(Constants.EVENT_CALL_ACTION, call.getStartDate());
     }
 
     private void endCallEvent() {
@@ -296,7 +310,7 @@ public class ActionController {
         // add to stack trace
         stateStack.add(Constants.EVENT_WALK_ACTION);
         // update status
-        updateStatus(context.getString(R.string.widget_walk_text), walk.getStartDate());
+        updateStatus(Constants.EVENT_WALK_ACTION, walk.getStartDate());
     }
 
     private void endWalkEvent() {

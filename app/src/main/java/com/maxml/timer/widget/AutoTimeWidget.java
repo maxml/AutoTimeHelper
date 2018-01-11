@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 import com.maxml.timer.R;
 import com.maxml.timer.controllers.ActionController;
@@ -24,11 +25,9 @@ public class AutoTimeWidget extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        if (!Utils.isServiceRunning(context, ReceiverService.class)) {
+        if (Utils.isServiceRunning(context, ReceiverService.class)) {
             if (actionController == null) {
-                eventBus = new EventBus();
-                actionController = new ActionController(context,eventBus);
-                actionController.registerEventBus(eventBus);
+                initEventBus(context);
                 eventBus.post(new Events.WidgetEvent(Constants.EVENT_SET_WIDGET_EVENT_BUS));
             }
         }
@@ -38,9 +37,21 @@ public class AutoTimeWidget extends AppWidgetProvider {
         }
     }
 
+    private void initEventBus(Context context) {
+        eventBus = new EventBus();
+        actionController = new ActionController(context, eventBus);
+        actionController.registerEventBus(eventBus);
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
+        if (Utils.isServiceRunning(context, ReceiverService.class)) {
+            if (actionController == null) {
+                initEventBus(context);
+            }
+        }
+
         String action = intent.getAction();
 
         // if action null return
@@ -59,15 +70,12 @@ public class AutoTimeWidget extends AppWidgetProvider {
                 case Constants.EVENT_WORK_ACTION:
                     eventBus.post(new Events.WidgetEvent(Constants.EVENT_WORK_ACTION));
                     break;
-
                 case Constants.EVENT_WALK_ACTION:
                     eventBus.post(new Events.WidgetEvent(Constants.EVENT_WALK_ACTION));
                     break;
-
                 case Constants.EVENT_REST_ACTION:
                     eventBus.post(new Events.WidgetEvent(Constants.EVENT_REST_ACTION));
                     break;
-
                 case Constants.EVENT_CALL_ACTION:
                     eventBus.post(new Events.WidgetEvent(Constants.EVENT_CALL_ACTION));
                     break;

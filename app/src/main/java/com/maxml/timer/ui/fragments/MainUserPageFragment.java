@@ -90,7 +90,7 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
         } else {
             disableAccessToUI();
 
-            Toast.makeText(getContext(), "You are anonymously.\n Please, Sign In", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), R.string.warning_about_anonymously, Toast.LENGTH_LONG).show();
         }
     }
 

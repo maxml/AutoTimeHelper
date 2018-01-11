@@ -15,6 +15,7 @@ import org.greenrobot.eventbus.EventBus;
 
 public class NetworkReceiver extends BroadcastReceiver {
     private DbController dbController;
+    private ActionController actionController;
     private EventBus eventBus;
 
     @Override
@@ -26,6 +27,7 @@ public class NetworkReceiver extends BroadcastReceiver {
             WifiState wifiState  = NetworkUtil.getCurrentWifi(context);
 
             dbController.wifiActivated(wifiState);
+            actionController.onReceiveWifiEvent(new Events.WifiEvent(Constants.EVENT_SET_WIFI_EVENT_BUS));
         }
     }
 
@@ -33,8 +35,10 @@ public class NetworkReceiver extends BroadcastReceiver {
         if (dbController == null) {
             eventBus = new EventBus();
             dbController = new DbController(context, eventBus);
+            actionController = new ActionController(context, eventBus);
 
             dbController.registerEventBus(eventBus);
+            actionController.registerEventBus(eventBus);
             eventBus.post(new Events.WifiEvent(Constants.EVENT_SET_WIFI_EVENT_BUS));
         }
     }

@@ -71,14 +71,16 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         registerEventBus();
-
-        progressListener.showProgressBar();
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        getActionsFromDb();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_week_calendar, container, false);
+
+        initView(rootView);
+
+        return rootView;
     }
 
     @Override
@@ -86,6 +88,8 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
         super.onStart();
         eventBus.register(this);
         controller.registerEventBus(eventBus);
+
+        loadActions();
     }
 
     @Override
@@ -96,6 +100,8 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
         if (statisticControl != null) {
             statisticControl.hideStatisticLayout();
         }
+
+        progressListener.hideProgressBar();
         super.onStop();
     }
 
@@ -122,7 +128,7 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
     }
 
     @Override
-    public void OnDialogItemClick(int position, String idEvent) {
+    public void onDialogItemClick(int position, String idEvent) {
         if (position == Constants.ID_BUTTON_EDIT) {
             Bundle args = new Bundle();
             args.putString(Constants.EXTRA_ID_ACTION, idEvent);
@@ -135,16 +141,6 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
 
             progressListener.showProgressBar();
         }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_week_calendar, container, false);
-
-        initView(rootView);
-
-        return rootView;
     }
 
     @Subscribe
@@ -180,6 +176,12 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
         }
     }
 
+
+    private void loadActions() {
+        progressListener.showProgressBar();
+        getActionsFromDb();
+    }
+
     private void getActionsFromDb() {
         Date startDate = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24 * Constants.WEEK_COUNT_DAY);
         Date endDate = new Date(System.currentTimeMillis());
@@ -196,7 +198,7 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
         weekView.setMonthChangeListener(this);
         weekView.setOnEventClickListener(this);
         weekView.setEventLongPressListener(this);
-        weekView.setNumberOfVisibleDays(5);
+        weekView.setNumberOfVisibleDays(1);
     }
 
     private void updateUI() {

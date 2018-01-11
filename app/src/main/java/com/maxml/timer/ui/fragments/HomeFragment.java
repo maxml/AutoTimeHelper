@@ -1,6 +1,7 @@
 package com.maxml.timer.ui.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,10 +13,12 @@ import android.widget.ToggleButton;
 import com.maxml.timer.R;
 import com.maxml.timer.controllers.ActionController;
 import com.maxml.timer.entity.Events;
+import com.maxml.timer.util.Constants;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.security.CodeSigner;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -34,15 +37,39 @@ public class HomeFragment extends Fragment {
     public HomeFragment() {
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        registerEventBus();
+    }
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.manual_activity_fragment, container, false);
 
         initView(rootView);
-        registerEventBus();
+        setStartUI();
 
         initListeners();
 
         return rootView;
+    }
+
+    private void setStartUI() {
+        String activeStatus = actionController.getActionStatus();
+        Date actionDate = actionController.getActionTime();
+        if (activeStatus != null && actionDate != null) {
+            tvTitle.setText(activeStatus);
+            tvStartDate.setText(charSequence(actionDate));
+            if (activeStatus.equalsIgnoreCase(Constants.EVENT_CALL_ACTION)) {
+                bCall.setChecked(true);
+            } else if (activeStatus.equalsIgnoreCase(Constants.EVENT_WORK_ACTION)) {
+                bWork.setChecked(true);
+            } else if (activeStatus.equalsIgnoreCase(Constants.EVENT_REST_ACTION)) {
+                bRest.setChecked(true);
+            } else if (activeStatus.equalsIgnoreCase(Constants.EVENT_WALK_ACTION)) {
+                bWalk.setChecked(true);
+            }
+        }
     }
 
     private void registerEventBus() {

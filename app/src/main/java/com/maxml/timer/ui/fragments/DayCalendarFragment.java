@@ -2,6 +2,7 @@ package com.maxml.timer.ui.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -67,13 +68,6 @@ public class DayCalendarFragment extends Fragment {
         initOptionButtons();
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        controller.getTableFromDb(new Date(System.currentTimeMillis()));
-        progressListener.showProgressBar();
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -90,6 +84,13 @@ public class DayCalendarFragment extends Fragment {
         super.onStart();
         eventBus.register(this);
         controller.registerEventBus(eventBus);
+
+        loadActions();
+    }
+
+    private void loadActions() {
+        controller.getTableFromDb(new Date(System.currentTimeMillis()));
+        progressListener.showProgressBar();
     }
 
     @Override
@@ -99,6 +100,8 @@ public class DayCalendarFragment extends Fragment {
         if (statisticControl != null) {
             statisticControl.hideStatisticLayout();
         }
+
+        progressListener.hideProgressBar();
 
         list.clear();
         super.onStop();
@@ -150,13 +153,16 @@ public class DayCalendarFragment extends Fragment {
         }
     }
 
+    @NonNull
     private String getStatisticTime() {
         long timeInMillis = 0;
         for (Action entity : list) {
-            Date startDate = entity.getStartDate();
-            Date endDate = entity.getEndDate();
-            long different = endDate.getTime() - startDate.getTime();
-            timeInMillis += different;
+            if (entity.getType().equalsIgnoreCase(Constants.EVENT_WORK_ACTION)) {
+                Date startDate = entity.getStartDate();
+                Date endDate = entity.getEndDate();
+                long different = endDate.getTime() - startDate.getTime();
+                timeInMillis += different;
+            }
         }
         NumberFormat f = new DecimalFormat("00");
         long hours = timeInMillis / 1000 / 60 / 60;

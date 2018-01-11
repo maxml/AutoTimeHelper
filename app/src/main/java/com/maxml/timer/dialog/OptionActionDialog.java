@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
-import com.alamkanak.weekview.WeekViewEvent;
 import com.maxml.timer.R;
 
 public class OptionActionDialog extends DialogFragment {
@@ -14,7 +13,7 @@ public class OptionActionDialog extends DialogFragment {
     private static OnDialogItemClickListener clickListener;
 
     public interface OnDialogItemClickListener {
-        void OnDialogItemClick(int position, String idEvent);
+        void onDialogItemClick(int position, String idEvent);
     }
 
     public static OptionActionDialog getInstance(OnDialogItemClickListener listener, String id) {
@@ -29,7 +28,7 @@ public class OptionActionDialog extends DialogFragment {
         builder.setItems(R.array.options_action, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                clickListener.OnDialogItemClick(i, idEvent);
+                clickListener.onDialogItemClick(i, idEvent);
             }
         });
 
