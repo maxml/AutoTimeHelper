@@ -7,19 +7,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.maxml.timer.R;
-import com.maxml.timer.controllers.ActionController;
 import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.entity.Coordinates;
 import com.maxml.timer.entity.Path;
@@ -35,7 +33,7 @@ import java.util.List;
 public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap map;
     private EventBus eventBus;
-    private SupportMapFragment mapFragment;
+    private MapView mapView;
     private DbController dbController;
 
     // single path
@@ -61,10 +59,12 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_google_map, container, false);
         Log.d(Constants.LOG, "GoogleMapFragment method onCreateView");
-        if (mapFragment == null) {
-            mapFragment = (SupportMapFragment) getChildFragmentManager()
-                    .findFragmentById(R.id.map);
-        }
+//        if (mapView == null) {
+//            mapView = (SupportMapFragment) getChildFragmentManager()
+//                    .findFragmentById(R.id.map);
+//        }
+        mapView = rootView.findViewById(R.id.mapView);
+        mapView.onCreate(savedInstanceState);
         // init feedback bridge
         eventBus = new EventBus();
         dbController = new DbController(getContext(), eventBus);
@@ -79,7 +79,7 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
             idPath = "-L1x9-4twC3flcTw9FX8";
         }
         // init map
-        mapFragment.getMapAsync(this);
+        mapView.getMapAsync(this);
         return rootView;
     }
 
@@ -132,24 +132,58 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onStart() {
-        Log.d(Constants.LOG, "GoogleMapFragment method onStart");
         super.onStart();
+        Log.d(Constants.LOG, "GoogleMapFragment method onStart");
         registerEventBus();
+        if (mapView != null) {
+            mapView.onStart();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(Constants.LOG, "GoogleMapFragment method onResume");
+        if (mapView != null) {
+            mapView.onResume();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        Log.d(Constants.LOG, "GoogleMapFragment method onPause");
+        if (mapView != null) {
+            mapView.onPause();
+        }
+        super.onPause();
     }
 
     @Override
     public void onStop() {
         Log.d(Constants.LOG, "GoogleMapFragment method onStop");
         unregisterEventBus();
-//        map.clear();
-//        mapFragment.onLowMemory();
+        if (map != null) {
+            mapView.onStop();
+        }
         super.onStop();
     }
 
     @Override
     public void onDestroy() {
         Log.d(Constants.LOG, "GoogleMapFragment method onDestroy");
+        map.clear();
+        if (mapView != null) {
+            mapView.onDestroy();
+        }
         super.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        if (mapView != null) {
+            mapView.onLowMemory();
+        }
     }
 
     private PolylineOptions getPolylineOptions(Path path) {

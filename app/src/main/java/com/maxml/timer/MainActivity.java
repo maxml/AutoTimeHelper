@@ -262,7 +262,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void setupFragment(Fragment fragment) {
-        FragmentUtils.setFragment(this, fragment, fragment.getClass().getName());
+        FragmentUtils.setFragment(this, fragment/*, fragment.getClass().getName()*/);
     }
 
     private void initController() {
