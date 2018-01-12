@@ -1,4 +1,4 @@
-package com.maxml.timer.dialog;
+package com.maxml.timer.ui.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

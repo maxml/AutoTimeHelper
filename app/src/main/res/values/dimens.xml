@@ -7,6 +7,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
     <!-- all my dimensions -->
+    <dimen name="fab_margin">0dp</dimen>
 
     <dimen name="size_minus_4">-4dp</dimen>
     <dimen name="size_minus_8">-8dp</dimen>

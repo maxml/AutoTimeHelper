@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -22,18 +21,15 @@ import com.maxml.timer.entity.Action;
 import com.maxml.timer.entity.Events;
 import com.maxml.timer.entity.ShowFragmentListener;
 import com.maxml.timer.entity.ShowProgressListener;
-import com.maxml.timer.entity.Table;
-import com.maxml.timer.util.ActionConverter;
+import com.maxml.timer.ui.dialog.CreateActionDialog;
 import com.maxml.timer.util.Constants;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
 
-public class DetailsActionFragment extends Fragment implements View.OnClickListener {
+public class DetailsActionFragment extends Fragment implements View.OnClickListener{
 
     private BootstrapButton bbChangeAction;
     private BootstrapButton bbChangeDescription;
@@ -182,7 +178,7 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
         bbChangeDescription = (BootstrapButton) view.findViewById(R.id.bb_change_description);
         bbOk = (BootstrapButton) view.findViewById(R.id.bb_ok);
 
-        sAction = (Spinner) view.findViewById(R.id.s_action);
+        sAction = (Spinner) view.findViewById(R.id.s_action_type);
         sAction.setEnabled(false);
 
         etDescription = (EditText) view.findViewById(R.id.bet_description);

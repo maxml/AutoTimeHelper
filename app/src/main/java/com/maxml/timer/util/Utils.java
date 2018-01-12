@@ -6,13 +6,10 @@ import android.content.Context;
 import com.google.api.client.util.Data;
 import com.maxml.timer.entity.Coordinates;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
-/**
- * Created by nazar on 13.09.17.
- */
 
 public class Utils {
     public static Date getDate(int day, int month, int year) {
@@ -21,6 +18,26 @@ public class Utils {
         cal.set(Calendar.MONTH, month);
         cal.set(Calendar.DAY_OF_MONTH, day);
         return cal.getTime();
+    }
+
+    public static Date getDate(int hour, int minute, int day, int month, int year) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, hour);
+        cal.set(Calendar.MINUTE, minute);
+        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.MONTH, month);
+        cal.set(Calendar.DAY_OF_MONTH, day);
+        return cal.getTime();
+    }
+
+    public static String parseToTime(long timeInMillis) {
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        return sdf.format(new Date(timeInMillis));
+    }
+
+    public static String parseToDate(long timeInMillis) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        return sdf.format(new Date(timeInMillis));
     }
 
     public static Date getDate(String dayCount) {

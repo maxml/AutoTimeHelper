@@ -11,7 +11,7 @@
         tools:context="com.maxml.timer.ui.fragments.DetailsActionFragment">
 
         <Spinner
-            android:id="@+id/s_action"
+            android:id="@+id/s_action_type"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"/>
@@ -20,7 +20,7 @@
             android:id="@+id/bet_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/s_action"
+            android:layout_below="@id/s_action_type"
             android:layout_margin="8dp"
             android:clickable="true"
             android:ems="10"

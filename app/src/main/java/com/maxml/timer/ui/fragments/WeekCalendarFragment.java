@@ -1,12 +1,12 @@
 package com.maxml.timer.ui.fragments;
 
 
-import android.app.ActionBar;
 import android.content.Context;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
@@ -24,7 +24,8 @@ import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
 import com.maxml.timer.R;
 import com.maxml.timer.controllers.DbController;
-import com.maxml.timer.dialog.OptionActionDialog;
+import com.maxml.timer.ui.dialog.CreateActionDialog;
+import com.maxml.timer.ui.dialog.OptionActionDialog;
 import com.maxml.timer.entity.Action;
 import com.maxml.timer.entity.ActionWeek;
 import com.maxml.timer.entity.Events;
@@ -46,7 +47,8 @@ import java.util.Date;
 import java.util.List;
 
 public class WeekCalendarFragment extends Fragment implements WeekView.EventClickListener,
-        MonthLoader.MonthChangeListener, WeekView.EventLongPressListener, OptionActionDialog.OnDialogItemClickListener {
+        MonthLoader.MonthChangeListener, WeekView.EventLongPressListener,
+        OptionActionDialog.OnDialogItemClickListener, CreateActionDialog.OnActionCreatedListener {
 
     private WeekView weekView;
     private CalendarView cvCalendar;
@@ -225,7 +227,6 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
         }
     }
 
-
     private void loadActions() {
         progressListener.showProgressBar();
         getActionsFromDb();
@@ -247,6 +248,14 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
         cvCalendar = (CalendarView) getActivity().findViewById(R.id.cv_calendar);
         toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.name_calendar_fragment);
+        FloatingActionButton fab  = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CreateActionDialog dialog = CreateActionDialog.getInstance(WeekCalendarFragment.this);
+                dialog.show(getFragmentManager(), "Create Action Dialog");
+            }
+        });
 
         weekView.setMonthChangeListener(this);
         weekView.setOnEventClickListener(this);
@@ -303,5 +312,12 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
             currentCalendarView = 0;
         }
         return calendarViews[currentCalendarView];
+    }
+
+    @Override
+    public void onActionCreated(Action action) {
+        controller.createAction(action);
+
+        progressListener.showProgressBar();
     }
 }
