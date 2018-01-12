@@ -169,13 +169,14 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     @Override
-    public void onDestroy() {
+    public void onDestroyView() {
         Log.d(Constants.LOG, "GoogleMapFragment method onDestroy");
         map.clear();
         if (mapView != null) {
             mapView.onDestroy();
+            mapView = null;
         }
-        super.onDestroy();
+        super.onDestroyView();
     }
 
     @Override
