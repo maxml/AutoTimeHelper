@@ -35,6 +35,7 @@ import java.util.List;
 public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap map;
     private EventBus eventBus;
+    private SupportMapFragment mapFragment;
     private DbController dbController;
 
     // single path
@@ -60,8 +61,10 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_google_map, container, false);
         Log.d(Constants.LOG, "GoogleMapFragment method onCreateView");
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
-                .findFragmentById(R.id.map);
+        if (mapFragment == null) {
+            mapFragment = (SupportMapFragment) getChildFragmentManager()
+                    .findFragmentById(R.id.map);
+        }
         // init feedback bridge
         eventBus = new EventBus();
         dbController = new DbController(getContext(), eventBus);
@@ -84,7 +87,6 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap map) {
         Log.d(Constants.LOG, "start method onMapReady");
         this.map = map;
-
         if (polyline == null && polylines.size() == 0) {
             getDataFromDb();
         }
@@ -100,10 +102,9 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
         PolylineOptions polylineOptions = getPolylineOptions(path);
         polyline = map.addPolyline(polylineOptions);
         polyline.setClickable(true);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(polyline.getPoints().get(0),15.0f));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(polyline.getPoints().get(0), 15.0f));
         progressListener.hideProgressBar();
     }
-
 
     @Subscribe()
     public void onReceiveMultiPath(ArrayList<Path> paths) {
@@ -122,7 +123,7 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
             polylines.add(polyline);
         }
         if (polylines.size() > 0) {
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(polylines.get(0).getPoints().get(0),15.0f));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(polylines.get(0).getPoints().get(0), 15.0f));
         } else {
             Toast.makeText(getActivity(), R.string.toast_walk_without_path, Toast.LENGTH_LONG).show();
         }
@@ -131,14 +132,24 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onStart() {
+        Log.d(Constants.LOG, "GoogleMapFragment method onStart");
         super.onStart();
         registerEventBus();
     }
 
     @Override
     public void onStop() {
+        Log.d(Constants.LOG, "GoogleMapFragment method onStop");
         unregisterEventBus();
+//        map.clear();
+//        mapFragment.onLowMemory();
         super.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.d(Constants.LOG, "GoogleMapFragment method onDestroy");
+        super.onDestroy();
     }
 
     private PolylineOptions getPolylineOptions(Path path) {
@@ -147,7 +158,7 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
         for (Coordinates coordinate : coordinates) {
             LatLng point = new LatLng(coordinate.getLatitude(), coordinate.getLongitude());
             polylineOptions.add(point);
-            map.addMarker( new MarkerOptions().position(point).title(coordinate.getDate().toString()));
+            map.addMarker(new MarkerOptions().position(point).title(coordinate.getDate().toString()));
         }
         return polylineOptions;
     }

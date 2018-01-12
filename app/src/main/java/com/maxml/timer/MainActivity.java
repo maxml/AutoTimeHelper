@@ -22,6 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.maxml.timer.controllers.ActionController;
 import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.entity.Events;
 import com.maxml.timer.entity.ShowFragmentListener;
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity
     private TextView eventTime;
 
     private DbController dbController;
+    private ActionController actionController;
     private EventBus eventBus;
 
     @Override
@@ -93,28 +95,43 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
         switch (item.getItemId()) {
             case R.id.i_home:
-                setupFragment(new HomeFragment());
+                if (!(fragment instanceof HomeFragment)) {
+                    setupFragment(new HomeFragment());
+                }
                 break;
             case R.id.i_calendar_month:
-                setupFragment(new MonthCalendarFragment());
+                if (!(fragment instanceof MonthCalendarFragment)) {
+                    setupFragment(new MonthCalendarFragment());
+                }
                 break;
             case R.id.i_calendar_week:
-                setupFragment(new WeekCalendarFragment());
+                if (!(fragment instanceof WeekCalendarFragment)) {
+                    setupFragment(new WeekCalendarFragment());
+                }
                 break;
             case R.id.i_calendar_day:
-                setupFragment(new DayCalendarFragment());
+                if (!(fragment instanceof DayCalendarFragment)) {
+                    setupFragment(new DayCalendarFragment());
+                }
                 break;
             case R.id.i_user:
-                setupFragment(new MainUserPageFragment());
+                if (!(fragment instanceof MainUserPageFragment)) {
+                    setupFragment(new MainUserPageFragment());
+                }
                 break;
             case R.id.i_map:
-                setupFragment(new GoogleMapFragment());
+                if (!(fragment instanceof GoogleMapFragment)) {
+                    setupFragment(new GoogleMapFragment());
+                }
                 break;
             case R.id.i_setting:
                 Log.d(Constants.TAG, "Select setting");
-                setupFragment(new SettingsFragment());
+                if (!(fragment instanceof SettingsFragment)) {
+                    setupFragment(new SettingsFragment());
+                }
                 break;
         }
         drawerLayout.closeDrawer(GravityCompat.START);
@@ -125,7 +142,7 @@ public class MainActivity extends AppCompatActivity
     protected void onStart() {
         eventBus.register(this);
         dbController.registerEventBus(eventBus);
-        dbController.sentUser();
+        dbController.getCurrentUser();
         super.onStart();
     }
 
@@ -152,7 +169,8 @@ public class MainActivity extends AppCompatActivity
                 .setNegativeButton(android.R.string.no, null)
                 .setPositiveButton(android.R.string.yes, new OnClickListener() {
                     public void onClick(DialogInterface arg0, int arg1) {
-                        MainActivity.super.onBackPressed();
+                        actionController.closeApp();
+                        finish();
                     }
                 })
                 .create()
@@ -172,7 +190,7 @@ public class MainActivity extends AppCompatActivity
                             loadImageFromCamera();
                         }
                         showProgressBar();
-                        dbController.sentUser();
+                        dbController.getCurrentUser();
                     } else {
                         Toast.makeText(this, "No network", Toast.LENGTH_SHORT).show();
                     }
@@ -217,7 +235,7 @@ public class MainActivity extends AppCompatActivity
                     ((MainUserPageFragment) FragmentUtils.getCurrentFragment(this))
                             .updateUI();
 
-                    dbController.sentUser();
+                    dbController.getCurrentUser();
 
                     hideProgressBar();
                 }
@@ -248,8 +266,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initController() {
-        eventBus = new org.greenrobot.eventbus.EventBus();
+        eventBus = new EventBus();
         dbController = new DbController(this, eventBus);
+        actionController = new ActionController(this, eventBus);
     }
 
     private void setHomeFragment() {
@@ -266,7 +285,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                dbController.sentUser();
+                dbController.getCurrentUser();
             }
         };
 

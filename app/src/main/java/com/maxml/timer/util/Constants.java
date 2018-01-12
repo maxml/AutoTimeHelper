@@ -4,10 +4,8 @@ public class Constants {
 
     public static final String TAG = "LOG";
 
-    public static final float MIN_DISTANCE_UPDATES = 0.2f;
-    public static final long MIN_TIME = 1000;
-//    public static final long MIN_DISTANCE_UPDATES = 5;
-//    public static final long MIN_TIME = 1000 * 20;
+    public static final float MIN_DISTANCE_UPDATES = 5f;
+    public static final long MIN_TIME = 1000*20;
 
     public static final int RESULT_OK = 1;
     public static final int RESULT_FALSE = 0;
@@ -91,4 +89,5 @@ public class Constants {
     public static final int ID_BUTTON_SPLIT = 2;
 
     public static final int WEEK_COUNT_DAY = 7;
+    public static final String EVENT_CLOSE_APP = "closeApp";
 }

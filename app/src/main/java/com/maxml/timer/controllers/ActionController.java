@@ -343,4 +343,8 @@ public class ActionController {
         intent.putExtra(Constants.WIDGET_EXTRA, status);
         context.sendBroadcast(intent);
     }
+
+    public void closeApp() {
+        serviceEventBus.post(new Events.Info(Constants.EVENT_CLOSE_APP));
+    }
 }

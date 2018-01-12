@@ -115,4 +115,15 @@ public class Events {
             return wifiState;
         }
     }
+
+    public static class Info {
+        private String eventMessage;
+        public Info(String eventMessage) {
+            this.eventMessage = eventMessage;
+        }
+
+        public String getEventMessage() {
+            return eventMessage;
+        }
+    }
 }

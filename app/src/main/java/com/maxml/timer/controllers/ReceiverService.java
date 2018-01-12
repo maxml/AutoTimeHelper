@@ -64,6 +64,7 @@ public class ReceiverService extends Service implements LocationListener {
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.d(Constants.LOG, "Start service");
         serviceEventBus = new EventBus();
         actionController = ActionController.build(this, serviceEventBus);
         dbController = DbController.build(this, serviceEventBus);
@@ -99,6 +100,17 @@ public class ReceiverService extends Service implements LocationListener {
     public void onReceiveDbEvent(Events.DbResult event) {
         if (event.getResultStatus().equals(Constants.EVENT_WALK_ACTION_SAVED)) {
             actionController.walkActionSaved(event.getActionId());
+        }
+    }
+
+    @Subscribe()
+    public void onInfoEvent(Events.Info event) {
+        switch (event.getEventMessage()){
+            case Constants.EVENT_CLOSE_APP:
+                stopForeground(true);
+                stopSelf();
+
+                break;
         }
     }
 

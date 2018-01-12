@@ -146,7 +146,7 @@ public class DbController {
         pathDAO.save(path);
     }
 
-    public void sentUser() {
+    public void getCurrentUser() {
         entityEventBus.post(userDAO.getCurrentUser());
     }
 

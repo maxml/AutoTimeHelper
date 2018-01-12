@@ -14,18 +14,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
-import com.maxml.timer.controllers.ActionController;
 import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.entity.Events;
 import com.maxml.timer.entity.ShowProgressListener;
-import com.maxml.timer.util.FragmentUtils;
 import com.maxml.timer.util.ImageUtil;
 import com.maxml.timer.R;
-import com.maxml.timer.database.UserDAO;
 import com.maxml.timer.entity.User;
 import com.maxml.timer.ui.activity.LoginActivity;
 import com.maxml.timer.util.Constants;
@@ -80,7 +76,7 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
     }
 
     public void updateUI() {
-        dbController.sentUser();
+        dbController.getCurrentUser();
     }
 
     @Subscribe
@@ -102,7 +98,7 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
                 break;
             case Constants.EVENT_DB_RESULT_ERROR:
                 progressListener.hideProgressBar();
-                dbController.sentUser();
+                dbController.getCurrentUser();
 
                 Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
                 break;
@@ -121,7 +117,7 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
         super.onStart();
         eventBus.register(this);
         dbController.registerEventBus(eventBus);
-        dbController.sentUser();
+        dbController.getCurrentUser();
     }
 
     @Override
