@@ -205,7 +205,7 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
             actions.addAll(table.getRestList());
             actions.addAll(table.getWalkList());
         }
-        list = ActionConverter.actionsToWeekViewEvents(actions, getResources());
+        list = ActionConverter.actionsToWeekViewEvents(actions, getContext());
 
         updateUI();
         initStatistic(actions);
