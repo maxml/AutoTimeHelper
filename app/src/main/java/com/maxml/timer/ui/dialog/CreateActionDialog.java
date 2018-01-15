@@ -49,7 +49,7 @@ public class CreateActionDialog extends DialogFragment implements View.OnClickLi
     }
 
     public static CreateActionDialog getInstance(OnActionCreatedListener actionCreatedListener) {
-            listener = actionCreatedListener;
+        listener = actionCreatedListener;
 
         if (createActionDialog == null) {
             createActionDialog = new CreateActionDialog();
@@ -158,13 +158,13 @@ public class CreateActionDialog extends DialogFragment implements View.OnClickLi
     }
 
     private void initUI(View rootView) {
-        etStartTime = (BootstrapEditText) rootView.findViewById(R.id.bet_start_time);
-        etEndTime = (BootstrapEditText) rootView.findViewById(R.id.bet_end_time);
-        etDate = (BootstrapEditText) rootView.findViewById(R.id.bet_date);
-        etDescription = (BootstrapEditText) rootView.findViewById(R.id.bet_description);
-        sAction = (Spinner) rootView.findViewById(R.id.s_action_type);
+        etStartTime = rootView.findViewById(R.id.bet_start_time);
+        etEndTime = rootView.findViewById(R.id.bet_end_time);
+        etDate = rootView.findViewById(R.id.bet_date);
+        etDescription = rootView.findViewById(R.id.bet_description);
+        sAction = rootView.findViewById(R.id.s_action_type);
 
-        sAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item,
+        sAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item,
                 new String[]{Constants.EVENT_CALL_ACTION, Constants.EVENT_REST_ACTION,
                         Constants.EVENT_WALK_ACTION, Constants.EVENT_WORK_ACTION});
 

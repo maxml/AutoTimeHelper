@@ -13,6 +13,7 @@ import android.widget.CalendarView;
 import com.maxml.timer.R;
 import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.entity.Action;
+import com.maxml.timer.entity.ShowFragmentListener;
 import com.maxml.timer.entity.ShowProgressListener;
 import com.maxml.timer.entity.StatisticControl;
 import com.maxml.timer.entity.Table;
@@ -31,30 +32,14 @@ import java.util.List;
 public class MonthCalendarFragment extends Fragment {
     private CalendarView cvCalendar;
 
-    private List<Action> list = new ArrayList<>();
-    private Date currentDay;
-
-    private EventBus eventBus;
-    private DbController controller;
-
-    private StatisticControl statisticControl;
-    private ShowProgressListener progressListener;
+    private ShowFragmentListener fragmentListener;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof StatisticControl) {
-            statisticControl = (StatisticControl) context;
+        if (context instanceof ShowFragmentListener) {
+            fragmentListener = (ShowFragmentListener) context;
         }
-        if (context instanceof ShowProgressListener) {
-            progressListener = (ShowProgressListener) context;
-        }
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        registerEventBus();
     }
 
     @Override
@@ -67,80 +52,8 @@ public class MonthCalendarFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        eventBus.register(this);
-        controller.registerEventBus(eventBus);
-
-        loadActions();
-    }
-
-    @Override
-    public void onStop() {
-        eventBus.unregister(this);
-        controller.unregisterEventBus(eventBus);
-        if (statisticControl != null) {
-            statisticControl.hideStatisticLayout();
-        }
-
-        progressListener.hideProgressBar();
-        super.onStop();
-    }
-
-    private void loadActions() {
-        if (currentDay == null) {
-            controller.getTableFromDb(new Date(System.currentTimeMillis()));
-            progressListener.showProgressBar();
-        } else {
-            controller.getTableFromDb(currentDay);
-            progressListener.showProgressBar();
-        }
-    }
-
-    @Subscribe
-    public void receiveTableFromDb(Table table) {
-        list.clear();
-        list.addAll(table.getWorkList());
-        list.addAll(table.getCallList());
-        list.addAll(table.getRestList());
-        list.addAll(table.getWalkList());
-
-        initStatistic();
-        progressListener.hideProgressBar();
-    }
-
-    public String getStatisticTime() {
-        long timeInMillis = 0;
-        for (Action entity : list) {
-            if (entity.getType().equalsIgnoreCase(Constants.EVENT_WORK_ACTION)) {
-                Date startDate = entity.getStartDate();
-                Date endDate = entity.getEndDate();
-                long different = endDate.getTime() - startDate.getTime();
-                timeInMillis += different;
-            }
-        }
-        NumberFormat f = new DecimalFormat("00");
-        long hours = timeInMillis / 1000 / 60 / 60;
-        long min = timeInMillis / 1000 / 60 % 60;
-        return f.format(hours) + ":" + f.format(min);
-    }
-
-    private void initStatistic() {
-        if (statisticControl != null) {
-            String time = getStatisticTime();
-            statisticControl.setEventTime(time);
-            statisticControl.showStatisticLayout();
-        }
-    }
-
-    private void registerEventBus() {
-        eventBus = new EventBus();
-        controller = new DbController(getContext(), eventBus);
-    }
-
     private void initUI(View view) {
-        cvCalendar = (CalendarView) view.findViewById(R.id.cv_calendar);
+        cvCalendar = view.findViewById(R.id.cv_calendar);
         cvCalendar.setDate(System.currentTimeMillis());
     }
 
@@ -151,10 +64,12 @@ public class MonthCalendarFragment extends Fragment {
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(year, month, dayOfMonth);
 
-                currentDay = calendar.getTime();
+                DayCalendarFragment dayCalendarFragment = new DayCalendarFragment();
+                Bundle args = new Bundle();
+                args.putLong(Constants.EXTRA_TIME_ACTION, calendar.getTimeInMillis());
+                dayCalendarFragment.setArguments(args);
 
-                controller.getTableFromDb(new Date(calendar.getTimeInMillis()));
-                progressListener.showProgressBar();
+                fragmentListener.showFragment(dayCalendarFragment);
             }
         });
     }

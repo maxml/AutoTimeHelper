@@ -1,6 +1,7 @@
 package com.maxml.timer.ui.fragments;
 
 
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
@@ -21,15 +23,18 @@ import com.maxml.timer.entity.Action;
 import com.maxml.timer.entity.Events;
 import com.maxml.timer.entity.ShowFragmentListener;
 import com.maxml.timer.entity.ShowProgressListener;
+import com.maxml.timer.ui.dialog.CheckTimeDialog;
 import com.maxml.timer.ui.dialog.CreateActionDialog;
 import com.maxml.timer.util.Constants;
+import com.maxml.timer.util.Utils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
-public class DetailsActionFragment extends Fragment implements View.OnClickListener{
+public class DetailsActionFragment extends Fragment implements View.OnClickListener {
 
     private BootstrapButton bbChangeAction;
     private BootstrapButton bbChangeDescription;
@@ -66,7 +71,10 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
         super.onCreate(savedInstanceState);
         registerEventBus();
 
-        dbController.getActionFromDb(getArguments().getString(Constants.EXTRA_ID_ACTION));
+        if (getArguments() != null) {
+            dbController.getActionFromDb(getArguments().getString(Constants.EXTRA_ID_ACTION));
+            progressListener.showProgressBar();
+        }
     }
 
     @Override
@@ -108,7 +116,49 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
                 bbOk.setVisibility(View.VISIBLE);
                 break;
             case R.id.bb_change_date:
+                etStartDate.setEnabled(true);
+                etEndDate.setEnabled(true);
+                bbOk.setVisibility(View.VISIBLE);
+                break;
+            case R.id.bet_start_time:
+                final Calendar calendarStartDate = Calendar.getInstance();
+                calendarStartDate.setTime(action.getStartDate());
+                CheckTimeDialog checkStartTimeDialog = CheckTimeDialog.getInstance(new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int i, int i1) {
+                        calendarStartDate.set(Calendar.HOUR_OF_DAY, i);
+                        calendarStartDate.set(Calendar.MINUTE, i1);
+                        action.setStartDate(calendarStartDate.getTime());
+                        etStartDate.setText(Utils.parseToTime(calendarStartDate.getTimeInMillis()));
 
+                        if (!isSuccessfulDate()) {
+                            bbOk.setEnabled(false);
+                        } else {
+                            bbOk.setEnabled(true);
+                        }
+                    }
+                });
+                checkStartTimeDialog.show(getFragmentManager(), "checkStartTimeDialog");
+                break;
+            case R.id.bet_end_time:
+                final Calendar calendarEndDate = Calendar.getInstance();
+                calendarEndDate.setTime(action.getEndDate());
+                CheckTimeDialog checkEndTimeDialog = CheckTimeDialog.getInstance(new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int i, int i1) {
+                        calendarEndDate.set(Calendar.HOUR_OF_DAY, i);
+                        calendarEndDate.set(Calendar.MINUTE, i1);
+                        action.setEndDate(calendarEndDate.getTime());
+                        etEndDate.setText(Utils.parseToTime(calendarEndDate.getTimeInMillis()));
+
+                        if (!isSuccessfulDate()) {
+                            bbOk.setEnabled(false);
+                        } else {
+                            bbOk.setEnabled(true);
+                        }
+                    }
+                });
+                checkEndTimeDialog.show(getFragmentManager(), "checkEndTimeDialog");
                 break;
             case R.id.bb_show_path_in_map:
                 GoogleMapFragment mapFragment = new GoogleMapFragment();
@@ -122,6 +172,8 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
             case R.id.bb_ok:
                 sAction.setEnabled(false);
                 etDescription.setEnabled(false);
+                etStartDate.setEnabled(false);
+                etEndDate.setEnabled(false);
                 bbOk.setVisibility(View.INVISIBLE);
                 progressListener.showProgressBar();
 
@@ -146,7 +198,7 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
             case Constants.EVENT_DB_RESULT_ERROR:
                 progressListener.hideProgressBar();
 
-                Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.action_not_exist, Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -173,19 +225,19 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
     }
 
     private void initUI(View view) {
-        bbChangeData = (BootstrapButton) view.findViewById(R.id.bb_change_date);
-        bbChangeAction = (BootstrapButton) view.findViewById(R.id.bb_change_action);
-        bbChangeDescription = (BootstrapButton) view.findViewById(R.id.bb_change_description);
-        bbOk = (BootstrapButton) view.findViewById(R.id.bb_ok);
+        bbChangeData = view.findViewById(R.id.bb_change_date);
+        bbChangeAction = view.findViewById(R.id.bb_change_action);
+        bbChangeDescription = view.findViewById(R.id.bb_change_description);
+        bbOk = view.findViewById(R.id.bb_ok);
 
-        sAction = (Spinner) view.findViewById(R.id.s_action_type);
+        sAction = view.findViewById(R.id.s_action_type);
         sAction.setEnabled(false);
 
-        etDescription = (EditText) view.findViewById(R.id.bet_description);
-        etStartDate = (EditText) view.findViewById(R.id.bet_start_date);
-        etEndDate = (EditText) view.findViewById(R.id.bet_end_date);
+        etDescription = view.findViewById(R.id.bet_description);
+        etStartDate = view.findViewById(R.id.bet_start_time);
+        etEndDate = view.findViewById(R.id.bet_end_time);
 
-        sAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item,
+        sAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item,
                 new String[]{Constants.EVENT_CALL_ACTION, Constants.EVENT_REST_ACTION,
                         Constants.EVENT_WALK_ACTION, Constants.EVENT_WORK_ACTION});
 
@@ -194,7 +246,7 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
 
     private void initUIbShow(View view) {
         if (action.getType().equalsIgnoreCase(Constants.EVENT_WALK_ACTION)) {
-            bbShowPathInMap = (BootstrapButton) view.findViewById(R.id.bb_show_path_in_map);
+            bbShowPathInMap = view.findViewById(R.id.bb_show_path_in_map);
             bbShowPathInMap.setVisibility(View.VISIBLE);
         }
     }
@@ -204,6 +256,8 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
         bbChangeDescription.setOnClickListener(this);
         bbChangeData.setOnClickListener(this);
         bbOk.setOnClickListener(this);
+        etStartDate.setOnClickListener(this);
+        etEndDate.setOnClickListener(this);
     }
 
     private void updateUI(Action action) {
@@ -222,5 +276,9 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
         etDescription.setText(action.getDescription());
         etStartDate.setText(sdf.format(action.getStartDate()));
         etEndDate.setText(sdf.format(action.getEndDate()));
+    }
+
+    private boolean isSuccessfulDate() {
+        return action.getStartDate().getTime() < action.getEndDate().getTime();
     }
 }

@@ -17,7 +17,6 @@ import java.util.List;
 public class OptionButtonsAdapter extends RecyclerView.Adapter<OptionButtonsAdapter.DayViewHolder> {
 
     private int lastPosition = -1;
-    private int textSize;
 
     private List<OptionButtons> optionButtonsList;
     private OnClickButton listener;
@@ -26,21 +25,16 @@ public class OptionButtonsAdapter extends RecyclerView.Adapter<OptionButtonsAdap
         void onClick(OptionButtons buttonType);
     }
 
-    public OptionButtonsAdapter(List<OptionButtons> buttonsList, OnClickButton listener, int textSize) {
+    public OptionButtonsAdapter(List<OptionButtons> buttonsList, OnClickButton listener) {
         optionButtonsList = buttonsList;
         this.listener = listener;
-        this.textSize = textSize;
     }
 
     @Override
     public DayViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Button button = new Button(parent.getContext());
-        button.setTextSize(textSize);
         button.setBackground(null);
-
-        ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        lp.height = textSize * 10;
-        button.setLayoutParams(lp);
+        button.setTextSize(8);
 
         return new DayViewHolder(button);
     }
@@ -75,10 +69,6 @@ public class OptionButtonsAdapter extends RecyclerView.Adapter<OptionButtonsAdap
                     bOption.setId(Constants.ID_BUTTON_DELETE);
                     bOption.setText(R.string.opyion_button_delete);
                     break;
-                case SPLIT:
-                    bOption.setId(Constants.ID_BUTTON_SPLIT);
-                    bOption.setText(R.string.opyion_button_split);
-                    break;
             }
             bOption.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -86,17 +76,6 @@ public class OptionButtonsAdapter extends RecyclerView.Adapter<OptionButtonsAdap
                     listener.onClick(optionButtons);
                 }
             });
-            setAnimation(bOption, position);
-            lastPosition = position;
-        }
-    }
-
-    private void setAnimation(View viewToAnimate, int position) {
-        if (position > lastPosition) {
-            Animation animation = AnimationUtils.loadAnimation(viewToAnimate.getContext(), android.R.anim.slide_in_left);
-            animation.setInterpolator(new DecelerateInterpolator());
-            animation.setStartOffset(position * 100);
-            viewToAnimate.startAnimation(animation);
             lastPosition = position;
         }
     }

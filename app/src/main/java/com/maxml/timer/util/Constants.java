@@ -12,8 +12,8 @@ public class Constants {
     public static final String SHARED_USER = "SHARED_USER";
     public static final String SHARED_COLOR = "SHARED_COLOR";
 
-    public static final int REQUEST_CODE_TAKE_PHOTO = 101;
-    public static final int REQUEST_LOCATION_PERMISSIONS = 102;
+    public static final int REQUEST_CODE_TAKE_PHOTO = 1;
+    public static final int REQUEST_LOCATION_PERMISSIONS = 2;
 
     // handler
 //    public static final int DB_RESULT_OK = 1;
@@ -43,7 +43,6 @@ public class Constants {
     public static final int WIFI_TYPE_WORK = 2;
     public static final String EVENT_WIFI_ENABLE = "eventWifiEnable";
     public static final String EVENT_WIFI_DISABLE = "eventWifiDisable";
-
 
     public static final String EVENT_CALL_ACTION = "call";
     public static final String EVENT_CALL_MISSING = "callMissing";
@@ -78,6 +77,7 @@ public class Constants {
     public static final int WAY_DONT_MOVE_TIME = 5;
     public static final String EXTRA_ID_PATH = "extraIdPath";
     public static final String EXTRA_ID_ACTION = "extraIdAction";
+    public static final String EXTRA_TIME_ACTION = "extraTimeAction";
     public static final String EXTRA_LIST_ID_PATH = "extraListIdPath";
     public static final String LOG = "appLog";
 
@@ -87,7 +87,6 @@ public class Constants {
 
     public static final int ID_BUTTON_EDIT = 0;
     public static final int ID_BUTTON_DELETE = 1;
-    public static final int ID_BUTTON_SPLIT = 2;
 
     public static final int WEEK_COUNT_DAY = 7;
     public static final String EVENT_CLOSE_APP = "closeApp";
