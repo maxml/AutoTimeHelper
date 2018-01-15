@@ -166,6 +166,7 @@
     <orderEntry type="library" name="com.android.support:appcompat-v7-27.0.1" level="project" />
     <orderEntry type="library" name="com.google.firebase:firebase-iid-license-11.4.2" level="project" />
     <orderEntry type="library" name="com.google.android.gms:play-services-auth-api-phone-11.4.2" level="project" />
+    <orderEntry type="library" name="com.thebluealliance:spectrum-0.7.1" level="project" />
     <orderEntry type="library" name="com.google.android.gms:play-services-tagmanager-api-license-11.4.2" level="project" />
     <orderEntry type="library" name="com.google.android.gms:play-services-wallet-11.4.2" level="project" />
     <orderEntry type="library" name="com.google.firebase:firebase-storage-11.4.2" level="project" />
@@ -217,6 +218,7 @@
     <orderEntry type="library" name="com.android.support:support-core-ui-27.0.1" level="project" />
     <orderEntry type="library" name="com.google.firebase:firebase-messaging-license-11.4.2" level="project" />
     <orderEntry type="library" name="com.google.android.gms:play-services-safetynet-license-11.4.2" level="project" />
+    <orderEntry type="library" name="com.android.support:preference-v7-27.0.1" level="project" />
     <orderEntry type="library" name="com.google.android.gms:play-services-location-license-11.4.2" level="project" />
     <orderEntry type="library" name="com.google.android.gms:play-services-analytics-impl-11.4.2" level="project" />
     <orderEntry type="library" name="com.j256.ormlite:ormlite-core:5.0@jar" level="project" />

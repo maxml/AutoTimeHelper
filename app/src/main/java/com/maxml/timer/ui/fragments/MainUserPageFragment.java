@@ -183,15 +183,15 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
     }
 
     private void initUI(View view) {
-        bbChangeEmail = (BootstrapButton) view.findViewById(R.id.bb_email);
-        bbChangeName = (BootstrapButton) view.findViewById(R.id.bb_name);
-        bbChangePicture = (BootstrapButton) view.findViewById(R.id.bb_change_picture);
-        bbOk = (BootstrapButton) view.findViewById(R.id.bb_ok);
+        bbChangeEmail = view.findViewById(R.id.bb_email);
+        bbChangeName = view.findViewById(R.id.bb_name);
+        bbChangePicture = view.findViewById(R.id.bb_change_picture);
+        bbOk = view.findViewById(R.id.bb_ok);
 
-        etName = (EditText) view.findViewById(R.id.bet_name);
-        etEmail = (EditText) view.findViewById(R.id.bet_email);
+        etName = view.findViewById(R.id.bet_name);
+        etEmail = view.findViewById(R.id.bet_email);
 
-        ivUser = (ImageView) view.findViewById(R.id.iv_user);
+        ivUser = view.findViewById(R.id.iv_user);
     }
 
     private void updateUI(User user) {

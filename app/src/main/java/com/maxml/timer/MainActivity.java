@@ -192,7 +192,7 @@ public class MainActivity extends AppCompatActivity
                         showProgressBar();
                         dbController.getCurrentUser();
                     } else {
-                        Toast.makeText(this, "No network", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, R.string.no_network, Toast.LENGTH_SHORT).show();
                     }
                 }
                 break;
