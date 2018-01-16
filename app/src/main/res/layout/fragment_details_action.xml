@@ -14,7 +14,7 @@
             android:id="@+id/s_action_type"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"/>
+            android:layout_margin="16dp" />
 
         <com.beardedhen.androidbootstrap.BootstrapEditText
             android:id="@+id/bet_description"
@@ -39,26 +39,32 @@
             android:orientation="horizontal">
 
             <com.beardedhen.androidbootstrap.BootstrapEditText
-                android:id="@+id/bet_start_date"
+                android:id="@+id/bet_start_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:layout_weight="1"
+                android:cursorVisible="false"
                 android:ems="10"
                 android:enabled="false"
+                android:focusableInTouchMode="false"
                 android:hint="10:50"
+                android:inputType="none"
                 bootstrapbutton:roundedCorners="true" />
 
             <com.beardedhen.androidbootstrap.BootstrapEditText
-                android:id="@+id/bet_end_date"
+                android:id="@+id/bet_end_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:layout_weight="1"
+                android:cursorVisible="false"
                 android:ems="10"
                 android:enabled="false"
+                android:focusableInTouchMode="false"
                 android:gravity="center"
                 android:hint="11:00"
+                android:inputType="none"
                 bootstrapbutton:roundedCorners="true" />
 
         </LinearLayout>
@@ -106,8 +112,8 @@
             android:layout_below="@id/bb_change_date"
             android:layout_margin="8dp"
             android:enabled="true"
-            android:visibility="gone"
             android:text="Show path"
+            android:visibility="gone"
             bootstrapbutton:bootstrapBrand="primary"
             bootstrapbutton:bootstrapSize="lg"
             bootstrapbutton:roundedCorners="true" />

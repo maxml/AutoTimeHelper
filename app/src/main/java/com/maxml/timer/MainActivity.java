@@ -71,14 +71,14 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        pbLoad = (ProgressBar) findViewById(R.id.pb_load);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        pbLoad = findViewById(R.id.pb_load);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        statisticLayout = (LinearLayout) findViewById(R.id.layoutStatistic);
-        eventTime = (TextView) findViewById(R.id.tvTime);
+        statisticLayout = findViewById(R.id.layoutStatistic);
+        eventTime = findViewById(R.id.tvTime);
 
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerLayout = findViewById(R.id.drawer_layout);
         hideProgressBar();
 
         if (getSupportActionBar() != null) {
@@ -262,7 +262,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void setupFragment(Fragment fragment) {
-        FragmentUtils.setFragment(this, fragment/*, fragment.getClass().getName()*/);
+        FragmentUtils.setFragment(this, fragment, fragment.getClass().getName());
     }
 
     private void initController() {

@@ -66,6 +66,12 @@ public class DayCalendarFragment extends Fragment {
         super.onCreate(savedInstanceState);
         registerEventBus();
         initOptionButtons();
+
+        if (getArguments() != null) {
+            loadActions(getArguments().getLong(Constants.EXTRA_TIME_ACTION));
+        } else {
+            loadActions(System.currentTimeMillis());
+        }
     }
 
     @Nullable
@@ -84,12 +90,14 @@ public class DayCalendarFragment extends Fragment {
         super.onStart();
         eventBus.register(this);
         controller.registerEventBus(eventBus);
-
-        loadActions();
     }
 
-    private void loadActions() {
-        controller.getTableFromDb(new Date(System.currentTimeMillis()));
+    private void loadActions(long time) {
+        if (time == 0) {
+            controller.getTableFromDb(new Date(System.currentTimeMillis()));
+        } else {
+            controller.getTableFromDb(new Date(time));
+        }
         progressListener.showProgressBar();
     }
 
@@ -194,7 +202,6 @@ public class DayCalendarFragment extends Fragment {
 
     private void initOptionButtons() {
         options.add(OptionButtons.DELETE);
-        options.add(OptionButtons.SPLIT);
         options.add(OptionButtons.EDIT);
     }
 }

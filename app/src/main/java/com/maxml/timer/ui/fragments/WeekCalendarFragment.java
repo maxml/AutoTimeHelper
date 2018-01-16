@@ -120,6 +120,13 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
     }
 
     @Override
+    public void onActionCreated(Action action) {
+        controller.createAction(action);
+
+        progressListener.showProgressBar();
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         toolbar.setTitle(R.string.app_name);
@@ -205,7 +212,7 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
             actions.addAll(table.getRestList());
             actions.addAll(table.getWalkList());
         }
-        list = ActionConverter.actionsToWeekViewEvents(actions, getResources());
+        list = ActionConverter.actionsToWeekViewEvents(actions, getContext());
 
         updateUI();
         initStatistic(actions);
@@ -312,12 +319,5 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
             currentCalendarView = 0;
         }
         return calendarViews[currentCalendarView];
-    }
-
-    @Override
-    public void onActionCreated(Action action) {
-        controller.createAction(action);
-
-        progressListener.showProgressBar();
     }
 }

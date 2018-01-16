@@ -137,7 +137,7 @@ public class CalendarDayAdapter extends RecyclerView.Adapter<CalendarDayAdapter.
             public void onClick(OptionButtons buttonType) {
                 onClickOptionListener.onClick(buttonType, entity);
             }
-        }, 12);
+        });
         recyclerView.setAdapter(adapter);
     }
 }

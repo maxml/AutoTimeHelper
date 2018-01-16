@@ -58,10 +58,10 @@
     <string name="name_calendar_fragment">Calendar</string>
     <string name="message_wrong_date">Wrong date</string>
     <string name="no_network">No network</string>
+    <string name="action_not_exist">Action is not exist</string>
 
     <string-array name="options_action">
         <item>Edit</item>
         <item>Delete</item>
-        <item>Split</item>
     </string-array>
 </resources>

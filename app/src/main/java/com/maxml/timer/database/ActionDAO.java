@@ -91,6 +91,8 @@ public class ActionDAO {
         Map<String, Object> map = new HashMap<>();
         map.put("description", action.getDescription());
         map.put("type", action.getType());
+        map.put("startDate", action.getStartDate());
+        map.put("endDate", action.getEndDate());
         actionRef.child(action.getId())
                 .updateChildren(map)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
