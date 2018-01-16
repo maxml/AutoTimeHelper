@@ -19,8 +19,9 @@ import android.widget.Toast;
 import com.maxml.timer.R;
 import com.maxml.timer.entity.Coordinates;
 import com.maxml.timer.entity.Events;
+import com.maxml.timer.ui.dialog.DialogCallback;
 import com.maxml.timer.util.Constants;
-import com.maxml.timer.util.DialogFactory;
+import com.maxml.timer.ui.dialog.DialogFactory;
 import com.maxml.timer.util.NotificationHelper;
 
 import org.greenrobot.eventbus.EventBus;
@@ -47,6 +48,7 @@ public class ReceiverService extends Service implements LocationListener {
     private boolean isGPSEnabled = false;
     private boolean isNetworkEnabled = false;
     private LocationManager locationManager;
+    private LocationListener autoWalkActionListener;
     private List<Coordinates> wayCoordinates = new ArrayList<>();
 
     @Nullable
@@ -72,6 +74,12 @@ public class ReceiverService extends Service implements LocationListener {
         // start service as foreground
         Notification notification = NotificationHelper.getDefaultNotification(this);
         startForeground(Constants.NOTIFICATION_ID, notification);
+
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+        initWalkLocationListener();
     }
 
     @Subscribe()
@@ -105,11 +113,10 @@ public class ReceiverService extends Service implements LocationListener {
 
     @Subscribe()
     public void onInfoEvent(Events.Info event) {
-        switch (event.getEventMessage()){
+        switch (event.getEventMessage()) {
             case Constants.EVENT_CLOSE_APP:
                 stopForeground(true);
                 stopSelf();
-
                 break;
         }
     }
@@ -128,7 +135,16 @@ public class ReceiverService extends Service implements LocationListener {
     public void onGpsEvent(Events.GPS event) {
         switch (event.getMessage()) {
             case Constants.EVENT_GPS_START:
-                initLocationListener();
+                // check location permission
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                        && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    initWalkLocationListener();
+                } else {
+                    // permission not granted
+                    Toast.makeText(this, R.string.toast_deny_location_permission, Toast.LENGTH_LONG).show();
+                    return;
+                }
+                closeAutoStartWalkAction();
                 wayCoordinates = new ArrayList<>();
                 startTimer();
                 break;
@@ -136,13 +152,14 @@ public class ReceiverService extends Service implements LocationListener {
             case Constants.EVENT_GPS_STOP:
                 actionController.gpsStopEvent(wayCoordinates);
                 stopUsingGPS();
+                initAutoStartWalkAction();
                 break;
         }
     }
 
-
     @Override
     public void onLocationChanged(Location location) {
+        Log.d(Constants.LOG, "catch new location" + location.getLatitude() + " : " + location.getLongitude());
         Coordinates point = new Coordinates();
         point.setLatitude(location.getLatitude());
         point.setLongitude(location.getLongitude());
@@ -160,7 +177,6 @@ public class ReceiverService extends Service implements LocationListener {
         }
     }
 
-
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
     }
@@ -175,6 +191,105 @@ public class ReceiverService extends Service implements LocationListener {
 
     }
 
+    // need location permission
+    private void initWalkLocationListener() {
+        Log.d(Constants.LOG, "initWalkLocationListener() CALLED");
+        // check location permission
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // permission not granted
+            Toast.makeText(this, R.string.toast_deny_location_permission, Toast.LENGTH_LONG).show();
+            Log.d(Constants.LOG, "location permission not granted");
+            return;
+        }
+
+        if (!isGPSEnabled && !isNetworkEnabled) {
+            Log.d(Constants.LOG, "Show turn on navigation dialog");
+            DialogFactory.showGpsSwitchAlert(this, new DialogCallback() {
+                @Override
+                public void onClickPositive() {
+                    Log.d(Constants.LOG, "Turn on navigation ok");
+                    // do logic under method
+                }
+
+                @Override
+                public void onClickNegative() {
+                    Log.d(Constants.LOG, "Turn on navigation cancel");
+                    Toast.makeText(ReceiverService.this, R.string.toast_deny_location_tracker, Toast.LENGTH_LONG).show();
+                }
+            });
+
+        }
+        if (isGPSEnabled) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, MIN_DISTANCE_UPDATES, this);
+        }
+        if (isNetworkEnabled) {
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE_UPDATES, this);
+        }
+    }
+
+    private void closeAutoStartWalkAction() {
+        locationManager.removeUpdates(autoWalkActionListener);
+        autoWalkActionListener = null;
+    }
+
+
+    private void initAutoStartWalkAction() {
+        Log.d(Constants.LOG, "Init Autostart WalkAction");
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // permission not granted
+            Log.d(Constants.LOG, "Autostart cancel, location permission not granted");
+            return;
+        }
+
+        if (!isGPSEnabled && !isNetworkEnabled) {
+            DialogFactory.showGpsSwitchAlert(this, new DialogCallback() {
+                @Override
+                public void onClickPositive() {
+                    Log.d(Constants.LOG, "Turn on navigation ok");
+                    // do logic under method
+                }
+
+                @Override
+                public void onClickNegative() {
+                    Log.d(Constants.LOG, "Turn on navigation cancel");
+                    Toast.makeText(ReceiverService.this, R.string.toast_deny_location_tracker, Toast.LENGTH_LONG).show();
+                }
+            });
+
+        }
+
+        autoWalkActionListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                actionController.walkActionEvent();
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        };
+
+        if (isGPSEnabled) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, Constants.MIN_DISTANCE_START_WALK_ACTION, autoWalkActionListener);
+        }
+        if (isNetworkEnabled) {
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, Constants.MIN_DISTANCE_START_WALK_ACTION, autoWalkActionListener);
+        }
+
+    }
 
     @Override
     public void onDestroy() {
@@ -212,33 +327,6 @@ public class ReceiverService extends Service implements LocationListener {
             locationManager.removeUpdates(ReceiverService.this);
         }
     }
-
-    void initLocationListener() {
-        Log.d("TAG", "initLocationListener() CALLED");
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // permission not granted
-            Toast.makeText(this, R.string.location_permissinons_not_garanted, Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        if (!isGPSEnabled && !isNetworkEnabled) {
-            DialogFactory.showGpsSwitchAlert(this);
-            return;
-        }
-        if (isGPSEnabled) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, MIN_DISTANCE_UPDATES, this);
-        } else {
-            if (isNetworkEnabled) {
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE_UPDATES, this);
-            }
-        }
-    }
-
 
     private void registerEventBus(EventBus eventBus) {
         if (eventBus != null && !eventBus.isRegistered(this)) {

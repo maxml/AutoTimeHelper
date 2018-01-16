@@ -58,6 +58,8 @@
     <string name="name_calendar_fragment">Calendar</string>
     <string name="message_wrong_date">Wrong date</string>
     <string name="no_network">No network</string>
+    <string name="toast_deny_location_permission">You deny location permission, your wolk actions are not trecking now</string>
+    <string name="toast_deny_location_tracker">Lockation tracker turn off, your walk actions aren\'t tracking now</string>
     <string name="action_not_exist">Action is not exist</string>
 
     <string-array name="options_action">

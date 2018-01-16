@@ -172,6 +172,7 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
     public void onDestroyView() {
         Log.d(Constants.LOG, "GoogleMapFragment method onDestroy");
         map.clear();
+        map.setMyLocationEnabled(false);
         if (mapView != null) {
             mapView.onDestroy();
             mapView = null;

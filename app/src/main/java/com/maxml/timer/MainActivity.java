@@ -86,8 +86,6 @@ public class MainActivity extends AppCompatActivity
             getSupportActionBar().setHomeButtonEnabled(true);
         }
 
-        checkLocationPermission();
-
         initDrawer();
         initController();
         setHomeFragment();
@@ -152,14 +150,6 @@ public class MainActivity extends AppCompatActivity
         eventBus.unregister(this);
         super.onStop();
     }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        // Forward results to EasyPermissions
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
-    }
-
 
     @Override
     public void onBackPressed() {
@@ -240,16 +230,6 @@ public class MainActivity extends AppCompatActivity
                     hideProgressBar();
                 }
                 break;
-        }
-    }
-
-    @AfterPermissionGranted(Constants.REQUEST_LOCATION_PERMISSIONS)
-    private void checkLocationPermission() {
-        String[] perms = {android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION};
-        if (!EasyPermissions.hasPermissions(this, perms)) {
-            // Do not have permissions, request them now
-            EasyPermissions.requestPermissions(this, getString(R.string.text_dialog_location_permission),
-                    Constants.REQUEST_LOCATION_PERMISSIONS, perms);
         }
     }
 

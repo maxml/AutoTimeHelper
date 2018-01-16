@@ -3,6 +3,8 @@ package com.maxml.timer.ui.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -24,7 +26,12 @@ import com.maxml.timer.util.Utils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-public class LoginActivity extends Activity {
+import java.util.List;
+
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
+
+public class LoginActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
     protected static final int CONNECTION_OK = 1;
 
     private TextView entLogin;
@@ -49,7 +56,7 @@ public class LoginActivity extends Activity {
 
         boolean isLogged = FirebaseAuth.getInstance().getCurrentUser() != null;
         if (isLogged) {
-            loginOk();
+            checkPermissions();
         }
     }
 
@@ -71,7 +78,7 @@ public class LoginActivity extends Activity {
             case Constants.EVENT_DB_RESULT_OK:
                 // sign in successful
                 pbLoad.setVisibility(View.INVISIBLE);
-                loginOk();
+                checkPermissions();
                 break;
             case Constants.EVENT_DB_RESULT_ERROR:
                 // sign in error
@@ -100,14 +107,51 @@ public class LoginActivity extends Activity {
         }
     }
 
-    public void loginAsAnonymously() {
+    private void loginAsAnonymously() {
         pbLoad.setVisibility(View.VISIBLE);
         dbController.loginAnonymously();
     }
 
-    public void login() {
+    private void login() {
         pbLoad.setVisibility(View.VISIBLE);
         dbController.login(entLogin.getText().toString(), entPassword.getText().toString());
+    }
+
+    @AfterPermissionGranted(Constants.REQUEST_LOCATION_PERMISSIONS)
+    void checkPermissions() {
+        String[] perms = {android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION};
+        if (EasyPermissions.hasPermissions(this, perms)) {
+            loginOk();
+        } else {
+            // Do not have permissions, request them now
+            EasyPermissions.requestPermissions(this, getString(R.string.text_dialog_location_permission),
+                    Constants.REQUEST_LOCATION_PERMISSIONS, perms);
+        }
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+        switch (requestCode){
+            case Constants.REQUEST_LOCATION_PERMISSIONS:
+                loginOk();
+                break;
+        }
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+        switch (requestCode){
+            case Constants.REQUEST_LOCATION_PERMISSIONS:
+                loginOk();
+                break;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        // Forward results to EasyPermissions
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
     private void incorrect() {
@@ -115,7 +159,7 @@ public class LoginActivity extends Activity {
                 .show();
     }
 
-    public void loginOk() {
+    private void loginOk() {
         initService();
         User user = UserDAO.getCurrentUser();
         SharedPrefUtils.saveCurrentUser(this, user);
