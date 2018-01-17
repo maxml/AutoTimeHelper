@@ -29,6 +29,7 @@ public class CreateUserActivity extends Activity {
     private DbController dbController;
     private EventBus eventBus;
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_user);
@@ -37,11 +38,11 @@ public class CreateUserActivity extends Activity {
         eventBus = new EventBus();
         dbController = new DbController(this, eventBus);
 
-        entLogin = (TextView) findViewById(R.id.textCreateLogin);
-        entPassword = (TextView) findViewById(R.id.textCreatePassword);
-        entRPassword = (TextView) findViewById(R.id.textRepeatPassword);
-        entEmail = (TextView) findViewById(R.id.textCreateEmail);
-        pbLoad = (ProgressBar) findViewById(R.id.pb_load);
+        entLogin = findViewById(R.id.textCreateLogin);
+        entPassword = findViewById(R.id.textCreatePassword);
+        entRPassword = findViewById(R.id.textRepeatPassword);
+        entEmail = findViewById(R.id.textCreateEmail);
+        pbLoad = findViewById(R.id.pb_load);
     }
 
     @Override
@@ -56,6 +57,22 @@ public class CreateUserActivity extends Activity {
         eventBus.unregister(this);
         dbController.unregisterEventBus(eventBus);
         super.onStop();
+    }
+
+
+    @Subscribe
+    public void onReceiveUserAPIEvent(Events.DbResult event) {
+        switch (event.getResultStatus()) {
+            case Constants.EVENT_DB_RESULT_OK:
+                pbLoad.setVisibility(View.INVISIBLE);
+                authorisation();
+                break;
+            case Constants.EVENT_DB_RESULT_ERROR:
+                pbLoad.setVisibility(View.INVISIBLE);
+                incorrect();
+                break;
+        }
+
     }
 
     public void onClick(View v) {
@@ -89,22 +106,7 @@ public class CreateUserActivity extends Activity {
 
     }
 
-    @Subscribe
-    public void onReceiveUserAPIEvent(Events.DbResult event){
-        switch (event.getResultStatus()) {
-            case Constants.EVENT_DB_RESULT_OK:
-                pbLoad.setVisibility(View.INVISIBLE);
-                authorisation();
-                break;
-            case Constants.EVENT_DB_RESULT_ERROR:
-                pbLoad.setVisibility(View.INVISIBLE);
-                incorrect();
-                break;
-        }
-
-    }
-
-    public void createUser() {
+    private void createUser() {
         Log.d("User", "create user");
         pbLoad.setVisibility(View.VISIBLE);
         dbController.createUser(entEmail.getText().toString(), entPassword.getText().toString());

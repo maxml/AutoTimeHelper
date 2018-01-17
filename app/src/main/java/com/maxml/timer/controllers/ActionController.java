@@ -29,7 +29,7 @@ public class ActionController {
     private DbController dbController;
 
     private String walkActionId;
-    private Map<String, Action> actions = new HashMap<>();
+    private static Map<String, Action> actions = new HashMap<>();
     private List<String> stateStack = new ArrayList<>();
 
     public ActionController(Context context, EventBus entityEventBus) {

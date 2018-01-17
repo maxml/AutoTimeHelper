@@ -33,7 +33,7 @@ import com.maxml.timer.entity.ShowFragmentListener;
 import com.maxml.timer.entity.ShowProgressListener;
 import com.maxml.timer.entity.StatisticControl;
 import com.maxml.timer.entity.Table;
-import com.maxml.timer.util.ActionConverter;
+import com.maxml.timer.util.ActionUtils;
 import com.maxml.timer.util.Constants;
 
 import org.greenrobot.eventbus.EventBus;
@@ -56,7 +56,7 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
 
     private List<WeekViewEvent> list = new ArrayList<>();
     private int[] calendarViews = {1, 3, 5};
-    private int currentCalendarView;
+    private int currentCalendarView = 1;
     private String idLastEvent;
 
     private EventBus eventBus;
@@ -87,7 +87,7 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_week_calendar, container, false);
 
@@ -214,7 +214,7 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
             actions.addAll(table.getRestList());
             actions.addAll(table.getWalkList());
         }
-        list = ActionConverter.actionsToWeekViewEvents(actions, getContext());
+        list = ActionUtils.actionsToWeekViewEvents(actions, getContext());
 
         updateUI();
         initStatistic(actions);
@@ -253,11 +253,11 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
     }
 
     private void initView(View rootView) {
-        weekView = (WeekView) rootView.findViewById(R.id.weekView);
-        cvCalendar = (CalendarView) getActivity().findViewById(R.id.cv_calendar);
-        toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        weekView = rootView.findViewById(R.id.weekView);
+        cvCalendar = getActivity().findViewById(R.id.cv_calendar);
+        toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.name_calendar_fragment);
-        FloatingActionButton fab  = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        FloatingActionButton fab = rootView.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -270,7 +270,7 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
         weekView.setOnEventClickListener(this);
         weekView.setEventLongPressListener(this);
         weekView.setShowNowLine(true);
-        weekView.setNumberOfVisibleDays(1);
+        weekView.setNumberOfVisibleDays(3);
     }
 
     private void setListeners() {

@@ -47,8 +47,7 @@ public class MyWidgetIntentReceiver extends BroadcastReceiver {
 	private String getTitle() {
 		// return "";
 		SimpleDateFormat sdf = new SimpleDateFormat("kk:mm:ss");
-		String currentDateandTime = sdf.format(new Date());
-		return currentDateandTime;
+		return sdf.format(new Date());
 
 	}
 }

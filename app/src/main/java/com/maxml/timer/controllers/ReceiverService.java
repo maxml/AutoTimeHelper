@@ -76,8 +76,10 @@ public class ReceiverService extends Service implements LocationListener {
         startForeground(Constants.NOTIFICATION_ID, notification);
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        if (locationManager != null) {
+            isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        }
 
         initWalkLocationListener();
     }
@@ -302,6 +304,7 @@ public class ReceiverService extends Service implements LocationListener {
         unregisterEventBus(serviceEventBus);
         unregisterEventBus(widgetEventBus);
         unregisterEventBus(callEventBus);
+        unregisterEventBus(wifiEventBus);
         stopTimer();
         super.onDestroy();
     }

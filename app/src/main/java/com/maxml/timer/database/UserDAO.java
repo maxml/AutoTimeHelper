@@ -21,12 +21,10 @@ public class UserDAO {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
-    private Context context;
     private DbController dbController;
 
-    public UserDAO(Context context, DbController dbController) {
+    public UserDAO(DbController dbController) {
         this.dbController = dbController;
-        this.context = context;
         initAuth();
     }
 

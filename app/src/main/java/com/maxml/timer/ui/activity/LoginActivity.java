@@ -1,6 +1,5 @@
 package com.maxml.timer.ui.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,7 +19,7 @@ import com.maxml.timer.controllers.ReceiverService;
 import com.maxml.timer.entity.User;
 import com.maxml.timer.entity.Events;
 import com.maxml.timer.util.Constants;
-import com.maxml.timer.util.SharedPrefUtils;
+import com.maxml.timer.util.SharedPreferencesUtils;
 import com.maxml.timer.util.Utils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -70,6 +69,31 @@ public class LoginActivity extends AppCompatActivity implements EasyPermissions.
     protected void onStop() {
         eventBus.unregister(this);
         super.onStop();
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+        switch (requestCode){
+            case Constants.REQUEST_LOCATION_PERMISSIONS:
+                loginOk();
+                break;
+        }
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+        switch (requestCode){
+            case Constants.REQUEST_LOCATION_PERMISSIONS:
+                loginOk();
+                break;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        // Forward results to EasyPermissions
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
     @Subscribe
@@ -129,31 +153,6 @@ public class LoginActivity extends AppCompatActivity implements EasyPermissions.
         }
     }
 
-    @Override
-    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
-        switch (requestCode){
-            case Constants.REQUEST_LOCATION_PERMISSIONS:
-                loginOk();
-                break;
-        }
-    }
-
-    @Override
-    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
-        switch (requestCode){
-            case Constants.REQUEST_LOCATION_PERMISSIONS:
-                loginOk();
-                break;
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        // Forward results to EasyPermissions
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
-    }
-
     private void incorrect() {
         Toast.makeText(getApplicationContext(), R.string.toast_incorrect_login_or_password, Toast.LENGTH_SHORT)
                 .show();
@@ -162,7 +161,7 @@ public class LoginActivity extends AppCompatActivity implements EasyPermissions.
     private void loginOk() {
         initService();
         User user = UserDAO.getCurrentUser();
-        SharedPrefUtils.saveCurrentUser(this, user);
+        SharedPreferencesUtils.saveCurrentUser(this, user);
         Toast.makeText(getApplicationContext(), R.string.toast_logged, Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);

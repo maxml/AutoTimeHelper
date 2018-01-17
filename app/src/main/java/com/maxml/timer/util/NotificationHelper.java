@@ -12,32 +12,25 @@ import com.maxml.timer.R;
 import com.maxml.timer.ui.activity.LoginActivity;
 import com.maxml.timer.util.Constants;
 
-/**
- * Created by Nazar on 09.04.2017.
- */
-
 public class NotificationHelper {
 
     private static NotificationCompat.Builder getNotificationBuilder(Context context) {
-        Context appContext = context.getApplicationContext();
-        NotificationCompat.Builder nb = new NotificationCompat.Builder(appContext)
+        return new NotificationCompat.Builder(context)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setSmallIcon(android.R.mipmap.sym_def_app_icon);
-        return nb;
     }
 
     public static Notification getDefaultNotification(Context context) {
-        Context appContext = context.getApplicationContext();
         // intent that is started when the notification is clicked
-        Intent notificationIntent = new Intent(appContext, LoginActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(appContext, 0,
+        Intent notificationIntent = new Intent(context, LoginActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
                 notificationIntent, 0);
 
-        NotificationCompat.Builder nb = getNotificationBuilder(appContext)
+        NotificationCompat.Builder nb = getNotificationBuilder(context)
                 .setContentIntent(pendingIntent)
-                .setContentTitle(appContext.getString(R.string.notification_title))
-                .setContentText(appContext.getString(R.string.notification_text))
-                .setLargeIcon(BitmapFactory.decodeResource(appContext.getResources(),
+                .setContentTitle(context.getString(R.string.notification_title))
+                .setContentText(context.getString(R.string.notification_text))
+                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(),
                         android.R.mipmap.sym_def_app_icon));
 
         return nb.build();

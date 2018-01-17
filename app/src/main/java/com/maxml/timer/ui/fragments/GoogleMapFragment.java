@@ -2,6 +2,7 @@ package com.maxml.timer.ui.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -52,11 +53,8 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
         progressListener = (ShowProgressListener) context;
     }
 
-    public GoogleMapFragment() {
-    }
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_google_map, container, false);
         Log.d(Constants.LOG, "GoogleMapFragment method onCreateView");
 //        if (mapView == null) {
@@ -90,44 +88,6 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
         if (polyline == null && polylines.size() == 0) {
             getDataFromDb();
         }
-    }
-
-    @Subscribe()
-    public void onReceiveSinglePath(Path path) {
-        Log.d(Constants.LOG, "start method onReceiveSinglePath");
-        if (path == null || path.getCoordinates() == null) {
-            Toast.makeText(getActivity(), R.string.toast_walk_without_path, Toast.LENGTH_LONG).show();
-            return;
-        }
-        PolylineOptions polylineOptions = getPolylineOptions(path);
-        polyline = map.addPolyline(polylineOptions);
-        polyline.setClickable(true);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(polyline.getPoints().get(0), 15.0f));
-        progressListener.hideProgressBar();
-    }
-
-    @Subscribe()
-    public void onReceiveMultiPath(ArrayList<Path> paths) {
-        Log.d(Constants.LOG, "start method onReceiveMultiPath");
-        if (paths == null) {
-            Toast.makeText(getActivity(), R.string.toast_walk_without_path, Toast.LENGTH_LONG).show();
-            return;
-        }
-        for (Path path : paths) {
-            if (path == null || path.getCoordinates() == null || path.getCoordinates().size() > 0) {
-                continue;
-            }
-            PolylineOptions polylineOptions = getPolylineOptions(path);
-            Polyline polyline = map.addPolyline(polylineOptions);
-            polyline.setClickable(true);
-            polylines.add(polyline);
-        }
-        if (polylines.size() > 0) {
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(polylines.get(0).getPoints().get(0), 15.0f));
-        } else {
-            Toast.makeText(getActivity(), R.string.toast_walk_without_path, Toast.LENGTH_LONG).show();
-        }
-        progressListener.hideProgressBar();
     }
 
     @Override
@@ -186,6 +146,45 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
         if (mapView != null) {
             mapView.onLowMemory();
         }
+    }
+
+
+    @Subscribe()
+    public void onReceiveSinglePath(Path path) {
+        Log.d(Constants.LOG, "start method onReceiveSinglePath");
+        if (path == null || path.getCoordinates() == null) {
+            Toast.makeText(getActivity(), R.string.toast_walk_without_path, Toast.LENGTH_LONG).show();
+            return;
+        }
+        PolylineOptions polylineOptions = getPolylineOptions(path);
+        polyline = map.addPolyline(polylineOptions);
+        polyline.setClickable(true);
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(polyline.getPoints().get(0), 15.0f));
+        progressListener.hideProgressBar();
+    }
+
+    @Subscribe()
+    public void onReceiveMultiPath(ArrayList<Path> paths) {
+        Log.d(Constants.LOG, "start method onReceiveMultiPath");
+        if (paths == null) {
+            Toast.makeText(getActivity(), R.string.toast_walk_without_path, Toast.LENGTH_LONG).show();
+            return;
+        }
+        for (Path path : paths) {
+            if (path == null || path.getCoordinates() == null || path.getCoordinates().size() > 0) {
+                continue;
+            }
+            PolylineOptions polylineOptions = getPolylineOptions(path);
+            Polyline polyline = map.addPolyline(polylineOptions);
+            polyline.setClickable(true);
+            polylines.add(polyline);
+        }
+        if (polylines.size() > 0) {
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(polylines.get(0).getPoints().get(0), 15.0f));
+        } else {
+            Toast.makeText(getActivity(), R.string.toast_walk_without_path, Toast.LENGTH_LONG).show();
+        }
+        progressListener.hideProgressBar();
     }
 
     private PolylineOptions getPolylineOptions(Path path) {

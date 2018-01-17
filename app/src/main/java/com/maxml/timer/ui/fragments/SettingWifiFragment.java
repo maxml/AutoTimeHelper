@@ -45,15 +45,6 @@ public class SettingWifiFragment extends Fragment implements WifiAdapter.OnItemC
         return rootView;
     }
 
-    private void initView(View rootView) {
-        RecyclerView rvWifi = rootView.findViewById(R.id.rv_wifi);
-        rvWifi.setHasFixedSize(true);
-        rvWifi.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        adapter = new WifiAdapter(new ArrayList<WifiState>(), this);
-        rvWifi.setAdapter(adapter);
-    }
-
     @Override
     public void onStart() {
         super.onStart();
@@ -69,21 +60,6 @@ public class SettingWifiFragment extends Fragment implements WifiAdapter.OnItemC
         eventBus.unregister(this);
         super.onStop();
     }
-
-    @Subscribe
-    public void receiveWifiFromDB(List<WifiState> list) {
-        adapter.swapData(list);
-    }
-
-    private void loadWifi() {
-        controller.sendAllWifi();
-    }
-
-    private void registerEventBus() {
-        eventBus = new EventBus();
-        controller = new DbController(getContext(), eventBus);
-    }
-
     @Override
     public void onItemClick(WifiState wifiState) {
         this.lastWifiState = wifiState;
@@ -102,5 +78,28 @@ public class SettingWifiFragment extends Fragment implements WifiAdapter.OnItemC
         }
         controller.updateWifi(lastWifiState);
         controller.sendAllWifi();
+    }
+
+    @Subscribe
+    public void receiveWifiFromDB(List<WifiState> list) {
+        adapter.swapData(list);
+    }
+
+    private void initView(View rootView) {
+        RecyclerView rvWifi = rootView.findViewById(R.id.rv_wifi);
+        rvWifi.setHasFixedSize(true);
+        rvWifi.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        adapter = new WifiAdapter(new ArrayList<WifiState>(), this);
+        rvWifi.setAdapter(adapter);
+    }
+
+    private void loadWifi() {
+        controller.sendAllWifi();
+    }
+
+    private void registerEventBus() {
+        eventBus = new EventBus();
+        controller = new DbController(getContext(), eventBus);
     }
 }

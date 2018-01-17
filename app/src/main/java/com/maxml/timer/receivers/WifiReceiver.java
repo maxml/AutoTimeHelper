@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
 import android.util.Log;
 
 import com.maxml.timer.controllers.ActionController;
@@ -16,45 +15,49 @@ import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.NetworkUtil;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-
-import java.util.logging.StreamHandler;
 
 public class WifiReceiver extends BroadcastReceiver {
     private DbController dbController;
     private ActionController actionController;
     private EventBus eventBus;
 
-    private static int counter;
+    private static boolean isActiveWifi;
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
-            NetworkInfo networkInfo = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
-            if (networkInfo != null && networkInfo.getTypeName().equalsIgnoreCase("WIFI")) {
-                if (networkInfo != null && networkInfo.getDetailedState() == NetworkInfo.DetailedState.CONNECTED) {
-                    initController(context);
-
-                    WifiState wifiState = NetworkUtil.getCurrentWifi(context);
-
-                    dbController.wifiActivated(wifiState);
-                    int type = dbController.sendWifiStateFromDB(wifiState);
-
-                    if (type == Constants.WIFI_TYPE_HOME) {
-                        actionController.onReceiveWifiEvent(new Events.WifiEvent(Constants.EVENT_WIFI_ENABLE));
-                        unregisterController();
-                        counter = 0;
-                    }
-                } else if (networkInfo != null && networkInfo.getDetailedState() == NetworkInfo.DetailedState.DISCONNECTED) {
-                    if (counter == 0) {
-                        initController(context);
-                        actionController.onReceiveWifiEvent(new Events.WifiEvent(Constants.EVENT_WIFI_DISABLE));
-                        unregisterController();
-                        counter++;
-                    }
+        NetworkInfo networkInfo = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
+        if (intent.getAction() != null && intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION) && networkInfo != null
+                && networkInfo.getTypeName().equalsIgnoreCase("WIFI")) {
+            if (networkInfo.getDetailedState() == NetworkInfo.DetailedState.CONNECTED) {
+                connectedWifi(context);
+            } else if (networkInfo.getDetailedState() == NetworkInfo.DetailedState.DISCONNECTED) {
+                if (isActiveWifi) {
+                    disconnectedWifi(context);
                 }
             }
         }
+    }
+
+    private void connectedWifi(Context context) {
+        initController(context);
+
+        WifiState wifiState = NetworkUtil.getCurrentWifi(context);
+
+        dbController.wifiActivated(wifiState);
+        int type = dbController.getWifiTypeFromDB(wifiState);
+
+        if (type == Constants.WIFI_TYPE_WORK) {
+            actionController.onReceiveWifiEvent(new Events.WifiEvent(Constants.EVENT_WIFI_ENABLE));
+            unregisterController();
+            isActiveWifi = true;
+        }
+    }
+
+    private void disconnectedWifi(Context context) {
+        initController(context);
+        actionController.onReceiveWifiEvent(new Events.WifiEvent(Constants.EVENT_WIFI_DISABLE));
+        unregisterController();
+        isActiveWifi = false;
     }
 
     private void initController(Context context) {

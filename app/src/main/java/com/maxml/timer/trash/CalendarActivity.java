@@ -1,4 +1,4 @@
-package com.maxml.timer.ui.activity;
+package com.maxml.timer.trash;
 
 import android.Manifest;
 import android.accounts.AccountManager;
@@ -35,8 +35,6 @@ import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
-import com.maxml.timer.MainActivity;
-import com.maxml.timer.R;
 
 import java.io.IOException;
 import java.util.ArrayList;

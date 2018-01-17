@@ -1,13 +1,8 @@
 package com.maxml.timer;
 
-import android.content.Intent;
 import android.support.multidex.MultiDexApplication;
-import android.util.Log;
 
-import com.maxml.timer.controllers.ReceiverService;
 import com.maxml.timer.database.DBFactory;
-import com.maxml.timer.util.Constants;
-import com.maxml.timer.util.Utils;
 
 public class App extends MultiDexApplication {
 

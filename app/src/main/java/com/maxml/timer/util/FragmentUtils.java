@@ -1,10 +1,7 @@
 package com.maxml.timer.util;
 
-import android.app.Activity;
-import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 
 import com.maxml.timer.R;
 
@@ -33,9 +30,6 @@ public class FragmentUtils {
         activity.getSupportFragmentManager()
                 .popBackStack();
 
-        if (activity.getSupportFragmentManager().getBackStackEntryCount() == 0) {
-            return false;
-        }
-        return true;
+        return activity.getSupportFragmentManager().getBackStackEntryCount() != 0;
     }
 }

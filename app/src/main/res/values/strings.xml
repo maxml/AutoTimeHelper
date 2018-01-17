@@ -30,7 +30,7 @@
     <string name="widget_work_text">Работа</string>
     <string name="widget_rest_text">Отдых</string>
     <string name="calendar">Calendar</string>
-    <string name="home">Home page</string>
+    <string name="home">Home</string>
     <string name="db_error">Ошыбка соединения</string>
 
     <!-- TODO: Remove or change this placeholder text -->
