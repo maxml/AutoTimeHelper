@@ -50,7 +50,6 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
     private DbController dbController;
     private Action action;
 
-    private ActionController actionController;
     private ShowProgressListener progressListener;
     private ShowFragmentListener fragmentListener;
 
@@ -69,11 +68,6 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         registerEventBus();
-
-        if (getArguments() != null) {
-            dbController.getActionFromDb(getArguments().getString(Constants.EXTRA_ID_ACTION));
-            progressListener.showProgressBar();
-        }
     }
 
     @Override
@@ -90,15 +84,22 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
     @Override
     public void onStart() {
         eventBus.register(this);
-        actionController.registerEventBus(eventBus);
         dbController.registerEventBus(eventBus);
+
+        loadAction();
         super.onStart();
+    }
+
+    private void loadAction() {
+        if (getArguments() != null) {
+            dbController.getActionFromDb(getArguments().getString(Constants.EXTRA_ID_ACTION));
+            progressListener.showProgressBar();
+        }
     }
 
     @Override
     public void onStop() {
         eventBus.unregister(this);
-        actionController.unregisterEventBus(eventBus);
         dbController.unregisterEventBus(eventBus);
         super.onStop();
     }
@@ -152,6 +153,7 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
         this.action = action;
         updateUI(action);
         initUIbShow(getView());
+        progressListener.hideProgressBar();
     }
 
     @Subscribe
@@ -227,7 +229,6 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
 
     private void registerEventBus() {
         eventBus = new EventBus();
-        actionController = new ActionController(getContext(), eventBus);
         dbController = new DbController(getContext(), eventBus);
     }
 
@@ -235,6 +236,7 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
         bbChangeData = view.findViewById(R.id.bb_change_date);
         bbChangeAction = view.findViewById(R.id.bb_change_action);
         bbChangeDescription = view.findViewById(R.id.bb_change_description);
+        bbShowPathInMap = view.findViewById(R.id.bb_show_path_in_map);
         bbOk = view.findViewById(R.id.bb_ok);
 
         sAction = view.findViewById(R.id.s_action_type);
@@ -279,11 +281,9 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
             sAction.setSelection(3);
         }
 
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:MM");
-
         etDescription.setText(action.getDescription());
-        etStartDate.setText(sdf.format(action.getStartDate()));
-        etEndDate.setText(sdf.format(action.getEndDate()));
+        etStartDate.setText(Utils.parseToTime(action.getStartDate().getTime()));
+        etEndDate.setText(Utils.parseToTime(action.getEndDate().getTime()));
     }
 
     private boolean isSuccessfulDate() {

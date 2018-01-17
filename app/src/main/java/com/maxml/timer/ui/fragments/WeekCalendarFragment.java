@@ -61,16 +61,12 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
 
     private EventBus eventBus;
     private DbController controller;
-    private StatisticControl statisticControl;
     private ShowFragmentListener fragmentListener;
     private ShowProgressListener progressListener;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof StatisticControl) {
-            statisticControl = (StatisticControl) context;
-        }
         if (context instanceof ShowFragmentListener) {
             fragmentListener = (ShowFragmentListener) context;
         }
@@ -110,10 +106,6 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
     public void onStop() {
         controller.unregisterEventBus(eventBus);
         eventBus.unregister(this);
-
-        if (statisticControl != null) {
-            statisticControl.hideStatisticLayout();
-        }
 
         cvCalendar.setVisibility(View.GONE);
         progressListener.hideProgressBar();
@@ -217,7 +209,6 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
         list = ActionUtils.actionsToWeekViewEvents(actions, getContext());
 
         updateUI();
-        initStatistic(actions);
 
         progressListener.hideProgressBar();
     }
@@ -289,30 +280,6 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
 
     private void updateUI() {
         weekView.notifyDataSetChanged();
-    }
-
-    private void initStatistic(List<Action> list) {
-        if (statisticControl != null) {
-            String time = getStatisticTime(list);
-            statisticControl.setEventTime(time);
-            statisticControl.showStatisticLayout();
-        }
-    }
-
-    private String getStatisticTime(List<Action> list) {
-        long timeInMillis = 0;
-        for (Action action : list) {
-            if (action.getType().equalsIgnoreCase(Constants.EVENT_WORK_ACTION)) {
-                Date startDate = action.getStartDate();
-                Date endDate = action.getEndDate();
-                long different = endDate.getTime() - startDate.getTime();
-                timeInMillis += different;
-            }
-        }
-        NumberFormat f = new DecimalFormat("00");
-        long hours = timeInMillis / 1000 / 60 / 60;
-        long min = timeInMillis / 1000 / 60 % 60;
-        return f.format(hours) + ":" + f.format(min);
     }
 
     private int getNextCurrentCalendarView() {

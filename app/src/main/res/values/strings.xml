@@ -61,6 +61,8 @@
     <string name="toast_deny_location_permission">You deny location permission, your wolk actions are not trecking now</string>
     <string name="toast_deny_location_tracker">Lockation tracker turn off, your walk actions aren\'t tracking now</string>
     <string name="action_not_exist">Action is not exist</string>
+    <string name="dialog_message_exit">Are you sure you want to exit?</string>
+    <string name="dialog_title_exit">Really Exit?</string>
 
     <string-array name="options_action">
         <item>Edit</item>

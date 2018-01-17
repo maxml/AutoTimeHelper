@@ -146,8 +146,8 @@ public class MainActivity extends AppCompatActivity
     public void onBackPressed() {
         if (!FragmentUtils.backFragment(this)) {
             new AlertDialog.Builder(this)
-                    .setTitle("Really Exit?")
-                    .setMessage("Are you sure you want to exit?")
+                    .setTitle(R.string.dialog_title_exit)
+                    .setMessage(R.string.dialog_message_exit)
                     .setNegativeButton(android.R.string.no, null)
                     .setPositiveButton(android.R.string.yes, new OnClickListener() {
                         public void onClick(DialogInterface arg0, int arg1) {

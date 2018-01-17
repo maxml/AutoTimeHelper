@@ -25,8 +25,8 @@ public class ActionUtils {
             startData.setTimeInMillis(action.getStartDate().getTime());
             endData.setTimeInMillis(action.getEndDate().getTime());
 
-            if (endData.getTimeInMillis() - startData.getTimeInMillis() < 1000 * 60 * 40) {
-                endData.setTimeInMillis(startData.getTimeInMillis() + (1000 * 60 * 40));
+            if (endData.getTimeInMillis() - startData.getTimeInMillis() < 1000 * 60 * 30) {
+                endData.setTimeInMillis(startData.getTimeInMillis() + (1000 * 60 * 30));
             }
 
             String description = (action.getDescription() == null) ? "" : action.getDescription();

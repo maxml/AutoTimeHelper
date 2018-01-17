@@ -11,8 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:firstDayOfWeek="2"
-        android:minDate="05/02/2017"
-        tools:layout_editor_absoluteX="17dp"
-        tools:layout_editor_absoluteY="-9dp" />
+        android:minDate="05/02/2017" />
 
 </RelativeLayout>
