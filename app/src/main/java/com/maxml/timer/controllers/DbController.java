@@ -172,13 +172,19 @@ public class DbController {
 
 
     public void wifiActivated(WifiState wifiState) {
-        Log.i(Constants.TAG, "wifiActivated: 1");
         if (wifiStateDAO.getWifiStatesById(wifiState.getId()) == null) {
-            wifiStateDAO.insert(wifiState);
-
-            Log.i(Constants.TAG, "wifiActivated: 2");
+            wifiStateDAO.insertData(wifiState);
         }
-        Log.i(Constants.TAG, "wifiActivated: " + wifiStateDAO.getAllRoles().size());
+    }
+
+    public int sendWifiStateFromDB(WifiState wifi) {
+        WifiState wifiState = wifiStateDAO.getWifiStatesById(wifi.getId());
+
+        return wifiState.getType();
+    }
+
+    public void updateWifi(WifiState wifiState){
+        wifiStateDAO.updateData(wifiState);
     }
 
     public void sendAllWifi() {

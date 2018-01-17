@@ -21,10 +21,21 @@ public class FragmentUtils {
                 .addToBackStack(tag)
                 .commit();
     }
+
     public static void setFragment(FragmentActivity activity, Fragment fragment) {
         activity.getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.content_frame, fragment)
                 .commit();
+    }
+
+    public static boolean backFragment(FragmentActivity activity) {
+        activity.getSupportFragmentManager()
+                .popBackStack();
+
+        if (activity.getSupportFragmentManager().getBackStackEntryCount() == 0) {
+            return false;
+        }
+        return true;
     }
 }

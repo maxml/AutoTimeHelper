@@ -23,4 +23,9 @@
             android:title="Rest" />
 
     </PreferenceCategory>
+
+    <android.support.v7.preference.Preference
+        android:key="wifi"
+        android:summary="checked work wifi"
+        android:title="Wifi" />
 </PreferenceScreen>

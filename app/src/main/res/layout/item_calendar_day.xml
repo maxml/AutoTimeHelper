@@ -30,13 +30,15 @@
                 android:id="@+id/tvActionType"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Call" />
+                android:text="Call"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/tvActionDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/action_default_description" />
+                android:text="@string/action_default_description"
+                android:textSize="14sp" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerViewOptions"

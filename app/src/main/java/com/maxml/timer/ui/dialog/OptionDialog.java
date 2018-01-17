@@ -6,29 +6,28 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
-import com.maxml.timer.R;
+public class OptionDialog extends DialogFragment {
+    private static int resourceItems;
 
-public class OptionActionDialog extends DialogFragment {
-    private static String idEvent;
     private static OnDialogItemClickListener clickListener;
 
     public interface OnDialogItemClickListener {
-        void onDialogItemClick(int position, String idEvent);
+        void onDialogItemClick(int position);
     }
 
-    public static OptionActionDialog getInstance(OnDialogItemClickListener listener, String id) {
-        idEvent = id;
+    public static OptionDialog getInstance(OnDialogItemClickListener listener, int resource) {
+        resourceItems = resource;
         clickListener = listener;
-        return new OptionActionDialog();
+        return new OptionDialog();
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setItems(R.array.options_action, new DialogInterface.OnClickListener() {
+        builder.setItems(resourceItems, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                clickListener.onDialogItemClick(i, idEvent);
+                clickListener.onDialogItemClick(i);
             }
         });
 

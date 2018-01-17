@@ -18,7 +18,7 @@ public class App extends MultiDexApplication {
         super.onCreate();
         DBFactory.setHelper(this);
 
-//		NetworkReceiver networkReceiver = new NetworkReceiver();
+//		WifiReceiver networkReceiver = new WifiReceiver();
 //		networkReceiver.onReceive(this, new Intent());
 
 //		NetworkStatus.isNetworkAvailable(this);

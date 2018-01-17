@@ -122,6 +122,11 @@ public class ReceiverService extends Service implements LocationListener {
     }
 
     @Subscribe()
+    public void onReceiveWifiEvent(Events.WifiEvent event) {
+        actionController.onReceiveWifiEvent(event);
+    }
+
+    @Subscribe()
     public void onReceiveWigetEvent(Events.WidgetEvent event) {
         actionController.onReceiveWidgetEvent(event);
     }

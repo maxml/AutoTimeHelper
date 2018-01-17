@@ -195,11 +195,34 @@ public class ActionController {
 
 
     private void startWifiEvent() {
-        //TODO
+        Action work = new Action();
+        work.setType(Constants.EVENT_WORK_ACTION);
+        work.setStartDate(new Date());
+        work.setDayCount(Utils.getDayCount(new Date()));
+        String dayCountType = work.getDayCount() + "_" + work.getType();
+        work.setDayCount_type(dayCountType);
+        // add it to temp map
+        actions.put(Constants.EVENT_WORK_ACTION, work);
+        // add to stack trace
+        stateStack.add(Constants.EVENT_WORK_ACTION);
+        // update status
+        updateStatus(Constants.EVENT_WORK_ACTION, work.getStartDate());
     }
 
     private void endWifiEvent() {
-        //TODO
+        Action work = actions.get(Constants.EVENT_WORK_ACTION);
+        if (work == null) {
+            startWifiEvent();
+            return;
+        }
+        work.setEndDate(new Date());
+        dbController.createAction(work);
+        // clear temp entity
+        actions.remove(Constants.EVENT_WORK_ACTION);
+        // delete from stacktrace
+        stateStack.remove(Constants.EVENT_WORK_ACTION);
+        // set previous action status
+        updateStatus(getActionStatus(), getActionTime());
     }
 
     private void startRestEvent() {

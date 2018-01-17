@@ -25,7 +25,7 @@ import com.alamkanak.weekview.WeekViewEvent;
 import com.maxml.timer.R;
 import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.ui.dialog.CreateActionDialog;
-import com.maxml.timer.ui.dialog.OptionActionDialog;
+import com.maxml.timer.ui.dialog.OptionDialog;
 import com.maxml.timer.entity.Action;
 import com.maxml.timer.entity.ActionWeek;
 import com.maxml.timer.entity.Events;
@@ -48,7 +48,7 @@ import java.util.List;
 
 public class WeekCalendarFragment extends Fragment implements WeekView.EventClickListener,
         MonthLoader.MonthChangeListener, WeekView.EventLongPressListener,
-        OptionActionDialog.OnDialogItemClickListener, CreateActionDialog.OnActionCreatedListener {
+        OptionDialog.OnDialogItemClickListener, CreateActionDialog.OnActionCreatedListener {
 
     private WeekView weekView;
     private CalendarView cvCalendar;
@@ -57,6 +57,7 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
     private List<WeekViewEvent> list = new ArrayList<>();
     private int[] calendarViews = {1, 3, 5};
     private int currentCalendarView;
+    private String idLastEvent;
 
     private EventBus eventBus;
     private DbController controller;
@@ -139,7 +140,8 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
 
     @Override
     public void onEventClick(WeekViewEvent event, RectF eventRect) {
-        DialogFragment dialog = OptionActionDialog.getInstance(this, ((ActionWeek) event).getActionId());
+        idLastEvent = ((ActionWeek) event).getActionId();
+        DialogFragment dialog = OptionDialog.getInstance(this, R.array.options_action);
         dialog.show(getFragmentManager(), "dialog option");
     }
 
@@ -155,16 +157,16 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
     }
 
     @Override
-    public void onDialogItemClick(int position, String idEvent) {
+    public void onDialogItemClick(int position) {
         if (position == Constants.ID_BUTTON_EDIT) {
             Bundle args = new Bundle();
-            args.putString(Constants.EXTRA_ID_ACTION, idEvent);
+            args.putString(Constants.EXTRA_ID_ACTION, idLastEvent);
             DetailsActionFragment fragment = new DetailsActionFragment();
             fragment.setArguments(args);
 
             fragmentListener.showFragment(fragment);
         } else if (position == Constants.ID_BUTTON_DELETE) {
-            controller.removeActionInDb(idEvent);
+            controller.removeActionInDb(idLastEvent);
 
             progressListener.showProgressBar();
         }

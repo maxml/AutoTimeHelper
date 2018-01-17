@@ -23,11 +23,11 @@ public class CallReceiver extends BroadcastReceiver {
         int state = 0;
         String stateStr = intent.getExtras().getString(TelephonyManager.EXTRA_STATE);
         if (stateStr != null) {
-            if (stateStr.equals(TelephonyManager.EXTRA_STATE_IDLE)) {
+            if (stateStr.equalsIgnoreCase(TelephonyManager.EXTRA_STATE_IDLE)) {
                 state = TelephonyManager.CALL_STATE_IDLE;
-            } else if (stateStr.equals(TelephonyManager.EXTRA_STATE_OFFHOOK)) {
+            } else if (stateStr.equalsIgnoreCase(TelephonyManager.EXTRA_STATE_OFFHOOK)) {
                 state = TelephonyManager.CALL_STATE_OFFHOOK;
-            } else if (stateStr.equals(TelephonyManager.EXTRA_STATE_RINGING)) {
+            } else if (stateStr.equalsIgnoreCase(TelephonyManager.EXTRA_STATE_RINGING)) {
                 state = TelephonyManager.CALL_STATE_RINGING;
             }
         }

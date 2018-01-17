@@ -50,9 +50,9 @@ public class LoginActivity extends AppCompatActivity implements EasyPermissions.
         eventBus = new EventBus();
         dbController = new DbController(this, eventBus);
 
-        entLogin = (TextView) findViewById(R.id.et_login);
-        entPassword = (TextView) findViewById(R.id.et_password);
-        pbLoad = (ProgressBar) findViewById(R.id.pb_load);
+        entLogin = findViewById(R.id.et_login);
+        entPassword = findViewById(R.id.et_password);
+        pbLoad = findViewById(R.id.pb_load);
 
         boolean isLogged = FirebaseAuth.getInstance().getCurrentUser() != null;
         if (isLogged) {

@@ -153,18 +153,20 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        new AlertDialog.Builder(this)
-                .setTitle("Really Exit?")
-                .setMessage("Are you sure you want to exit?")
-                .setNegativeButton(android.R.string.no, null)
-                .setPositiveButton(android.R.string.yes, new OnClickListener() {
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        actionController.closeApp();
-                        finish();
-                    }
-                })
-                .create()
+        if (!FragmentUtils.backFragment(this)) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Really Exit?")
+                    .setMessage("Are you sure you want to exit?")
+                    .setNegativeButton(android.R.string.no, null)
+                    .setPositiveButton(android.R.string.yes, new OnClickListener() {
+                        public void onClick(DialogInterface arg0, int arg1) {
+                            actionController.closeApp();
+                            finish();
+                        }
+                    })
+                    .create()
                 .show();
+        }
     }
 
     @Override

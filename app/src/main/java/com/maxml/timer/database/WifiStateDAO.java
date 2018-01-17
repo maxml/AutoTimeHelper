@@ -1,8 +1,6 @@
 package com.maxml.timer.database;
 
 import com.j256.ormlite.dao.BaseDaoImpl;
-import com.j256.ormlite.stmt.PreparedQuery;
-import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 import com.maxml.timer.entity.WifiState;
 
@@ -37,9 +35,17 @@ public class WifiStateDAO extends BaseDaoImpl<WifiState, String> {
         }
     }
 
-    public void insert(WifiState wifiState) {
+    public void insertData(WifiState wifiState) {
         try {
             create(wifiState);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateData(WifiState wifiState) {
+        try {
+            update(wifiState);
         } catch (SQLException e) {
             e.printStackTrace();
         }
