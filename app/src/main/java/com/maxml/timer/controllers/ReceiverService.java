@@ -16,13 +16,10 @@ import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.maxml.timer.MainActivity;
 import com.maxml.timer.R;
 import com.maxml.timer.entity.Coordinates;
 import com.maxml.timer.entity.Events;
-import com.maxml.timer.ui.dialog.DialogCallback;
 import com.maxml.timer.util.Constants;
-import com.maxml.timer.ui.dialog.DialogFactory;
 import com.maxml.timer.util.NotificationHelper;
 
 import org.greenrobot.eventbus.EventBus;
@@ -76,7 +73,7 @@ public class ReceiverService extends Service implements LocationListener {
         serviceEventBus.register(this);
         // start service as foreground
         Notification notification = NotificationHelper.getDefaultNotification(this);
-        startForeground(Constants.NOTIFICATION_ID, notification);
+        startForeground(Constants.NOTIFICATION_APP_ID, notification);
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
@@ -141,7 +138,7 @@ public class ReceiverService extends Service implements LocationListener {
                 }
                 break;
             case Constants.EVENT_TURN_ON_DENY:
-                Toast.makeText(this, R.string.toast_deny_location_tracker, Toast.LENGTH_LONG).show();
+                NotificationHelper.showMessageNotification(this, getString(R.string.message_deny_location_tracker));
                 break;
         }
     }

@@ -38,7 +38,9 @@ public class Constants {
     public static final String EVENT_DB_RESULT_OK = "resultOk";
     public static final String EVENT_DB_RESULT_ERROR = "resultError";
 
-    public static final int NOTIFICATION_ID = 100;
+    public static final int NOTIFICATION_APP_ID = 100;
+    public static final int NOTIFICATION_MESSAGE_ID = 101;
+
 
     public static final int WIFI_TYPE_NONE = 0;
     public static final int WIFI_TYPE_HOME = 1;
