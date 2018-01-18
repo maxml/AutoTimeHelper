@@ -12,43 +12,44 @@ import com.maxml.timer.entity.WifiState;
 public class NetworkUtil {
 
     public static boolean isNetworkAvailable(Context context) {
-        try {
-            ConnectivityManager cm = (ConnectivityManager)
-                    context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager)
+                context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm != null) {
             NetworkInfo networkInfo = cm.getActiveNetworkInfo();
 
-            if (networkInfo != null && networkInfo.isConnected()) {
-                return true;
-            }
-        } catch (Exception e) {
-
+            return networkInfo != null && networkInfo.isConnected();
         }
         return false;
     }
 
     public static boolean isWifiAvailable(Context context) {
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo mWifi = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        try {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm != null) {
+            NetworkInfo mWifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
             return mWifi.isConnected();
-        } catch (Exception e) {
-            return false;
         }
+        return false;
     }
 
     public static boolean isWifiAvailable(Context context, int id) {
         WifiManager wifiManager = (WifiManager) context
                 .getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        if (wifiManager != null) {
+            WifiInfo wifiInfo = wifiManager.getConnectionInfo();
 
-        return id == wifiInfo.getIpAddress();
+            return id == wifiInfo.getIpAddress();
+        }
+        return false;
     }
 
     public static WifiState getCurrentWifi(Context context) {
         WifiManager wifiManager = (WifiManager) context
                 .getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        if (wifiManager != null) {
+            WifiInfo wifiInfo = wifiManager.getConnectionInfo();
 
-        return new WifiState(wifiInfo.getBSSID(), wifiInfo.getSSID());
+            return new WifiState(wifiInfo.getBSSID(), wifiInfo.getSSID());
+        }
+        return new WifiState();
     }
 }

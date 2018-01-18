@@ -76,9 +76,9 @@ public class DayCalendarFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_day_calendar, container, false);
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        recyclerView =  view.findViewById(R.id.recyclerView);
 
         initRecyclerView();
 
@@ -90,15 +90,6 @@ public class DayCalendarFragment extends Fragment {
         super.onStart();
         eventBus.register(this);
         controller.registerEventBus(eventBus);
-    }
-
-    private void loadActions(long time) {
-        if (time == 0) {
-            controller.getTableFromDb(new Date(System.currentTimeMillis()));
-        } else {
-            controller.getTableFromDb(new Date(time));
-        }
-        progressListener.showProgressBar();
     }
 
     @Override
@@ -142,6 +133,15 @@ public class DayCalendarFragment extends Fragment {
         }
     }
 
+    private void loadActions(long time) {
+        if (time == 0) {
+            controller.getTableFromDb(new Date(System.currentTimeMillis()));
+        } else {
+            controller.getTableFromDb(new Date(time));
+        }
+        progressListener.showProgressBar();
+    }
+
     private void updateUI() {
         adapter.swapData(list);
 
@@ -161,7 +161,6 @@ public class DayCalendarFragment extends Fragment {
         }
     }
 
-    @NonNull
     private String getStatisticTime() {
         long timeInMillis = 0;
         for (Action entity : list) {

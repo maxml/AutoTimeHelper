@@ -28,7 +28,7 @@ public class ActionController {
     private DbController dbController;
 
     private String walkActionId;
-    private Map<String, Action> actions = new HashMap<>();
+    private static Map<String, Action> actions = new HashMap<>();
     private List<String> stateStack = new ArrayList<>();
 
     public ActionController(Context context, EventBus entityEventBus) {
@@ -200,7 +200,7 @@ public class ActionController {
     private void startWifiEvent() {
         Action work = new Action();
         work.setType(Constants.EVENT_WORK_ACTION);
-        work.setStartDate(new Date());
+        work.setStartDate(new Date(System.currentTimeMillis()));
         work.setDayCount(Utils.getDayCount(new Date()));
         String dayCountType = work.getDayCount() + "_" + work.getType();
         work.setDayCount_type(dayCountType);
@@ -218,7 +218,7 @@ public class ActionController {
             startWifiEvent();
             return;
         }
-        work.setEndDate(new Date());
+        work.setEndDate(new Date(System.currentTimeMillis()));
         dbController.createAction(work);
         // clear temp entity
         actions.remove(Constants.EVENT_WORK_ACTION);

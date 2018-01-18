@@ -25,13 +25,14 @@ public class ForgotPasswordActivity extends Activity {
     private DbController dbController;
     private EventBus eventBus;
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.forgot_password);
         eventBus = new EventBus();
         dbController = new DbController(this, eventBus);
-        tvEmail = (TextView) findViewById(R.id.textFPEmail);
-        pbLoad = (ProgressBar) findViewById(R.id.pb_load);
+        tvEmail = findViewById(R.id.textFPEmail);
+        pbLoad = findViewById(R.id.pb_load);
     }
 
     @Override

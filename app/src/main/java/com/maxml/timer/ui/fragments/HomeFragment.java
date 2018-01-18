@@ -1,6 +1,7 @@
 package com.maxml.timer.ui.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -43,7 +44,8 @@ public class HomeFragment extends Fragment {
         registerEventBus();
     }
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.manual_activity_fragment, container, false);
 
         initView(rootView);
@@ -52,39 +54,6 @@ public class HomeFragment extends Fragment {
         initListeners();
 
         return rootView;
-    }
-
-    private void setStartUI() {
-        String activeStatus = actionController.getActionStatus();
-        Date actionDate = actionController.getActionTime();
-        if (activeStatus != null && actionDate != null) {
-            tvTitle.setText(activeStatus);
-            tvStartDate.setText(charSequence(actionDate));
-            if (activeStatus.equalsIgnoreCase(Constants.EVENT_CALL_ACTION)) {
-                bCall.setChecked(true);
-            } else if (activeStatus.equalsIgnoreCase(Constants.EVENT_WORK_ACTION)) {
-                bWork.setChecked(true);
-            } else if (activeStatus.equalsIgnoreCase(Constants.EVENT_REST_ACTION)) {
-                bRest.setChecked(true);
-            } else if (activeStatus.equalsIgnoreCase(Constants.EVENT_WALK_ACTION)) {
-                bWalk.setChecked(true);
-            }
-        }
-    }
-
-    private void registerEventBus() {
-        eventBus = new EventBus();
-        actionController = new ActionController(getContext(), eventBus);
-    }
-
-    private void initView(View view) {
-        bCall = (ToggleButton) view.findViewById(R.id.b_call);
-        bWork = (ToggleButton) view.findViewById(R.id.b_work);
-        bRest = (ToggleButton) view.findViewById(R.id.b_rest);
-        bWalk = (ToggleButton) view.findViewById(R.id.b_walk);
-
-        tvStartDate = (TextView) view.findViewById(R.id.tv_start_date);
-        tvTitle = (TextView) view.findViewById(R.id.tv_title);
     }
 
     @Subscribe()
@@ -111,6 +80,39 @@ public class HomeFragment extends Fragment {
         actionController.unregisterEventBus(eventBus);
         eventBus.unregister(this);
         super.onStop();
+    }
+
+    private void setStartUI() {
+        String activeStatus = actionController.getActionStatus();
+        Date actionDate = actionController.getActionTime();
+        if (activeStatus != null && actionDate != null) {
+            tvTitle.setText(activeStatus);
+            tvStartDate.setText(charSequence(actionDate));
+            if (activeStatus.equalsIgnoreCase(Constants.EVENT_CALL_ACTION)) {
+                bCall.setChecked(true);
+            } else if (activeStatus.equalsIgnoreCase(Constants.EVENT_WORK_ACTION)) {
+                bWork.setChecked(true);
+            } else if (activeStatus.equalsIgnoreCase(Constants.EVENT_REST_ACTION)) {
+                bRest.setChecked(true);
+            } else if (activeStatus.equalsIgnoreCase(Constants.EVENT_WALK_ACTION)) {
+                bWalk.setChecked(true);
+            }
+        }
+    }
+
+    private void registerEventBus() {
+        eventBus = new EventBus();
+        actionController = new ActionController(getContext(), eventBus);
+    }
+
+    private void initView(View view) {
+        bCall = view.findViewById(R.id.b_call);
+        bWork = view.findViewById(R.id.b_work);
+        bRest = view.findViewById(R.id.b_rest);
+        bWalk = view.findViewById(R.id.b_walk);
+
+        tvStartDate = view.findViewById(R.id.tv_start_date);
+        tvTitle = view.findViewById(R.id.tv_title);
     }
 
     private void refreshActionStatus() {
@@ -170,8 +172,7 @@ public class HomeFragment extends Fragment {
 
     private String charSequence(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("kk:mm:ss");
-        String currentDateAndTime = "Start at:" + sdf.format(date);
-        return currentDateAndTime;
+        return "Start at:" + sdf.format(date);
     }
 
 }

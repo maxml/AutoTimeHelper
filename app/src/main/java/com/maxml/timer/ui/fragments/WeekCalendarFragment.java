@@ -33,7 +33,7 @@ import com.maxml.timer.entity.ShowFragmentListener;
 import com.maxml.timer.entity.ShowProgressListener;
 import com.maxml.timer.entity.StatisticControl;
 import com.maxml.timer.entity.Table;
-import com.maxml.timer.util.ActionConverter;
+import com.maxml.timer.util.ActionUtils;
 import com.maxml.timer.util.Constants;
 
 import org.greenrobot.eventbus.EventBus;
@@ -56,21 +56,17 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
 
     private List<WeekViewEvent> list = new ArrayList<>();
     private int[] calendarViews = {1, 3, 5};
-    private int currentCalendarView;
+    private int currentCalendarView = 1;
     private String idLastEvent;
 
     private EventBus eventBus;
     private DbController controller;
-    private StatisticControl statisticControl;
     private ShowFragmentListener fragmentListener;
     private ShowProgressListener progressListener;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof StatisticControl) {
-            statisticControl = (StatisticControl) context;
-        }
         if (context instanceof ShowFragmentListener) {
             fragmentListener = (ShowFragmentListener) context;
         }
@@ -87,7 +83,7 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_week_calendar, container, false);
 
@@ -110,10 +106,6 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
     public void onStop() {
         controller.unregisterEventBus(eventBus);
         eventBus.unregister(this);
-
-        if (statisticControl != null) {
-            statisticControl.hideStatisticLayout();
-        }
 
         cvCalendar.setVisibility(View.GONE);
         progressListener.hideProgressBar();
@@ -214,10 +206,9 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
             actions.addAll(table.getRestList());
             actions.addAll(table.getWalkList());
         }
-        list = ActionConverter.actionsToWeekViewEvents(actions, getContext());
+        list = ActionUtils.actionsToWeekViewEvents(actions, getContext());
 
         updateUI();
-        initStatistic(actions);
 
         progressListener.hideProgressBar();
     }
@@ -253,11 +244,11 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
     }
 
     private void initView(View rootView) {
-        weekView = (WeekView) rootView.findViewById(R.id.weekView);
-        cvCalendar = (CalendarView) getActivity().findViewById(R.id.cv_calendar);
-        toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        weekView = rootView.findViewById(R.id.weekView);
+        cvCalendar = getActivity().findViewById(R.id.cv_calendar);
+        toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.name_calendar_fragment);
-        FloatingActionButton fab  = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        FloatingActionButton fab = rootView.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -270,7 +261,7 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
         weekView.setOnEventClickListener(this);
         weekView.setEventLongPressListener(this);
         weekView.setShowNowLine(true);
-        weekView.setNumberOfVisibleDays(1);
+        weekView.setNumberOfVisibleDays(3);
     }
 
     private void setListeners() {
@@ -289,30 +280,6 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
 
     private void updateUI() {
         weekView.notifyDataSetChanged();
-    }
-
-    private void initStatistic(List<Action> list) {
-        if (statisticControl != null) {
-            String time = getStatisticTime(list);
-            statisticControl.setEventTime(time);
-            statisticControl.showStatisticLayout();
-        }
-    }
-
-    private String getStatisticTime(List<Action> list) {
-        long timeInMillis = 0;
-        for (Action action : list) {
-            if (action.getType().equalsIgnoreCase(Constants.EVENT_WORK_ACTION)) {
-                Date startDate = action.getStartDate();
-                Date endDate = action.getEndDate();
-                long different = endDate.getTime() - startDate.getTime();
-                timeInMillis += different;
-            }
-        }
-        NumberFormat f = new DecimalFormat("00");
-        long hours = timeInMillis / 1000 / 60 / 60;
-        long min = timeInMillis / 1000 / 60 % 60;
-        return f.format(hours) + ":" + f.format(min);
     }
 
     private int getNextCurrentCalendarView() {

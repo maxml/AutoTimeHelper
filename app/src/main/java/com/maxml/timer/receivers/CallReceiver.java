@@ -3,6 +3,7 @@ package com.maxml.timer.receivers;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.telephony.TelephonyManager;
 
 import com.maxml.timer.controllers.ActionController;
@@ -21,20 +22,24 @@ public class CallReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         initController(context);
         int state = 0;
-        if (intent.getExtras()==null){
-            return;
-        }
-        String stateStr = intent.getExtras().getString(TelephonyManager.EXTRA_STATE);
-        if (stateStr != null) {
-            if (stateStr.equalsIgnoreCase(TelephonyManager.EXTRA_STATE_IDLE)) {
-                state = TelephonyManager.CALL_STATE_IDLE;
-            } else if (stateStr.equalsIgnoreCase(TelephonyManager.EXTRA_STATE_OFFHOOK)) {
-                state = TelephonyManager.CALL_STATE_OFFHOOK;
-            } else if (stateStr.equalsIgnoreCase(TelephonyManager.EXTRA_STATE_RINGING)) {
-                state = TelephonyManager.CALL_STATE_RINGING;
-            }
+        if (intent.getExtras() != null) {
+            state = getState(intent.getExtras());
         }
         onCallStateChanged(state);
+    }
+
+    private int getState(Bundle args) {
+        String stateStr = args.getString(TelephonyManager.EXTRA_STATE);
+        if (stateStr != null) {
+            if (stateStr.equalsIgnoreCase(TelephonyManager.EXTRA_STATE_IDLE)) {
+                return TelephonyManager.CALL_STATE_IDLE;
+            } else if (stateStr.equalsIgnoreCase(TelephonyManager.EXTRA_STATE_OFFHOOK)) {
+                return TelephonyManager.CALL_STATE_OFFHOOK;
+            } else if (stateStr.equalsIgnoreCase(TelephonyManager.EXTRA_STATE_RINGING)) {
+                return TelephonyManager.CALL_STATE_RINGING;
+            }
+        }
+        return 0;
     }
 
     private void initController(Context context) {

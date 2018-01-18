@@ -11,7 +11,7 @@ import com.google.gson.GsonBuilder;
 import com.maxml.timer.R;
 import com.maxml.timer.entity.User;
 
-public class SharedPrefUtils {
+public class SharedPreferencesUtils {
 
     public static void saveCurrentUser(Context context, User user) {
         if (user == null) return;

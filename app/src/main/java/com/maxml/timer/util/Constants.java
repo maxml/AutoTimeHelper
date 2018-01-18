@@ -40,6 +40,7 @@ public class Constants {
 
     public static final int NOTIFICATION_ID = 100;
 
+    public static final int WIFI_TYPE_NONE = 0;
     public static final int WIFI_TYPE_HOME = 1;
     public static final int WIFI_TYPE_WORK = 2;
     public static final String EVENT_WIFI_ENABLE = "eventWifiEnable";

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -60,7 +61,7 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_main_user_page, container, false);
 
         registerEventBus();
@@ -68,48 +69,6 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
         setListeners();
 
         return rootView;
-    }
-
-    private void registerEventBus() {
-        eventBus = new EventBus();
-        dbController = new DbController(getContext(), eventBus);
-    }
-
-    public void updateUI() {
-        dbController.getCurrentUser();
-    }
-
-    @Subscribe
-    public void onReceiveUser(User user) {
-        if (!user.isAnonymously()) {
-            updateUI(user);
-        } else {
-            disableAccessToUI();
-
-            Toast.makeText(getContext(), R.string.warning_about_anonymously, Toast.LENGTH_LONG).show();
-        }
-    }
-
-    @Subscribe
-    public void onDatabaseEvent(Events.DbResult event) {
-        switch (event.getResultStatus()) {
-            case Constants.EVENT_DB_RESULT_OK:
-                progressListener.hideProgressBar();
-                break;
-            case Constants.EVENT_DB_RESULT_ERROR:
-                progressListener.hideProgressBar();
-                dbController.getCurrentUser();
-
-                Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
-                break;
-        }
-    }
-
-    private void disableAccessToUI() {
-        bbChangeEmail.setEnabled(false);
-        bbChangeName.setEnabled(false);
-        bbChangePicture.setEnabled(false);
-        bbOk.setEnabled(false);
     }
 
     @Override
@@ -173,6 +132,49 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
             startActivity(new Intent(getActivity(), LoginActivity.class));
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Subscribe
+    public void onReceiveUser(User user) {
+        if (!user.isAnonymously()) {
+            updateUI(user);
+        } else {
+            disableAccessToUI();
+
+            Toast.makeText(getContext(), R.string.warning_about_anonymously, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Subscribe
+    public void onDatabaseEvent(Events.DbResult event) {
+        switch (event.getResultStatus()) {
+            case Constants.EVENT_DB_RESULT_OK:
+                progressListener.hideProgressBar();
+                break;
+            case Constants.EVENT_DB_RESULT_ERROR:
+                progressListener.hideProgressBar();
+                dbController.getCurrentUser();
+
+                Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
+
+    private void registerEventBus() {
+        eventBus = new EventBus();
+        dbController = new DbController(getContext(), eventBus);
+    }
+
+    public void updateUI() {
+        dbController.getCurrentUser();
+    }
+
+
+    private void disableAccessToUI() {
+        bbChangeEmail.setEnabled(false);
+        bbChangeName.setEnabled(false);
+        bbChangePicture.setEnabled(false);
+        bbOk.setEnabled(false);
     }
 
     private void setListeners() {

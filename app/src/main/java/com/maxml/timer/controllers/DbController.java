@@ -147,7 +147,7 @@ public class DbController {
     }
 
     public void getCurrentUser() {
-        entityEventBus.post(userDAO.getCurrentUser());
+        entityEventBus.post(UserDAO.getCurrentUser());
     }
 
     public void login(String email, String password) {
@@ -177,10 +177,13 @@ public class DbController {
         }
     }
 
-    public int sendWifiStateFromDB(WifiState wifi) {
+    public int getWifiTypeFromDB(WifiState wifi) {
         WifiState wifiState = wifiStateDAO.getWifiStatesById(wifi.getId());
 
-        return wifiState.getType();
+        if (wifiState != null) {
+            return wifiState.getType();
+        }
+        return Constants.WIFI_TYPE_NONE;
     }
 
     public void updateWifi(WifiState wifiState){
@@ -206,7 +209,7 @@ public class DbController {
     private void initCRUD() {
         tableDAO = new TableDAO(this);
         actionDAO = new ActionDAO(this);
-        userDAO = new UserDAO(context, this);
+        userDAO = new UserDAO(this);
         wifiStateDAO = DBFactory.getHelper().getWifiStateDAO();
         pathDAO = DBFactory.getHelper().getPathDAO();
         coordinateDAO = DBFactory.getHelper().getCoordinateDAO();

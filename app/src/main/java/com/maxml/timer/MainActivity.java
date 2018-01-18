@@ -42,7 +42,7 @@ import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.FragmentUtils;
 import com.maxml.timer.util.ImageUtil;
 import com.maxml.timer.util.NetworkUtil;
-import com.maxml.timer.util.SharedPrefUtils;
+import com.maxml.timer.util.SharedPreferencesUtils;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
@@ -56,7 +56,6 @@ public class MainActivity extends AppCompatActivity
 
     private DrawerLayout drawerLayout;
     private ProgressBar pbLoad;
-    private ActionBarDrawerToggle drawerToggle;
     private Toolbar toolbar;
     private LinearLayout statisticLayout;
     private TextView eventTime;
@@ -92,7 +91,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
         switch (item.getItemId()) {
             case R.id.i_home:
@@ -118,11 +117,6 @@ public class MainActivity extends AppCompatActivity
             case R.id.i_user:
                 if (!(fragment instanceof MainUserPageFragment)) {
                     setupFragment(new MainUserPageFragment());
-                }
-                break;
-            case R.id.i_map:
-                if (!(fragment instanceof GoogleMapFragment)) {
-                    setupFragment(new GoogleMapFragment());
                 }
                 break;
             case R.id.i_setting:
@@ -156,8 +150,8 @@ public class MainActivity extends AppCompatActivity
     public void onBackPressed() {
         if (!FragmentUtils.backFragment(this)) {
             new AlertDialog.Builder(this)
-                    .setTitle("Really Exit?")
-                    .setMessage("Are you sure you want to exit?")
+                    .setTitle(R.string.dialog_title_exit)
+                    .setMessage(R.string.dialog_message_exit)
                     .setNegativeButton(android.R.string.no, null)
                     .setPositiveButton(android.R.string.yes, new OnClickListener() {
                         public void onClick(DialogInterface arg0, int arg1) {
@@ -295,7 +289,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initDrawer() {
-        drawerToggle = new ActionBarDrawerToggle(
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(
                 this,
                 drawerLayout,
                 toolbar,
@@ -305,6 +299,7 @@ public class MainActivity extends AppCompatActivity
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 dbController.getCurrentUser();
+
             }
         };
 
@@ -318,15 +313,15 @@ public class MainActivity extends AppCompatActivity
         if (user == null) {
             return;
         }
-        NavigationView nv = (NavigationView) findViewById(R.id.navigationView);
+        NavigationView nv = findViewById(R.id.navigationView);
         View header = nv.getHeaderView(0);
 
-        TextView name = (TextView) header.findViewById(R.id.user_name);
-        ImageView icon = (ImageView) header.findViewById(R.id.profile_image);
+        TextView name =  header.findViewById(R.id.user_name);
+        ImageView icon =  header.findViewById(R.id.profile_image);
 
         nv.setNavigationItemSelectedListener(this);
 
-        user = SharedPrefUtils.getCurrentUser(this);
+        user = SharedPreferencesUtils.getCurrentUser(this);
         if (user.getEmail() != null && !user.getEmail().isEmpty()) {
             if (user.getUsername() != null) {
                 name.setText(user.getUsername());

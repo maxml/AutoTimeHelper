@@ -4,6 +4,7 @@ package com.maxml.timer.ui.fragments;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -24,7 +25,6 @@ import com.maxml.timer.entity.Events;
 import com.maxml.timer.entity.ShowFragmentListener;
 import com.maxml.timer.entity.ShowProgressListener;
 import com.maxml.timer.ui.dialog.CheckTimeDialog;
-import com.maxml.timer.ui.dialog.CreateActionDialog;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.Utils;
 
@@ -46,12 +46,10 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
     private EditText etEndDate;
     private Spinner sAction;
 
-    private ArrayAdapter<String> sAdapter;
     private EventBus eventBus;
     private DbController dbController;
     private Action action;
 
-    private ActionController actionController;
     private ShowProgressListener progressListener;
     private ShowFragmentListener fragmentListener;
 
@@ -70,15 +68,10 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         registerEventBus();
-
-        if (getArguments() != null) {
-            dbController.getActionFromDb(getArguments().getString(Constants.EXTRA_ID_ACTION));
-            progressListener.showProgressBar();
-        }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_details_action, container, false);
 
@@ -91,15 +84,22 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
     @Override
     public void onStart() {
         eventBus.register(this);
-        actionController.registerEventBus(eventBus);
         dbController.registerEventBus(eventBus);
+
+        loadAction();
         super.onStart();
+    }
+
+    private void loadAction() {
+        if (getArguments() != null) {
+            dbController.getActionFromDb(getArguments().getString(Constants.EXTRA_ID_ACTION));
+            progressListener.showProgressBar();
+        }
     }
 
     @Override
     public void onStop() {
         eventBus.unregister(this);
-        actionController.unregisterEventBus(eventBus);
         dbController.unregisterEventBus(eventBus);
         super.onStop();
     }
@@ -121,44 +121,10 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
                 bbOk.setVisibility(View.VISIBLE);
                 break;
             case R.id.bet_start_time:
-                final Calendar calendarStartDate = Calendar.getInstance();
-                calendarStartDate.setTime(action.getStartDate());
-                CheckTimeDialog checkStartTimeDialog = CheckTimeDialog.getInstance(new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int i, int i1) {
-                        calendarStartDate.set(Calendar.HOUR_OF_DAY, i);
-                        calendarStartDate.set(Calendar.MINUTE, i1);
-                        action.setStartDate(calendarStartDate.getTime());
-                        etStartDate.setText(Utils.parseToTime(calendarStartDate.getTimeInMillis()));
-
-                        if (!isSuccessfulDate()) {
-                            bbOk.setEnabled(false);
-                        } else {
-                            bbOk.setEnabled(true);
-                        }
-                    }
-                });
-                checkStartTimeDialog.show(getFragmentManager(), "checkStartTimeDialog");
+                showDialogStartTime();
                 break;
             case R.id.bet_end_time:
-                final Calendar calendarEndDate = Calendar.getInstance();
-                calendarEndDate.setTime(action.getEndDate());
-                CheckTimeDialog checkEndTimeDialog = CheckTimeDialog.getInstance(new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int i, int i1) {
-                        calendarEndDate.set(Calendar.HOUR_OF_DAY, i);
-                        calendarEndDate.set(Calendar.MINUTE, i1);
-                        action.setEndDate(calendarEndDate.getTime());
-                        etEndDate.setText(Utils.parseToTime(calendarEndDate.getTimeInMillis()));
-
-                        if (!isSuccessfulDate()) {
-                            bbOk.setEnabled(false);
-                        } else {
-                            bbOk.setEnabled(true);
-                        }
-                    }
-                });
-                checkEndTimeDialog.show(getFragmentManager(), "checkEndTimeDialog");
+                showDialogEndTime();
                 break;
             case R.id.bb_show_path_in_map:
                 GoogleMapFragment mapFragment = new GoogleMapFragment();
@@ -187,6 +153,7 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
         this.action = action;
         updateUI(action);
         initUIbShow(getView());
+        progressListener.hideProgressBar();
     }
 
     @Subscribe
@@ -201,6 +168,48 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
                 Toast.makeText(getContext(), R.string.action_not_exist, Toast.LENGTH_SHORT).show();
                 break;
         }
+    }
+
+    private void showDialogStartTime() {
+        final Calendar calendarStartDate = Calendar.getInstance();
+        calendarStartDate.setTime(action.getStartDate());
+        CheckTimeDialog checkStartTimeDialog = CheckTimeDialog.getInstance(new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int i, int i1) {
+                calendarStartDate.set(Calendar.HOUR_OF_DAY, i);
+                calendarStartDate.set(Calendar.MINUTE, i1);
+                action.setStartDate(calendarStartDate.getTime());
+                etStartDate.setText(Utils.parseToTime(calendarStartDate.getTimeInMillis()));
+
+                if (!isSuccessfulDate()) {
+                    bbOk.setEnabled(false);
+                } else {
+                    bbOk.setEnabled(true);
+                }
+            }
+        });
+        checkStartTimeDialog.show(getFragmentManager(), "checkStartTimeDialog");
+    }
+
+    private void showDialogEndTime() {
+        final Calendar calendarEndDate = Calendar.getInstance();
+        calendarEndDate.setTime(action.getEndDate());
+        CheckTimeDialog checkEndTimeDialog = CheckTimeDialog.getInstance(new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int i, int i1) {
+                calendarEndDate.set(Calendar.HOUR_OF_DAY, i);
+                calendarEndDate.set(Calendar.MINUTE, i1);
+                action.setEndDate(calendarEndDate.getTime());
+                etEndDate.setText(Utils.parseToTime(calendarEndDate.getTimeInMillis()));
+
+                if (!isSuccessfulDate()) {
+                    bbOk.setEnabled(false);
+                } else {
+                    bbOk.setEnabled(true);
+                }
+            }
+        });
+        checkEndTimeDialog.show(getFragmentManager(), "checkEndTimeDialog");
     }
 
     private void updateAction() {
@@ -220,7 +229,6 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
 
     private void registerEventBus() {
         eventBus = new EventBus();
-        actionController = new ActionController(getContext(), eventBus);
         dbController = new DbController(getContext(), eventBus);
     }
 
@@ -228,6 +236,7 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
         bbChangeData = view.findViewById(R.id.bb_change_date);
         bbChangeAction = view.findViewById(R.id.bb_change_action);
         bbChangeDescription = view.findViewById(R.id.bb_change_description);
+        bbShowPathInMap = view.findViewById(R.id.bb_show_path_in_map);
         bbOk = view.findViewById(R.id.bb_ok);
 
         sAction = view.findViewById(R.id.s_action_type);
@@ -237,7 +246,7 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
         etStartDate = view.findViewById(R.id.bet_start_time);
         etEndDate = view.findViewById(R.id.bet_end_time);
 
-        sAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item,
+        ArrayAdapter<String> sAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item,
                 new String[]{Constants.EVENT_CALL_ACTION, Constants.EVENT_REST_ACTION,
                         Constants.EVENT_WALK_ACTION, Constants.EVENT_WORK_ACTION});
 
@@ -255,6 +264,7 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
         bbChangeAction.setOnClickListener(this);
         bbChangeDescription.setOnClickListener(this);
         bbChangeData.setOnClickListener(this);
+        bbShowPathInMap.setOnClickListener(this);
         bbOk.setOnClickListener(this);
         etStartDate.setOnClickListener(this);
         etEndDate.setOnClickListener(this);
@@ -271,11 +281,9 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
             sAction.setSelection(3);
         }
 
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:MM");
-
         etDescription.setText(action.getDescription());
-        etStartDate.setText(sdf.format(action.getStartDate()));
-        etEndDate.setText(sdf.format(action.getEndDate()));
+        etStartDate.setText(Utils.parseToTime(action.getStartDate().getTime()));
+        etEndDate.setText(Utils.parseToTime(action.getEndDate().getTime()));
     }
 
     private boolean isSuccessfulDate() {

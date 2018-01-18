@@ -94,7 +94,7 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".ui.activity.CalendarActivity" />
+        <activity android:name=".trash.CalendarActivity" />
 
         <service android:name=".controllers.ReceiverService" />
     </application>

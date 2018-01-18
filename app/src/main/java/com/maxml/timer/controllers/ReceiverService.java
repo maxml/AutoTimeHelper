@@ -309,6 +309,7 @@ public class ReceiverService extends Service implements LocationListener {
         unregisterEventBus(serviceEventBus);
         unregisterEventBus(widgetEventBus);
         unregisterEventBus(callEventBus);
+        unregisterEventBus(wifiEventBus);
         unregisterEventBus(mainActivityEventBus);
         stopTimer();
         super.onDestroy();
