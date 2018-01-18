@@ -5,7 +5,9 @@ package com.maxml.timer.ui.dialog;
  */
 
 public interface DialogCallback {
-    void onClickPositive();
+    void onTrue();
 
-    void onClickNegative();
+    void onFalse();
+
+    void onShowSettingDialog();
 }

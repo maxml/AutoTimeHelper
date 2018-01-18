@@ -16,6 +16,7 @@ import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.maxml.timer.MainActivity;
 import com.maxml.timer.R;
 import com.maxml.timer.entity.Coordinates;
 import com.maxml.timer.entity.Events;
@@ -42,11 +43,13 @@ public class ReceiverService extends Service implements LocationListener {
     private EventBus widgetEventBus;
     private EventBus callEventBus;
     private EventBus wifiEventBus;
+    private EventBus mainActivityEventBus;
 
     private Handler handler;
     private int dontMoveTimer = 0;/*in min*/
     private boolean isGPSEnabled = false;
     private boolean isNetworkEnabled = false;
+    private boolean isFirstRun = true;
     private LocationManager locationManager;
     private LocationListener autoWalkActionListener;
     private List<Coordinates> wayCoordinates = new ArrayList<>();
@@ -78,8 +81,6 @@ public class ReceiverService extends Service implements LocationListener {
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-
-        initWalkLocationListener();
     }
 
     @Subscribe()
@@ -101,6 +102,13 @@ public class ReceiverService extends Service implements LocationListener {
             case Constants.EVENT_SET_WIFI_EVENT_BUS:
                 wifiEventBus = event.getEventBus();
                 break;
+            case Constants.EVENT_SET_MAIN_ACTIVITY_EVENT_BUS:
+                mainActivityEventBus = event.getEventBus();
+                if (isFirstRun) {
+                    isFirstRun = false;
+                    initAutoStartWalkAction();
+                }
+                break;
         }
     }
 
@@ -117,6 +125,23 @@ public class ReceiverService extends Service implements LocationListener {
             case Constants.EVENT_CLOSE_APP:
                 stopForeground(true);
                 stopSelf();
+                break;
+        }
+    }
+
+    @Subscribe()
+    public void onTurnOnGeolocationEvent(Events.TurnOnGeolocation event) {
+        switch (event.getMessage()) {
+            case Constants.EVENT_TURN_ON_SUCCESSFUL:
+                if (event.getRequest() == Constants.REQUEST_WALK_TRACKER) {
+                    initWalkLocationListener();
+                }
+                if (event.getRequest() == Constants.REQUEST_AUTO_WALK_STARTER) {
+                    initAutoStartWalkAction();
+                }
+                break;
+            case Constants.EVENT_TURN_ON_DENY:
+                Toast.makeText(this, R.string.toast_deny_location_tracker, Toast.LENGTH_LONG).show();
                 break;
         }
     }
@@ -209,22 +234,13 @@ public class ReceiverService extends Service implements LocationListener {
         }
 
         if (!isGPSEnabled && !isNetworkEnabled) {
-            Log.d(Constants.LOG, "Show turn on navigation dialog");
-            DialogFactory.showGpsSwitchAlert(this, new DialogCallback() {
-                @Override
-                public void onClickPositive() {
-                    Log.d(Constants.LOG, "Turn on navigation ok");
-                    // do logic under method
-                }
-
-                @Override
-                public void onClickNegative() {
-                    Log.d(Constants.LOG, "Turn on navigation cancel");
-                    Toast.makeText(ReceiverService.this, R.string.toast_deny_location_tracker, Toast.LENGTH_LONG).show();
-                }
-            });
-
+            if (mainActivityEventBus != null) {
+                mainActivityEventBus.post(new Events.TurnOnGeolocation(Constants.EVENT_TURN_ON_GEOLOCATION, Constants.REQUEST_WALK_TRACKER));
+            } else {
+                Log.d(Constants.LOG, "mainActivityEventBus == null");
+            }
         }
+
         if (isGPSEnabled) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, MIN_DISTANCE_UPDATES, this);
         }
@@ -249,20 +265,12 @@ public class ReceiverService extends Service implements LocationListener {
         }
 
         if (!isGPSEnabled && !isNetworkEnabled) {
-            DialogFactory.showGpsSwitchAlert(this, new DialogCallback() {
-                @Override
-                public void onClickPositive() {
-                    Log.d(Constants.LOG, "Turn on navigation ok");
-                    // do logic under method
-                }
-
-                @Override
-                public void onClickNegative() {
-                    Log.d(Constants.LOG, "Turn on navigation cancel");
-                    Toast.makeText(ReceiverService.this, R.string.toast_deny_location_tracker, Toast.LENGTH_LONG).show();
-                }
-            });
-
+            if (mainActivityEventBus != null) {
+                mainActivityEventBus.post(new Events.TurnOnGeolocation(Constants.EVENT_TURN_ON_GEOLOCATION, Constants.REQUEST_AUTO_WALK_STARTER));
+            } else {
+                Log.d(Constants.LOG, "mainActivityEventBus == null");
+            }
+            return;
         }
 
         autoWalkActionListener = new LocationListener() {
@@ -293,7 +301,6 @@ public class ReceiverService extends Service implements LocationListener {
         if (isNetworkEnabled) {
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, Constants.MIN_DISTANCE_START_WALK_ACTION, autoWalkActionListener);
         }
-
     }
 
     @Override
@@ -302,6 +309,7 @@ public class ReceiverService extends Service implements LocationListener {
         unregisterEventBus(serviceEventBus);
         unregisterEventBus(widgetEventBus);
         unregisterEventBus(callEventBus);
+        unregisterEventBus(mainActivityEventBus);
         stopTimer();
         super.onDestroy();
     }

@@ -65,7 +65,7 @@ public class WifiReceiver extends BroadcastReceiver {
 
             dbController.registerEventBus(eventBus);
             actionController.registerEventBus(eventBus);
-            eventBus.post(new Events.WifiEvent(Constants.EVENT_SET_WIFI_EVENT_BUS));
+            actionController.setWifiEventBus();
         }
     }
 

@@ -118,12 +118,31 @@ public class Events {
 
     public static class Info {
         private String eventMessage;
+
         public Info(String eventMessage) {
             this.eventMessage = eventMessage;
         }
 
         public String getEventMessage() {
             return eventMessage;
+        }
+    }
+
+    public static class TurnOnGeolocation {
+        private String message;
+        private int request;
+
+        public TurnOnGeolocation(String message, int request) {
+            this.message = message;
+            this.request = request;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public int getRequest() {
+            return request;
         }
     }
 }

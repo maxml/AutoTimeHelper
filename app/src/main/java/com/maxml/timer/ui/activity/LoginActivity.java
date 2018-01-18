@@ -131,11 +131,6 @@ public class LoginActivity extends AppCompatActivity implements EasyPermissions.
 
     @Override
     public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
-        switch (requestCode){
-            case Constants.REQUEST_LOCATION_PERMISSIONS:
-                loginOk();
-                break;
-        }
     }
 
     @Override

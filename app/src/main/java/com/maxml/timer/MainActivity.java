@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -24,11 +23,14 @@ import android.widget.Toast;
 
 import com.maxml.timer.controllers.ActionController;
 import com.maxml.timer.controllers.DbController;
+import com.maxml.timer.controllers.ReceiverService;
 import com.maxml.timer.entity.Events;
 import com.maxml.timer.entity.ShowFragmentListener;
 import com.maxml.timer.entity.ShowProgressListener;
 import com.maxml.timer.entity.StatisticControl;
 import com.maxml.timer.entity.User;
+import com.maxml.timer.ui.dialog.DialogCallback;
+import com.maxml.timer.ui.dialog.DialogFactory;
 import com.maxml.timer.ui.fragments.DayCalendarFragment;
 import com.maxml.timer.ui.fragments.GoogleMapFragment;
 import com.maxml.timer.ui.fragments.HomeFragment;
@@ -48,9 +50,6 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.io.File;
 
-import pub.devrel.easypermissions.AfterPermissionGranted;
-import pub.devrel.easypermissions.EasyPermissions;
-
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         ShowProgressListener, StatisticControl, ShowFragmentListener {
@@ -65,6 +64,7 @@ public class MainActivity extends AppCompatActivity
     private DbController dbController;
     private ActionController actionController;
     private EventBus eventBus;
+    private int settingRequest;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -139,15 +139,16 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         eventBus.register(this);
-        dbController.registerEventBus(eventBus);
+        actionController.registerEventBus(eventBus);
+        actionController.setMineActivityEventBus();
         dbController.getCurrentUser();
         super.onStart();
     }
 
     @Override
     protected void onStop() {
-        dbController.unregisterEventBus(eventBus);
         eventBus.unregister(this);
+        actionController.unregisterEventBus(eventBus);
         super.onStop();
     }
 
@@ -165,7 +166,7 @@ public class MainActivity extends AppCompatActivity
                         }
                     })
                     .create()
-                .show();
+                    .show();
         }
     }
 
@@ -186,6 +187,17 @@ public class MainActivity extends AppCompatActivity
                     } else {
                         Toast.makeText(this, R.string.no_network, Toast.LENGTH_SHORT).show();
                     }
+                }
+                break;
+
+            case Constants.REQUEST_CHECK_LOCATION_SETTING:
+                if (resultCode == RESULT_OK) {
+                    Log.d(Constants.LOG, "Dialog turn on navigation ok");
+                    // do logic under method
+                    eventBus.post(new Events.TurnOnGeolocation(Constants.EVENT_TURN_ON_SUCCESSFUL, settingRequest));
+                } else {
+                    Log.d(Constants.LOG, "Dialog turn on navigation cancel");
+                    eventBus.post(new Events.TurnOnGeolocation(Constants.EVENT_TURN_ON_DENY, settingRequest));
                 }
                 break;
         }
@@ -213,6 +225,31 @@ public class MainActivity extends AppCompatActivity
         setupFragment(fragment);
     }
 
+    @Subscribe
+    public void turnOnGeolocation(Events.TurnOnGeolocation event) {
+        if (event.getMessage().equals(Constants.EVENT_TURN_ON_GEOLOCATION)) {
+            settingRequest = event.getRequest();
+            DialogFactory.showGpsSwitchAlert(this, new DialogCallback() {
+                @Override
+                public void onTrue() {
+                    Log.d(Constants.LOG, "Turn on navigation ok");
+                    eventBus.post(new Events.TurnOnGeolocation(Constants.EVENT_TURN_ON_SUCCESSFUL, settingRequest));
+                }
+
+                @Override
+                public void onShowSettingDialog() {
+                    Log.d(Constants.LOG, "Show setting dialog");
+                    // catch result in onActivityResult()
+                }
+
+                @Override
+                public void onFalse() {
+                    Log.d(Constants.LOG, "Turn on navigation cancel");
+                    eventBus.post(new Events.TurnOnGeolocation(Constants.EVENT_TURN_ON_DENY, settingRequest));
+                }
+            });
+        }
+    }
 
     @Subscribe
     public void onReceiveUser(User user) {

@@ -1,5 +1,6 @@
 package com.maxml.timer.ui.dialog;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -62,8 +63,8 @@ public class DialogFactory {
         alertDialog.show();
     }
 
-    public static void showGpsSwitchAlert(final Context context, final DialogCallback callback) {
-        GoogleApiClient googleApiClient = new GoogleApiClient.Builder(context)
+    public static void showGpsSwitchAlert(final Activity activity, final DialogCallback callback) {
+        GoogleApiClient googleApiClient = new GoogleApiClient.Builder(activity)
                 .addApi(LocationServices.API).build();
         googleApiClient.connect();
 
@@ -83,15 +84,24 @@ public class DialogFactory {
                 switch (status.getStatusCode()) {
                     case LocationSettingsStatusCodes.SUCCESS:
                         Log.d(Constants.LOG, "All location settings are satisfied.");
-                        callback.onClickPositive();
+                        callback.onTrue();
                         break;
                     case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                        Log.d(Constants.LOG, "Location settings are not satisfied.");
-                        callback.onClickNegative();
+                        Log.d(Constants.LOG, "Location settings are not satisfied. Show dialog");
+                        try {
+                            // Show the dialog by calling startResolutionForResult(), and check the result
+                            // in onActivityResult().
+                            callback.onShowSettingDialog();
+                            status.startResolutionForResult(activity, Constants.REQUEST_CHECK_LOCATION_SETTING);
+                        } catch (IntentSender.SendIntentException e) {
+                            Log.d(Constants.LOG, "PendingIntent unable to execute request.");
+                            callback.onFalse();
+                        }
+
                         break;
                     case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
                         Log.d(Constants.LOG, "Location settings are inadequate, and cannot be fixed here.");
-                        callback.onClickNegative();
+                        callback.onFalse();
                         break;
                 }
             }

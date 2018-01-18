@@ -6,7 +6,7 @@ public class Constants {
 
     public static final float MIN_DISTANCE_START_WALK_ACTION = 25f;
     public static final float MIN_DISTANCE_UPDATES = 5f;
-    public static final long MIN_TIME = 1000*20;
+    public static final long MIN_TIME = 1000 * 20;
 
     public static final int RESULT_OK = 1;
     public static final int RESULT_FALSE = 0;
@@ -75,12 +75,14 @@ public class Constants {
     public static final String EVENT_SET_WIDGET_EVENT_BUS = "setCurrentEventBusAsWidget";
     public static final String EVENT_SET_CALL_EVENT_BUS = "setCallEventBus";
     public static final String EVENT_SET_WIFI_EVENT_BUS = "setWifiEventBus";
+    public static final String EVENT_SET_MAIN_ACTIVITY_EVENT_BUS = "mainActivityEventBus";
     public static final int WAY_DONT_MOVE_TIME = 5;
     public static final String EXTRA_ID_PATH = "extraIdPath";
     public static final String EXTRA_ID_ACTION = "extraIdAction";
     public static final String EXTRA_TIME_ACTION = "extraTimeAction";
     public static final String EXTRA_LIST_ID_PATH = "extraListIdPath";
     public static final String LOG = "appLog";
+
 
     public static final String TABLE_PATH = "tablePath";
     public static final String TABLE_COORDINATES = "tableCoordinates";
@@ -91,4 +93,10 @@ public class Constants {
 
     public static final int WEEK_COUNT_DAY = 7;
     public static final String EVENT_CLOSE_APP = "closeApp";
+    public static final String EVENT_TURN_ON_GEOLOCATION = "turnOnGeolocation";
+    public static final String EVENT_TURN_ON_SUCCESSFUL = "successfulTurnOnGeolocation";
+    public static final String EVENT_TURN_ON_DENY = "denyTurnOnGeolocation";
+    public static final int REQUEST_CHECK_LOCATION_SETTING = 122;
+    public static final int REQUEST_WALK_TRACKER = 123;
+    public static final int REQUEST_AUTO_WALK_STARTER = 124;
 }

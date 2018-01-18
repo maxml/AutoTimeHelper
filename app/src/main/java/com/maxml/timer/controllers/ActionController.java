@@ -5,7 +5,6 @@ import android.content.Intent;
 
 import com.maxml.timer.R;
 import com.maxml.timer.entity.Coordinates;
-import com.maxml.timer.entity.Path;
 import com.maxml.timer.entity.Action;
 import com.maxml.timer.entity.Events;
 import com.maxml.timer.util.Constants;
@@ -43,11 +42,18 @@ public class ActionController {
         return new ActionController(context, eventBus);
     }
 
+    public void setMineActivityEventBus(){
+        serviceEventBus.post(new Events.EventBusControl(Constants.EVENT_SET_MAIN_ACTIVITY_EVENT_BUS, entityEventBus));
+    }
+    public void setCallEventBus(){
+        serviceEventBus.post(new Events.EventBusControl(Constants.EVENT_SET_CALL_EVENT_BUS, entityEventBus));
+    }
+    public void setWifiEventBus(){
+        serviceEventBus.post(new Events.EventBusControl(Constants.EVENT_SET_WIFI_EVENT_BUS, entityEventBus));
+    }
+
     public void onReceiveCallEvent(Events.CallEvent event) {
         switch (event.getCallState()) {
-            case Constants.EVENT_SET_CALL_EVENT_BUS:
-                serviceEventBus.post(new Events.EventBusControl(Constants.EVENT_SET_CALL_EVENT_BUS, entityEventBus));
-                break;
 
             case Constants.EVENT_CALL_ONGOING_ANSWERED:
                 startCallEvent();
@@ -67,9 +73,6 @@ public class ActionController {
 
     public void onReceiveWifiEvent(Events.WifiEvent event) {
         switch (event.getWifiState()) {
-            case Constants.EVENT_SET_WIFI_EVENT_BUS:
-                serviceEventBus.post(new Events.EventBusControl(Constants.EVENT_SET_WIFI_EVENT_BUS, entityEventBus));
-                break;
             case Constants.EVENT_WIFI_ENABLE:
                 startWifiEvent();
                 break;
