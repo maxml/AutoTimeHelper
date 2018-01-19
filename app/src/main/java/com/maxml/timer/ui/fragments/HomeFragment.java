@@ -43,22 +43,24 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.manual_activity_fragment, container, false);
-
         initView(rootView);
-        setStartUI();
         initListeners();
-
         return rootView;
     }
-
 
     @Override
     public void onStart() {
         super.onStart();
         eventBus.register(this);
         actionController.registerEventBus(eventBus);
+    }
 
-        refreshActionStatus();
+    @Override
+    public void onResume() {
+        super.onResume();
+        String action = actionController.getCurrentActionType();
+        Date time = actionController.getCurrentActionStartTime();
+        refreshActionStatus(action, time);
     }
 
     @Override
@@ -70,31 +72,7 @@ public class HomeFragment extends Fragment {
 
     @Subscribe()
     public void onReceiveStatusEvent(Events.ActionStatus event) {
-        tvTitle.setText(event.getActionStatus());
-        Date time = event.getActionTime();
-        if (time == null) {
-            tvStartDate.setText(getString(R.string.widget_default_text));
-        } else {
-            tvStartDate.setText(charSequence(time));
-        }
-    }
-
-    private void setStartUI() {
-        String activeStatus = actionController.getPreviousActionType();
-        Date actionDate = actionController.getPreviousActionStartTime();
-        if (activeStatus != null && actionDate != null) {
-            tvTitle.setText(activeStatus);
-            tvStartDate.setText(charSequence(actionDate));
-            if (activeStatus.equalsIgnoreCase(Constants.EVENT_CALL_ACTION)) {
-                bCall.setChecked(true);
-            } else if (activeStatus.equalsIgnoreCase(Constants.EVENT_WORK_ACTION)) {
-                bWork.setChecked(true);
-            } else if (activeStatus.equalsIgnoreCase(Constants.EVENT_REST_ACTION)) {
-                bRest.setChecked(true);
-            } else if (activeStatus.equalsIgnoreCase(Constants.EVENT_WALK_ACTION)) {
-                bWalk.setChecked(true);
-            }
-        }
+        refreshActionStatus(event.getActionStatus(), event.getActionTime());
     }
 
     private void registerEventBus() {
@@ -102,35 +80,51 @@ public class HomeFragment extends Fragment {
         actionController = new ActionController(getContext(), eventBus);
     }
 
-    private void initView(View view) {
-        bCall = view.findViewById(R.id.b_call);
-        bWork = view.findViewById(R.id.b_work);
-        bRest = view.findViewById(R.id.b_rest);
-        bWalk = view.findViewById(R.id.b_walk);
-
-        tvStartDate = view.findViewById(R.id.tv_start_date);
-        tvTitle = view.findViewById(R.id.tv_title);
+    private void refreshActionStatus(String action, Date startTime) {
+        tvTitle.setText(action);
+        if (startTime == null) {
+            tvStartDate.setText(R.string.text_default_action_date);
+        } else {
+            tvStartDate.setText(charSequence(startTime));
+        }
+        updateButtonsState(action);
     }
 
-    private void refreshActionStatus() {
-        String action = actionController.getPreviousActionType();
-        Date time = actionController.getPreviousActionStartTime();
-        tvTitle.setText(action);
-        if (time == null) {
-            tvStartDate.setText(getString(R.string.widget_default_text));
-        } else {
-            tvStartDate.setText(charSequence(time));
+    private void updateButtonsState(String currentAction) {
+        switch (currentAction) {
+            case Constants.EVENT_WALK_ACTION:
+                setActiveButton(bWalk);
+                break;
+            case Constants.EVENT_WORK_ACTION:
+                setActiveButton(bWork);
+                break;
+            case Constants.EVENT_REST_ACTION:
+                setActiveButton(bRest);
+                break;
+            case Constants.EVENT_CALL_ACTION:
+                setActiveButton(bCall);
+                break;
+            default:
+                setActiveButton(null);
+                break;
         }
+    }
+
+    private void setActiveButton(ToggleButton button) {
+        if (button == null) {
+            button = new ToggleButton(getContext());
+        }
+        bWork.setChecked(bWork.getId() == button.getId());
+        bWalk.setChecked(bWalk.getId() == button.getId());
+        bRest.setChecked(bRest.getId() == button.getId());
+        bCall.setChecked(bCall.getId() == button.getId());
     }
 
     private void initListeners() {
         bCall.setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(View v) {
-                bWork.setChecked(false);
-                bWalk.setChecked(false);
-                bRest.setChecked(false);
+                setActiveButton((ToggleButton) v);
                 actionController.callActionEvent();
             }
         });
@@ -138,9 +132,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                bCall.setChecked(false);
-                bWalk.setChecked(false);
-                bRest.setChecked(false);
+                setActiveButton((ToggleButton) v);
                 actionController.workActionEvent();
             }
         });
@@ -148,9 +140,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                bCall.setChecked(false);
-                bWalk.setChecked(false);
-                bWork.setChecked(false);
+                setActiveButton((ToggleButton) v);
                 actionController.restActionEvent();
             }
         });
@@ -158,13 +148,19 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                bCall.setChecked(false);
-                bRest.setChecked(false);
-                bWork.setChecked(false);
+                setActiveButton((ToggleButton) v);
                 actionController.walkActionEvent();
             }
         });
+    }
 
+    private void initView(View view) {
+        bCall = view.findViewById(R.id.b_call);
+        bWork = view.findViewById(R.id.b_work);
+        bRest = view.findViewById(R.id.b_rest);
+        bWalk = view.findViewById(R.id.b_walk);
+        tvStartDate = view.findViewById(R.id.tv_start_date);
+        tvTitle = view.findViewById(R.id.tv_title);
     }
 
     private String charSequence(Date date) {

@@ -126,7 +126,7 @@ public class ActionController {
         serviceEventBus.post(new Events.EventBusControl(Constants.EVENT_UNREGISTER_EVENT_BUS, entityEventBus));
     }
 
-    public String getPreviousActionType() {
+    public String getCurrentActionType() {
         if (currentAction == null) {
             return context.getString(R.string.text_default_action_state);
         } else {
@@ -134,19 +134,18 @@ public class ActionController {
         }
     }
 
-    public void dontMoveTimerOff() {
-        serviceEventBus.post(new Events.GPS(Constants.EVENT_GPS_STOP));
-        // todo event after dont move timer off
-        restActionEvent();
-    }
-
-
-    public Date getPreviousActionStartTime() {
+    public Date getCurrentActionStartTime() {
         if (currentAction == null) {
             return null;
         } else {
             return currentAction.getStartDate();
         }
+    }
+
+    public void dontMoveTimerOff() {
+        serviceEventBus.post(new Events.GPS(Constants.EVENT_GPS_STOP));
+        // todo event after dont move timer off
+        restActionEvent();
     }
 
     public void restActionEvent() {
