@@ -19,7 +19,6 @@ import com.maxml.timer.util.Constants;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.security.CodeSigner;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -83,8 +82,8 @@ public class HomeFragment extends Fragment {
     }
 
     private void setStartUI() {
-        String activeStatus = actionController.getActionStatus();
-        Date actionDate = actionController.getActionTime();
+        String activeStatus = actionController.getPreviousActionType();
+        Date actionDate = actionController.getPreviousActionStartTime();
         if (activeStatus != null && actionDate != null) {
             tvTitle.setText(activeStatus);
             tvStartDate.setText(charSequence(actionDate));
@@ -116,8 +115,8 @@ public class HomeFragment extends Fragment {
     }
 
     private void refreshActionStatus() {
-        String action = actionController.getActionStatus();
-        Date time = actionController.getActionTime();
+        String action = actionController.getPreviousActionType();
+        Date time = actionController.getPreviousActionStartTime();
         tvTitle.setText(action);
         if (time == null) {
             tvStartDate.setText(getString(R.string.widget_default_text));

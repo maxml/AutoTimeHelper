@@ -28,7 +28,6 @@ public class AutoTimeWidget extends AppWidgetProvider {
         if (Utils.isServiceRunning(context, ReceiverService.class)) {
             if (actionController == null) {
                 initEventBus(context);
-                eventBus.post(new Events.WidgetEvent(Constants.EVENT_SET_WIDGET_EVENT_BUS));
             }
         }
         // There may be multiple widgets active, so update all of them
@@ -41,6 +40,7 @@ public class AutoTimeWidget extends AppWidgetProvider {
         eventBus = new EventBus();
         actionController = new ActionController(context, eventBus);
         actionController.registerEventBus(eventBus);
+        actionController.setWidgetEventBus();
     }
 
     @Override

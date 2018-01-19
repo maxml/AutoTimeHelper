@@ -7,6 +7,7 @@ import com.maxml.timer.R;
 import com.maxml.timer.entity.Coordinates;
 import com.maxml.timer.entity.Action;
 import com.maxml.timer.entity.Events;
+import com.maxml.timer.entity.BackStackEntity;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.NotificationHelper;
 import com.maxml.timer.util.Utils;
@@ -16,9 +17,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ActionController {
 
@@ -27,9 +26,9 @@ public class ActionController {
     private Context context;
     private DbController dbController;
 
-    private String walkActionId;
-    private static Map<String, Action> actions = new HashMap<>();
-    private List<String> stateStack = new ArrayList<>();
+    private static String walkActionId;
+    private static Action currentAction;
+    private static List<BackStackEntity> backStack = new ArrayList<>();
 
     public ActionController(Context context, EventBus entityEventBus) {
         this.context = context;
@@ -42,19 +41,24 @@ public class ActionController {
         return new ActionController(context, eventBus);
     }
 
-    public void setMineActivityEventBus(){
+    public void setMineActivityEventBus() {
         serviceEventBus.post(new Events.EventBusControl(Constants.EVENT_SET_MAIN_ACTIVITY_EVENT_BUS, entityEventBus));
     }
-    public void setCallEventBus(){
+
+    public void setCallEventBus() {
         serviceEventBus.post(new Events.EventBusControl(Constants.EVENT_SET_CALL_EVENT_BUS, entityEventBus));
     }
-    public void setWifiEventBus(){
+
+    public void setWidgetEventBus() {
+        serviceEventBus.post(new Events.EventBusControl(Constants.EVENT_SET_WIDGET_EVENT_BUS, entityEventBus));
+    }
+
+    public void setWifiEventBus() {
         serviceEventBus.post(new Events.EventBusControl(Constants.EVENT_SET_WIFI_EVENT_BUS, entityEventBus));
     }
 
     public void onReceiveCallEvent(Events.CallEvent event) {
         switch (event.getCallState()) {
-
             case Constants.EVENT_CALL_ONGOING_ANSWERED:
                 startCallEvent();
                 break;
@@ -74,20 +78,16 @@ public class ActionController {
     public void onReceiveWifiEvent(Events.WifiEvent event) {
         switch (event.getWifiState()) {
             case Constants.EVENT_WIFI_ENABLE:
-                startWifiEvent();
+                startWorkEvent();
                 break;
             case Constants.EVENT_WIFI_DISABLE:
-                endWifiEvent();
+                endWorkEvent();
                 break;
         }
     }
 
     public void onReceiveWidgetEvent(Events.WidgetEvent event) {
         switch (event.getMessage()) {
-            case Constants.EVENT_SET_WIDGET_EVENT_BUS:
-                serviceEventBus.post(new Events.EventBusControl(Constants.EVENT_SET_WIDGET_EVENT_BUS, entityEventBus));
-                break;
-
             case Constants.EVENT_WALK_ACTION:
                 walkActionEvent();
                 break;
@@ -126,11 +126,11 @@ public class ActionController {
         serviceEventBus.post(new Events.EventBusControl(Constants.EVENT_UNREGISTER_EVENT_BUS, entityEventBus));
     }
 
-    public String getActionStatus() {
-        if (stateStack.size() == 0) {
-            return context.getString(R.string.widget_default_text);
+    public String getPreviousActionType() {
+        if (currentAction == null) {
+            return context.getString(R.string.text_default_action_state);
         } else {
-            return stateStack.get(stateStack.size() - 1);
+            return currentAction.getType();
         }
     }
 
@@ -141,91 +141,44 @@ public class ActionController {
     }
 
 
-    public Date getActionTime() {
-        if (stateStack.size() == 0) {
-            return null;
-        }
-        String status = getActionStatus();
-        Action action = actions.get(status);
-        if (action == null) {
+    public Date getPreviousActionStartTime() {
+        if (currentAction == null) {
             return null;
         } else {
-            return action.getStartDate();
+            return currentAction.getStartDate();
         }
     }
 
-
     public void restActionEvent() {
-        Action rest = actions.get(Constants.EVENT_REST_ACTION);
-        if (rest == null) {
-            startRestEvent();
-        } else {
+        if (currentAction != null && currentAction.getType().equals(Constants.EVENT_REST_ACTION)) {
             endRestEvent();
+        } else {
+            startRestEvent();
         }
     }
 
     public void callActionEvent() {
-        Action call = actions.get(Constants.EVENT_CALL_ACTION);
-        if (call == null) {
-            startCallEvent();
-        } else {
+        if (currentAction != null && currentAction.getType().equals(Constants.EVENT_CALL_ACTION)) {
             endCallEvent();
+        } else {
+            startCallEvent();
         }
     }
 
-
     public void workActionEvent() {
-        Action work = actions.get(Constants.EVENT_WORK_ACTION);
-        if (work == null) {
-            startWorkEvent();
-        } else {
+        if (currentAction != null && currentAction.getType().equals(Constants.EVENT_WORK_ACTION)) {
             endWorkEvent();
+        } else {
+            startWorkEvent();
         }
     }
 
     public void walkActionEvent() {
-        Action walk = actions.get(Constants.EVENT_WALK_ACTION);
-        if (walk == null) {
-            // start gps tracking
-            serviceEventBus.post(new Events.GPS(Constants.EVENT_GPS_START));
-            // create walk action
-            startWalkEvent();
-        } else {
-            // save walt action
+        if (currentAction != null && currentAction.getType().equals(Constants.EVENT_WALK_ACTION)) {
             endWalkEvent();
+        } else {
+            startWalkEvent();
         }
-    }
-
-
-    private void startWifiEvent() {
-        Action work = new Action();
-        work.setType(Constants.EVENT_WORK_ACTION);
-        work.setStartDate(new Date(System.currentTimeMillis()));
-        work.setDayCount(Utils.getDayCount(new Date()));
-        String dayCountType = work.getDayCount() + "_" + work.getType();
-        work.setDayCount_type(dayCountType);
-        // add it to temp map
-        actions.put(Constants.EVENT_WORK_ACTION, work);
-        // add to stack trace
-        stateStack.add(Constants.EVENT_WORK_ACTION);
-        // update status
-        updateStatus(Constants.EVENT_WORK_ACTION, work.getStartDate());
-    }
-
-    private void endWifiEvent() {
-        Action work = actions.get(Constants.EVENT_WORK_ACTION);
-        if (work == null) {
-            startWifiEvent();
-            return;
-        }
-        work.setEndDate(new Date(System.currentTimeMillis()));
-        dbController.createAction(work);
-        // clear temp entity
-        actions.remove(Constants.EVENT_WORK_ACTION);
-        // delete from stacktrace
-        stateStack.remove(Constants.EVENT_WORK_ACTION);
-        // set previous action status
-        updateStatus(getActionStatus(), getActionTime());
     }
 
     private void startRestEvent() {
@@ -236,28 +189,27 @@ public class ActionController {
         rest.setDayCount(Utils.getDayCount(new Date()));
         String dayCount_type = rest.getDayCount() + "_" + rest.getType();
         rest.setDayCount_type(dayCount_type);
-        // add it to temp map
-        actions.put(Constants.EVENT_REST_ACTION, rest);
         // add to stack trace
-        stateStack.add(Constants.EVENT_REST_ACTION);
+        boolean isBreak = false;
+        if (currentAction != null) {
+            // this Action break previous Action
+            isBreak = true;
+        }
+        backStack.add(new BackStackEntity(rest, isBreak));
+        // mark as current
+        currentAction = rest;
         // update status
         updateStatus(Constants.EVENT_REST_ACTION, rest.getStartDate());
     }
 
     private void endRestEvent() {
-        Action rest = actions.get(Constants.EVENT_REST_ACTION);
-        if (rest == null) {
-            startRestEvent();
-            return;
-        }
+        Action rest = currentAction;
         rest.setEndDate(new Date());
         dbController.createAction(rest);
         // clear temp entity
-        actions.remove(Constants.EVENT_REST_ACTION);
-        // delete from stacktrace
-        stateStack.remove(Constants.EVENT_REST_ACTION);
+        currentAction = null;
         // set previous action status
-        updateStatus(getActionStatus(), getActionTime());
+        setPreviousAction();
     }
 
     private void startWorkEvent() {
@@ -268,28 +220,27 @@ public class ActionController {
         work.setDayCount(Utils.getDayCount(new Date()));
         String dayCount_type = work.getDayCount() + "_" + work.getType();
         work.setDayCount_type(dayCount_type);
-        // add it to temp map
-        actions.put(Constants.EVENT_WORK_ACTION, work);
         // add to stack trace
-        stateStack.add(Constants.EVENT_WORK_ACTION);
+        boolean isBreak = false;
+        if (currentAction != null) {
+            // this Action break previous Action
+            isBreak = true;
+        }
+        backStack.add(new BackStackEntity(work, isBreak));
+        // mark as current
+        currentAction = work;
         // update status
         updateStatus(Constants.EVENT_WORK_ACTION, work.getStartDate());
     }
 
     private void endWorkEvent() {
-        Action work = actions.get(Constants.EVENT_WORK_ACTION);
-        if (work == null) {
-            startWorkEvent();
-            return;
-        }
+        Action work = currentAction;
         work.setEndDate(new Date());
         dbController.createAction(work);
         // clear temp entity
-        actions.remove(Constants.EVENT_WORK_ACTION);
-        // delete from stacktrace
-        stateStack.remove(Constants.EVENT_WORK_ACTION);
+        currentAction = null;
         // set previous action status
-        updateStatus(getActionStatus(), getActionTime());
+        setPreviousAction();
     }
 
     private void startCallEvent() {
@@ -300,28 +251,27 @@ public class ActionController {
         call.setDayCount(Utils.getDayCount(new Date()));
         String dayCount_type = call.getDayCount() + "_" + call.getType();
         call.setDayCount_type(dayCount_type);
-        // add it to temp map
-        actions.put(Constants.EVENT_CALL_ACTION, call);
         // add to stack trace
-        stateStack.add(Constants.EVENT_CALL_ACTION);
+        boolean isBreak = false;
+        if (currentAction != null) {
+            // this Action break previous Action
+            isBreak = true;
+        }
+        backStack.add(new BackStackEntity(call, isBreak));
+        // mark as current
+        currentAction = call;
         // update status
         updateStatus(Constants.EVENT_CALL_ACTION, call.getStartDate());
     }
 
     private void endCallEvent() {
-        Action call = actions.get(Constants.EVENT_CALL_ACTION);
-        if (call == null) {
-            startCallEvent();
-            return;
-        }
+        Action call = currentAction;
         call.setEndDate(new Date());
         dbController.createAction(call);
         // clear temp entity
-        actions.remove(Constants.EVENT_CALL_ACTION);
-        // delete from stacktrace
-        stateStack.remove(Constants.EVENT_CALL_ACTION);
+        currentAction = null;
         // set previous action status
-        updateStatus(getActionStatus(), getActionTime());
+        setPreviousAction();
     }
 
     private void startWalkEvent() {
@@ -332,30 +282,60 @@ public class ActionController {
         walk.setDayCount(Utils.getDayCount(new Date()));
         String dayCount_type = walk.getDayCount() + "_" + walk.getType();
         walk.setDayCount_type(dayCount_type);
-        // add it to temp map
-        actions.put(Constants.EVENT_WALK_ACTION, walk);
         // add to stack trace
-        stateStack.add(Constants.EVENT_WALK_ACTION);
+        boolean isBreak = false;
+        if (currentAction != null) {
+            // this Action break previous Action
+            isBreak = true;
+        }
+        backStack.add(new BackStackEntity(walk, isBreak));
+        // mark as current
+        currentAction = walk;
         // update status
         updateStatus(Constants.EVENT_WALK_ACTION, walk.getStartDate());
+        // start gps tracking
+        serviceEventBus.post(new Events.GPS(Constants.EVENT_GPS_START));
     }
 
     private void endWalkEvent() {
-        Action walk = actions.get(Constants.EVENT_WALK_ACTION);
-        if (walk == null) {
-            startWalkEvent();
-            return;
-        }
+        Action walk = currentAction;
         walk.setEndDate(new Date());
         dbController.createWalkAction(walk);
         // clear temp entity
-        actions.remove(Constants.EVENT_WALK_ACTION);
-        // delete from stacktrace
-        stateStack.remove(Constants.EVENT_WALK_ACTION);
+        currentAction = null;
         // set previous action status
-        updateStatus(getActionStatus(), getActionTime());
+        setPreviousAction();
     }
 
+    private void setPreviousAction() {
+        if (backStack.size() > 1) {
+            // if last Action break previous continue previous action
+            BackStackEntity entity = backStack.get(backStack.size()-1);
+            if (entity.isBreak()){
+                continuePreviousAction();
+                return;
+            }
+        }
+        updateStatus(context.getString(R.string.text_default_action_state), null);
+    }
+
+    private void continuePreviousAction() {
+        String type = backStack.get(backStack.size()-2).getType();
+        switch (type){
+            case Constants.EVENT_REST_ACTION:
+                startRestEvent();
+                break;
+            case Constants.EVENT_WALK_ACTION:
+                startWalkEvent();
+                break;
+            case Constants.EVENT_WORK_ACTION:
+                startWorkEvent();
+                break;
+            case Constants.EVENT_CALL_ACTION:
+                startCallEvent();
+                break;
+        }
+    }
 
     private void updateStatus(String status, Date time) {
         Events.ActionStatus statusEvent = new Events.ActionStatus(status, time);
