@@ -52,7 +52,7 @@
     <string name="action_default_description">not selected</string>
     <string name="opyion_button_edit">Edit</string>
     <string name="opyion_button_delete">Delete</string>
-    <string name="opyion_button_split">Split</string>
+    <string name="opyion_button_join">Join</string>
     <string name="statistic_text">Work time:</string>
     <string name="warning_about_anonymously">You are anonymously.  Please, Sign In</string>
     <string name="name_calendar_fragment">Calendar</string>
@@ -63,11 +63,13 @@
     <string name="action_not_exist">Action is not exist</string>
     <string name="dialog_message_exit">Are you sure you want to exit?</string>
     <string name="dialog_title_exit">Really Exit?</string>
+    <string name="message_two_identical_action">you have selected two identical actions</string>
     <string name="text_default_action_state">Not do any action</string>
 
     <string-array name="options_action">
         <item>Edit</item>
         <item>Delete</item>
+        <item>Join</item>
     </string-array>
     <string-array name="options_wifi_type">
         <item>Home</item>

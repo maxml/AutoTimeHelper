@@ -50,4 +50,12 @@ public class WifiStateDAO extends BaseDaoImpl<WifiState, String> {
             e.printStackTrace();
         }
     }
+
+    public void insertOrUpdateData(WifiState wifiState) {
+        try {
+            createOrUpdate(wifiState);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

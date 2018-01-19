@@ -49,5 +49,4 @@ public class SharedPreferencesUtils {
 
         return sp.getInt(actionName, defaultColor);
     }
-
 }

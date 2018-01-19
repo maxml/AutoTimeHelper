@@ -173,7 +173,7 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
     private void showDialogStartTime() {
         final Calendar calendarStartDate = Calendar.getInstance();
         calendarStartDate.setTime(action.getStartDate());
-        CheckTimeDialog checkStartTimeDialog = CheckTimeDialog.getInstance(new TimePickerDialog.OnTimeSetListener() {
+        CheckTimeDialog checkStartTimeDialog = CheckTimeDialog.getInstance(action.getStartDate(), new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int i, int i1) {
                 calendarStartDate.set(Calendar.HOUR_OF_DAY, i);
@@ -194,7 +194,7 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
     private void showDialogEndTime() {
         final Calendar calendarEndDate = Calendar.getInstance();
         calendarEndDate.setTime(action.getEndDate());
-        CheckTimeDialog checkEndTimeDialog = CheckTimeDialog.getInstance(new TimePickerDialog.OnTimeSetListener() {
+        CheckTimeDialog checkEndTimeDialog = CheckTimeDialog.getInstance(action.getEndDate(), new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int i, int i1) {
                 calendarEndDate.set(Calendar.HOUR_OF_DAY, i);
@@ -266,6 +266,7 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
         bbChangeData.setOnClickListener(this);
         bbShowPathInMap.setOnClickListener(this);
         bbOk.setOnClickListener(this);
+
         etStartDate.setOnClickListener(this);
         etEndDate.setOnClickListener(this);
     }

@@ -208,7 +208,6 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
         if (idPath != null) {
             progressListener.showProgressBar();
             dbController.getPathFromDb(idPath);
-            return;
         }
     }
 

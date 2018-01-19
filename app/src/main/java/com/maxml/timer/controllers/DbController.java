@@ -113,14 +113,6 @@ public class DbController {
         actionDAO.updateActionInDb(action);
     }
 
-    public void insertWifiInDb(WifiState wifiState) {
-        try {
-            wifiStateDAO.createOrUpdate(wifiState);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void updateUserEmail(String email) {
         userDAO.updateEmail(email);
     }
@@ -170,11 +162,8 @@ public class DbController {
         serviceEventBus.post(new Events.DbResult(Constants.EVENT_WALK_ACTION_SAVED, walkActionId));
     }
 
-
     public void wifiActivated(WifiState wifiState) {
-        if (wifiStateDAO.getWifiStatesById(wifiState.getId()) == null) {
-            wifiStateDAO.insertData(wifiState);
-        }
+        wifiStateDAO.insertOrUpdateData(wifiState);
     }
 
     public int getWifiTypeFromDB(WifiState wifi) {
@@ -190,12 +179,8 @@ public class DbController {
         wifiStateDAO.updateData(wifiState);
     }
 
-    public void sendAllWifi() {
+    public void getAllWifi() {
         entityEventBus.post(wifiStateDAO.getAllRoles());
-    }
-
-    public boolean isCurrentWifi(int id) {
-        return NetworkUtil.isWifiAvailable(context, id);
     }
 
     public void registerEventBus(EventBus entityEventBus) {

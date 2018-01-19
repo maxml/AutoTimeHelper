@@ -24,7 +24,6 @@ import android.widget.Toast;
 
 import com.maxml.timer.controllers.ActionController;
 import com.maxml.timer.controllers.DbController;
-import com.maxml.timer.controllers.ReceiverService;
 import com.maxml.timer.entity.Events;
 import com.maxml.timer.entity.ShowFragmentListener;
 import com.maxml.timer.entity.ShowProgressListener;
@@ -33,7 +32,6 @@ import com.maxml.timer.entity.User;
 import com.maxml.timer.ui.dialog.DialogCallback;
 import com.maxml.timer.ui.dialog.DialogFactory;
 import com.maxml.timer.ui.fragments.DayCalendarFragment;
-import com.maxml.timer.ui.fragments.GoogleMapFragment;
 import com.maxml.timer.ui.fragments.HomeFragment;
 import com.maxml.timer.ui.fragments.MainUserPageFragment;
 import com.maxml.timer.ui.fragments.MonthCalendarFragment;
@@ -43,7 +41,6 @@ import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.FragmentUtils;
 import com.maxml.timer.util.ImageUtil;
 import com.maxml.timer.util.NetworkUtil;
-import com.maxml.timer.util.SharedPreferencesUtils;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
@@ -136,6 +133,7 @@ public class MainActivity extends AppCompatActivity
         eventBus.register(this);
         actionController.registerEventBus(eventBus);
         actionController.setMineActivityEventBus();
+
         dbController.getCurrentUser();
         super.onStart();
     }
@@ -178,6 +176,7 @@ public class MainActivity extends AppCompatActivity
                             loadImageFromCamera();
                         }
                         showProgressBar();
+
                         dbController.getCurrentUser();
                     } else {
                         Toast.makeText(this, R.string.no_network, Toast.LENGTH_SHORT).show();
@@ -322,7 +321,6 @@ public class MainActivity extends AppCompatActivity
 
         nv.setNavigationItemSelectedListener(this);
 
-        user = SharedPreferencesUtils.getCurrentUser(this);
         if (user.getEmail() != null && !user.getEmail().isEmpty()) {
             if (user.getUsername() != null) {
                 name.setText(user.getUsername());

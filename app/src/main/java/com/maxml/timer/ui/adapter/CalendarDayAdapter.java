@@ -16,7 +16,6 @@ import com.maxml.timer.util.OptionButtons;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
@@ -28,15 +27,17 @@ public class CalendarDayAdapter extends RecyclerView.Adapter<CalendarDayAdapter.
     private List<Action> list;
     private List<OptionButtons> optionList;
 
-    private OnClickOption onClickOptionListener;
+    private OnClickListener listener;
 
-    public interface OnClickOption {
-        void onClick(OptionButtons optionType, Action item);
+    public interface OnClickListener {
+        void onClickOption(OptionButtons optionType, Action item);
+
+        void onClick(Action action);
     }
 
     public CalendarDayAdapter(Context context, List<Action> entityList,
-                              List<OptionButtons> optionList, OnClickOption listener) {
-        onClickOptionListener = listener;
+                              List<OptionButtons> optionList, OnClickListener listener) {
+        this.listener = listener;
         this.list = entityList;
         this.context = context;
         this.optionList = optionList;
@@ -61,10 +62,15 @@ public class CalendarDayAdapter extends RecyclerView.Adapter<CalendarDayAdapter.
     }
 
 
-    public void  swapData(List<Action> actions) {
+    public void swapData(List<Action> actions) {
         list = actions;
         Collections.sort(list);
 
+        notifyDataSetChanged();
+    }
+
+    public void resetList() {
+        mExpandedPosition = -1;
         notifyDataSetChanged();
     }
 
@@ -77,14 +83,14 @@ public class CalendarDayAdapter extends RecyclerView.Adapter<CalendarDayAdapter.
 
         public DayViewHolder(View itemView) {
             super(itemView);
-            cvView = (CardView) itemView.findViewById(R.id.rootCardView);
-            tvTime = (TextView) itemView.findViewById(R.id.time);
-            tvType = (TextView) itemView.findViewById(R.id.tvActionType);
-            tvDescription = (TextView) itemView.findViewById(R.id.tvActionDescription);
-            rvOptions = (RecyclerView) itemView.findViewById(R.id.recyclerViewOptions);
+            cvView = itemView.findViewById(R.id.rootCardView);
+            tvTime = itemView.findViewById(R.id.time);
+            tvType = itemView.findViewById(R.id.tvActionType);
+            tvDescription = itemView.findViewById(R.id.tvActionDescription);
+            rvOptions = itemView.findViewById(R.id.recyclerViewOptions);
         }
 
-        public void bind(Action action, final int position) {
+        public void bind(final Action action, final int position) {
             // tvTime
             if (action != null) {
                 Calendar calendar = Calendar.getInstance();
@@ -92,7 +98,7 @@ public class CalendarDayAdapter extends RecyclerView.Adapter<CalendarDayAdapter.
                 NumberFormat f = new DecimalFormat("00");
                 int hour = calendar.get(Calendar.HOUR_OF_DAY);
                 int min = calendar.get(Calendar.MINUTE);
-                String time = f.format(hour)  + ":" + f.format(min);
+                String time = f.format(hour) + ":" + f.format(min);
                 tvTime.setText(time);
                 // tvDescription
                 if (action.getDescription() != null && !action.getDescription().equals("")) {
@@ -123,6 +129,7 @@ public class CalendarDayAdapter extends RecyclerView.Adapter<CalendarDayAdapter.
                         notifyItemRemoved(position);
                         TransitionManager.beginDelayedTransition(rvOptions);
                         notifyDataSetChanged();
+                        listener.onClick(action);
                     }
                 });
             }
@@ -135,7 +142,7 @@ public class CalendarDayAdapter extends RecyclerView.Adapter<CalendarDayAdapter.
         OptionButtonsAdapter adapter = new OptionButtonsAdapter(optionList, new OptionButtonsAdapter.OnClickButton() {
             @Override
             public void onClick(OptionButtons buttonType) {
-                onClickOptionListener.onClick(buttonType, entity);
+                listener.onClickOption(buttonType, entity);
             }
         });
         recyclerView.setAdapter(adapter);
