@@ -35,9 +35,6 @@ public class HomeFragment extends Fragment {
     private EventBus eventBus;
     private ActionController actionController;
 
-    public HomeFragment() {
-    }
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,10 +47,26 @@ public class HomeFragment extends Fragment {
 
         initView(rootView);
         setStartUI();
-
         initListeners();
 
         return rootView;
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        eventBus.register(this);
+        actionController.registerEventBus(eventBus);
+
+        refreshActionStatus();
+    }
+
+    @Override
+    public void onStop() {
+        actionController.unregisterEventBus(eventBus);
+        eventBus.unregister(this);
+        super.onStop();
     }
 
     @Subscribe()
@@ -65,21 +78,6 @@ public class HomeFragment extends Fragment {
         } else {
             tvStartDate.setText(charSequence(time));
         }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        refreshActionStatus();
-        eventBus.register(this);
-        actionController.registerEventBus(eventBus);
-    }
-
-    @Override
-    public void onStop() {
-        actionController.unregisterEventBus(eventBus);
-        eventBus.unregister(this);
-        super.onStop();
     }
 
     private void setStartUI() {

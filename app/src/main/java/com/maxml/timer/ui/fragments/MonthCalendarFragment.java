@@ -64,13 +64,17 @@ public class MonthCalendarFragment extends Fragment {
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(year, month, dayOfMonth);
 
-                DayCalendarFragment dayCalendarFragment = new DayCalendarFragment();
-                Bundle args = new Bundle();
-                args.putLong(Constants.EXTRA_TIME_ACTION, calendar.getTimeInMillis());
-                dayCalendarFragment.setArguments(args);
-
-                fragmentListener.showFragment(dayCalendarFragment);
+                showDayFragment(calendar);
             }
         });
+    }
+
+    private void showDayFragment(Calendar calendar) {
+        DayCalendarFragment dayCalendarFragment = new DayCalendarFragment();
+        Bundle args = new Bundle();
+        args.putLong(Constants.EXTRA_TIME_ACTION, calendar.getTimeInMillis());
+        dayCalendarFragment.setArguments(args);
+
+        fragmentListener.showFragment(dayCalendarFragment);
     }
 }

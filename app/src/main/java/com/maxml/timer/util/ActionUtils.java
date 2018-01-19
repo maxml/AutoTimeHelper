@@ -3,6 +3,7 @@ package com.maxml.timer.util;
 import android.content.Context;
 
 import com.alamkanak.weekview.WeekViewEvent;
+import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.database.DatabaseHelper;
 import com.maxml.timer.entity.Action;
 import com.maxml.timer.entity.ActionWeek;
@@ -14,7 +15,7 @@ import java.util.List;
 
 public class ActionUtils {
 
-    public static List<WeekViewEvent> actionsToWeekViewEvents(List<Action> list, Context context) {
+    public static List<WeekViewEvent> convertActionsToWeekViewEvents(List<Action> list, Context context) {
         List<WeekViewEvent> result = new ArrayList<>();
 
         for (Action action :
@@ -40,4 +41,48 @@ public class ActionUtils {
         }
         return result;
     }
+
+    public static Action findActionById(String id, List<Action> actions) {
+        for (Action action :
+                actions) {
+            if (action.getId() == id) {
+                return action;
+            }
+        }
+        return null;
+    }
+
+    public static Action joinActions(Action firstAction, Action secondAction) {
+        if (firstAction.getStartDate().getTime() < secondAction.getStartDate().getTime()) {
+            Date endDate = new Date(firstAction.getEndDate().getTime() +
+                    (secondAction.getEndDate().getTime() - secondAction.getStartDate().getTime()));
+
+            firstAction.setEndDate(endDate);
+            return firstAction;
+        } else {
+            Date startData = new Date(firstAction.getStartDate().getTime() -
+                    (secondAction.getEndDate().getTime() - secondAction.getStartDate().getTime()));
+            firstAction.setStartDate(startData);
+
+            return firstAction;
+        }
+    }
+
+//        if (firstAction.getStartDate().getTime() < secondAction.getStartDate().getTime()) {
+//            Date endDate = new Date(firstAction.getEndDate().getTime() +
+//                    secondAction.getEndDate().getTime() - secondAction.getStartDate().getTime());
+//
+//            controller.removeActionInDb(secondAction.getId());
+//            firstAction.setEndDate(endDate);
+//            return firstAction;
+//        } else {
+//            Date endDate = new Date(secondAction.getEndDate().getTime() +
+//                    firstAction.getEndDate().getTime() - firstAction.getStartDate().getTime());
+//            secondAction.setEndDate(endDate);
+//
+//            controller.removeActionInDb(firstAction.getId());
+//            return secondAction;
+//        }
+
+
 }

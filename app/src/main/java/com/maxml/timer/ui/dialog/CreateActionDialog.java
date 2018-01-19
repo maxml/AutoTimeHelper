@@ -28,6 +28,7 @@ import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.Utils;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class CreateActionDialog extends DialogFragment implements View.OnClickListener {
     private BootstrapEditText etEndTime;
@@ -119,7 +120,7 @@ public class CreateActionDialog extends DialogFragment implements View.OnClickLi
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.bet_start_time:
-                CheckTimeDialog checkStartTimeDialog = CheckTimeDialog.getInstance(new TimePickerDialog.OnTimeSetListener() {
+                CheckTimeDialog checkStartTimeDialog = CheckTimeDialog.getInstance(new Date(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int i, int i1) {
                         calendarStartDate.set(Calendar.HOUR_OF_DAY, i);
@@ -130,7 +131,7 @@ public class CreateActionDialog extends DialogFragment implements View.OnClickLi
                 checkStartTimeDialog.show(getFragmentManager(), "checkStartTimeDialog");
                 break;
             case R.id.bet_end_time:
-                CheckTimeDialog checkEndTimeDialog = CheckTimeDialog.getInstance(new TimePickerDialog.OnTimeSetListener() {
+                CheckTimeDialog checkEndTimeDialog = CheckTimeDialog.getInstance(new Date(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int i, int i1) {
                         calendarEndDate.set(Calendar.HOUR_OF_DAY, i);

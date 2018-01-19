@@ -69,6 +69,9 @@ public class OptionButtonsAdapter extends RecyclerView.Adapter<OptionButtonsAdap
                     bOption.setId(Constants.ID_BUTTON_DELETE);
                     bOption.setText(R.string.opyion_button_delete);
                     break;
+                case JOIN:
+                    bOption.setId(Constants.ID_BUTTON_JOIN);
+                    bOption.setText(R.string.opyion_button_join);
             }
             bOption.setOnClickListener(new View.OnClickListener() {
                 @Override

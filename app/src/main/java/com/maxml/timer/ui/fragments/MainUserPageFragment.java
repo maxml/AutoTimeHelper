@@ -57,7 +57,9 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        progressListener = (ShowProgressListener) context;
+        if (context instanceof ShowProgressListener) {
+            progressListener = (ShowProgressListener) context;
+        }
     }
 
     @Override
@@ -76,6 +78,7 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
         super.onStart();
         eventBus.register(this);
         dbController.registerEventBus(eventBus);
+
         dbController.getCurrentUser();
     }
 
@@ -102,9 +105,7 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
                 Intent intent = ImageUtil.createIntentForLoadImage(getActivity());
                 if (intent != null) {
                     getActivity().startActivityForResult(intent, Constants.REQUEST_CODE_TAKE_PHOTO);
-                    progressListener.showProgressBar();
                 }
-                progressListener.hideProgressBar();
                 break;
             case R.id.bb_ok:
                 bbOk.setVisibility(View.GONE);
@@ -154,8 +155,6 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
             case Constants.EVENT_DB_RESULT_ERROR:
                 progressListener.hideProgressBar();
                 dbController.getCurrentUser();
-
-                Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
                 break;
         }
     }

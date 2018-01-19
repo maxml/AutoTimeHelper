@@ -160,8 +160,6 @@ public class LoginActivity extends AppCompatActivity implements EasyPermissions.
 
     private void loginOk() {
         initService();
-        User user = UserDAO.getCurrentUser();
-        SharedPreferencesUtils.saveCurrentUser(this, user);
         Toast.makeText(getApplicationContext(), R.string.toast_logged, Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);

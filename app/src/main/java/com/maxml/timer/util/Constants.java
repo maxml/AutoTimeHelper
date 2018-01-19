@@ -48,6 +48,8 @@ public class Constants {
     public static final String EVENT_WIFI_ENABLE = "eventWifiEnable";
     public static final String EVENT_WIFI_DISABLE = "eventWifiDisable";
 
+    public static final String KEY_SETTING_WIFI = "wifi";
+
     public static final String EVENT_CALL_ACTION = "call";
     public static final String EVENT_CALL_MISSING = "callMissing";
     public static final String EVENT_CALL_INCOMING_ENDED = "incomingCallEnded";
@@ -93,6 +95,7 @@ public class Constants {
 
     public static final int ID_BUTTON_EDIT = 0;
     public static final int ID_BUTTON_DELETE = 1;
+    public static final int ID_BUTTON_JOIN = 2;
 
     public static final int WEEK_COUNT_DAY = 7;
     public static final String EVENT_CLOSE_APP = "closeApp";

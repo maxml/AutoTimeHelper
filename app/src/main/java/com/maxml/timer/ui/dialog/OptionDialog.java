@@ -23,13 +23,14 @@ public class OptionDialog extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setItems(resourceItems, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                clickListener.onDialogItemClick(i);
-            }
-        });
+        AlertDialog.Builder builder = new AlertDialog
+                .Builder(getActivity())
+                .setItems(resourceItems, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        clickListener.onDialogItemClick(i);
+                    }
+                });
 
         return builder.create();
     }

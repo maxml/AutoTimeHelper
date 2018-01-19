@@ -31,7 +31,6 @@ import com.maxml.timer.entity.ActionWeek;
 import com.maxml.timer.entity.Events;
 import com.maxml.timer.entity.ShowFragmentListener;
 import com.maxml.timer.entity.ShowProgressListener;
-import com.maxml.timer.entity.StatisticControl;
 import com.maxml.timer.entity.Table;
 import com.maxml.timer.util.ActionUtils;
 import com.maxml.timer.util.Constants;
@@ -39,8 +38,6 @@ import com.maxml.timer.util.Constants;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -53,16 +50,20 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
     private WeekView weekView;
     private CalendarView cvCalendar;
     private Toolbar toolbar;
+    private Menu menu;
 
     private List<WeekViewEvent> list = new ArrayList<>();
+    private List<Action> actions = new ArrayList<>();
     private int[] calendarViews = {1, 3, 5};
     private int currentCalendarView = 1;
-    private String idLastEvent;
+    private boolean isJoined;
 
     private EventBus eventBus;
     private DbController controller;
     private ShowFragmentListener fragmentListener;
     private ShowProgressListener progressListener;
+
+    private WeekViewEvent lastEvent;
 
     @Override
     public void onAttach(Context context) {
@@ -132,9 +133,13 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
 
     @Override
     public void onEventClick(WeekViewEvent event, RectF eventRect) {
-        idLastEvent = ((ActionWeek) event).getActionId();
-        DialogFragment dialog = OptionDialog.getInstance(this, R.array.options_action);
-        dialog.show(getFragmentManager(), "dialog option");
+        if (isJoined) {
+            joinTwoAction(event);
+        } else {
+            lastEvent = event;
+            DialogFragment dialog = OptionDialog.getInstance(this, R.array.options_action);
+            dialog.show(getFragmentManager(), "dialog option");
+        }
     }
 
     @Override
@@ -150,24 +155,32 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
 
     @Override
     public void onDialogItemClick(int position) {
-        if (position == Constants.ID_BUTTON_EDIT) {
-            Bundle args = new Bundle();
-            args.putString(Constants.EXTRA_ID_ACTION, idLastEvent);
-            DetailsActionFragment fragment = new DetailsActionFragment();
-            fragment.setArguments(args);
+        switch (position) {
+            case Constants.ID_BUTTON_EDIT:
+                Bundle args = new Bundle();
+                args.putString(Constants.EXTRA_ID_ACTION, ((ActionWeek) lastEvent).getActionId());
+                DetailsActionFragment fragment = new DetailsActionFragment();
+                fragment.setArguments(args);
 
-            fragmentListener.showFragment(fragment);
-        } else if (position == Constants.ID_BUTTON_DELETE) {
-            controller.removeActionInDb(idLastEvent);
+                fragmentListener.showFragment(fragment);
+                break;
+            case Constants.ID_BUTTON_DELETE:
+                controller.removeActionInDb(((ActionWeek) lastEvent).getActionId());
 
-            progressListener.showProgressBar();
+                progressListener.showProgressBar();
+                break;
+            case Constants.ID_BUTTON_JOIN:
+                isJoined = true;
+                changeMenuVisible();
+                break;
         }
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.calendar_menu, menu);
+        inflater.inflate(R.menu.calendar_week_menu, menu);
+        this.menu = menu;
     }
 
     @Override
@@ -190,6 +203,10 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
             case R.id.i_v_refresh:
                 loadActions();
                 break;
+            case R.id.i_v_cancel:
+                isJoined = false;
+                changeMenuVisible();
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -197,7 +214,7 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
 
     @Subscribe
     public void receiveTableFromDb(List<Table> listTable) {
-        List<Action> actions = new ArrayList<>();
+        actions = new ArrayList<>();
 
         for (Table table :
                 listTable) {
@@ -206,7 +223,7 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
             actions.addAll(table.getRestList());
             actions.addAll(table.getWalkList());
         }
-        list = ActionUtils.actionsToWeekViewEvents(actions, getContext());
+        list = ActionUtils.convertActionsToWeekViewEvents(actions, getContext());
 
         updateUI();
 
@@ -221,10 +238,24 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
                 break;
             case Constants.EVENT_DB_RESULT_ERROR:
                 progressListener.hideProgressBar();
-
-                Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
                 break;
         }
+    }
+
+    private void joinTwoAction(WeekViewEvent event) {
+        if (event != lastEvent) {
+            Action action = ActionUtils.joinActions(ActionUtils.findActionById(((ActionWeek) lastEvent).getActionId(), actions)
+                    , ActionUtils.findActionById(((ActionWeek) event).getActionId(), actions));
+
+            controller.removeActionInDb(((ActionWeek) event).getActionId());
+            controller.updateActionInDb(action);
+            progressListener.showProgressBar();
+        } else {
+            Toast.makeText(getContext(), R.string.message_two_identical_action, Toast.LENGTH_SHORT).show();
+        }
+        isJoined = false;
+
+        changeMenuVisible();
     }
 
     private void loadActions() {
@@ -288,5 +319,10 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
             currentCalendarView = 0;
         }
         return calendarViews[currentCalendarView];
+    }
+
+    private void changeMenuVisible() {
+        menu.setGroupVisible(R.id.g_main_option, !isJoined);
+        menu.setGroupVisible(R.id.g_cancel_option, isJoined);
     }
 }
