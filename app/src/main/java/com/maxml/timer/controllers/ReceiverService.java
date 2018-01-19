@@ -46,7 +46,8 @@ public class ReceiverService extends Service implements LocationListener {
     private int dontMoveTimer = 0;/*in min*/
     private boolean isGPSEnabled = false;
     private boolean isNetworkEnabled = false;
-    private boolean isFirstRun = true;
+    private boolean isFirstRunMineActivity = true;
+    private boolean isAutoWalkActionActivate = false;
     private LocationManager locationManager;
     private LocationListener autoWalkActionListener;
     private List<Coordinates> wayCoordinates = new ArrayList<>();
@@ -101,8 +102,8 @@ public class ReceiverService extends Service implements LocationListener {
                 break;
             case Constants.EVENT_SET_MAIN_ACTIVITY_EVENT_BUS:
                 mainActivityEventBus = event.getEventBus();
-                if (isFirstRun) {
-                    isFirstRun = false;
+                if (isFirstRunMineActivity) {
+                    isFirstRunMineActivity = false;
                     initAutoStartWalkAction();
                 }
                 break;
@@ -162,21 +163,23 @@ public class ReceiverService extends Service implements LocationListener {
     public void onGpsEvent(Events.GPS event) {
         switch (event.getMessage()) {
             case Constants.EVENT_GPS_START:
+                Log.d(Constants.LOG, "EVENT_GPS_START");
                 // check location permission
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                         && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     initWalkLocationListener();
+                    stopAutoStartWalkAction();
                 } else {
                     // permission not granted
                     Toast.makeText(this, R.string.toast_deny_location_permission, Toast.LENGTH_LONG).show();
                     return;
                 }
-                closeAutoStartWalkAction();
                 wayCoordinates = new ArrayList<>();
                 startTimer();
                 break;
 
             case Constants.EVENT_GPS_STOP:
+                Log.d(Constants.LOG, "EVENT_GPS_STOP");
                 actionController.gpsStopEvent(wayCoordinates);
                 stopUsingGPS();
                 initAutoStartWalkAction();
@@ -246,14 +249,16 @@ public class ReceiverService extends Service implements LocationListener {
         }
     }
 
-    private void closeAutoStartWalkAction() {
+    private void stopAutoStartWalkAction() {
+        Log.d(Constants.LOG, "Autostart stopAutoStartWalkAction()");
         locationManager.removeUpdates(autoWalkActionListener);
         autoWalkActionListener = null;
+        isAutoWalkActionActivate = false;
     }
 
 
     private void initAutoStartWalkAction() {
-        Log.d(Constants.LOG, "Init Autostart WalkAction");
+        Log.d(Constants.LOG, "Autostart initAutoStartWalkAction()");
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // permission not granted
@@ -269,11 +274,17 @@ public class ReceiverService extends Service implements LocationListener {
             }
             return;
         }
-
+        Log.d(Constants.LOG, "Autostart geolocation turn on and permission granted");
         autoWalkActionListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                actionController.walkActionEvent();
+                if (isAutoWalkActionActivate){
+                    Log.d(Constants.LOG, "Auto location is start WalkAction");
+                    actionController.autoWalkAction();
+                    }else {
+                    Log.d(Constants.LOG, "Autostart WalkAction ready");
+                    isAutoWalkActionActivate = true;
+                }
             }
 
             @Override
@@ -319,15 +330,18 @@ public class ReceiverService extends Service implements LocationListener {
             public void run() {
                 dontMoveTimer++;
                 if (dontMoveTimer >= Constants.WAY_DONT_MOVE_TIME) {
+                    Log.d(Constants.TAG, "Don't move timer activated");
                     actionController.dontMoveTimerOff();
+                    stopTimer();
                 } else {
-                    handler.postDelayed(this, 60000);
+                    handler.postDelayed(this, 1000);
                 }
             }
         });
     }
 
     private void stopTimer() {
+        dontMoveTimer = 0;
         if (handler != null) {
             handler.removeCallbacksAndMessages(null);
         }

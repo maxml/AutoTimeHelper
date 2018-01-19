@@ -143,9 +143,12 @@ public class ActionController {
     }
 
     public void dontMoveTimerOff() {
-        serviceEventBus.post(new Events.GPS(Constants.EVENT_GPS_STOP));
+        endWalkEvent();
         // todo event after dont move timer off
-        restActionEvent();
+    }
+
+    public void autoWalkAction(){
+        startWalkEvent();
     }
 
     public void restActionEvent() {
