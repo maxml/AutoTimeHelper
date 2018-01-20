@@ -42,13 +42,15 @@ public class ActionController {
         return new ActionController(context, eventBus);
     }
 
-    public void setMineActivityEventBus(){
+    public void setMineActivityEventBus() {
         serviceEventBus.post(new Events.EventBusControl(Constants.EVENT_SET_MAIN_ACTIVITY_EVENT_BUS, entityEventBus));
     }
-    public void setCallEventBus(){
+
+    public void setCallEventBus() {
         serviceEventBus.post(new Events.EventBusControl(Constants.EVENT_SET_CALL_EVENT_BUS, entityEventBus));
     }
-    public void setWifiEventBus(){
+
+    public void setWifiEventBus() {
         serviceEventBus.post(new Events.EventBusControl(Constants.EVENT_SET_WIFI_EVENT_BUS, entityEventBus));
     }
 
@@ -74,10 +76,14 @@ public class ActionController {
     public void onReceiveWifiEvent(Events.WifiEvent event) {
         switch (event.getWifiState()) {
             case Constants.EVENT_WIFI_ENABLE:
-                startWifiEvent();
+                if (event.getWifiType() == Constants.WIFI_TYPE_WORK) {
+                    startWifiEvent();
+                }
                 break;
             case Constants.EVENT_WIFI_DISABLE:
-                endWifiEvent();
+                if (event.getWifiType() == Constants.WIFI_TYPE_WORK) {
+                    endWifiEvent();
+                }
                 break;
         }
     }

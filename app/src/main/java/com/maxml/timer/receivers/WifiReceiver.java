@@ -22,6 +22,7 @@ public class WifiReceiver extends BroadcastReceiver {
     private EventBus eventBus;
 
     private static boolean isActiveWifi;
+    private static int wifiType;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -46,16 +47,15 @@ public class WifiReceiver extends BroadcastReceiver {
         dbController.wifiActivated(wifiState);
         int type = dbController.getWifiTypeFromDB(wifiState);
 
-        if (type == Constants.WIFI_TYPE_WORK) {
-            actionController.onReceiveWifiEvent(new Events.WifiEvent(Constants.EVENT_WIFI_ENABLE));
-            unregisterController();
-            isActiveWifi = true;
-        }
+        actionController.onReceiveWifiEvent(new Events.WifiEvent(Constants.EVENT_WIFI_ENABLE, type));
+        unregisterController();
+        isActiveWifi = true;
+        wifiType = type;
     }
 
     private void disconnectedWifi(Context context) {
         initController(context);
-        actionController.onReceiveWifiEvent(new Events.WifiEvent(Constants.EVENT_WIFI_DISABLE));
+        actionController.onReceiveWifiEvent(new Events.WifiEvent(Constants.EVENT_WIFI_DISABLE, wifiType));
         unregisterController();
         isActiveWifi = false;
     }

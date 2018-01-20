@@ -163,7 +163,9 @@ public class DbController {
     }
 
     public void wifiActivated(WifiState wifiState) {
-        wifiStateDAO.insertOrUpdateData(wifiState);
+        if (wifiStateDAO.getWifiStatesById(wifiState.getId()) == null) {
+            wifiStateDAO.insertData(wifiState);
+        }
     }
 
     public int getWifiTypeFromDB(WifiState wifi) {
