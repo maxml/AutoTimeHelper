@@ -78,10 +78,14 @@ public class ActionController {
     public void onReceiveWifiEvent(Events.WifiEvent event) {
         switch (event.getWifiState()) {
             case Constants.EVENT_WIFI_ENABLE:
-                startWorkEvent();
+                if (event.getWifiType() == Constants.WIFI_TYPE_WORK) {
+                    startWifiEvent();
+                }
                 break;
             case Constants.EVENT_WIFI_DISABLE:
-                endWorkEvent();
+                if (event.getWifiType() == Constants.WIFI_TYPE_WORK) {
+                    endWifiEvent();
+                }
                 break;
         }
     }

@@ -4,12 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.maxml.timer.MainActivity;
 import com.maxml.timer.R;
@@ -30,12 +33,16 @@ import java.util.List;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class LoginActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
-    protected static final int CONNECTION_OK = 1;
+public class LoginActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks, View.OnClickListener {
 
     private TextView entLogin;
     private TextView entPassword;
     private ProgressBar pbLoad;
+    private BootstrapButton bLoginAnonimously;
+    private BootstrapButton bLogin;
+    private BootstrapButton bSignIn;
+    private BootstrapButton bForgitPassword;
+
 
     private EventBus eventBus;
     private DbController dbController;
@@ -49,9 +56,8 @@ public class LoginActivity extends AppCompatActivity implements EasyPermissions.
         eventBus = new EventBus();
         dbController = new DbController(this, eventBus);
 
-        entLogin = findViewById(R.id.et_login);
-        entPassword = findViewById(R.id.et_password);
-        pbLoad = findViewById(R.id.pb_load);
+        initUI();
+        setListeners();
 
         boolean isLogged = FirebaseAuth.getInstance().getCurrentUser() != null;
         if (isLogged) {
@@ -112,6 +118,7 @@ public class LoginActivity extends AppCompatActivity implements EasyPermissions.
         }
     }
 
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.b_login:
@@ -138,7 +145,12 @@ public class LoginActivity extends AppCompatActivity implements EasyPermissions.
 
     private void login() {
         pbLoad.setVisibility(View.VISIBLE);
-        dbController.login(entLogin.getText().toString(), entPassword.getText().toString());
+
+        String login = entLogin.getText().toString();
+        String password = entPassword.getText().toString();
+        if (!TextUtils.isEmpty(login) && !TextUtils.isEmpty(password)) {
+            dbController.login(login, password);
+        }
     }
 
     @AfterPermissionGranted(Constants.REQUEST_LOCATION_PERMISSIONS)
@@ -151,6 +163,23 @@ public class LoginActivity extends AppCompatActivity implements EasyPermissions.
             EasyPermissions.requestPermissions(this, getString(R.string.text_dialog_location_permission),
                     Constants.REQUEST_LOCATION_PERMISSIONS, perms);
         }
+    }
+
+    private void initUI() {
+        entLogin = findViewById(R.id.et_login);
+        entPassword = findViewById(R.id.et_password);
+        pbLoad = findViewById(R.id.pb_load);
+        bLoginAnonimously = findViewById(R.id.b_login_anonymously);
+        bLogin = findViewById(R.id.b_login);
+        bSignIn = findViewById(R.id.b_sign_in);
+        bForgitPassword = findViewById(R.id.b_forgot_password);
+    }
+
+    private void setListeners() {
+        bLoginAnonimously.setOnClickListener(this);
+        bLogin.setOnClickListener(this);
+        bSignIn.setOnClickListener(this);
+        bForgitPassword.setOnClickListener(this);
     }
 
     private void incorrect() {
@@ -175,4 +204,5 @@ public class LoginActivity extends AppCompatActivity implements EasyPermissions.
             startService(serviceIntent);
         }
     }
+
 }

@@ -106,13 +106,19 @@ public class Events {
 
     public static class WifiEvent {
         public String wifiState;
+        public int wifiType;
 
-        public WifiEvent(String wifiState) {
+        public WifiEvent(String wifiState, int wifiType) {
             this.wifiState = wifiState;
+            this.wifiType = wifiType;
         }
 
         public String getWifiState() {
             return wifiState;
+        }
+
+        public int getWifiType() {
+            return wifiType;
         }
     }
 
