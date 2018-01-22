@@ -68,17 +68,17 @@
                 bootstrapbutton:bootstrapSize="lg"
                 bootstrapbutton:roundedCorners="true" />
 
-            <com.beardedhen.androidbootstrap.BootstrapButton
-                android:id="@+id/b_login_anonymously"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                android:onClick="onClick"
-                android:text="Login as anonim"
-                bootstrapbutton:bootstrapBrand="primary"
-                bootstrapbutton:bootstrapSize="lg"
-                bootstrapbutton:roundedCorners="true" />
+            <!--<com.beardedhen.androidbootstrap.BootstrapButton-->
+                <!--android:id="@+id/b_login_anonymously"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_margin="10dp"-->
+                <!--android:layout_weight="1"-->
+                <!--android:onClick="onClick"-->
+                <!--android:text="Login as anonim"-->
+                <!--bootstrapbutton:bootstrapBrand="primary"-->
+                <!--bootstrapbutton:bootstrapSize="lg"-->
+                <!--bootstrapbutton:roundedCorners="true" />-->
         </LinearLayout>
 
         <LinearLayout

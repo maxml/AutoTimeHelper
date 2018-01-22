@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +31,7 @@ import com.maxml.timer.entity.ShowFragmentListener;
 import com.maxml.timer.entity.ShowProgressListener;
 import com.maxml.timer.entity.StatisticControl;
 import com.maxml.timer.entity.User;
+import com.maxml.timer.ui.activity.LoginActivity;
 import com.maxml.timer.ui.dialog.DialogCallback;
 import com.maxml.timer.ui.dialog.DialogFactory;
 import com.maxml.timer.ui.fragments.DayCalendarFragment;
@@ -97,6 +100,11 @@ public class MainActivity extends AppCompatActivity
                     setupFragment(new HomeFragment());
                 }
                 break;
+            case R.id.i_user:
+                if (!(fragment instanceof MainUserPageFragment)) {
+                    setupFragment(new MainUserPageFragment());
+                }
+                break;
             case R.id.i_calendar_month:
                 if (!(fragment instanceof MonthCalendarFragment)) {
                     setupFragment(new MonthCalendarFragment());
@@ -110,11 +118,6 @@ public class MainActivity extends AppCompatActivity
             case R.id.i_calendar_day:
                 if (!(fragment instanceof DayCalendarFragment)) {
                     setupFragment(new DayCalendarFragment());
-                }
-                break;
-            case R.id.i_user:
-                if (!(fragment instanceof MainUserPageFragment)) {
-                    setupFragment(new MainUserPageFragment());
                 }
                 break;
             case R.id.i_setting:
@@ -248,6 +251,9 @@ public class MainActivity extends AppCompatActivity
     @Subscribe
     public void onReceiveUser(User user) {
         initDrawerHeader(user);
+        if (user.isAnonymously()) {
+            showMessageAboutAnonymously();
+        }
     }
 
     @Subscribe
@@ -295,18 +301,21 @@ public class MainActivity extends AppCompatActivity
                 toolbar,
                 R.string.drawer_open,
                 R.string.drawer_close) {
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                dbController.getCurrentUser();
-
-            }
         };
 
         drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         drawerLayout.setStatusBarBackground(R.color.primary_dark);
         drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
+
+        NavigationView nv = findViewById(R.id.navigationView);
+        View header = nv.getHeaderView(0);
+        header.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setupFragment(new MainUserPageFragment());
+            }
+        });
     }
 
     private void initDrawerHeader(User user) {
@@ -316,8 +325,8 @@ public class MainActivity extends AppCompatActivity
         NavigationView nv = findViewById(R.id.navigationView);
         View header = nv.getHeaderView(0);
 
-        TextView name =  header.findViewById(R.id.user_name);
-        ImageView icon =  header.findViewById(R.id.profile_image);
+        TextView name = header.findViewById(R.id.user_name);
+        ImageView icon = header.findViewById(R.id.profile_image);
 
         nv.setNavigationItemSelectedListener(this);
 
@@ -347,5 +356,18 @@ public class MainActivity extends AppCompatActivity
 
     private void loadImageFromCamera() {
         dbController.updateUserPhoto(ImageUtil.fPhoto.toString());
+    }
+
+    private void showMessageAboutAnonymously() {
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.container), R.string.warning_about_anonymously, Snackbar.LENGTH_LONG)
+                .setAction("Sign in", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                    }
+                });
+        View snackBarView = snackbar.getView();
+        snackBarView.setBackgroundColor(getResources().getColor(R.color.divider));
+        snackbar.show();
     }
 }

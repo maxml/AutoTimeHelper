@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Auto Time Helper</string>
-    <string name="user_name">User Name</string>
+    <string name="user_name">Anonim</string>
     <string name="drawer_open">Menu Opened</string>
     <string name="drawer_close">Menu Closed</string>
     <string name="menu_template">My page</string>
@@ -54,7 +54,7 @@
     <string name="opyion_button_delete">Delete</string>
     <string name="opyion_button_join">Join</string>
     <string name="statistic_text">Work time:</string>
-    <string name="warning_about_anonymously">You are anonymously.  Please, Sign In</string>
+    <string name="warning_about_anonymously">You are anonymously. Please, Sign In</string>
     <string name="name_calendar_fragment">Calendar</string>
     <string name="message_wrong_date">Wrong date</string>
     <string name="no_network">No network</string>
@@ -66,6 +66,7 @@
     <string name="message_two_identical_action">you have selected two identical actions</string>
     <string name="text_default_action_state">Not start any action</string>
     <string name="text_default_action_date">Not start any action</string>
+    <string name="error_input_data">Please input login and password</string>
 
     <string-array name="options_action">
         <item>Edit</item>

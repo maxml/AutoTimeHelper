@@ -29,4 +29,10 @@
         android:key="wifi"
         android:summary="Checked work wifi"
         android:title="Wifi" />
+
+    <android.support.v7.preference.Preference
+        android:key="account"
+        android:summary="Manage Account"
+        android:title="Sing In" />
+
 </PreferenceScreen>
