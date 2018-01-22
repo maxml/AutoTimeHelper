@@ -6,10 +6,12 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.maxml.timer.MainActivity;
 import com.maxml.timer.R;
@@ -30,12 +32,13 @@ import java.util.List;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class LoginActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
+public class LoginActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks, View.OnClickListener {
     protected static final int CONNECTION_OK = 1;
 
     private TextView entLogin;
     private TextView entPassword;
     private ProgressBar pbLoad;
+    private BootstrapButton bLogAnonim;
 
     private EventBus eventBus;
     private DbController dbController;
@@ -52,6 +55,8 @@ public class LoginActivity extends AppCompatActivity implements EasyPermissions.
         entLogin = findViewById(R.id.et_login);
         entPassword = findViewById(R.id.et_password);
         pbLoad = findViewById(R.id.pb_load);
+        bLogAnonim = findViewById(R.id.b_login_anonymously);
+        bLogAnonim.setOnClickListener(this);
 
         boolean isLogged = FirebaseAuth.getInstance().getCurrentUser() != null;
         if (isLogged) {
@@ -175,4 +180,5 @@ public class LoginActivity extends AppCompatActivity implements EasyPermissions.
             startService(serviceIntent);
         }
     }
+
 }
