@@ -2,6 +2,7 @@ package com.maxml.timer.controllers;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.maxml.timer.R;
 import com.maxml.timer.entity.Coordinates;
@@ -71,6 +72,8 @@ public class ActionController {
             case Constants.EVENT_CALL_INCOMING_ENDED:
             case Constants.EVENT_CALL_ONGOING_ENDED:
                 endCallEvent();
+                // set previous action status
+                setPreviousAction();
                 break;
         }
     }
@@ -79,12 +82,14 @@ public class ActionController {
         switch (event.getWifiState()) {
             case Constants.EVENT_WIFI_ENABLE:
                 if (event.getWifiType() == Constants.WIFI_TYPE_WORK) {
-                    startWifiEvent();
+                    startWorkEvent();
                 }
                 break;
             case Constants.EVENT_WIFI_DISABLE:
                 if (event.getWifiType() == Constants.WIFI_TYPE_WORK) {
-                    endWifiEvent();
+                    endWorkEvent();
+                    // set previous action status
+                    setPreviousAction();
                 }
                 break;
         }
@@ -148,16 +153,20 @@ public class ActionController {
 
     public void dontMoveTimerOff() {
         endWalkEvent();
+        // set previous action status
+        setPreviousAction();
         // todo event after dont move timer off
     }
 
-    public void autoWalkAction(){
+    public void autoWalkAction() {
         startWalkEvent();
     }
 
     public void restActionEvent() {
         if (currentAction != null && currentAction.getType().equals(Constants.EVENT_REST_ACTION)) {
             endRestEvent();
+            // set previous action status
+            setPreviousAction();
         } else {
             startRestEvent();
         }
@@ -166,6 +175,8 @@ public class ActionController {
     public void callActionEvent() {
         if (currentAction != null && currentAction.getType().equals(Constants.EVENT_CALL_ACTION)) {
             endCallEvent();
+            // set previous action status
+            setPreviousAction();
         } else {
             startCallEvent();
         }
@@ -174,6 +185,8 @@ public class ActionController {
     public void workActionEvent() {
         if (currentAction != null && currentAction.getType().equals(Constants.EVENT_WORK_ACTION)) {
             endWorkEvent();
+            // set previous action status
+            setPreviousAction();
         } else {
             startWorkEvent();
         }
@@ -182,12 +195,15 @@ public class ActionController {
     public void walkActionEvent() {
         if (currentAction != null && currentAction.getType().equals(Constants.EVENT_WALK_ACTION)) {
             endWalkEvent();
+            // set previous action status
+            setPreviousAction();
         } else {
             startWalkEvent();
         }
     }
 
     private void startRestEvent() {
+        Log.d(Constants.TAG, "ActionController: startRestEvent()");
         // create action entity
         Action rest = new Action();
         rest.setType(Constants.EVENT_REST_ACTION);
@@ -200,6 +216,7 @@ public class ActionController {
         if (currentAction != null) {
             // this Action break previous Action
             isBreak = true;
+            stopCurrentAction();
         }
         backStack.add(new BackStackEntity(rest, isBreak));
         // mark as current
@@ -209,16 +226,16 @@ public class ActionController {
     }
 
     private void endRestEvent() {
+        Log.d(Constants.TAG, "ActionController: endRestEvent()");
         Action rest = currentAction;
         rest.setEndDate(new Date());
         dbController.createAction(rest);
         // clear temp entity
         currentAction = null;
-        // set previous action status
-        setPreviousAction();
     }
 
     private void startWorkEvent() {
+        Log.d(Constants.TAG, "ActionController: startWorkEvent()");
         // create action entity
         Action work = new Action();
         work.setType(Constants.EVENT_WORK_ACTION);
@@ -231,6 +248,7 @@ public class ActionController {
         if (currentAction != null) {
             // this Action break previous Action
             isBreak = true;
+            stopCurrentAction();
         }
         backStack.add(new BackStackEntity(work, isBreak));
         // mark as current
@@ -240,16 +258,16 @@ public class ActionController {
     }
 
     private void endWorkEvent() {
+        Log.d(Constants.TAG, "ActionController: endWorkEvent()");
         Action work = currentAction;
         work.setEndDate(new Date());
         dbController.createAction(work);
         // clear temp entity
         currentAction = null;
-        // set previous action status
-        setPreviousAction();
     }
 
     private void startCallEvent() {
+        Log.d(Constants.TAG, "ActionController: startCallEvent()");
         // create action entity
         Action call = new Action();
         call.setType(Constants.EVENT_CALL_ACTION);
@@ -262,6 +280,7 @@ public class ActionController {
         if (currentAction != null) {
             // this Action break previous Action
             isBreak = true;
+            stopCurrentAction();
         }
         backStack.add(new BackStackEntity(call, isBreak));
         // mark as current
@@ -271,16 +290,16 @@ public class ActionController {
     }
 
     private void endCallEvent() {
+        Log.d(Constants.TAG, "ActionController: endCallEvent()");
         Action call = currentAction;
         call.setEndDate(new Date());
         dbController.createAction(call);
         // clear temp entity
         currentAction = null;
-        // set previous action status
-        setPreviousAction();
     }
 
     private void startWalkEvent() {
+        Log.d(Constants.TAG, "ActionController: startWalkEvent()");
         // create action entity
         Action walk = new Action();
         walk.setType(Constants.EVENT_WALK_ACTION);
@@ -293,6 +312,7 @@ public class ActionController {
         if (currentAction != null) {
             // this Action break previous Action
             isBreak = true;
+            stopCurrentAction();
         }
         backStack.add(new BackStackEntity(walk, isBreak));
         // mark as current
@@ -304,20 +324,20 @@ public class ActionController {
     }
 
     private void endWalkEvent() {
+        Log.d(Constants.TAG, "ActionController: endWalkEvent()");
         Action walk = currentAction;
         walk.setEndDate(new Date());
         dbController.createWalkAction(walk);
         // clear temp entity
         currentAction = null;
-        // set previous action status
-        setPreviousAction();
     }
 
     private void setPreviousAction() {
         if (backStack.size() > 1) {
             // if last Action break previous continue previous action
-            BackStackEntity entity = backStack.get(backStack.size()-1);
-            if (entity.isBreak()){
+            BackStackEntity entity = backStack.get(backStack.size() - 1);
+            if (entity.isBreak()) {
+                Log.d(Constants.TAG, "ActionController: setPreviousAction(), start stopped Action");
                 continuePreviousAction();
                 return;
             }
@@ -325,9 +345,31 @@ public class ActionController {
         updateStatus(context.getString(R.string.text_default_action_state), null);
     }
 
+    private void stopCurrentAction(){
+        Log.d(Constants.TAG, "ActionController: stopCurrentAction()");
+        if (currentAction == null){
+            return;
+        }
+        String type = currentAction.getType();
+        switch (type) {
+            case Constants.EVENT_REST_ACTION:
+                endRestEvent();
+                break;
+            case Constants.EVENT_WALK_ACTION:
+                endWalkEvent();
+                break;
+            case Constants.EVENT_WORK_ACTION:
+                endWorkEvent();
+                break;
+            case Constants.EVENT_CALL_ACTION:
+                endCallEvent();
+                break;
+        }
+    }
+
     private void continuePreviousAction() {
-        String type = backStack.get(backStack.size()-2).getType();
-        switch (type){
+        String type = backStack.get(backStack.size() - 2).getType();
+        switch (type) {
             case Constants.EVENT_REST_ACTION:
                 startRestEvent();
                 break;
@@ -345,7 +387,7 @@ public class ActionController {
 
     private void updateStatus(String status, Date time) {
         Events.ActionStatus statusEvent = new Events.ActionStatus(status, time);
-        entityEventBus.post(statusEvent);
+        EventBus.getDefault().post(statusEvent);
         updateWidgetStatus(status);
         NotificationHelper.updateNotification(context, status);
     }

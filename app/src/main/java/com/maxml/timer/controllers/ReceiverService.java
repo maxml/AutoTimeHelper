@@ -251,7 +251,9 @@ public class ReceiverService extends Service implements LocationListener {
 
     private void stopAutoStartWalkAction() {
         Log.d(Constants.LOG, "Autostart stopAutoStartWalkAction()");
-        locationManager.removeUpdates(autoWalkActionListener);
+        if (locationManager != null) {
+            locationManager.removeUpdates(autoWalkActionListener);
+        }
         autoWalkActionListener = null;
         isAutoWalkActionActivate = false;
     }
@@ -278,10 +280,10 @@ public class ReceiverService extends Service implements LocationListener {
         autoWalkActionListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                if (isAutoWalkActionActivate){
+                if (isAutoWalkActionActivate) {
                     Log.d(Constants.LOG, "Auto location is start WalkAction");
                     actionController.autoWalkAction();
-                    }else {
+                } else {
                     Log.d(Constants.LOG, "Autostart WalkAction ready");
                     isAutoWalkActionActivate = true;
                 }
@@ -334,7 +336,7 @@ public class ReceiverService extends Service implements LocationListener {
                     actionController.dontMoveTimerOff();
                     stopTimer();
                 } else {
-                    handler.postDelayed(this, 1000);
+                    handler.postDelayed(this, 60000);
                 }
             }
         });
