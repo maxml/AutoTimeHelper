@@ -49,6 +49,7 @@ public class Constants {
     public static final String EVENT_WIFI_DISABLE = "eventWifiDisable";
 
     public static final String KEY_SETTING_WIFI = "wifi";
+    public static final String KEY_MANAGE_ACCOUNT = "account";
 
     public static final String EVENT_CALL_ACTION = "call";
     public static final String EVENT_CALL_MISSING = "callMissing";

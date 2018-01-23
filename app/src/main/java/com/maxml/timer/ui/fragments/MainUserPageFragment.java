@@ -141,8 +141,6 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
             updateUI(user);
         } else {
             disableAccessToUI();
-
-            Toast.makeText(getContext(), R.string.warning_about_anonymously, Toast.LENGTH_LONG).show();
         }
     }
 

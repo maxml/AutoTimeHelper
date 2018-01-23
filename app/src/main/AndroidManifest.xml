@@ -19,7 +19,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <!--<uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />-->
+    <!-- <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" /> -->
+
 
     <!-- IMPORTANT: Change "com.parse.starter.permission.C2D_MESSAGE" in the lines below -->
     <!-- to match your app's package name + ".permission.C2D_MESSAGE". -->
@@ -38,7 +39,6 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -46,13 +46,16 @@
         <activity
             android:name=".ui.activity.LoginActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme" />
+
+        <activity android:name=".ui.activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".ui.activity.CreateUserActivity"
             android:label="@string/app_name"
@@ -81,11 +84,10 @@
         <receiver android:name=".receivers.WifiReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-                <action android:name="android.net.wifi.STATE_CHANGE"/>
-                <!--<action android:name="android.net.wifi.SCAN_RESULTS"/>-->
+                <action android:name="android.net.wifi.STATE_CHANGE" />
+                <!-- <action android:name="android.net.wifi.SCAN_RESULTS"/> -->
             </intent-filter>
         </receiver>
-
         <receiver
             android:name=".receivers.CallReceiver"
             android:enabled="true">
