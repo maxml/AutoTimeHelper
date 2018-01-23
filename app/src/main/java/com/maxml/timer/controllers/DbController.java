@@ -89,12 +89,12 @@ public class DbController {
         tableDAO.getTableByData(startDate, endDate);
     }
 
-    public void getActionFromDb(String id) {
-        actionDAO.getActionFromDb(id);
+    public void getActionFromDb(String dayCount, String id) {
+        actionDAO.getActionFromDb(dayCount, id);
     }
 
-    public void removeActionInDb(String id) {
-        actionDAO.removeAction(id);
+    public void removeActionInDb(String dayCount, String id) {
+        actionDAO.removeAction(dayCount, id);
     }
 
     public void sendTableFromDb(Table table) {

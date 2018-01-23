@@ -46,8 +46,7 @@ public class TableDAO {
             return;
         }
 
-        actionRef.orderByChild(Constants.COLUMN_DAY_COUNT)
-                .equalTo(dayCount)
+        actionRef.child(String.valueOf(dayCount))
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -96,10 +95,9 @@ public class TableDAO {
 
         final List<Table> list = new ArrayList<>();
 
-        for (long i = startDayCount; i <= endDayCount; i++) {
+        for (long i = endDayCount; i > startDayCount; i--) {
             final long finalI = i;
-            actionRef.orderByChild(Constants.COLUMN_DAY_COUNT)
-                    .equalTo(i)
+            actionRef.child(String.valueOf(i))
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {

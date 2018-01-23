@@ -33,7 +33,7 @@ public class ActionUtils {
             String description = (action.getDescription() == null) ? "" : action.getDescription();
 
             ActionWeek actionWeek = new ActionWeek(action.getId(), action.getType() + "\n" + description,
-                    action.getType(), startData, endData);
+                    action.getType(), startData, endData, action.getDayCount());
 
             actionWeek.setColor(SharedPreferencesUtils.getColor(context, actionWeek.getType()));
 
@@ -45,7 +45,7 @@ public class ActionUtils {
     public static Action findActionById(String id, List<Action> actions) {
         for (Action action :
                 actions) {
-            if (action.getId() == id) {
+            if (action.getId().equalsIgnoreCase(id)) {
                 return action;
             }
         }
@@ -67,22 +67,4 @@ public class ActionUtils {
             return firstAction;
         }
     }
-
-//        if (firstAction.getStartDate().getTime() < secondAction.getStartDate().getTime()) {
-//            Date endDate = new Date(firstAction.getEndDate().getTime() +
-//                    secondAction.getEndDate().getTime() - secondAction.getStartDate().getTime());
-//
-//            controller.removeActionInDb(secondAction.getId());
-//            firstAction.setEndDate(endDate);
-//            return firstAction;
-//        } else {
-//            Date endDate = new Date(secondAction.getEndDate().getTime() +
-//                    firstAction.getEndDate().getTime() - firstAction.getStartDate().getTime());
-//            secondAction.setEndDate(endDate);
-//
-//            controller.removeActionInDb(firstAction.getId());
-//            return secondAction;
-//        }
-
-
 }

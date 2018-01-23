@@ -92,7 +92,7 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
 
     private void loadAction() {
         if (getArguments() != null) {
-            dbController.getActionFromDb(getArguments().getString(Constants.EXTRA_ID_ACTION));
+            dbController.getActionFromDb(getArguments().getString(Constants.EXTRA_ID_DAY_COUNT), getArguments().getString(Constants.EXTRA_ID_ACTION));
             progressListener.showProgressBar();
         }
     }

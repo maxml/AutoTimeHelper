@@ -145,7 +145,7 @@ public class DayCalendarFragment extends Fragment implements CalendarDayAdapter.
 
             fragmentListener.showFragment(fragment);
         } else if (optionType == OptionButtons.DELETE) {
-            controller.removeActionInDb(item.getId());
+            controller.removeActionInDb(String.valueOf(item.getDayCount()), item.getId());
 
             progressListener.showProgressBar();
         } else if (optionType == OptionButtons.JOIN) {
@@ -163,7 +163,7 @@ public class DayCalendarFragment extends Fragment implements CalendarDayAdapter.
             if (action != lastAction) {
                 Action newAction = ActionUtils.joinActions(lastAction, action);
 
-                controller.removeActionInDb(action.getId());
+                controller.removeActionInDb(String.valueOf(action.getDayCount()), action.getId());
                 controller.updateActionInDb(newAction);
                 progressListener.showProgressBar();
             } else {

@@ -28,7 +28,8 @@ public class ActionDAO {
         this.dbController = dbController;
         User user = UserDAO.getCurrentUser();
         if (actionRef == null && user != null) {
-            actionRef = FirebaseDatabase.getInstance().getReference()
+            actionRef = FirebaseDatabase.getInstance()
+                    .getReference()
                     .child(Constants.USER_DATABASE_PATH)
                     .child(user.getId());
         }
@@ -40,7 +41,7 @@ public class ActionDAO {
         String dbId = actionRef.push().getKey();
         action.setId(dbId);
 
-        actionRef.child(dbId).setValue(action).addOnCompleteListener(new OnCompleteListener<Void>() {
+        actionRef.child(String.valueOf(action.getDayCount())).child(dbId).setValue(action).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
@@ -58,7 +59,7 @@ public class ActionDAO {
         final String dbId = actionRef.push().getKey();
         walk.setId(dbId);
 
-        actionRef.child(dbId).setValue(walk).addOnCompleteListener(new OnCompleteListener<Void>() {
+        actionRef.child(String.valueOf(walk.getDayCount())).child(dbId).setValue(walk).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
@@ -70,8 +71,8 @@ public class ActionDAO {
         });
     }
 
-    public void getActionFromDb(String id) {
-        actionRef.child(id)
+    public void getActionFromDb(String countDAy, String id) {
+        actionRef.child(countDAy).child(id)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -93,7 +94,7 @@ public class ActionDAO {
         map.put("type", action.getType());
         map.put("startDate", action.getStartDate());
         map.put("endDate", action.getEndDate());
-        actionRef.child(action.getId())
+        actionRef.child(String.valueOf(action.getDayCount())).child(action.getId())
                 .updateChildren(map)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -107,8 +108,8 @@ public class ActionDAO {
                 });
     }
 
-    public void removeAction(String id) {
-        actionRef.child(id).removeValue(
+    public void removeAction(String dayCount, String id) {
+        actionRef.child(dayCount).child(id).removeValue(
                 new DatabaseReference.CompletionListener() {
                     @Override
                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
