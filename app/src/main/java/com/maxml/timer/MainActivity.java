@@ -34,7 +34,7 @@ import com.maxml.timer.entity.User;
 import com.maxml.timer.ui.activity.LoginActivity;
 import com.maxml.timer.ui.dialog.DialogCallback;
 import com.maxml.timer.ui.dialog.DialogFactory;
-import com.maxml.timer.ui.fragments.DayCalendarFragment;
+import com.maxml.timer.ui.fragments.DayCalendarFragmentNew;
 import com.maxml.timer.ui.fragments.HomeFragment;
 import com.maxml.timer.ui.fragments.MainUserPageFragment;
 import com.maxml.timer.ui.fragments.MonthCalendarFragment;
@@ -116,8 +116,8 @@ public class MainActivity extends AppCompatActivity
                 }
                 break;
             case R.id.i_calendar_day:
-                if (!(fragment instanceof DayCalendarFragment)) {
-                    setupFragment(new DayCalendarFragment());
+                if (!(fragment instanceof DayCalendarFragmentNew)) {
+                    setupFragment(new DayCalendarFragmentNew());
                 }
                 break;
             case R.id.i_setting:

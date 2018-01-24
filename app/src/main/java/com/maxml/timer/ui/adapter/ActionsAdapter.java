@@ -1,5 +1,6 @@
 package com.maxml.timer.ui.adapter;
 
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +25,6 @@ public class ActionsAdapter extends RecyclerView.Adapter<ActionsAdapter.ViewHold
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_action, parent);
-
         return new ViewHolder(rootView);
     }
 
@@ -35,7 +35,23 @@ public class ActionsAdapter extends RecyclerView.Adapter<ActionsAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.bind(actionList.get(position));
+        Action action = actionList.get(position);
+        holder.tvType.setText(action.getType());
+        switch (action.getType()){
+            case Constants.EVENT_CALL_ACTION:
+                holder.cardView.setBackgroundResource(R.drawable.button_call);
+                break;
+            case Constants.EVENT_REST_ACTION:
+                holder.cardView.setBackgroundResource(R.drawable.button_rest);
+                break;
+            case Constants.EVENT_WALK_ACTION:
+                holder.cardView.setBackgroundResource(R.drawable.button_walk);
+                break;
+            case Constants.EVENT_WORK_ACTION:
+                holder.cardView.setBackgroundResource(R.drawable.button_work);
+                break;
+        }
+        holder.tvDuration.setText(Utils.getTimeSubscribe(action.getStartDate(), action.getEndDate()));
     }
 
     @Override
@@ -45,34 +61,14 @@ public class ActionsAdapter extends RecyclerView.Adapter<ActionsAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView tvType;
-        private TextView tvDescription;
-        private TextView tvTime;
+        private TextView tvDuration;
+        private CardView cardView;
 
         public ViewHolder(View itemView) {
             super(itemView);
-
-            tvType = (TextView) itemView.findViewById(R.id.tv_type);
-            tvDescription = (TextView) itemView.findViewById(R.id.tv_title);
-            tvTime = (TextView) itemView.findViewById(R.id.tv_time);
-        }
-
-        public void bind(Action action) {
-            bindTvType(action.getType());
-            tvDescription.setText(action.getDescription());
-            tvTime.setText(Utils.getTimeSubscribe(action.getStartDate(), action.getEndDate()));
-        }
-
-        public void bindTvType(String type) {
-            tvType.setText(type);
-            if (type.equalsIgnoreCase(Constants.EVENT_CALL_ACTION)) {
-                tvType.setBackgroundResource(R.drawable.button_call);
-            } else if (type.equalsIgnoreCase(Constants.EVENT_REST_ACTION)) {
-                tvType.setBackgroundResource(R.drawable.button_rest);
-            } else if (type.equalsIgnoreCase(Constants.EVENT_WALK_ACTION)) {
-                tvType.setBackgroundResource(R.drawable.button_walk);
-            } else if (type.equalsIgnoreCase(Constants.EVENT_WORK_ACTION)) {
-                tvType.setBackgroundResource(R.drawable.button_work);
-            }
+            tvType = itemView.findViewById(R.id.action);
+            tvDuration = itemView.findViewById(R.id.duration);
+            cardView = itemView.findViewById(R.id.cardVied);
         }
     }
 }

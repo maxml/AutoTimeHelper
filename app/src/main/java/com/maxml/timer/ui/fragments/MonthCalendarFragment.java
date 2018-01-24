@@ -70,7 +70,7 @@ public class MonthCalendarFragment extends Fragment {
     }
 
     private void showDayFragment(Calendar calendar) {
-        DayCalendarFragment dayCalendarFragment = new DayCalendarFragment();
+        DayCalendarFragmentNew dayCalendarFragment = new DayCalendarFragmentNew();
         Bundle args = new Bundle();
         args.putLong(Constants.EXTRA_TIME_ACTION, calendar.getTimeInMillis());
         dayCalendarFragment.setArguments(args);
