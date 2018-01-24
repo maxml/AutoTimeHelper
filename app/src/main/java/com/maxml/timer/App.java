@@ -2,7 +2,9 @@ package com.maxml.timer;
 
 import android.support.multidex.MultiDexApplication;
 
+import com.google.firebase.database.FirebaseDatabase;
 import com.maxml.timer.database.DBFactory;
+import com.maxml.timer.util.NetworkUtil;
 
 public class App extends MultiDexApplication {
 
@@ -12,6 +14,7 @@ public class App extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         DBFactory.setHelper(this);
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
 //		WifiReceiver networkReceiver = new WifiReceiver();
 //		networkReceiver.onReceive(this, new Intent());
@@ -28,5 +31,4 @@ public class App extends MultiDexApplication {
         DBFactory.releaseHelper();
         super.onTerminate();
     }
-
 }

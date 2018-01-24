@@ -116,7 +116,7 @@ public class UserDAO {
         User user = new User();
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser == null) {
-            return null;
+            return new User();
         }
         String objectId = firebaseUser.getUid();
         String username = firebaseUser.getDisplayName();

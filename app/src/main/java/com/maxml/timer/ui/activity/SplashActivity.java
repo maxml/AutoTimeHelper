@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.maxml.timer.MainActivity;
@@ -11,6 +12,7 @@ import com.maxml.timer.R;
 import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.controllers.ReceiverService;
 import com.maxml.timer.util.Constants;
+import com.maxml.timer.util.NetworkUtil;
 import com.maxml.timer.util.Utils;
 
 import org.greenrobot.eventbus.EventBus;

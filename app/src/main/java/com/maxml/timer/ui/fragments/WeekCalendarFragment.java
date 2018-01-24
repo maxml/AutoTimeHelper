@@ -1,6 +1,5 @@
 package com.maxml.timer.ui.fragments;
 
-
 import android.content.Context;
 import android.graphics.RectF;
 import android.os.Bundle;
@@ -24,14 +23,14 @@ import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
 import com.maxml.timer.R;
 import com.maxml.timer.controllers.DbController;
-import com.maxml.timer.ui.dialog.CreateActionDialog;
-import com.maxml.timer.ui.dialog.OptionDialog;
 import com.maxml.timer.entity.Action;
 import com.maxml.timer.entity.ActionWeek;
 import com.maxml.timer.entity.Events;
 import com.maxml.timer.entity.ShowFragmentListener;
 import com.maxml.timer.entity.ShowProgressListener;
 import com.maxml.timer.entity.Table;
+import com.maxml.timer.ui.dialog.CreateActionDialog;
+import com.maxml.timer.ui.dialog.OptionDialog;
 import com.maxml.timer.util.ActionUtils;
 import com.maxml.timer.util.Constants;
 
@@ -116,6 +115,10 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
     @Override
     public void onActionCreated(Action action) {
         controller.createAction(action);
+        List<Action> list = new ArrayList<>();
+        list.add(action);
+        this.list.addAll(ActionUtils.convertActionsToWeekViewEvents(list, getContext()));
+        weekView.notifyDataSetChanged();
 
         progressListener.showProgressBar();
     }
@@ -128,7 +131,6 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
 
     @Override
     public void onEventLongPress(WeekViewEvent event, RectF eventRect) {
-
     }
 
     @Override
@@ -165,7 +167,7 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
                 fragmentListener.showFragment(fragment);
                 break;
             case Constants.ID_BUTTON_DELETE:
-                controller.removeActionInDb(((ActionWeek) lastEvent).getActionId());
+                controller.removeActionInDb(String.valueOf(((ActionWeek) lastEvent).getDayCount()), ((ActionWeek) lastEvent).getActionId());
 
                 progressListener.showProgressBar();
                 break;
@@ -231,6 +233,22 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
     }
 
     @Subscribe
+    public void receiveTableFromDb(Table table) {
+        actions = new ArrayList<>();
+
+        actions.addAll(table.getWorkList());
+        actions.addAll(table.getCallList());
+        actions.addAll(table.getRestList());
+        actions.addAll(table.getWalkList());
+
+        list = ActionUtils.convertActionsToWeekViewEvents(actions, getContext());
+
+        updateUI();
+
+        progressListener.hideProgressBar();
+    }
+
+    @Subscribe
     public void onDatabaseEvent(Events.DbResult event) {
         switch (event.getResultStatus()) {
             case Constants.EVENT_DB_RESULT_OK:
@@ -247,7 +265,7 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
             Action action = ActionUtils.joinActions(ActionUtils.findActionById(((ActionWeek) lastEvent).getActionId(), actions)
                     , ActionUtils.findActionById(((ActionWeek) event).getActionId(), actions));
 
-            controller.removeActionInDb(((ActionWeek) event).getActionId());
+            controller.removeActionInDb(String.valueOf(((ActionWeek) event).getDayCount()), ((ActionWeek) event).getActionId());
             controller.updateActionInDb(action);
             progressListener.showProgressBar();
         } else {
@@ -266,6 +284,7 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
     private void getActionsFromDb() {
         Date startDate = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24 * Constants.WEEK_COUNT_DAY);
         Date endDate = new Date(System.currentTimeMillis());
+//        controller.getTableFromDb(endDate);
         controller.getTableFromDb(startDate, endDate);
     }
 

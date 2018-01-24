@@ -85,6 +85,7 @@ public class Constants {
     public static final int WAY_DONT_MOVE_TIME = 5;
     public static final String EXTRA_ID_PATH = "extraIdPath";
     public static final String EXTRA_ID_ACTION = "extraIdAction";
+    public static final String EXTRA_ID_DAY_COUNT = "extraIdDayCount";
     public static final String EXTRA_TIME_ACTION = "extraTimeAction";
     public static final String EXTRA_LIST_ID_PATH = "extraListIdPath";
     public static final String LOG = "appLog";
