@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -37,8 +38,11 @@ import org.greenrobot.eventbus.Subscribe;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+
+import static android.support.v7.widget.helper.ItemTouchHelper.ACTION_STATE_IDLE;
 
 public class DayCalendarFragmentNew extends Fragment implements CalendarDayAdapterNew.OnClickListener {
 
@@ -47,9 +51,14 @@ public class DayCalendarFragmentNew extends Fragment implements CalendarDayAdapt
 
     private boolean isJoined;
 
+    private int from = 0;
+    private int to = 0;
+
+
     private List<OptionButtons> options = new ArrayList<>();
     private List<Action> list = new ArrayList<>();
     private CalendarDayAdapterNew adapter;
+    private CalendarDayTimeAdapter timeAdapter;
     private DbController controller;
     private EventBus eventBus;
     private Action lastAction;
@@ -248,28 +257,32 @@ public class DayCalendarFragmentNew extends Fragment implements CalendarDayAdapt
 
     private void initRecyclerView() {
         //todo
+        List<Date> dates = new ArrayList<>();
         list = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             Action action = new Action();
             action.setType("item - " + i);
-            action.setStartDate(new Date(20000000));
-            action.setStartDate(new Date(20500000));
+            action.setStartDate(new Date(20000000 + i * 200000));
+            action.setEndDate(new Date(20000000 + i * i * 200000));
             list.add(action);
+            dates.add(action.getStartDate());
         }
 
         recyclerViewTime.setLayoutManager(new LinearLayoutManager(getContext()));
-        CalendarDayTimeAdapter timeAdapter = new CalendarDayTimeAdapter(getContext(), list);
+        timeAdapter = new CalendarDayTimeAdapter(getContext(), dates);
         recyclerViewTime.setAdapter(timeAdapter);
-//        recyclerViewTime.setNestedScrollingEnabled(false);
-//        recyclerViewTime.setHasFixedSize(true);
 
         recyclerViewActions.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
         adapter = new CalendarDayAdapterNew(getContext(), list, options, this);
         recyclerViewActions.setAdapter(adapter);
-//        recyclerViewActions.setNestedScrollingEnabled(false);
-//        recyclerViewActions.setHasFixedSize(true);
 
-        //rcv and leftrcv are two recyclerviews
+        initRecyclerViewListeners();
+
+    }
+
+    private void initRecyclerViewListeners() {
+
+        // synchronize recycler view scrolling
         RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -290,8 +303,63 @@ public class DayCalendarFragmentNew extends Fragment implements CalendarDayAdapt
             }
         };
 
+        ItemTouchHelper.Callback itemTouch = new ItemTouchHelper.Callback() {
+            @Override
+            public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
+//                super.onSelectedChanged(viewHolder, actionState);
+                if (actionState == ACTION_STATE_IDLE) {
+//                    timeAdapter.onItemMove(from, to);
+                }
+            }
+
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+
+//                // get the viewHolder's and target's positions in your adapter data, swap them
+//                Collections.swap(list, viewHolder.getAdapterPosition(), target.getAdapterPosition());
+                final int fromPosition = viewHolder.getAdapterPosition();
+                final int toPosition = target.getAdapterPosition();
+                from = fromPosition;
+                to = toPosition;
+                // and notify the adapter that its dataset has changed
+                adapter.onItemMove(fromPosition, toPosition);
+                timeAdapter.onItemMove(fromPosition, toPosition);
+
+//                adapter.notifyItemMoved(fromPosition, toPosition);
+//                timeAdapter.notifyItemMoved(fromPosition, toPosition);
+
+////                if (fromPosition < toPosition) {
+////                    timeAdapter.notifyItemMoved(fromPosition + 1, toPosition - 1);
+////                }
+////                if (fromPosition > toPosition) {
+////                    timeAdapter.notifyItemMoved(fromPosition - 1, toPosition + 1);
+////                }
+
+////                adapter.swapData(list);
+////                timeAdapter.swapData(list);
+
+////                adapter.notifyDataSetChanged();
+////                timeAdapter.notifyDataSetChanged();
+                return true;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                //TODO
+            }
+
+            //defines the enabled move directions in each state (idle, swiping, dragging).
+            @Override
+            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                return makeFlag(ItemTouchHelper.ACTION_STATE_DRAG,
+                        ItemTouchHelper.DOWN | ItemTouchHelper.UP | ItemTouchHelper.START | ItemTouchHelper.END);
+            }
+        };
+        ItemTouchHelper touchHelper = new ItemTouchHelper(itemTouch);
+        touchHelper.attachToRecyclerView(recyclerViewActions);
+
         recyclerViewTime.addOnScrollListener(scrollListener);
         recyclerViewActions.addOnScrollListener(scrollListener);
+
     }
 
     private void initOptionButtons() {

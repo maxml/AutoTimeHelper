@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.maxml.timer.R;
 import com.maxml.timer.entity.Action;
 import com.maxml.timer.util.OptionButtons;
+import com.maxml.timer.util.Utils;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -40,7 +41,7 @@ public class CalendarDayAdapterNew extends RecyclerView.Adapter<CalendarDayAdapt
         this.list = entityList;
         this.context = context;
         this.optionList = optionList;
-        Collections.sort(list);
+//        Collections.sort(list);
     }
 
     @Override
@@ -71,13 +72,8 @@ public class CalendarDayAdapterNew extends RecyclerView.Adapter<CalendarDayAdapt
         // tvType
         holder.tvType.setText(action.getType());
         // tvTime
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(action.getStartDate());
-        NumberFormat f = new DecimalFormat("00");
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        int min = calendar.get(Calendar.MINUTE);
-        String time = f.format(hour) + ":" + f.format(min);
-        holder.tvTime.setText(time);
+//        holder.tvTime.setText(Utils.parseToTime(action.getStartDate().getTime()-action.getEndDate().getTime()));
+        holder.tvTime.setText(Utils.parseToTime(action.getStartDate().getTime()));
 //        // tvDescription
 //        if (action.getDescription() != null && !action.getDescription().equals("")) {
 //            holder.tvTime.setText(action.getDescription());
@@ -118,13 +114,27 @@ public class CalendarDayAdapterNew extends RecyclerView.Adapter<CalendarDayAdapt
 
     public void swapData(List<Action> actions) {
         list = actions;
-        Collections.sort(list);
+//        Collections.sort(list);
         notifyDataSetChanged();
     }
 
     public void resetList() {
         mExpandedPosition = -1;
         notifyDataSetChanged();
+    }
+
+    public boolean onItemMove(int fromPosition, int toPosition) {
+        if (fromPosition < toPosition) {
+            for (int i = fromPosition; i < toPosition; i++) {
+                Collections.swap(list, i, i + 1);
+            }
+        } else {
+            for (int i = fromPosition; i > toPosition; i--) {
+                Collections.swap(list, i, i - 1);
+            }
+        }
+        notifyItemMoved(fromPosition, toPosition);
+        return true;
     }
 
     public class DayViewHolder extends RecyclerView.ViewHolder {

@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <android.support.v7.preference.PreferenceScreen
         android:key="colors"
-        android:title="Color actions"
+        android:title="Color dates"
         android:summary="Change color action in calendar">
 
         <com.kizitonwose.colorpreferencecompat.ColorPreferenceCompat

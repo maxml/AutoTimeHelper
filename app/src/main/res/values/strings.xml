@@ -58,12 +58,12 @@
     <string name="name_calendar_fragment">Calendar</string>
     <string name="message_wrong_date">Wrong date</string>
     <string name="no_network">No network</string>
-    <string name="toast_deny_location_permission">You deny location permission, your wolk actions are not trecking now</string>
-    <string name="message_deny_location_tracker">Lockation tracker turn off, your walk actions aren\'t tracking now</string>
+    <string name="toast_deny_location_permission">You deny location permission, your wolk dates are not trecking now</string>
+    <string name="message_deny_location_tracker">Lockation tracker turn off, your walk dates aren\'t tracking now</string>
     <string name="action_not_exist">Action is not exist</string>
     <string name="dialog_message_exit">Are you sure you want to exit?</string>
     <string name="dialog_title_exit">Really Exit?</string>
-    <string name="message_two_identical_action">you have selected two identical actions</string>
+    <string name="message_two_identical_action">you have selected two identical dates</string>
     <string name="text_default_action_state">Not start any action</string>
     <string name="text_default_action_date">Not start any action</string>
     <string name="error_input_data">Please input login and password</string>

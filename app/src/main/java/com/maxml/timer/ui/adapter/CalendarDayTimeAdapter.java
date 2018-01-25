@@ -1,11 +1,8 @@
 package com.maxml.timer.ui.adapter;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,21 +10,18 @@ import android.widget.TextView;
 
 import com.maxml.timer.R;
 import com.maxml.timer.entity.Action;
-import com.maxml.timer.util.OptionButtons;
 import com.maxml.timer.util.Utils;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 public class CalendarDayTimeAdapter extends RecyclerView.Adapter<CalendarDayTimeAdapter.DayViewHolder> {
-    private List<Action> actions;
+    private List<Date> dates;
     private Context context;
 
-    public CalendarDayTimeAdapter(Context context, List<Action> actions) {
-        this.actions = actions;
+    public CalendarDayTimeAdapter(Context context, List<Date> dates) {
+        this.dates = dates;
         this.context = context;
     }
 
@@ -39,10 +33,10 @@ public class CalendarDayTimeAdapter extends RecyclerView.Adapter<CalendarDayTime
 
     @Override
     public void onBindViewHolder(final DayViewHolder holder, final int position) {
-        Action action = actions.get(holder.getAdapterPosition());
+        Date date = dates.get(holder.getAdapterPosition());
         int itemPosition = holder.getAdapterPosition() + 1;
-        holder.tvTime.setText(Utils.parseToTime(action.getStartDate().getTime()));
-        if (itemPosition == actions.size()) {
+        holder.tvTime.setText(Utils.parseToTime(date.getTime()));
+        if (itemPosition == dates.size()) {
             setMargin(90 + 60, holder.cardView);
         } else {
             if (itemPosition % 3 == 0) {
@@ -55,14 +49,29 @@ public class CalendarDayTimeAdapter extends RecyclerView.Adapter<CalendarDayTime
 
     @Override
     public int getItemCount() {
-        return actions.size();
+        return dates.size();
     }
 
-    public class DayViewHolder extends RecyclerView.ViewHolder {
+    public boolean onItemMove(int fromPosition, int toPosition) {
+        if (fromPosition < toPosition) {
+            for (int i = fromPosition; i < toPosition; i++) {
+                Collections.swap(dates, i, i + 1);
+            }
+        } else {
+            for (int i = fromPosition; i > toPosition; i--) {
+                Collections.swap(dates, i, i - 1);
+            }
+        }
+//        notifyItemMoved(fromPosition, toPosition);
+        notifyDataSetChanged();
+        return true;
+    }
+
+    class DayViewHolder extends RecyclerView.ViewHolder {
         private TextView tvTime;
         private CardView cardView;
 
-        public DayViewHolder(View itemView) {
+        DayViewHolder(View itemView) {
             super(itemView);
             tvTime = itemView.findViewById(R.id.duration);
             cardView = itemView.findViewById(R.id.cardVied);
