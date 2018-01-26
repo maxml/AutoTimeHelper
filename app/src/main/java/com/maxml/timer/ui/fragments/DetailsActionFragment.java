@@ -48,6 +48,7 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
 
     private EventBus eventBus;
     private DbController dbController;
+    private Action oldAction;
     private Action action;
 
     private ShowProgressListener progressListener;
@@ -92,7 +93,7 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
 
     private void loadAction() {
         if (getArguments() != null) {
-            dbController.getActionFromDb(getArguments().getString(Constants.EXTRA_ID_DAY_COUNT), getArguments().getString(Constants.EXTRA_ID_ACTION));
+            dbController.getActionFromDb(getArguments().getString(Constants.EXTRA_ID_ACTION));
             progressListener.showProgressBar();
         }
     }
@@ -149,7 +150,9 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
     }
 
     @Subscribe
-    public void receiveActionFromDb(Action action) {
+    public void receiveActionFromDb(final Action action) {
+        this.oldAction = new Action(action.getId(), action.getType(), action.getDayCount(), action.getDayCount_type(),
+                action.getStartDate(), action.getEndDate(), action.getDescription(), action.isDeleted());
         this.action = action;
         updateUI(action);
         initUIbShow(getView());
@@ -224,7 +227,7 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
         }
         action.setDescription(etDescription.getText().toString());
 
-        dbController.updateActionInDb(action);
+        dbController.updateActionInDb(action, oldAction.getDescription());
     }
 
     private void registerEventBus() {

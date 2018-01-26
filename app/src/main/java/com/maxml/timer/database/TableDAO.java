@@ -46,8 +46,10 @@ public class TableDAO {
             return;
         }
 
-        actionRef.child(String.valueOf(dayCount))
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+        actionRef
+                .orderByChild(Constants.COLUMN_DAY_COUNT)
+                .equalTo(dayCount)
+                .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         // get result data
@@ -97,8 +99,9 @@ public class TableDAO {
 
         for (long i = endDayCount; i > startDayCount; i--) {
             final long finalI = i;
-            actionRef.child(String.valueOf(i))
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
+            actionRef.orderByChild(Constants.COLUMN_DAY_COUNT)
+                    .equalTo(i)
+                    .addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             // get result data
@@ -139,6 +142,48 @@ public class TableDAO {
                     });
         }
         Log.i("LOG", "getTableByData: " + list.size());
+    }
+
+    public void getTableByDescription(String description) {
+        actionRef
+                .orderByChild(Constants.COLUMN_DESCRIPTION)
+                .equalTo(description)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        // get result data
+                        Table table = new Table();
+
+                        if (!dataSnapshot.exists()) {
+                            dbController.sendTableFromDb(table);
+                            return;
+                        }
+
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            Action action = snapshot.getValue(Action.class);
+                            switch (action.getType()) {
+                                case Constants.EVENT_REST_ACTION:
+                                    table.addRest(action);
+                                    break;
+                                case Constants.EVENT_WALK_ACTION:
+                                    table.addWalk(action);
+                                    break;
+                                case Constants.EVENT_WORK_ACTION:
+                                    table.addWork(action);
+                                    break;
+                                case Constants.EVENT_CALL_ACTION:
+                                    table.addCall(action);
+                                    break;
+                            }
+                        }
+                        dbController.sendTableFromDb(table);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        dbController.sendDbResultError();
+                    }
+                });
     }
 
     private void sendListTableIfFull(List<Table> list) {

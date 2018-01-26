@@ -1,0 +1,31 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:bootstrapbutton="http://schemas.android.com/apk/res-auto"
+    tools:context="com.maxml.timer.ui.fragments.SelectTagsFragment">
+
+    <AutoCompleteTextView
+        android:id="@+id/ac_tags"
+        android:layout_width="match_parent"
+        android:completionThreshold="1"
+        android:layout_toLeftOf="@id/b_add"
+        android:layout_height="wrap_content" />
+
+    <com.beardedhen.androidbootstrap.BootstrapButton
+        android:id="@+id/b_add"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="add"
+        bootstrapbutton:bootstrapBrand="primary"
+        bootstrapbutton:bootstrapSize="lg"
+        bootstrapbutton:roundedCorners="true" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_list_tags"
+        android:layout_below="@id/ac_tags"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</RelativeLayout>

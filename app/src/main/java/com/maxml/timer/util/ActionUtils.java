@@ -33,7 +33,7 @@ public class ActionUtils {
             String description = (action.getDescription() == null) ? "" : action.getDescription();
 
             ActionWeek actionWeek = new ActionWeek(action.getId(), action.getType() + "\n" + description,
-                    action.getType(), startData, endData, action.getDayCount());
+                    action.getType(), startData, endData);
 
             actionWeek.setColor(SharedPreferencesUtils.getColor(context, actionWeek.getType()));
 

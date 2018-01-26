@@ -13,10 +13,21 @@ public class Action implements Comparable<Action> {
     private String dayCount_type;
     private Date startDate;
     private Date endDate;
-    private String description;
+    private String description = "-";
     private boolean deleted = false;
 
     public Action() {
+    }
+
+    public Action(String id, String type, long dayCount, String dayCount_type, Date startDate, Date endDate, String description, boolean deleted) {
+        this.id = id;
+        this.type = type;
+        this.dayCount = dayCount;
+        this.dayCount_type = dayCount_type;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.description = description;
+        this.deleted = deleted;
     }
 
     public String getId() {

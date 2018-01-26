@@ -12,6 +12,7 @@ public class Constants {
     public static final int RESULT_FALSE = 0;
     public static final String SHARED_USER = "SHARED_USER";
     public static final String SHARED_COLOR = "SHARED_COLOR";
+    public static final String SHARED_TAGS = "SHARED_TAGS";
 
     public static final int REQUEST_CODE_TAKE_PHOTO = 1;
     public static final int REQUEST_LOCATION_PERMISSIONS = 2;
@@ -25,6 +26,7 @@ public class Constants {
     // firebase database
     public static final String USER_DATABASE_PATH = "users";
     public static final String WALK_DATABASE_PATH = "walks";
+    public static final String DESCRIPTION_DATABASE_PATH = "description";
 
     //  columns
     public static final String COLUMN_ID = "id";
@@ -85,7 +87,6 @@ public class Constants {
     public static final int WAY_DONT_MOVE_TIME = 5;
     public static final String EXTRA_ID_PATH = "extraIdPath";
     public static final String EXTRA_ID_ACTION = "extraIdAction";
-    public static final String EXTRA_ID_DAY_COUNT = "extraIdDayCount";
     public static final String EXTRA_TIME_ACTION = "extraTimeAction";
     public static final String EXTRA_LIST_ID_PATH = "extraListIdPath";
     public static final String LOG = "appLog";
@@ -95,9 +96,11 @@ public class Constants {
     public static final String TABLE_COORDINATES = "tableCoordinates";
     public static final String TABLE_WIFI_STATE = "wifiStates";
 
-    public static final int ID_BUTTON_EDIT = 0;
-    public static final int ID_BUTTON_DELETE = 1;
-    public static final int ID_BUTTON_JOIN = 2;
+    public static final int ID_BUTTON_ACTION_EDIT = 0;
+    public static final int ID_BUTTON_ACTION_DELETE = 1;
+    public static final int ID_BUTTON_ACTION_JOIN = 2;
+
+    public static final int ID_BUTTON_TAG_delete = 0;
 
     public static final int WEEK_COUNT_DAY = 7;
     public static final String EVENT_CLOSE_APP = "closeApp";

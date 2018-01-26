@@ -8,6 +8,7 @@ public class User {
 	private boolean isAnonymously;
 
 	public User() {
+		id = "";
 	}
 
 	public  String getPhoto() {

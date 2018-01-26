@@ -3,9 +3,6 @@ package com.maxml.timer.ui.adapter;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 
 import com.maxml.timer.R;
@@ -62,15 +59,15 @@ public class OptionButtonsAdapter extends RecyclerView.Adapter<OptionButtonsAdap
 
             switch (optionButtons) {
                 case EDIT:
-                    bOption.setId(Constants.ID_BUTTON_EDIT);
+                    bOption.setId(Constants.ID_BUTTON_ACTION_EDIT);
                     bOption.setText(R.string.opyion_button_edit);
                     break;
                 case DELETE:
-                    bOption.setId(Constants.ID_BUTTON_DELETE);
+                    bOption.setId(Constants.ID_BUTTON_ACTION_DELETE);
                     bOption.setText(R.string.opyion_button_delete);
                     break;
                 case JOIN:
-                    bOption.setId(Constants.ID_BUTTON_JOIN);
+                    bOption.setId(Constants.ID_BUTTON_ACTION_JOIN);
                     bOption.setText(R.string.opyion_button_join);
             }
             bOption.setOnClickListener(new View.OnClickListener() {

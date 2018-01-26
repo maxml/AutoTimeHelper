@@ -67,6 +67,7 @@
     <string name="text_default_action_state">Not start any action</string>
     <string name="text_default_action_date">Not start any action</string>
     <string name="error_input_data">Please input login and password</string>
+    <string name="toast_wrong_description">Wrong description</string>
 
     <string-array name="options_action">
         <item>Edit</item>
@@ -77,5 +78,8 @@
         <item>Home</item>
         <item>Work</item>
         <item>None</item>
+    </string-array>
+    <string-array name="options_tags">
+        <item>Delete</item>
     </string-array>
 </resources>
