@@ -75,10 +75,6 @@ public class ReceiverService extends Service implements LocationListener {
         // start service as foreground
         Notification notification = NotificationHelper.getDefaultNotification(this);
         startForeground(Constants.NOTIFICATION_APP_ID, notification);
-
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 
     @Subscribe()
@@ -233,6 +229,10 @@ public class ReceiverService extends Service implements LocationListener {
             return;
         }
 
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
         if (!isGPSEnabled && !isNetworkEnabled) {
             if (mainActivityEventBus != null) {
                 mainActivityEventBus.post(new Events.TurnOnGeolocation(Constants.EVENT_TURN_ON_GEOLOCATION, Constants.REQUEST_WALK_TRACKER));
@@ -268,23 +268,27 @@ public class ReceiverService extends Service implements LocationListener {
             return;
         }
 
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
         if (!isGPSEnabled && !isNetworkEnabled) {
             if (mainActivityEventBus != null) {
                 mainActivityEventBus.post(new Events.TurnOnGeolocation(Constants.EVENT_TURN_ON_GEOLOCATION, Constants.REQUEST_AUTO_WALK_STARTER));
             } else {
-                Log.d(Constants.LOG, "mainActivityEventBus == null");
+                Log.d(Constants.LOG, "EventBus mainActivityEventBus == null");
             }
             return;
         }
-        Log.d(Constants.LOG, "Autostart geolocation turn on and permission granted");
+        Log.d(Constants.LOG, "Autostart WalkAction: turn on and permission granted");
         autoWalkActionListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
                 if (isAutoWalkActionActivate) {
-                    Log.d(Constants.LOG, "Auto location is start WalkAction");
+                    Log.d(Constants.LOG, "Autostart WalkAction: is start WalkAction");
                     actionController.autoWalkAction();
                 } else {
-                    Log.d(Constants.LOG, "Autostart WalkAction ready");
+                    Log.d(Constants.LOG, "Autostart WalkAction: ready");
                     isAutoWalkActionActivate = true;
                 }
             }
@@ -301,7 +305,6 @@ public class ReceiverService extends Service implements LocationListener {
 
             @Override
             public void onProviderDisabled(String provider) {
-
             }
         };
 
@@ -322,6 +325,8 @@ public class ReceiverService extends Service implements LocationListener {
         unregisterEventBus(wifiEventBus);
         unregisterEventBus(mainActivityEventBus);
         stopTimer();
+        stopUsingGPS();
+        stopAutoStartWalkAction();
         super.onDestroy();
     }
 

@@ -167,7 +167,7 @@ public class DayCalendarFragmentNew extends Fragment implements CalendarDayAdapt
             if (action != lastAction) {
                 Action newAction = ActionUtils.joinActions(lastAction, action);
                 controller.removeActionInDb(String.valueOf(action.getDayCount()), action.getId());
-                controller.updateActionInDb(newAction);
+                controller.updateActionInDb(newAction,lastAction.getDescription());
                 progressListener.showProgressBar();
             } else {
                 Toast.makeText(getContext(), R.string.message_two_identical_action, Toast.LENGTH_SHORT).show();
