@@ -12,6 +12,11 @@
             android:id="@+id/i_user"
             android:icon="@drawable/ic_person"
             android:title="@string/user" />
+
+        <item
+            android:id="@+id/i_tags"
+            android:icon="@drawable/ic_tags"
+            android:title="tags"/>
     </group>
 
     <group android:checkableBehavior="single">

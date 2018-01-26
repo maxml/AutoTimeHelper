@@ -89,12 +89,20 @@ public class DbController {
         tableDAO.getTableByData(startDate, endDate);
     }
 
-    public void getActionFromDb(String dayCount, String id) {
-        actionDAO.getActionFromDb(dayCount, id);
+    public void getActionFromDb(String id) {
+        actionDAO.getActionFromDb(id);
     }
 
-    public void removeActionInDb(String dayCount, String id) {
-        actionDAO.removeAction(dayCount, id);
+    public void getTableByTag(String tag) {
+        tableDAO.getTableByDescription(tag);
+    }
+
+    public void getAllTags() {
+        actionDAO.getAllTags();
+    }
+
+    public void removeActionInDb(String id, String description) {
+        actionDAO.removeAction(id, description);
     }
 
     public void sendTableFromDb(Table table) {
@@ -109,8 +117,12 @@ public class DbController {
         entityEventBus.post(action);
     }
 
-    public void updateActionInDb(Action action) {
-        actionDAO.updateActionInDb(action);
+    public void sendAllTags(List<String> tags) {
+        entityEventBus.post(tags);
+    }
+
+    public void updateActionInDb(Action action, String oldDescription) {
+        actionDAO.updateActionInDb(action, oldDescription);
     }
 
     public void updateUserEmail(String email) {

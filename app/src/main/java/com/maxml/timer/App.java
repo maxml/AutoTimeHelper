@@ -16,6 +16,7 @@ public class App extends MultiDexApplication {
         DBFactory.setHelper(this);
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
+
 //		WifiReceiver networkReceiver = new WifiReceiver();
 //		networkReceiver.onReceive(this, new Intent());
 

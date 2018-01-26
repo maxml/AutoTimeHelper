@@ -38,6 +38,7 @@ import com.maxml.timer.ui.fragments.DayCalendarFragmentNew;
 import com.maxml.timer.ui.fragments.HomeFragment;
 import com.maxml.timer.ui.fragments.MainUserPageFragment;
 import com.maxml.timer.ui.fragments.MonthCalendarFragment;
+import com.maxml.timer.ui.fragments.SelectTagsFragment;
 import com.maxml.timer.ui.fragments.SettingsFragment;
 import com.maxml.timer.ui.fragments.WeekCalendarFragment;
 import com.maxml.timer.util.Constants;
@@ -103,6 +104,11 @@ public class MainActivity extends AppCompatActivity
             case R.id.i_user:
                 if (!(fragment instanceof MainUserPageFragment)) {
                     setupFragment(new MainUserPageFragment());
+                }
+                break;
+            case R.id.i_tags:
+                if (!(fragment instanceof SelectTagsFragment)) {
+                    setupFragment(new SelectTagsFragment());
                 }
                 break;
             case R.id.i_calendar_month:
@@ -212,9 +218,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void setEventTime(String time) {
-        String text = getString(R.string.statistic_text);
-        String displayText = text + " " + time;
-        eventTime.setText(displayText);
+        eventTime.setText(time);
     }
 
     @Override

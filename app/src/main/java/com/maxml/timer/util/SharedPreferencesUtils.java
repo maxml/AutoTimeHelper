@@ -11,6 +11,9 @@ import com.google.gson.GsonBuilder;
 import com.maxml.timer.R;
 import com.maxml.timer.entity.User;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class SharedPreferencesUtils {
 
     public static void saveCurrentUser(Context context, User user) {
@@ -29,6 +32,16 @@ public class SharedPreferencesUtils {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         return gson.fromJson(userFromPref, User.class);
+    }
+
+    public static void saveTags(Context context, Set<String> tags) {
+        SharedPreferences sp = context.getSharedPreferences(Constants.SHARED_TAGS, Context.MODE_PRIVATE);
+        sp.edit().putStringSet(Constants.SHARED_TAGS, tags).apply();
+    }
+
+    public static Set<String> getTags(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(Constants.SHARED_TAGS, Context.MODE_PRIVATE);
+        return sp.getStringSet(Constants.SHARED_TAGS, new HashSet<String>());
     }
 
     public static int getColor(Context context, String actionName) {

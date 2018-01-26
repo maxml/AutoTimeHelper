@@ -145,7 +145,7 @@ public class DayCalendarFragment extends Fragment implements CalendarDayAdapter.
 
             fragmentListener.showFragment(fragment);
         } else if (optionType == OptionButtons.DELETE) {
-            controller.removeActionInDb(String.valueOf(item.getDayCount()), item.getId());
+            controller.removeActionInDb(item.getId(), item.getDescription());
 
             progressListener.showProgressBar();
         } else if (optionType == OptionButtons.JOIN) {
@@ -163,8 +163,8 @@ public class DayCalendarFragment extends Fragment implements CalendarDayAdapter.
             if (action != lastAction) {
                 Action newAction = ActionUtils.joinActions(lastAction, action);
 
-                controller.removeActionInDb(String.valueOf(action.getDayCount()), action.getId());
-                controller.updateActionInDb(newAction);
+                controller.removeActionInDb(action.getId(), action.getDescription());
+                controller.updateActionInDb(newAction, lastAction.getDescription());
                 progressListener.showProgressBar();
             } else {
                 Toast.makeText(getContext(), R.string.message_two_identical_action, Toast.LENGTH_SHORT).show();
@@ -222,7 +222,7 @@ public class DayCalendarFragment extends Fragment implements CalendarDayAdapter.
     private void initStatistic() {
         if (statisticControl != null) {
             String time = getStatisticTime();
-            statisticControl.setEventTime(time);
+            statisticControl.setEventTime("Work time: " + time);
             statisticControl.showStatisticLayout();
         }
     }

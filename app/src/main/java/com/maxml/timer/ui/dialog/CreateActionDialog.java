@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -189,7 +190,12 @@ public class CreateActionDialog extends DialogFragment implements View.OnClickLi
             action.setType(Constants.EVENT_WORK_ACTION);
         }
         action.setDayCount(Utils.getDayCount(calendarStartDate.getTime()));
-        action.setDescription(etDescription.getText().toString());
+        String description = etDescription.getText().toString();
+        if (TextUtils.isEmpty(description)) {
+            action.setDescription("-");
+        } else {
+            action.setDescription(etDescription.getText().toString());
+        }
         action.setStartDate(calendarStartDate.getTime());
         action.setEndDate(calendarEndDate.getTime());
 
