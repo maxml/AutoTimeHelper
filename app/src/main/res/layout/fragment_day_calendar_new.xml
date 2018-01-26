@@ -1,24 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent">
-<android.support.v4.widget.NestedScrollView
-
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:scrollbars="vertical">
+    android:paddingBottom="25dp">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="25dp"
-        android:orientation="horizontal">
+        android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerViewTime"
-            android:layout_width="match_parent"
+            android:layout_width="60dp"
             android:layout_height="match_parent"
             android:layout_weight="5"
             android:padding="2dp" />
@@ -28,8 +20,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:padding="2dp" />
+            android:paddingBottom="2dp"
+            android:paddingLeft="60dp"
+            android:paddingRight="2dp"
+            android:paddingTop="2dp" />
 
-    </LinearLayout>
-</android.support.v4.widget.NestedScrollView>
+    </RelativeLayout>
+
 </LinearLayout>

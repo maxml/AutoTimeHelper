@@ -4,6 +4,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 
 import com.google.api.client.util.Data;
+import com.maxml.timer.R;
 import com.maxml.timer.entity.Coordinates;
 
 import java.text.SimpleDateFormat;
@@ -11,6 +12,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class Utils {
     public static Date getDate(int day, int month, int year) {
@@ -34,6 +36,30 @@ public class Utils {
     public static String parseToTime(long timeInMillis) {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
         return sdf.format(new Date(timeInMillis));
+    }
+
+    public static String parseToTimeDuration(Context context, long timeInMillis) {
+        int hour = (int) ((timeInMillis / (1000 * 60 * 60)) % 24);
+        int min = (int) ((timeInMillis / (1000 * 60)) % 60);
+        int sec = (int) (timeInMillis / 1000) % 60;
+        StringBuilder sb = new StringBuilder();
+        if (hour > 0) {
+            sb.append(hour);
+            sb.append(context.getString(R.string.hour));
+            sb.append(":");
+        }
+        if (hour > 0 || min > 0) {
+            sb.append(min);
+            sb.append(context.getString(R.string.min));
+        }
+        if (hour == 0 && min < 2) {
+            if (min > 0) {
+                sb.append(":");
+            }
+            sb.append(sec);
+            sb.append(context.getString(R.string.sec));
+        }
+        return sb.toString();
     }
 
     public static String parseToDate(long timeInMillis) {
@@ -89,13 +115,13 @@ public class Utils {
         return false;
     }
 
-    public static double getDistance(List<Coordinates> path){
-                if (path.size() < 2){
+    public static double getDistance(List<Coordinates> path) {
+        if (path.size() < 2) {
             return 0;
         }
         double result = 0;
-        for (int index = 0; index > path.size()-1; index++) {
-            double length = Coordinates.getDistanceInMeter(path.get(index), path.get(index+1));
+        for (int index = 0; index > path.size() - 1; index++) {
+            double length = Coordinates.getDistanceInMeter(path.get(index), path.get(index + 1));
             result = result + length;
         }
         return result;

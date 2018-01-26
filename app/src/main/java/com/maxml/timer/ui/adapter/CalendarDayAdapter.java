@@ -1,10 +1,10 @@
 package com.maxml.timer.ui.adapter;
 
 import android.content.Context;
+import android.support.transition.TransitionManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

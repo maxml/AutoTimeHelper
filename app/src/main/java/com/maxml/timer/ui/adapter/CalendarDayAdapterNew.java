@@ -1,12 +1,16 @@
 package com.maxml.timer.ui.adapter;
 
 import android.content.Context;
+import android.support.transition.TransitionManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.maxml.timer.R;
@@ -14,9 +18,6 @@ import com.maxml.timer.entity.Action;
 import com.maxml.timer.util.OptionButtons;
 import com.maxml.timer.util.Utils;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
@@ -53,27 +54,28 @@ public class CalendarDayAdapterNew extends RecyclerView.Adapter<CalendarDayAdapt
     @Override
     public void onBindViewHolder(final DayViewHolder holder, final int position) {
         final int itemPosition = holder.getAdapterPosition();
-        Action action = list.get(itemPosition);
+        final Action action = list.get(itemPosition);
         switch (itemPosition) {
             case 0:
-                setMargin(0, holder.cardView);
+                setTopMargin(0, holder.cardView);
                 break;
             case 1:
-                setMargin(30, holder.cardView);
+                setTopMargin(30, holder.cardView);
                 break;
             case 2:
-                setMargin(60, holder.cardView);
+                setTopMargin(60, holder.cardView);
                 break;
             default:
-                setMargin(0, holder.cardView);
+                setTopMargin(0, holder.cardView);
                 break;
         }
 
         // tvType
         holder.tvType.setText(action.getType());
         // tvTime
-//        holder.tvTime.setText(Utils.parseToTime(action.getStartDate().getTime()-action.getEndDate().getTime()));
-        holder.tvTime.setText(Utils.parseToTime(action.getStartDate().getTime()));
+        long time = action.getEndDate().getTime()- action.getStartDate().getTime();
+        holder.tvTime.setText(Utils.parseToTimeDuration(context, time));
+
 //        // tvDescription
 //        if (action.getDescription() != null && !action.getDescription().equals("")) {
 //            holder.tvTime.setText(action.getDescription());
@@ -81,29 +83,39 @@ public class CalendarDayAdapterNew extends RecyclerView.Adapter<CalendarDayAdapt
 //            holder.tvTime.setText(R.string.action_default_description);
 //        }
 
-//                // options
-//                final boolean isExpanded = position == mExpandedPosition;
-//                if (isExpanded) {
-//                    rvOptions.setVisibility(View.VISIBLE);
-//                    showOptions(rvOptions, action);
-//                } else {
-//                    rvOptions.setVisibility(View.GONE);
-//                    rvOptions.setAdapter(null);
-//                }
-//                cardView.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        if (isExpanded) {
-//                            mExpandedPosition = -1;
-//                        } else {
-//                            mExpandedPosition = position;
-//                        }
-//                        notifyItemRemoved(position);
-//                        TransitionManager.beginDelayedTransition(rvOptions);
-//                        notifyDataSetChanged();
-//                        listener.onClick(action);
-//                    }
-//                });
+        // options
+        final boolean isExpanded = position == mExpandedPosition;
+        if (isExpanded) {
+            holder.rvOptions.setVisibility(View.VISIBLE);
+            setBottomMargin(2, holder.cardView);
+            showOptions(holder.rvOptions, action);
+        } else {
+            holder.rvOptions.setVisibility(View.GONE);
+            setBottomMargin(80, holder.cardView);
+            holder.rvOptions.setAdapter(null);
+        }
+        holder.actionLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isExpanded) {
+                    mExpandedPosition = -1;
+                } else {
+                    mExpandedPosition = position;
+                }
+//                notifyItemRemoved(position);
+                TransitionManager.beginDelayedTransition(holder.rvOptions);
+                notifyDataSetChanged();
+                listener.onClick(action);
+            }
+        });
+    }
+
+    public void closeExpandableOption() {
+        if (mExpandedPosition != -1) {
+            int expandedItem = mExpandedPosition;
+            mExpandedPosition = -1;
+            notifyItemChanged(expandedItem);
+        }
     }
 
     @Override
@@ -114,7 +126,6 @@ public class CalendarDayAdapterNew extends RecyclerView.Adapter<CalendarDayAdapt
 
     public void swapData(List<Action> actions) {
         list = actions;
-//        Collections.sort(list);
         notifyDataSetChanged();
     }
 
@@ -127,12 +138,15 @@ public class CalendarDayAdapterNew extends RecyclerView.Adapter<CalendarDayAdapt
         if (fromPosition < toPosition) {
             for (int i = fromPosition; i < toPosition; i++) {
                 Collections.swap(list, i, i + 1);
+                notifyItemChanged(i);
             }
         } else {
             for (int i = fromPosition; i > toPosition; i--) {
                 Collections.swap(list, i, i - 1);
+                notifyItemChanged(i);
             }
         }
+        notifyItemChanged(toPosition);
         notifyItemMoved(fromPosition, toPosition);
         return true;
     }
@@ -141,24 +155,26 @@ public class CalendarDayAdapterNew extends RecyclerView.Adapter<CalendarDayAdapt
         private CardView cardView;
         private TextView tvTime;
         private TextView tvType;
-//        private RecyclerView rvOptions;
+        private RelativeLayout actionLayout;
+        private RecyclerView rvOptions;
 
         public DayViewHolder(View itemView) {
             super(itemView);
             cardView = itemView.findViewById(R.id.cardVied);
             tvTime = itemView.findViewById(R.id.duration);
             tvType = itemView.findViewById(R.id.action);
-//            rvOptions = itemView.findViewById(R.id.recyclerViewOptions);
+            actionLayout = itemView.findViewById(R.id.rootRelativeLayout);
+            rvOptions = itemView.findViewById(R.id.recyclerViewOptions);
         }
     }
 
-    private void setMargin(int margin, View view) {
-        CardView.LayoutParams params = new CardView.LayoutParams(
-                CardView.LayoutParams.MATCH_PARENT,
-                CardView.LayoutParams.WRAP_CONTENT
-        );
-        params.setMargins(convertToDp(2), convertToDp(margin), convertToDp(2), convertToDp(60));
-        view.setLayoutParams(params);
+    private void setTopMargin(int margin, CardView view) {
+        StaggeredGridLayoutManager.LayoutParams params = (StaggeredGridLayoutManager.LayoutParams) view.getLayoutParams();
+        params.topMargin = convertToDp(margin);
+    }
+    private void setBottomMargin(int margin, CardView view) {
+        StaggeredGridLayoutManager.LayoutParams params = (StaggeredGridLayoutManager.LayoutParams) view.getLayoutParams();
+        params.bottomMargin = convertToDp(margin);
     }
 
     private void showOptions(RecyclerView recyclerView, final Action entity) {

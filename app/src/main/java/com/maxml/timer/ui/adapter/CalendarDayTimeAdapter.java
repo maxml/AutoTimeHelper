@@ -37,10 +37,10 @@ public class CalendarDayTimeAdapter extends RecyclerView.Adapter<CalendarDayTime
         int itemPosition = holder.getAdapterPosition() + 1;
         holder.tvTime.setText(Utils.parseToTime(date.getTime()));
         if (itemPosition == dates.size()) {
-            setMargin(90 + 60, holder.cardView);
+            setMargin(500, holder.cardView);
         } else {
             if (itemPosition % 3 == 0) {
-                setMargin(90, holder.cardView);
+                setMargin(110, holder.cardView);
             } else {
                 setMargin(0, holder.cardView);
             }
@@ -62,9 +62,13 @@ public class CalendarDayTimeAdapter extends RecyclerView.Adapter<CalendarDayTime
                 Collections.swap(dates, i, i - 1);
             }
         }
-//        notifyItemMoved(fromPosition, toPosition);
         notifyDataSetChanged();
         return true;
+    }
+
+    public void swapData(List<Date> dates) {
+        this.dates = dates;
+        notifyDataSetChanged();
     }
 
     class DayViewHolder extends RecyclerView.ViewHolder {

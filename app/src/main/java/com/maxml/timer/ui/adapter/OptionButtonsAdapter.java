@@ -1,5 +1,6 @@
 package com.maxml.timer.ui.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,6 +8,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import com.maxml.timer.R;
 import com.maxml.timer.util.Constants;
@@ -33,9 +35,12 @@ public class OptionButtonsAdapter extends RecyclerView.Adapter<OptionButtonsAdap
     @Override
     public DayViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Button button = new Button(parent.getContext());
+        RecyclerView.LayoutParams lp = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, convertToDp(parent.getContext(),30));
+        lp.setMargins(0,0,0,0);
+        button.setLayoutParams(lp);
         button.setBackground(null);
-        button.setTextSize(8);
-
+        button.setTextSize(10);
+        button.setPadding(0,0,0,0);
         return new DayViewHolder(button);
     }
 
@@ -49,15 +54,15 @@ public class OptionButtonsAdapter extends RecyclerView.Adapter<OptionButtonsAdap
         return optionButtonsList.size();
     }
 
-    public class DayViewHolder extends RecyclerView.ViewHolder {
+    class DayViewHolder extends RecyclerView.ViewHolder {
         private Button bOption;
 
-        public DayViewHolder(Button bOption) {
+        DayViewHolder(Button bOption) {
             super(bOption);
             this.bOption = bOption;
         }
 
-        public void bind(int position) {
+        void bind(int position) {
             final OptionButtons optionButtons = optionButtonsList.get(position);
 
             switch (optionButtons) {
@@ -82,4 +87,12 @@ public class OptionButtonsAdapter extends RecyclerView.Adapter<OptionButtonsAdap
             lastPosition = position;
         }
     }
+
+    private int convertToDp(Context context, int input) {
+        // Get the screen's density scale
+        final float scale = context.getResources().getDisplayMetrics().density;
+        // Convert the dps to pixels, based on density scale
+        return (int) (input * scale + 0.5f);
+    }
+
 }

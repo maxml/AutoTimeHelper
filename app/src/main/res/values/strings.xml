@@ -67,6 +67,9 @@
     <string name="text_default_action_state">Not start any action</string>
     <string name="text_default_action_date">Not start any action</string>
     <string name="error_input_data">Please input login and password</string>
+    <string name="hour">h</string>
+    <string name="min">min</string>
+    <string name="sec">sec</string>
 
     <string-array name="options_action">
         <item>Edit</item>
