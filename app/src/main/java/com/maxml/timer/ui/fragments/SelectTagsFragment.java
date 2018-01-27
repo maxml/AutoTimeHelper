@@ -39,7 +39,6 @@ import java.util.Set;
 public class SelectTagsFragment extends Fragment implements View.OnClickListener, TagsAdapter.OnTagsUpdateListener {
     private AutoCompleteTextView acTags;
     private BootstrapButton bAdd;
-    private RecyclerView rvTags;
 
     private DbController controller;
     private EventBus eventBus;
@@ -180,7 +179,6 @@ public class SelectTagsFragment extends Fragment implements View.OnClickListener
     private void initView(View rootView) {
         acTags = rootView.findViewById(R.id.ac_tags);
         bAdd = rootView.findViewById(R.id.b_add);
-        rvTags = rootView.findViewById(R.id.rv_list_tags);
         RecyclerView rvListTags = rootView.findViewById(R.id.rv_list_tags);
         rvListTags.setHasFixedSize(true);
         rvListTags.setLayoutManager(new LinearLayoutManager(getContext()));

@@ -88,7 +88,7 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
                     OptionDialog dialog = OptionDialog.getInstance(new OptionDialog.OnDialogItemClickListener() {
                         @Override
                         public void onDialogItemClick(int positionButton) {
-                            if (positionButton == Constants.ID_BUTTON_TAG_delete) {
+                            if (positionButton == Constants.ID_BUTTON_TAG_DELETE) {
                                 list.remove(position);
                                 saveNewData();
                                 tagsUpdateListener.tagsUpdate();

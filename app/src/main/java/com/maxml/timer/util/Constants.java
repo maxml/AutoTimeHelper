@@ -100,7 +100,7 @@ public class Constants {
     public static final int ID_BUTTON_ACTION_DELETE = 1;
     public static final int ID_BUTTON_ACTION_JOIN = 2;
 
-    public static final int ID_BUTTON_TAG_delete = 0;
+    public static final int ID_BUTTON_TAG_DELETE = 0;
 
     public static final int WEEK_COUNT_DAY = 7;
     public static final String EVENT_CLOSE_APP = "closeApp";

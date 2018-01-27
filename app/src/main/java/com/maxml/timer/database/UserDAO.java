@@ -99,10 +99,10 @@ public class UserDAO {
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (!task.isSuccessful()) {
-                            dbController.sendDbResultError();
-                        } else {
+                        if (task.isSuccessful()) {
                             dbController.sendDbResultOk();
+                        } else {
+                            dbController.sendDbResultError();
                         }
                     }
                 });
