@@ -44,17 +44,18 @@ public class ActionDAO {
         String dbId = actionRef.push().getKey();
         action.setId(dbId);
 
-        actionRef.child(dbId).setValue(action).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    dbController.sendDbResultOk();
-                    tagDao.createDescription(action.getDescription());
-                } else {
-                    dbController.sendDbResultError();
-                }
-            }
-        });
+        actionRef.child(dbId).setValue(action)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            tagDao.createDescription(action.getDescription());
+                            dbController.sendDbResultOk();
+                        } else {
+                            dbController.sendDbResultError();
+                        }
+                    }
+                });
     }
 
     public void createWalkAction(Action walk) {
@@ -106,8 +107,8 @@ public class ActionDAO {
                         if (!task.isSuccessful()) {
                             dbController.sendDbResultError();
                         } else {
-                            dbController.sendDbResultOk();
                             tagDao.updateDescription(oldDescription, action.getDescription());
+                            dbController.sendDbResultOk();
                         }
                     }
                 });
@@ -123,8 +124,8 @@ public class ActionDAO {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
-                                            dbController.sendDbResultOk();
                                             tagDao.removeDescription(description);
+                                            dbController.sendDbResultOk();
                                         } else {
                                             dbController.sendDbResultError();
                                         }
@@ -133,6 +134,7 @@ public class ActionDAO {
                     }
                 });
     }
+
     public void getAllTags() {
         actionRef
                 .child(Constants.DESCRIPTION_DATABASE_PATH)

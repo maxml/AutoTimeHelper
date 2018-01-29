@@ -252,8 +252,8 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
 
             Action action = ActionUtils.joinActions(firesAction, secondAction);
 
-            controller.removeActionInDb(secondAction.getId(), secondAction.getDescription());
             controller.updateActionInDb(action, firesAction.getDescription());
+            controller.removeActionInDb(secondAction.getId(), secondAction.getDescription());
             progressListener.showProgressBar();
         } else {
             Toast.makeText(getContext(), R.string.message_two_identical_action, Toast.LENGTH_SHORT).show();

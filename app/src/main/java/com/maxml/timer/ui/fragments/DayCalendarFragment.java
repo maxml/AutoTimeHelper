@@ -16,15 +16,14 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.maxml.timer.R;
-import com.maxml.timer.entity.ActionWeek;
-import com.maxml.timer.entity.Events;
-import com.maxml.timer.ui.adapter.CalendarDayAdapter;
 import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.entity.Action;
+import com.maxml.timer.entity.Events;
 import com.maxml.timer.entity.ShowFragmentListener;
 import com.maxml.timer.entity.ShowProgressListener;
 import com.maxml.timer.entity.StatisticControl;
 import com.maxml.timer.entity.Table;
+import com.maxml.timer.ui.adapter.CalendarDayAdapter;
 import com.maxml.timer.util.ActionUtils;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.OptionButtons;
@@ -120,7 +119,6 @@ public class DayCalendarFragment extends Fragment implements CalendarDayAdapter.
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.calendar_day_menu, menu);
-
         this.menu = menu;
     }
 
@@ -136,22 +134,26 @@ public class DayCalendarFragment extends Fragment implements CalendarDayAdapter.
     }
 
     @Override
-    public void onClickOption(OptionButtons optionType, Action item) {
-        if (optionType == OptionButtons.EDIT) {
-            Bundle args = new Bundle();
-            args.putString(Constants.EXTRA_ID_ACTION, item.getId());
-            DetailsActionFragment fragment = new DetailsActionFragment();
-            fragment.setArguments(args);
+    public void onClickOption(OptionButtons optionButton, Action item) {
+        switch (optionButton) {
+            case EDIT:
+                Bundle args = new Bundle();
+                args.putString(Constants.EXTRA_ID_ACTION, item.getId());
+                DetailsActionFragment fragment = new DetailsActionFragment();
+                fragment.setArguments(args);
 
-            fragmentListener.showFragment(fragment);
-        } else if (optionType == OptionButtons.DELETE) {
-            controller.removeActionInDb(item.getId(), item.getDescription());
+                fragmentListener.showFragment(fragment);
+                break;
+            case DELETE:
+                controller.removeActionInDb(item.getId(), item.getDescription());
 
-            progressListener.showProgressBar();
-        } else if (optionType == OptionButtons.JOIN) {
-            isJoined = true;
-            lastAction = item;
-            changeMenuVisible();
+                progressListener.showProgressBar();
+                break;
+            case JOIN:
+                isJoined = true;
+                lastAction = item;
+                changeMenuVisible();
+                break;
         }
         adapter.resetList();
     }

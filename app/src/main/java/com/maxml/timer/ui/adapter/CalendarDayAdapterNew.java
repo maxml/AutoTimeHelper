@@ -102,7 +102,7 @@ public class CalendarDayAdapterNew extends RecyclerView.Adapter<CalendarDayAdapt
                 } else {
                     mExpandedPosition = position;
                 }
-//                notifyItemRemoved(position);
+                notifyItemRemoved(position);
                 TransitionManager.beginDelayedTransition(holder.rvOptions);
                 notifyDataSetChanged();
                 listener.onClick(action);

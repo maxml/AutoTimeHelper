@@ -141,7 +141,7 @@ public class DayCalendarFragmentNew extends Fragment implements CalendarDayAdapt
     public void onClickOption(OptionButtons optionType, Action item) {
         switch (optionType) {
             case DELETE:
-                controller.removeActionInDb(String.valueOf(item.getDayCount()), item.getId());
+                controller.removeActionInDb(String.valueOf(item.getId()), item.getDescription());
                 progressListener.showProgressBar();
                 break;
             case EDIT:
@@ -166,8 +166,8 @@ public class DayCalendarFragmentNew extends Fragment implements CalendarDayAdapt
             actionAdapter.resetList();
             if (action != lastAction) {
                 Action newAction = ActionUtils.joinActions(lastAction, action);
-                controller.removeActionInDb(String.valueOf(action.getDayCount()), action.getId());
                 controller.updateActionInDb(newAction,lastAction.getDescription());
+                controller.removeActionInDb(action.getId(), action.getDescription());
                 progressListener.showProgressBar();
             } else {
                 Toast.makeText(getContext(), R.string.message_two_identical_action, Toast.LENGTH_SHORT).show();
