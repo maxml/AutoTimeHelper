@@ -15,6 +15,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.maxml.timer.R;
@@ -25,11 +27,13 @@ import com.maxml.timer.entity.ShowFragmentListener;
 import com.maxml.timer.entity.ShowProgressListener;
 import com.maxml.timer.entity.StatisticControl;
 import com.maxml.timer.entity.Table;
+import com.maxml.timer.listeners.OnSwipeTouchListener;
 import com.maxml.timer.ui.adapter.CalendarDayAdapterNew;
 import com.maxml.timer.ui.adapter.CalendarDayTimeAdapter;
 import com.maxml.timer.util.ActionUtils;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.OptionButtons;
+import com.maxml.timer.util.Utils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -45,9 +49,11 @@ public class DayCalendarFragmentNew extends Fragment implements CalendarDayAdapt
 
     private RecyclerView recyclerViewTime;
     private RecyclerView recyclerViewActions;
+    private TextView tvDay;
 
     private boolean isJoined;
 
+    private Date currentDate;
     private List<OptionButtons> options = new ArrayList<>();
     private List<Action> list = new ArrayList<>();
     private List<Date> dates = new ArrayList<>();
@@ -90,7 +96,17 @@ public class DayCalendarFragmentNew extends Fragment implements CalendarDayAdapt
         View view = inflater.inflate(R.layout.fragment_day_calendar_new, container, false);
         recyclerViewActions = view.findViewById(R.id.recyclerView);
         recyclerViewTime = view.findViewById(R.id.recyclerViewTime);
+        tvDay = view.findViewById(R.id.day);
         initRecyclerView();
+        recyclerViewActions.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
+            public void onSwipeRight() {
+                gotoPreviousDate();
+            }
+
+            public void onSwipeLeft() {
+                gotoNextDate();
+            }
+        });
         return view;
     }
 
@@ -100,10 +116,17 @@ public class DayCalendarFragmentNew extends Fragment implements CalendarDayAdapt
         eventBus.register(this);
         controller.registerEventBus(eventBus);
         if (getArguments() != null) {
-            loadActions(getArguments().getLong(Constants.EXTRA_TIME_ACTION));
+            currentDate = new Date(getArguments().getLong(Constants.EXTRA_TIME_ACTION));
         } else {
-            loadActions(System.currentTimeMillis());
+            currentDate = new Date(System.currentTimeMillis());
         }
+        loadActions(currentDate.getTime());
+        updateDay();
+    }
+
+    private void updateDay() {
+        String date = Utils.parseToDate(currentDate.getTime());
+        tvDay.setText(date);
     }
 
     @Override
@@ -167,7 +190,7 @@ public class DayCalendarFragmentNew extends Fragment implements CalendarDayAdapt
             if (action != lastAction) {
                 Action newAction = ActionUtils.joinActions(lastAction, action);
                 controller.removeActionInDb(String.valueOf(action.getDayCount()), action.getId());
-                controller.updateActionInDb(newAction,lastAction.getDescription());
+                controller.updateActionInDb(newAction, lastAction.getDescription());
                 progressListener.showProgressBar();
             } else {
                 Toast.makeText(getContext(), R.string.message_two_identical_action, Toast.LENGTH_SHORT).show();
@@ -302,7 +325,6 @@ public class DayCalendarFragmentNew extends Fragment implements CalendarDayAdapt
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                //TODO
             }
 
             //defines the enabled move directions in each state (idle, swiping, dragging).
@@ -316,6 +338,20 @@ public class DayCalendarFragmentNew extends Fragment implements CalendarDayAdapt
         touchHelper.attachToRecyclerView(recyclerViewActions);
         recyclerViewTime.setNestedScrollingEnabled(false);
         recyclerViewActions.addOnScrollListener(scrollListener);
+    }
+
+    private void gotoPreviousDate() {
+        long time = currentDate.getTime() - 86400000;
+        currentDate = new Date(time);
+        loadActions(time);
+        updateDay();
+    }
+
+    private void gotoNextDate() {
+        long time = currentDate.getTime() + 86400000;
+        currentDate = new Date(time);
+        loadActions(time);
+        updateDay();
     }
 
     private void initOptionButtons() {

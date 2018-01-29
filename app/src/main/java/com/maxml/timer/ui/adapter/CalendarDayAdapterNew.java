@@ -15,7 +15,9 @@ import android.widget.TextView;
 
 import com.maxml.timer.R;
 import com.maxml.timer.entity.Action;
+import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.OptionButtons;
+import com.maxml.timer.util.SharedPreferencesUtils;
 import com.maxml.timer.util.Utils;
 
 import java.util.Collections;
@@ -73,7 +75,7 @@ public class CalendarDayAdapterNew extends RecyclerView.Adapter<CalendarDayAdapt
         // tvType
         holder.tvType.setText(action.getType());
         // tvTime
-        long time = action.getEndDate().getTime()- action.getStartDate().getTime();
+        long time = action.getEndDate().getTime() - action.getStartDate().getTime();
         holder.tvTime.setText(Utils.parseToTimeDuration(context, time));
 
 //        // tvDescription
@@ -82,6 +84,9 @@ public class CalendarDayAdapterNew extends RecyclerView.Adapter<CalendarDayAdapt
 //        } else {
 //            holder.tvTime.setText(R.string.action_default_description);
 //        }
+
+        int color = SharedPreferencesUtils.getColor(context, action.getType());
+        holder.actionLayout.setBackgroundColor(color);
 
         // options
         final boolean isExpanded = position == mExpandedPosition;
@@ -172,6 +177,7 @@ public class CalendarDayAdapterNew extends RecyclerView.Adapter<CalendarDayAdapt
         StaggeredGridLayoutManager.LayoutParams params = (StaggeredGridLayoutManager.LayoutParams) view.getLayoutParams();
         params.topMargin = convertToDp(margin);
     }
+
     private void setBottomMargin(int margin, CardView view) {
         StaggeredGridLayoutManager.LayoutParams params = (StaggeredGridLayoutManager.LayoutParams) view.getLayoutParams();
         params.bottomMargin = convertToDp(margin);
