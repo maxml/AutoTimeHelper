@@ -1,6 +1,5 @@
 package com.maxml.timer.database;
 
-
 import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
@@ -9,11 +8,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.maxml.timer.controllers.DbController;
-import com.maxml.timer.entity.Table;
 import com.maxml.timer.entity.Action;
+import com.maxml.timer.entity.Table;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.Utils;
-
 
 import java.util.ArrayList;
 import java.util.Date;

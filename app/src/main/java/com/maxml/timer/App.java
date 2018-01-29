@@ -8,23 +8,11 @@ import com.maxml.timer.util.NetworkUtil;
 
 public class App extends MultiDexApplication {
 
-//    private ActionController controller;
-
     @Override
     public void onCreate() {
         super.onCreate();
         DBFactory.setHelper(this);
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-
-
-//		WifiReceiver networkReceiver = new WifiReceiver();
-//		networkReceiver.onReceive(this, new Intent());
-
-//		NetworkStatus.isNetworkAvailable(this);
-
-        //	ReceiverService table = new ReceiverService();
-
-        //	table.getListSlice();
     }
 
     @Override

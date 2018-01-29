@@ -26,6 +26,7 @@ import com.maxml.timer.R;
 import com.maxml.timer.entity.User;
 import com.maxml.timer.ui.activity.LoginActivity;
 import com.maxml.timer.util.Constants;
+import com.maxml.timer.util.NetworkUtil;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
@@ -115,7 +116,7 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
                 dbController.updateUserEmail(etEmail.getText().toString());
                 dbController.updateUserName(etName.getText().toString());
 
-                progressListener.showProgressBar();
+                showProgress();
                 break;
         }
     }
@@ -215,6 +216,12 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
                         .load(file)
                         .into(ivUser);
             }
+        }
+    }
+
+    private void showProgress() {
+        if (NetworkUtil.isNetworkAvailable(getContext())) {
+            progressListener.showProgressBar();
         }
     }
 }

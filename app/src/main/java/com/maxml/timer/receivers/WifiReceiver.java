@@ -5,12 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
 
 import com.maxml.timer.controllers.ActionController;
 import com.maxml.timer.controllers.DbController;
-import com.maxml.timer.entity.WifiState;
 import com.maxml.timer.entity.Events;
+import com.maxml.timer.entity.WifiState;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.NetworkUtil;
 

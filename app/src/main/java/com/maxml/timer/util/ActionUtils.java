@@ -3,8 +3,6 @@ package com.maxml.timer.util;
 import android.content.Context;
 
 import com.alamkanak.weekview.WeekViewEvent;
-import com.maxml.timer.controllers.DbController;
-import com.maxml.timer.database.DatabaseHelper;
 import com.maxml.timer.entity.Action;
 import com.maxml.timer.entity.ActionWeek;
 

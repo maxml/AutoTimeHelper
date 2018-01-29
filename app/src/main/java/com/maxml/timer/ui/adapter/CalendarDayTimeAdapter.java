@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.maxml.timer.R;
-import com.maxml.timer.entity.Action;
 import com.maxml.timer.util.Utils;
 
 import java.util.Collections;

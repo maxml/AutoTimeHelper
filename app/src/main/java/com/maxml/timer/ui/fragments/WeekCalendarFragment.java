@@ -33,6 +33,7 @@ import com.maxml.timer.ui.dialog.CreateActionDialog;
 import com.maxml.timer.ui.dialog.OptionDialog;
 import com.maxml.timer.util.ActionUtils;
 import com.maxml.timer.util.Constants;
+import com.maxml.timer.util.NetworkUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -120,7 +121,7 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
         this.list.addAll(ActionUtils.convertActionsToWeekViewEvents(list, getContext()));
         weekView.notifyDataSetChanged();
 
-        progressListener.showProgressBar();
+        showProgress();
     }
 
     @Override
@@ -169,8 +170,10 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
             case Constants.ID_BUTTON_ACTION_DELETE:
                 Action action = ActionUtils.findActionById(((ActionWeek) lastEvent).getActionId(), actions);
                 controller.removeActionInDb(action.getId(), action.getDescription());
+                list.remove(lastEvent);
+                weekView.notifyDataSetChanged();
 
-                progressListener.showProgressBar();
+                showProgress();
                 break;
             case Constants.ID_BUTTON_ACTION_JOIN:
                 isJoined = true;
@@ -254,7 +257,7 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
 
             controller.updateActionInDb(action, firesAction.getDescription());
             controller.removeActionInDb(secondAction.getId(), secondAction.getDescription());
-            progressListener.showProgressBar();
+            showProgress();
         } else {
             Toast.makeText(getContext(), R.string.message_two_identical_action, Toast.LENGTH_SHORT).show();
         }
@@ -264,7 +267,7 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
     }
 
     private void loadActions() {
-        progressListener.showProgressBar();
+        showProgress();
         getActionsFromDb();
     }
 
@@ -324,6 +327,12 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
             currentCalendarView = 0;
         }
         return calendarViews[currentCalendarView];
+    }
+
+    private void showProgress() {
+        if (NetworkUtil.isNetworkAvailable(getContext())) {
+            progressListener.showProgressBar();
+        }
     }
 
     private void changeMenuVisible() {

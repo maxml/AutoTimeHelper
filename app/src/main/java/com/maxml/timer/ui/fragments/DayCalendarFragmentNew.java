@@ -98,15 +98,16 @@ public class DayCalendarFragmentNew extends Fragment implements CalendarDayAdapt
         recyclerViewTime = view.findViewById(R.id.recyclerViewTime);
         tvDay = view.findViewById(R.id.day);
         initRecyclerView();
-        recyclerViewActions.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
-            public void onSwipeRight() {
-                gotoPreviousDate();
-            }
+        recyclerViewActions
+                .setOnTouchListener(new OnSwipeTouchListener(getContext()) {
+                    public void onSwipeRight() {
+                        gotoPreviousDate();
+                    }
 
-            public void onSwipeLeft() {
-                gotoNextDate();
-            }
-        });
+                    public void onSwipeLeft() {
+                        gotoNextDate();
+                    }
+                });
         return view;
     }
 
@@ -189,7 +190,7 @@ public class DayCalendarFragmentNew extends Fragment implements CalendarDayAdapt
             actionAdapter.resetList();
             if (action != lastAction) {
                 Action newAction = ActionUtils.joinActions(lastAction, action);
-                controller.updateActionInDb(newAction,lastAction.getDescription());
+                controller.updateActionInDb(newAction, lastAction.getDescription());
                 controller.removeActionInDb(action.getId(), action.getDescription());
                 progressListener.showProgressBar();
             } else {

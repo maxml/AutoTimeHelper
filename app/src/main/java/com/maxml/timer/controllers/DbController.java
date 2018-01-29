@@ -2,7 +2,6 @@ package com.maxml.timer.controllers;
 
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
 
 import com.maxml.timer.database.ActionDAO;
 import com.maxml.timer.database.CoordinateDAO;
@@ -18,11 +17,9 @@ import com.maxml.timer.entity.Path;
 import com.maxml.timer.entity.Table;
 import com.maxml.timer.entity.WifiState;
 import com.maxml.timer.util.Constants;
-import com.maxml.timer.util.NetworkUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 

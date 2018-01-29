@@ -4,10 +4,6 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.Date;
 
-/**
- * Created by nazar on 18.12.17.
- */
-
 public class Events {
 
     public static class EventBusControl {

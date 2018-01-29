@@ -5,15 +5,14 @@ import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.maxml.timer.controllers.DbController;
-import com.maxml.timer.entity.User;
 import com.maxml.timer.entity.Action;
+import com.maxml.timer.entity.User;
 import com.maxml.timer.util.Constants;
 
 import java.util.ArrayList;
@@ -49,13 +48,13 @@ public class ActionDAO {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            tagDao.createDescription(action.getDescription());
                             dbController.sendDbResultOk();
                         } else {
                             dbController.sendDbResultError();
                         }
                     }
                 });
+        tagDao.createDescription(action.getDescription());
     }
 
     public void createWalkAction(Action walk) {
@@ -104,14 +103,14 @@ public class ActionDAO {
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if (!task.isSuccessful()) {
-                            dbController.sendDbResultError();
-                        } else {
-                            tagDao.updateDescription(oldDescription, action.getDescription());
+                        if (task.isSuccessful()) {
                             dbController.sendDbResultOk();
+                        } else {
+                            dbController.sendDbResultError();
                         }
                     }
                 });
+        tagDao.updateDescription(oldDescription, action.getDescription());
     }
 
     public void removeAction(String id, final String description) {
@@ -124,7 +123,6 @@ public class ActionDAO {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
-                                            tagDao.removeDescription(description);
                                             dbController.sendDbResultOk();
                                         } else {
                                             dbController.sendDbResultError();
@@ -133,6 +131,7 @@ public class ActionDAO {
                                 });
                     }
                 });
+        tagDao.removeDescription(description);
     }
 
     public void getAllTags() {

@@ -24,6 +24,7 @@ import com.maxml.timer.entity.ShowProgressListener;
 import com.maxml.timer.entity.StatisticControl;
 import com.maxml.timer.entity.Table;
 import com.maxml.timer.ui.adapter.TagsAdapter;
+import com.maxml.timer.util.NetworkUtil;
 import com.maxml.timer.util.SharedPreferencesUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -217,6 +218,12 @@ public class SelectTagsFragment extends Fragment implements View.OnClickListener
         }
 
         controller.getAllTags();
-        progressListener.showProgressBar();
+        showProgress();
+    }
+
+    private void showProgress() {
+        if (NetworkUtil.isNetworkAvailable(getContext())) {
+            progressListener.showProgressBar();
+        }
     }
 }

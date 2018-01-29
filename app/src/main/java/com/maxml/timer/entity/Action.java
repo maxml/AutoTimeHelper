@@ -2,8 +2,6 @@ package com.maxml.timer.entity;
 
 import android.support.annotation.NonNull;
 
-import com.maxml.timer.util.Utils;
-
 import java.util.Date;
 
 public class Action implements Comparable<Action> {
@@ -99,8 +97,10 @@ public class Action implements Comparable<Action> {
     public int compareTo(@NonNull Action a) {
         if (a.getStartDate().before(startDate)) {
             return 1;
-        } else {
+        } else if (a.getStartDate().after(startDate)) {
             return -1;
+        } else {
+            return 0;
         }
     }
 }

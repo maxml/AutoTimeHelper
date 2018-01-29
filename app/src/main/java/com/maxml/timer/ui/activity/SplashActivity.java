@@ -2,9 +2,9 @@ package com.maxml.timer.ui.activity;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -18,8 +18,6 @@ import com.maxml.timer.util.NetworkUtil;
 import com.maxml.timer.util.Utils;
 
 import org.greenrobot.eventbus.EventBus;
-
-import java.util.concurrent.TimeUnit;
 
 public class SplashActivity extends AppCompatActivity {
     private EventBus eventBus;

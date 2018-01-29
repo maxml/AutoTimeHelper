@@ -9,9 +9,6 @@ import com.maxml.timer.database.PathDAO;
 import com.maxml.timer.util.Constants;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 @DatabaseTable(tableName = Constants.TABLE_PATH, daoClass = PathDAO.class)
 public class Path {

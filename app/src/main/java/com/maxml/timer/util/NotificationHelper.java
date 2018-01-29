@@ -10,7 +10,6 @@ import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.support.v4.app.NotificationCompat;
 
-import com.maxml.timer.Manifest;
 import com.maxml.timer.R;
 import com.maxml.timer.ui.activity.LoginActivity;
 

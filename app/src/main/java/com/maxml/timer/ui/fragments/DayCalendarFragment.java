@@ -26,6 +26,7 @@ import com.maxml.timer.entity.Table;
 import com.maxml.timer.ui.adapter.CalendarDayAdapter;
 import com.maxml.timer.util.ActionUtils;
 import com.maxml.timer.util.Constants;
+import com.maxml.timer.util.NetworkUtil;
 import com.maxml.timer.util.OptionButtons;
 
 import org.greenrobot.eventbus.EventBus;
@@ -147,7 +148,7 @@ public class DayCalendarFragment extends Fragment implements CalendarDayAdapter.
             case DELETE:
                 controller.removeActionInDb(item.getId(), item.getDescription());
 
-                progressListener.showProgressBar();
+                showProgress();
                 break;
             case JOIN:
                 isJoined = true;
@@ -167,7 +168,7 @@ public class DayCalendarFragment extends Fragment implements CalendarDayAdapter.
 
                 controller.removeActionInDb(action.getId(), action.getDescription());
                 controller.updateActionInDb(newAction, lastAction.getDescription());
-                progressListener.showProgressBar();
+                showProgress();
             } else {
                 Toast.makeText(getContext(), R.string.message_two_identical_action, Toast.LENGTH_SHORT).show();
             }
@@ -207,7 +208,7 @@ public class DayCalendarFragment extends Fragment implements CalendarDayAdapter.
         } else {
             controller.getTableFromDb(new Date(time));
         }
-        progressListener.showProgressBar();
+        showProgress();
     }
 
     private void updateUI() {
@@ -256,6 +257,12 @@ public class DayCalendarFragment extends Fragment implements CalendarDayAdapter.
         options.add(OptionButtons.DELETE);
         options.add(OptionButtons.EDIT);
         options.add(OptionButtons.JOIN);
+    }
+
+    private void showProgress() {
+        if (NetworkUtil.isNetworkAvailable(getContext())) {
+            progressListener.showProgressBar();
+        }
     }
 
     private void changeMenuVisible() {

@@ -1,4 +1,4 @@
-package com.maxml.timer.util;
+package com.maxml.timer.trash;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;
@@ -9,10 +9,6 @@ import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
-
-/**
- * Created by marazmone on 10.01.17.
- */
 
 public class AnimUtils {
     private static int counter = 0;

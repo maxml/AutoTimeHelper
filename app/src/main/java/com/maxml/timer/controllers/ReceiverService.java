@@ -77,6 +77,40 @@ public class ReceiverService extends Service implements LocationListener {
         startForeground(Constants.NOTIFICATION_APP_ID, notification);
     }
 
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.d(Constants.LOG, "catch new location" + location.getLatitude() + " : " + location.getLongitude());
+        Coordinates point = new Coordinates();
+        point.setLatitude(location.getLatitude());
+        point.setLongitude(location.getLongitude());
+        point.setDate(new Date());
+
+        if (wayCoordinates.size() == 0) {
+            wayCoordinates.add(point);
+            return;
+        }
+
+        // if distance between previous point and current more than constant
+        // add current point to wayCoordinates
+        if (Coordinates.getDistanceInMeter(wayCoordinates.get(wayCoordinates.size() - 1), point) > MIN_DISTANCE_UPDATES) {
+            wayCoordinates.add(point);
+        }
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
     @Subscribe()
     public void onEventBusControll(Events.EventBusControl event) {
         String message = event.getMessage();
@@ -181,40 +215,6 @@ public class ReceiverService extends Service implements LocationListener {
                 initAutoStartWalkAction();
                 break;
         }
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        Log.d(Constants.LOG, "catch new location" + location.getLatitude() + " : " + location.getLongitude());
-        Coordinates point = new Coordinates();
-        point.setLatitude(location.getLatitude());
-        point.setLongitude(location.getLongitude());
-        point.setDate(new Date());
-
-        if (wayCoordinates.size() == 0) {
-            wayCoordinates.add(point);
-            return;
-        }
-
-        // if distance between previous point and current more than constant
-        // add current point to wayCoordinates
-        if (Coordinates.getDistanceInMeter(wayCoordinates.get(wayCoordinates.size() - 1), point) > MIN_DISTANCE_UPDATES) {
-            wayCoordinates.add(point);
-        }
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
     }
 
     // need location permission

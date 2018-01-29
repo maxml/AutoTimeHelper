@@ -9,13 +9,11 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.maxml.timer.R;
 import com.maxml.timer.entity.Action;
-import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.OptionButtons;
 import com.maxml.timer.util.SharedPreferencesUtils;
 import com.maxml.timer.util.Utils;
@@ -87,6 +85,7 @@ public class CalendarDayAdapterNew extends RecyclerView.Adapter<CalendarDayAdapt
 
         int color = SharedPreferencesUtils.getColor(context, action.getType());
         holder.actionLayout.setBackgroundColor(color);
+        holder.rvOptions.setBackgroundColor(color);
 
         // options
         final boolean isExpanded = position == mExpandedPosition;

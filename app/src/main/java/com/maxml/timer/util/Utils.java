@@ -3,7 +3,6 @@ package com.maxml.timer.util;
 import android.app.ActivityManager;
 import android.content.Context;
 
-import com.google.api.client.util.Data;
 import com.maxml.timer.R;
 import com.maxml.timer.entity.Coordinates;
 
@@ -11,8 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 public class Utils {
     public static Date getDate(int day, int month, int year) {

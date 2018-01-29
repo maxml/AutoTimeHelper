@@ -20,7 +20,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -318,6 +317,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 setupFragment(new MainUserPageFragment());
+                drawerLayout.closeDrawers();
             }
         });
     }

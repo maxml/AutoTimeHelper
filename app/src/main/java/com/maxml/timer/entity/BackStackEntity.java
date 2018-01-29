@@ -1,9 +1,5 @@
 package com.maxml.timer.entity;
 
-/**
- * Created by nazar on 19.01.18.
- */
-
 public class BackStackEntity {
     private Action action;
     private boolean isBreak;

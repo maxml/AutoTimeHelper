@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.maxml.timer.R;
-import com.maxml.timer.controllers.ActionController;
 import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.entity.Action;
 import com.maxml.timer.entity.Events;
@@ -31,7 +30,6 @@ import com.maxml.timer.util.Utils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class DetailsActionFragment extends Fragment implements View.OnClickListener {
@@ -89,13 +87,6 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
 
         loadAction();
         super.onStart();
-    }
-
-    private void loadAction() {
-        if (getArguments() != null) {
-            dbController.getActionFromDb(getArguments().getString(Constants.EXTRA_ID_ACTION));
-            progressListener.showProgressBar();
-        }
     }
 
     @Override
@@ -170,6 +161,13 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
 
                 Toast.makeText(getContext(), R.string.action_not_exist, Toast.LENGTH_SHORT).show();
                 break;
+        }
+    }
+
+    private void loadAction() {
+        if (getArguments() != null) {
+            dbController.getActionFromDb(getArguments().getString(Constants.EXTRA_ID_ACTION));
+            progressListener.showProgressBar();
         }
     }
 
