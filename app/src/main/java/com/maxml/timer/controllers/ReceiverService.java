@@ -47,7 +47,7 @@ public class ReceiverService extends Service implements LocationListener {
     private boolean isGPSEnabled = false;
     private boolean isNetworkEnabled = false;
     private boolean isFirstRunMineActivity = true;
-    private boolean isAutoWalkActionActivate = false;
+    private Location startAutoWalkPoint;
     private LocationManager locationManager;
     private LocationListener autoWalkActionListener;
     private List<Coordinates> wayCoordinates = new ArrayList<>();
@@ -255,7 +255,7 @@ public class ReceiverService extends Service implements LocationListener {
             locationManager.removeUpdates(autoWalkActionListener);
         }
         autoWalkActionListener = null;
-        isAutoWalkActionActivate = false;
+        startAutoWalkPoint = null;
     }
 
 
@@ -284,12 +284,12 @@ public class ReceiverService extends Service implements LocationListener {
         autoWalkActionListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                if (isAutoWalkActionActivate) {
+                if (startAutoWalkPoint == null) {
+                    startAutoWalkPoint = location;
+                }
+                if (startAutoWalkPoint.distanceTo(location) >= Constants.MIN_DISTANCE_START_WALK_ACTION) {
                     Log.d(Constants.LOG, "Autostart WalkAction: is start WalkAction");
                     actionController.autoWalkAction();
-                } else {
-                    Log.d(Constants.LOG, "Autostart WalkAction: ready");
-                    isAutoWalkActionActivate = true;
                 }
             }
 
@@ -309,10 +309,12 @@ public class ReceiverService extends Service implements LocationListener {
         };
 
         if (isGPSEnabled) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, Constants.MIN_DISTANCE_START_WALK_ACTION, autoWalkActionListener);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME,
+                    Constants.MIN_DISTANCE_START_WALK_ACTION, autoWalkActionListener);
         }
         if (isNetworkEnabled) {
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, Constants.MIN_DISTANCE_START_WALK_ACTION, autoWalkActionListener);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME,
+                    Constants.MIN_DISTANCE_START_WALK_ACTION, autoWalkActionListener);
         }
     }
 
