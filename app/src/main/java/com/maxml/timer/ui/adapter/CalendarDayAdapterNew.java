@@ -70,8 +70,8 @@ public class CalendarDayAdapterNew extends RecyclerView.Adapter<CalendarDayAdapt
                 break;
         }
 
-        // tvType
-        holder.tvType.setText(action.getType());
+        // tvName
+        holder.tvName.setText(action.getDescription());
         // tvTime
         long time = action.getEndDate().getTime() - action.getStartDate().getTime();
         holder.tvTime.setText(Utils.parseToTimeDuration(context, time));
@@ -158,7 +158,7 @@ public class CalendarDayAdapterNew extends RecyclerView.Adapter<CalendarDayAdapt
     public class DayViewHolder extends RecyclerView.ViewHolder {
         private CardView cardView;
         private TextView tvTime;
-        private TextView tvType;
+        private TextView tvName;
         private RelativeLayout actionLayout;
         private RecyclerView rvOptions;
 
@@ -166,7 +166,7 @@ public class CalendarDayAdapterNew extends RecyclerView.Adapter<CalendarDayAdapt
             super(itemView);
             cardView = itemView.findViewById(R.id.cardVied);
             tvTime = itemView.findViewById(R.id.duration);
-            tvType = itemView.findViewById(R.id.action);
+            tvName = itemView.findViewById(R.id.action);
             actionLayout = itemView.findViewById(R.id.rootRelativeLayout);
             rvOptions = itemView.findViewById(R.id.recyclerViewOptions);
         }

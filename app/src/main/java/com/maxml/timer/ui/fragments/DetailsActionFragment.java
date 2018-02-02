@@ -1,6 +1,5 @@
 package com.maxml.timer.ui.fragments;
 
-
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.os.Bundle;

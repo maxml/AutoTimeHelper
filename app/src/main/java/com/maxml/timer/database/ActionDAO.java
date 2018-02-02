@@ -13,6 +13,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.entity.Action;
 import com.maxml.timer.entity.User;
+import com.maxml.timer.util.ActionUtils;
 import com.maxml.timer.util.Constants;
 
 import java.util.ArrayList;
@@ -42,6 +43,7 @@ public class ActionDAO {
 
         String dbId = actionRef.push().getKey();
         action.setId(dbId);
+        action.setDescription(ActionUtils.escapingTag(action.getDescription()));
 
         actionRef.child(dbId).setValue(action)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -62,6 +64,7 @@ public class ActionDAO {
 
         final String dbId = actionRef.push().getKey();
         walk.setId(dbId);
+        walk.setDescription(ActionUtils.escapingTag(walk.getDescription()));
 
         actionRef.child(dbId).setValue(walk).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -81,7 +84,7 @@ public class ActionDAO {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Action action = dataSnapshot.getValue(Action.class);
-
+                        action = ActionUtils.unescaping(action);
                         dbController.sendActionFromDb(action);
                     }
 
@@ -93,6 +96,8 @@ public class ActionDAO {
     }
 
     public void updateActionInDb(final Action action, final String oldDescription) {
+        action.setDescription(ActionUtils.escapingTag(action.getDescription()));
+
         Map<String, Object> map = new HashMap<>();
         map.put("description", action.getDescription());
         map.put("type", action.getType());
@@ -113,7 +118,9 @@ public class ActionDAO {
         tagDao.updateDescription(oldDescription, action.getDescription());
     }
 
-    public void removeAction(String id, final String description) {
+    public void removeAction(String id, String description) {
+        description = ActionUtils.escapingTag(description);
+
         actionRef.child(id).removeValue(
                 new DatabaseReference.CompletionListener() {
                     @Override
@@ -145,6 +152,7 @@ public class ActionDAO {
                                 dataSnapshot.getChildren()) {
                             list.add(snapshot.getKey());
                         }
+                        list = ActionUtils.unescapingTag(list);
                         dbController.sendAllTags(list);
                     }
 

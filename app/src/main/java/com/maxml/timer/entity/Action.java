@@ -11,7 +11,7 @@ public class Action implements Comparable<Action> {
     private String dayCount_type;
     private Date startDate;
     private Date endDate;
-    private String description = "-";
+    private String description;
     private boolean deleted = false;
 
     public Action() {

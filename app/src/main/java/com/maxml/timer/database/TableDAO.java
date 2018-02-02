@@ -10,6 +10,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.entity.Action;
 import com.maxml.timer.entity.Table;
+import com.maxml.timer.util.ActionUtils;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.Utils;
 
@@ -61,6 +62,7 @@ public class TableDAO {
 
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             Action action = snapshot.getValue(Action.class);
+                            action = ActionUtils.unescaping(action);
                             switch (action.getType()) {
                                 case Constants.EVENT_REST_ACTION:
                                     table.addRest(action);
@@ -114,6 +116,7 @@ public class TableDAO {
 
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 Action action = snapshot.getValue(Action.class);
+                                action = ActionUtils.unescaping(action);
                                 switch (action.getType()) {
                                     case Constants.EVENT_REST_ACTION:
                                         table.addRest(action);
@@ -159,6 +162,7 @@ public class TableDAO {
 
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             Action action = snapshot.getValue(Action.class);
+                            action = ActionUtils.unescaping(action);
                             switch (action.getType()) {
                                 case Constants.EVENT_REST_ACTION:
                                     table.addRest(action);
