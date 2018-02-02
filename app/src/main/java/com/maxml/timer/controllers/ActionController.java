@@ -207,6 +207,7 @@ public class ActionController {
         // create action entity
         Action rest = new Action();
         rest.setType(Constants.EVENT_REST_ACTION);
+        rest.setDescription("__" + Constants.EVENT_REST_ACTION);
         rest.setStartDate(new Date());
         rest.setDayCount(Utils.getDayCount(new Date()));
         String dayCount_type = rest.getDayCount() + "_" + rest.getType();
@@ -239,6 +240,7 @@ public class ActionController {
         // create action entity
         Action work = new Action();
         work.setType(Constants.EVENT_WORK_ACTION);
+        work.setDescription("__" + Constants.EVENT_WORK_ACTION);
         work.setStartDate(new Date());
         work.setDayCount(Utils.getDayCount(new Date()));
         String dayCount_type = work.getDayCount() + "_" + work.getType();
@@ -271,6 +273,7 @@ public class ActionController {
         // create action entity
         Action call = new Action();
         call.setType(Constants.EVENT_CALL_ACTION);
+        call.setDescription("__" + Constants.EVENT_CALL_ACTION);
         call.setStartDate(new Date());
         call.setDayCount(Utils.getDayCount(new Date()));
         String dayCount_type = call.getDayCount() + "_" + call.getType();
@@ -303,6 +306,7 @@ public class ActionController {
         // create action entity
         Action walk = new Action();
         walk.setType(Constants.EVENT_WALK_ACTION);
+        walk.setDescription("__" + Constants.EVENT_WALK_ACTION);
         walk.setStartDate(new Date());
         walk.setDayCount(Utils.getDayCount(new Date()));
         String dayCount_type = walk.getDayCount() + "_" + walk.getType();
@@ -345,9 +349,9 @@ public class ActionController {
         updateStatus(context.getString(R.string.text_default_action_state), null);
     }
 
-    private void stopCurrentAction(){
+    private void stopCurrentAction() {
         Log.d(Constants.TAG, "ActionController: stopCurrentAction()");
-        if (currentAction == null){
+        if (currentAction == null) {
             return;
         }
         String type = currentAction.getType();

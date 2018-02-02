@@ -28,9 +28,7 @@ public class ActionUtils {
                 endData.setTimeInMillis(startData.getTimeInMillis() + (1000 * 60 * 30));
             }
 
-            String description = (action.getDescription() == null) ? "" : action.getDescription();
-
-            ActionWeek actionWeek = new ActionWeek(action.getId(), action.getType() + "\n" + description,
+            ActionWeek actionWeek = new ActionWeek(action.getId(), action.getDescription(),
                     action.getType(), startData, endData);
 
             actionWeek.setColor(SharedPreferencesUtils.getColor(context, actionWeek.getType()));
@@ -38,6 +36,52 @@ public class ActionUtils {
             result.add(actionWeek);
         }
         return result;
+    }
+
+    public static List<Action> unescaping(List<Action> list) {
+        for (Action action :
+                list) {
+            action = unescaping(action);
+        }
+        return list;
+    }
+
+    public static Action escaping(Action action) {
+        if (action.getDescription().contains("#"))
+            action.setDescription(action.getDescription().replace("#", "__"));
+        return action;
+    }
+
+    public static Action unescaping(Action action) {
+        if (action.getDescription().contains("__"))
+            action.setDescription(action.getDescription().replace("__", "#"));
+        return action;
+    }
+
+    public static String escapingTag(String s) {
+        if (s.contains("#"))
+            s = s.replace("#", "__");
+        return s;
+    }
+
+    public static String unescapingTag(String s) {
+        if (s.contains("__"))
+            s = s.replace("__", "#");
+        return s;
+    }
+
+    public static List<String> escapingTag(List<String> list) {
+        for (int i = 0; i < list.size(); i++) {
+            list.set(i, escapingTag(list.get(i)));
+        }
+        return list;
+    }
+
+    public static List<String> unescapingTag(List<String> list) {
+        for (int i = 0; i < list.size(); i++) {
+            list.set(i, unescapingTag(list.get(i)));
+        }
+        return list;
     }
 
     public static Action findActionById(String id, List<Action> actions) {
