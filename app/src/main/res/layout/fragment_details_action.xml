@@ -24,7 +24,6 @@
             android:layout_margin="8dp"
             android:clickable="true"
             android:ems="10"
-            android:enabled="false"
             android:gravity="center_vertical"
             android:hint="Description"
             bootstrapbutton:roundedCorners="true" />
@@ -46,7 +45,6 @@
                 android:layout_weight="1"
                 android:cursorVisible="false"
                 android:ems="10"
-                android:enabled="false"
                 android:focusableInTouchMode="false"
                 android:hint="10:50"
                 android:inputType="none"
@@ -60,7 +58,6 @@
                 android:layout_weight="1"
                 android:cursorVisible="false"
                 android:ems="10"
-                android:enabled="false"
                 android:focusableInTouchMode="false"
                 android:gravity="center"
                 android:hint="11:00"
@@ -70,53 +67,18 @@
         </LinearLayout>
 
         <com.beardedhen.androidbootstrap.BootstrapButton
-            android:id="@+id/bb_change_action"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/ll_time"
-            android:layout_margin="8dp"
-            android:enabled="true"
-            android:text="Change action"
-            bootstrapbutton:bootstrapBrand="primary"
-            bootstrapbutton:bootstrapSize="lg"
-            bootstrapbutton:roundedCorners="true" />
-
-        <com.beardedhen.androidbootstrap.BootstrapButton
-            android:id="@+id/bb_change_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/bb_change_action"
-            android:layout_margin="8dp"
-            android:enabled="true"
-            android:text="Change description"
-            bootstrapbutton:bootstrapBrand="primary"
-            bootstrapbutton:bootstrapSize="lg"
-            bootstrapbutton:roundedCorners="true" />
-
-        <com.beardedhen.androidbootstrap.BootstrapButton
-            android:id="@+id/bb_change_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/bb_change_description"
-            android:layout_margin="8dp"
-            android:enabled="true"
-            android:text="Change date"
-            bootstrapbutton:bootstrapBrand="primary"
-            bootstrapbutton:bootstrapSize="lg"
-            bootstrapbutton:roundedCorners="true" />
-
-        <com.beardedhen.androidbootstrap.BootstrapButton
             android:id="@+id/bb_show_path_in_map"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/bb_change_date"
             android:layout_margin="8dp"
             android:enabled="true"
             android:text="Show path"
             android:visibility="gone"
+            android:layout_below="@id/ll_time"
             bootstrapbutton:bootstrapBrand="primary"
             bootstrapbutton:bootstrapSize="lg"
             bootstrapbutton:roundedCorners="true" />
+
 
         <com.beardedhen.androidbootstrap.BootstrapButton
             android:id="@+id/bb_ok"
@@ -128,7 +90,6 @@
             android:layout_marginTop="16dp"
             android:enabled="true"
             android:text="ok"
-            android:visibility="invisible"
             bootstrapbutton:bootstrapBrand="primary"
             bootstrapbutton:bootstrapSize="lg"
             bootstrapbutton:roundedCorners="true" />

@@ -115,7 +115,7 @@ public class ActionDAO {
                         }
                     }
                 });
-        tagDao.updateDescription(oldDescription, action.getDescription());
+        tagDao.updateDescription(ActionUtils.escapingTag(oldDescription), action.getDescription());
     }
 
     public void removeAction(String id, String description) {

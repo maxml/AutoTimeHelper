@@ -132,6 +132,7 @@ public class MainActivity extends AppCompatActivity
                 }
                 break;
         }
+        item.setChecked(true);
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -168,6 +169,12 @@ public class MainActivity extends AppCompatActivity
                     })
                     .create()
                     .show();
+        }
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
         }
     }
 
@@ -314,6 +321,7 @@ public class MainActivity extends AppCompatActivity
         drawerToggle.syncState();
 
         NavigationView nv = findViewById(R.id.navigationView);
+
         View header = nv.getHeaderView(0);
         header.setOnClickListener(new View.OnClickListener() {
             @Override
