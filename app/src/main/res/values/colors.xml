@@ -37,6 +37,8 @@
     <color name="color3">#50ff99</color><!--50, 250, 100-->
     <color name="color4">#ff9925</color><!--250, 100, 25-->
 
+    <color name="select_action">#E65100</color>
+
     <color name="gray">#f2f2f2</color>
 
     <color name="colorText">#ffffff</color>
