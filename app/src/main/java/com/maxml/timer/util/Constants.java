@@ -4,8 +4,8 @@ public class Constants {
 
     public static final String TAG = "LOG";
 
-    public static final float MIN_DISTANCE_START_WALK_ACTION = 25f;
-    public static final float MIN_DISTANCE_UPDATES = 5f;
+    public static final float MIN_DISTANCE_START_WALK_ACTION = 80f;
+    public static final float MIN_DISTANCE_UPDATES = 100f;
     public static final long MIN_TIME = 1000 * 20;
 
     public static final int RESULT_OK = 1;

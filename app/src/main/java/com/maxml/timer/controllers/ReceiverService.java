@@ -80,6 +80,10 @@ public class ReceiverService extends Service implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
         Log.d(Constants.LOG, "catch new location" + location.getLatitude() + " : " + location.getLongitude());
+        if (location.getAccuracy()>40){
+            Log.d(Constants.LOG, "Location accuracy is too huge: " + location.getAccuracy());
+            return;
+        }
         Coordinates point = new Coordinates();
         point.setLatitude(location.getLatitude());
         point.setLongitude(location.getLongitude());
@@ -287,11 +291,13 @@ public class ReceiverService extends Service implements LocationListener {
                 Log.d(Constants.LOG, location.getProvider() + " " + location.getAccuracy());
                 if (startAutoWalkPoint == null) {
                     startAutoWalkPoint = location;
+                    return;
                 }
-//                if (startAutoWalkPoint.distanceTo(location) >= Constants.MIN_DISTANCE_START_WALK_ACTION) {
-//                    Log.d(Constants.LOG, "Autostart WalkAction: is start WalkAction");
-//                    actionController.autoWalkAction();
-//                }
+
+                if (location.getAccuracy() < 40 && startAutoWalkPoint.distanceTo(location) >= Constants.MIN_DISTANCE_START_WALK_ACTION) {
+                    Log.d(Constants.LOG, "Autostart WalkAction: is start WalkAction");
+                    actionController.autoWalkAction();
+                }
             }
 
             @Override
