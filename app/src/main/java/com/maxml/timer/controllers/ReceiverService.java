@@ -284,13 +284,14 @@ public class ReceiverService extends Service implements LocationListener {
         autoWalkActionListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
+                Log.d(Constants.LOG, location.getProvider() + " " + location.getAccuracy());
                 if (startAutoWalkPoint == null) {
                     startAutoWalkPoint = location;
                 }
-                if (startAutoWalkPoint.distanceTo(location) >= Constants.MIN_DISTANCE_START_WALK_ACTION) {
-                    Log.d(Constants.LOG, "Autostart WalkAction: is start WalkAction");
-                    actionController.autoWalkAction();
-                }
+//                if (startAutoWalkPoint.distanceTo(location) >= Constants.MIN_DISTANCE_START_WALK_ACTION) {
+//                    Log.d(Constants.LOG, "Autostart WalkAction: is start WalkAction");
+//                    actionController.autoWalkAction();
+//                }
             }
 
             @Override

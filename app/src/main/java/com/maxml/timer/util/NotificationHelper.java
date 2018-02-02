@@ -12,6 +12,7 @@ import android.support.v4.app.NotificationCompat;
 
 import com.maxml.timer.R;
 import com.maxml.timer.ui.activity.LoginActivity;
+import com.maxml.timer.ui.activity.SplashActivity;
 
 public class NotificationHelper {
 
@@ -45,7 +46,7 @@ public class NotificationHelper {
 
     private static NotificationCompat.Builder getNotificationBuilder(Context context, String text) {
         // intent that is started when the notification is clicked
-        Intent notificationIntent = new Intent(context, LoginActivity.class);
+        Intent notificationIntent = new Intent(context, SplashActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
                 notificationIntent, 0);
         NotificationCompat.Builder nb;

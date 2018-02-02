@@ -33,7 +33,7 @@ import com.maxml.timer.entity.User;
 import com.maxml.timer.ui.activity.LoginActivity;
 import com.maxml.timer.ui.dialog.DialogCallback;
 import com.maxml.timer.ui.dialog.DialogFactory;
-import com.maxml.timer.ui.fragments.DayCalendarFragmentNew;
+import com.maxml.timer.ui.fragments.DayCalendarFragment;
 import com.maxml.timer.ui.fragments.HomeFragment;
 import com.maxml.timer.ui.fragments.MainUserPageFragment;
 import com.maxml.timer.ui.fragments.MonthCalendarFragment;
@@ -121,8 +121,8 @@ public class MainActivity extends AppCompatActivity
                 }
                 break;
             case R.id.i_calendar_day:
-                if (!(fragment instanceof DayCalendarFragmentNew)) {
-                    setupFragment(new DayCalendarFragmentNew());
+                if (!(fragment instanceof DayCalendarFragment)) {
+                    setupFragment(new DayCalendarFragment());
                 }
                 break;
             case R.id.i_setting:
@@ -217,7 +217,9 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void setEventTime(String time) {
-        eventTime.setText(time);
+        String placeholder = getString(R.string.text_work_statistic);
+        String text = placeholder + " " + time;
+        eventTime.setText(text);
     }
 
     @Override

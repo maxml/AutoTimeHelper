@@ -1,4 +1,4 @@
-package com.maxml.timer.ui.adapter;
+package com.maxml.timer.trash;
 
 import android.content.Context;
 import android.support.transition.TransitionManager;
@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.maxml.timer.R;
 import com.maxml.timer.entity.Action;
+import com.maxml.timer.ui.adapter.OptionButtonsAdapter;
 import com.maxml.timer.util.OptionButtons;
 
 import java.text.DecimalFormat;

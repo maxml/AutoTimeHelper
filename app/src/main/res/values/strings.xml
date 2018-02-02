@@ -64,13 +64,14 @@
     <string name="dialog_message_exit">Are you sure you want to exit?</string>
     <string name="dialog_title_exit">Really Exit?</string>
     <string name="message_two_identical_action">you have selected two identical dates</string>
-    <string name="text_default_action_state">Not start any action</string>
-    <string name="text_default_action_date">Not start any action</string>
+    <string name="text_default_action_state"></string>
+    <string name="text_default_action_date"></string>
     <string name="error_input_data">Please input login and password</string>
     <string name="hour">h</string>
     <string name="min">min</string>
     <string name="sec">sec</string>
     <string name="toast_wrong_description">Wrong description</string>
+    <string name="text_work_statistic">Вы проработали:</string>
 
     <string-array name="options_action">
         <item>Edit</item>

@@ -21,7 +21,7 @@ import com.maxml.timer.util.Utils;
 import java.util.Collections;
 import java.util.List;
 
-public class CalendarDayAdapterNew extends RecyclerView.Adapter<CalendarDayAdapterNew.DayViewHolder> {
+public class CalendarDayActionAdapter extends RecyclerView.Adapter<CalendarDayActionAdapter.DayViewHolder> {
     private int mExpandedPosition = -1;
 
     private Context context;
@@ -36,8 +36,8 @@ public class CalendarDayAdapterNew extends RecyclerView.Adapter<CalendarDayAdapt
         void onClick(Action action);
     }
 
-    public CalendarDayAdapterNew(Context context, List<Action> entityList,
-                                 List<OptionButtons> optionList, OnClickListener listener) {
+    public CalendarDayActionAdapter(Context context, List<Action> entityList,
+                                    List<OptionButtons> optionList, OnClickListener listener) {
         this.listener = listener;
         this.list = entityList;
         this.context = context;

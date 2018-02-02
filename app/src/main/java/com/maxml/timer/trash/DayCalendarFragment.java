@@ -1,4 +1,4 @@
-package com.maxml.timer.ui.fragments;
+package com.maxml.timer.trash;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -7,16 +7,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.maxml.timer.R;
@@ -27,13 +23,11 @@ import com.maxml.timer.entity.ShowFragmentListener;
 import com.maxml.timer.entity.ShowProgressListener;
 import com.maxml.timer.entity.StatisticControl;
 import com.maxml.timer.entity.Table;
-import com.maxml.timer.listeners.OnSwipeTouchListener;
-import com.maxml.timer.ui.adapter.CalendarDayAdapterNew;
-import com.maxml.timer.ui.adapter.CalendarDayTimeAdapter;
+import com.maxml.timer.ui.fragments.DetailsActionFragment;
 import com.maxml.timer.util.ActionUtils;
 import com.maxml.timer.util.Constants;
+import com.maxml.timer.util.NetworkUtil;
 import com.maxml.timer.util.OptionButtons;
-import com.maxml.timer.util.Utils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -41,24 +35,18 @@ import org.greenrobot.eventbus.Subscribe;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-public class DayCalendarFragmentNew extends Fragment implements CalendarDayAdapterNew.OnClickListener {
+public class DayCalendarFragment extends Fragment implements CalendarDayAdapter.OnClickListener {
 
-    private RecyclerView recyclerViewTime;
-    private RecyclerView recyclerViewActions;
-    private TextView tvDay;
+    private RecyclerView recyclerView;
 
     private boolean isJoined;
 
-    private Date currentDate;
     private List<OptionButtons> options = new ArrayList<>();
     private List<Action> list = new ArrayList<>();
-    private List<Date> dates = new ArrayList<>();
-    private CalendarDayAdapterNew actionAdapter;
-    private CalendarDayTimeAdapter timeAdapter;
+    private CalendarDayAdapter adapter;
     private DbController controller;
     private EventBus eventBus;
     private Action lastAction;
@@ -93,21 +81,11 @@ public class DayCalendarFragmentNew extends Fragment implements CalendarDayAdapt
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_day_calendar_new, container, false);
-        recyclerViewActions = view.findViewById(R.id.recyclerView);
-        recyclerViewTime = view.findViewById(R.id.recyclerViewTime);
-        tvDay = view.findViewById(R.id.day);
-        initRecyclerView();
-        recyclerViewActions
-                .setOnTouchListener(new OnSwipeTouchListener(getContext()) {
-                    public void onSwipeRight() {
-                        gotoPreviousDate();
-                    }
+        View view = inflater.inflate(R.layout.fragment_day_calendar, container, false);
+        recyclerView = view.findViewById(R.id.recyclerView);
 
-                    public void onSwipeLeft() {
-                        gotoNextDate();
-                    }
-                });
+        initRecyclerView();
+
         return view;
     }
 
@@ -116,18 +94,12 @@ public class DayCalendarFragmentNew extends Fragment implements CalendarDayAdapt
         super.onStart();
         eventBus.register(this);
         controller.registerEventBus(eventBus);
-        if (getArguments() != null) {
-            currentDate = new Date(getArguments().getLong(Constants.EXTRA_TIME_ACTION));
-        } else {
-            currentDate = new Date(System.currentTimeMillis());
-        }
-        loadActions(currentDate.getTime());
-        updateDay();
-    }
 
-    private void updateDay() {
-        String date = Utils.parseToDate(currentDate.getTime());
-        tvDay.setText(date);
+        if (getArguments() != null) {
+            loadActions(getArguments().getLong(Constants.EXTRA_TIME_ACTION));
+        } else {
+            loadActions(System.currentTimeMillis());
+        }
     }
 
     @Override
@@ -137,9 +109,10 @@ public class DayCalendarFragmentNew extends Fragment implements CalendarDayAdapt
         if (statisticControl != null) {
             statisticControl.hideStatisticLayout();
         }
+
         progressListener.hideProgressBar();
+
         list.clear();
-        dates.clear();
         super.onStop();
     }
 
@@ -162,18 +135,20 @@ public class DayCalendarFragmentNew extends Fragment implements CalendarDayAdapt
     }
 
     @Override
-    public void onClickOption(OptionButtons optionType, Action item) {
-        switch (optionType) {
-            case DELETE:
-                controller.removeActionInDb(String.valueOf(item.getId()), item.getDescription());
-                progressListener.showProgressBar();
-                break;
+    public void onClickOption(OptionButtons optionButton, Action item) {
+        switch (optionButton) {
             case EDIT:
                 Bundle args = new Bundle();
                 args.putString(Constants.EXTRA_ID_ACTION, item.getId());
                 DetailsActionFragment fragment = new DetailsActionFragment();
                 fragment.setArguments(args);
+
                 fragmentListener.showFragment(fragment);
+                break;
+            case DELETE:
+                controller.removeActionInDb(item.getId(), item.getDescription());
+
+                showProgress();
                 break;
             case JOIN:
                 isJoined = true;
@@ -181,18 +156,19 @@ public class DayCalendarFragmentNew extends Fragment implements CalendarDayAdapt
                 changeMenuVisible();
                 break;
         }
-        actionAdapter.resetList();
+        adapter.resetList();
     }
 
     @Override
     public void onClick(Action action) {
         if (isJoined) {
-            actionAdapter.resetList();
+            adapter.resetList();
             if (action != lastAction) {
                 Action newAction = ActionUtils.joinActions(lastAction, action);
-                controller.updateActionInDb(newAction, lastAction.getDescription());
+
                 controller.removeActionInDb(action.getId(), action.getDescription());
-                progressListener.showProgressBar();
+                controller.updateActionInDb(newAction, lastAction.getDescription());
+                showProgress();
             } else {
                 Toast.makeText(getContext(), R.string.message_two_identical_action, Toast.LENGTH_SHORT).show();
             }
@@ -208,12 +184,6 @@ public class DayCalendarFragmentNew extends Fragment implements CalendarDayAdapt
         list.addAll(table.getCallList());
         list.addAll(table.getRestList());
         list.addAll(table.getWalkList());
-        Collections.sort(list);
-
-        dates.clear();
-        for (Action action : list) {
-            dates.add(action.getStartDate());
-        }
 
         updateUI();
         initStatistic();
@@ -238,12 +208,12 @@ public class DayCalendarFragmentNew extends Fragment implements CalendarDayAdapt
         } else {
             controller.getTableFromDb(new Date(time));
         }
-        progressListener.showProgressBar();
+        showProgress();
     }
 
     private void updateUI() {
-        actionAdapter.swapData(list);
-        timeAdapter.swapData(dates);
+        adapter.swapData(list);
+
         initStatistic();
     }
 
@@ -255,7 +225,7 @@ public class DayCalendarFragmentNew extends Fragment implements CalendarDayAdapt
     private void initStatistic() {
         if (statisticControl != null) {
             String time = getStatisticTime();
-            statisticControl.setEventTime(time);
+            statisticControl.setEventTime("Work time: " + time);
             statisticControl.showStatisticLayout();
         }
     }
@@ -277,88 +247,22 @@ public class DayCalendarFragmentNew extends Fragment implements CalendarDayAdapt
     }
 
     private void initRecyclerView() {
-        recyclerViewTime.setLayoutManager(new LinearLayoutManager(getContext()));
-        timeAdapter = new CalendarDayTimeAdapter(getContext(), dates);
-        recyclerViewTime.setAdapter(timeAdapter);
-
-        recyclerViewActions.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
-        actionAdapter = new CalendarDayAdapterNew(getContext(), list, options, this);
-        recyclerViewActions.setAdapter(actionAdapter);
-
-        initRecyclerViewListeners();
-    }
-
-    private void initRecyclerViewListeners() {
-        // synchronize recycler view scrolling
-        RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (recyclerView == recyclerViewActions) {
-                    recyclerViewTime.removeOnScrollListener(this);
-                    recyclerViewTime.scrollBy(0, dy);
-                    recyclerViewTime.addOnScrollListener(this);
-                }
-            }
-
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-        };
-
-        ItemTouchHelper.Callback itemTouch = new ItemTouchHelper.Callback() {
-            @Override
-            public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
-                if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
-                    actionAdapter.closeExpandableOption();
-                }
-                super.onSelectedChanged(viewHolder, actionState);
-            }
-
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                final int fromPosition = viewHolder.getAdapterPosition();
-                final int toPosition = target.getAdapterPosition();
-                // and notify the actionAdapter that its dataset has changed
-                actionAdapter.onItemMove(fromPosition, toPosition);
-                timeAdapter.onItemMove(fromPosition, toPosition);
-                return true;
-            }
-
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-            }
-
-            //defines the enabled move directions in each state (idle, swiping, dragging).
-            @Override
-            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-                return makeFlag(ItemTouchHelper.ACTION_STATE_DRAG,
-                        ItemTouchHelper.DOWN | ItemTouchHelper.UP | ItemTouchHelper.START | ItemTouchHelper.END);
-            }
-        };
-        ItemTouchHelper touchHelper = new ItemTouchHelper(itemTouch);
-        touchHelper.attachToRecyclerView(recyclerViewActions);
-        recyclerViewTime.setNestedScrollingEnabled(false);
-        recyclerViewActions.addOnScrollListener(scrollListener);
-    }
-
-    private void gotoPreviousDate() {
-        long time = currentDate.getTime() - 86400000;
-        currentDate = new Date(time);
-        loadActions(time);
-        updateDay();
-    }
-
-    private void gotoNextDate() {
-        long time = currentDate.getTime() + 86400000;
-        currentDate = new Date(time);
-        loadActions(time);
-        updateDay();
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new CalendarDayAdapter(getContext(), new ArrayList<Action>(),
+                options, this);
+        recyclerView.setAdapter(adapter);
     }
 
     private void initOptionButtons() {
         options.add(OptionButtons.DELETE);
         options.add(OptionButtons.EDIT);
         options.add(OptionButtons.JOIN);
+    }
+
+    private void showProgress() {
+        if (NetworkUtil.isNetworkAvailable(getContext())) {
+            progressListener.showProgressBar();
+        }
     }
 
     private void changeMenuVisible() {

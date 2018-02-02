@@ -28,6 +28,7 @@ import com.maxml.timer.entity.ActionWeek;
 import com.maxml.timer.entity.Events;
 import com.maxml.timer.entity.ShowFragmentListener;
 import com.maxml.timer.entity.ShowProgressListener;
+import com.maxml.timer.entity.StatisticControl;
 import com.maxml.timer.entity.Table;
 import com.maxml.timer.ui.dialog.CreateActionDialog;
 import com.maxml.timer.ui.dialog.OptionDialog;
@@ -38,6 +39,8 @@ import com.maxml.timer.util.NetworkUtil;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -62,6 +65,7 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
     private DbController controller;
     private ShowFragmentListener fragmentListener;
     private ShowProgressListener progressListener;
+    private StatisticControl statisticControl;
 
     private WeekViewEvent lastEvent;
 
@@ -73,6 +77,9 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
         }
         if (context instanceof ShowProgressListener) {
             progressListener = (ShowProgressListener) context;
+        }
+        if (context instanceof StatisticControl) {
+            statisticControl = (StatisticControl) context;
         }
     }
 
@@ -87,10 +94,8 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_week_calendar, container, false);
-
         initView(rootView);
         setListeners();
-
         return rootView;
     }
 
@@ -101,6 +106,9 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
         controller.registerEventBus(eventBus);
 
         loadActions();
+        if (statisticControl != null) {
+            statisticControl.showStatisticLayout();
+        }
     }
 
     @Override
@@ -110,6 +118,10 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
 
         cvCalendar.setVisibility(View.GONE);
         progressListener.hideProgressBar();
+
+        if (statisticControl != null) {
+            statisticControl.hideStatisticLayout();
+        }
         super.onStop();
     }
 
@@ -221,17 +233,20 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
     @Subscribe
     public void receiveTableFromDb(List<Table> listTable) {
         actions = new ArrayList<>();
+        List<Action> workActions = new ArrayList<>();
 
-        for (Table table :
-                listTable) {
+        for (Table table : listTable) {
             actions.addAll(table.getWorkList());
             actions.addAll(table.getCallList());
             actions.addAll(table.getRestList());
             actions.addAll(table.getWalkList());
+            workActions.addAll(table.getWorkList());
         }
         list = ActionUtils.convertActionsToWeekViewEvents(actions, getContext());
 
         updateUI();
+        String workTime = getStatisticTime(workActions);
+        statisticControl.setEventTime(workTime);
 
         progressListener.hideProgressBar();
     }
@@ -247,6 +262,21 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
                 break;
         }
     }
+
+    private String getStatisticTime(List<Action> list) {
+        long timeInMillis = 0;
+        for (Action entity : list) {
+            Date startDate = entity.getStartDate();
+            Date endDate = entity.getEndDate();
+            long different = endDate.getTime() - startDate.getTime();
+            timeInMillis += different;
+        }
+        NumberFormat f = new DecimalFormat("00");
+        long hours = timeInMillis / 1000 / 60 / 60;
+        long min = timeInMillis / 1000 / 60 % 60;
+        return f.format(hours) + ":" + f.format(min);
+    }
+
 
     private void joinTwoAction(WeekViewEvent event) {
         if (event != lastEvent) {
@@ -311,7 +341,6 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
                 calendar.set(Calendar.YEAR, i);
                 calendar.set(Calendar.MONTH, i1);
                 calendar.set(Calendar.DAY_OF_MONTH, i2);
-
                 weekView.goToDate(calendar);
             }
         });
@@ -319,6 +348,7 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
 
     private void updateUI() {
         weekView.notifyDataSetChanged();
+
     }
 
     private int getNextCurrentCalendarView() {
