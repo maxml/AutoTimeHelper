@@ -64,6 +64,7 @@ dependencies {
     implementation 'com.beardedhen:androidbootstrap:2.0.0'
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'pub.devrel:easypermissions:1.1.1'
+    implementation 'com.u1aryz:colorpicker-preference-compat:0.1.0'
     implementation 'com.j256.ormlite:ormlite-android:5.0'
     implementation 'com.j256.ormlite:ormlite-core:5.0'
     implementation group: 'com.j256.ormlite', name: 'ormlite-core', version: '5.0'

@@ -1,6 +1,7 @@
 package com.maxml.timer.util;
 
 import android.content.Context;
+import android.graphics.Color;
 
 import com.alamkanak.weekview.WeekViewEvent;
 import com.maxml.timer.entity.Action;
@@ -36,6 +37,11 @@ public class ActionUtils {
             result.add(actionWeek);
         }
         return result;
+    }
+
+    public static ActionWeek setStandartColor(Context context, ActionWeek action) {
+        action.setColor(SharedPreferencesUtils.getColor(context, action.getType()));
+        return action;
     }
 
     public static List<Action> unescaping(List<Action> list) {

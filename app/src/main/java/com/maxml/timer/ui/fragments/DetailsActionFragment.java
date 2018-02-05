@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -33,9 +34,6 @@ import java.util.Calendar;
 
 public class DetailsActionFragment extends Fragment implements View.OnClickListener {
 
-    private BootstrapButton bbChangeAction;
-    private BootstrapButton bbChangeDescription;
-    private BootstrapButton bbChangeData;
     private BootstrapButton bbShowPathInMap;
     private BootstrapButton bbOk;
     private EditText etDescription;
@@ -98,19 +96,6 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.bb_change_action:
-                sAction.setEnabled(true);
-                bbOk.setVisibility(View.VISIBLE);
-                break;
-            case R.id.bb_change_description:
-                etDescription.setEnabled(true);
-                bbOk.setVisibility(View.VISIBLE);
-                break;
-            case R.id.bb_change_date:
-                etStartDate.setEnabled(true);
-                etEndDate.setEnabled(true);
-                bbOk.setVisibility(View.VISIBLE);
-                break;
             case R.id.bet_start_time:
                 showDialogStartTime();
                 break;
@@ -127,11 +112,6 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
                 fragmentListener.showFragment(mapFragment);
                 break;
             case R.id.bb_ok:
-                sAction.setEnabled(false);
-                etDescription.setEnabled(false);
-                etStartDate.setEnabled(false);
-                etEndDate.setEnabled(false);
-                bbOk.setVisibility(View.INVISIBLE);
                 progressListener.showProgressBar();
 
                 updateAction();
@@ -145,7 +125,7 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
                 action.getStartDate(), action.getEndDate(), action.getDescription(), action.isDeleted());
         this.action = action;
         updateUI(action);
-        initUIbShow(getView());
+        initUIbShow();
         progressListener.hideProgressBar();
     }
 
@@ -213,6 +193,12 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
     }
 
     private void updateAction() {
+        setDataToAction();
+
+        dbController.updateActionInDb(action, oldAction.getDescription());
+    }
+
+    private void setDataToAction() {
         if (sAction.getSelectedItemPosition() == 0) {
             action.setType(Constants.EVENT_CALL_ACTION);
         } else if (sAction.getSelectedItemPosition() == 1) {
@@ -223,8 +209,6 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
             action.setType(Constants.EVENT_WORK_ACTION);
         }
         action.setDescription(etDescription.getText().toString());
-
-        dbController.updateActionInDb(action, oldAction.getDescription());
     }
 
     private void registerEventBus() {
@@ -233,14 +217,10 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
     }
 
     private void initUI(View view) {
-        bbChangeData = view.findViewById(R.id.bb_change_date);
-        bbChangeAction = view.findViewById(R.id.bb_change_action);
-        bbChangeDescription = view.findViewById(R.id.bb_change_description);
         bbShowPathInMap = view.findViewById(R.id.bb_show_path_in_map);
         bbOk = view.findViewById(R.id.bb_ok);
 
         sAction = view.findViewById(R.id.s_action_type);
-        sAction.setEnabled(false);
 
         etDescription = view.findViewById(R.id.bet_description);
         etStartDate = view.findViewById(R.id.bet_start_time);
@@ -253,22 +233,33 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
         sAction.setAdapter(sAdapter);
     }
 
-    private void initUIbShow(View view) {
+    private void initUIbShow() {
         if (action.getType().equalsIgnoreCase(Constants.EVENT_WALK_ACTION)) {
-            bbShowPathInMap = view.findViewById(R.id.bb_show_path_in_map);
             bbShowPathInMap.setVisibility(View.VISIBLE);
+        } else {
+            bbShowPathInMap.setVisibility(View.GONE);
         }
     }
 
     private void setListeners() {
-        bbChangeAction.setOnClickListener(this);
-        bbChangeDescription.setOnClickListener(this);
-        bbChangeData.setOnClickListener(this);
         bbShowPathInMap.setOnClickListener(this);
         bbOk.setOnClickListener(this);
 
         etStartDate.setOnClickListener(this);
         etEndDate.setOnClickListener(this);
+
+        sAction.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                setDataToAction();
+                initUIbShow();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     private void updateUI(Action action) {

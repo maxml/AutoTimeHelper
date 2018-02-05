@@ -21,7 +21,7 @@ public class WifiState {
 
     public WifiState(String id, String name) {
         this.id = id;
-        this.name = name;
+        this.name = name.substring(1, name.length() - 1);
     }
 
     public String getId() {

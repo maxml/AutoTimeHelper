@@ -68,6 +68,7 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
     private StatisticControl statisticControl;
 
     private WeekViewEvent lastEvent;
+    private WeekViewEvent standarColorForAction;
 
     @Override
     public void onAttach(Context context) {
@@ -149,6 +150,7 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
     @Override
     public void onEventClick(WeekViewEvent event, RectF eventRect) {
         if (isJoined) {
+            setStandartColorForAction(lastEvent);
             joinTwoAction(event);
         } else {
             lastEvent = event;
@@ -189,6 +191,10 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
                 break;
             case Constants.ID_BUTTON_ACTION_JOIN:
                 isJoined = true;
+
+                lastEvent.setColor(R.color.select_action);
+                weekView.notifyDataSetChanged();
+
                 changeMenuVisible();
                 break;
         }
@@ -224,6 +230,7 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
             case R.id.i_v_cancel:
                 isJoined = false;
                 changeMenuVisible();
+                setStandartColorForAction(lastEvent);
                 break;
         }
 
@@ -368,5 +375,10 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
     private void changeMenuVisible() {
         menu.setGroupVisible(R.id.g_main_option, !isJoined);
         menu.setGroupVisible(R.id.g_cancel_option, isJoined);
+    }
+
+    public void setStandartColorForAction(WeekViewEvent weekViewEvent) {
+        ActionUtils.setStandartColor(getContext(), (ActionWeek) weekViewEvent);
+        weekView.notifyDataSetChanged();
     }
 }
