@@ -1,26 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <android.support.v7.preference.PreferenceScreen
         android:key="colors"
-        android:title="Color dates"
-        android:summary="Change color action in calendar">
+        android:summary="Change color action in calendar"
+        android:title="Color dates">
 
-        <com.kizitonwose.colorpreferencecompat.ColorPreferenceCompat
+        <com.u1aryz.android.colorpicker.ColorPreference
             android:defaultValue="@color/event_color_blue"
             android:key="walk"
-
+            android:persistent="true"
             android:title="Walk" />
-        <com.kizitonwose.colorpreferencecompat.ColorPreferenceCompat
+
+        <com.u1aryz.android.colorpicker.ColorPreference
             android:defaultValue="@color/event_color_yellow"
             android:key="call"
+            android:persistent="true"
             android:title="Call" />
-        <com.kizitonwose.colorpreferencecompat.ColorPreferenceCompat
+
+        <com.u1aryz.android.colorpicker.ColorPreference
             android:defaultValue="@color/event_color_red"
             android:key="work"
+            android:persistent="true"
             android:title="Work" />
-        <com.kizitonwose.colorpreferencecompat.ColorPreferenceCompat
+
+        <com.u1aryz.android.colorpicker.ColorPreference
             android:defaultValue="@color/event_color_green"
             android:key="rest"
+            android:persistent="true"
             android:title="Rest" />
 
     </android.support.v7.preference.PreferenceScreen>

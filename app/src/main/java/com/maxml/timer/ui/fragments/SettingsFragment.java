@@ -12,8 +12,9 @@ import com.maxml.timer.R;
 import com.maxml.timer.entity.ShowFragmentListener;
 import com.maxml.timer.ui.activity.LoginActivity;
 import com.maxml.timer.util.Constants;
+import com.u1aryz.android.colorpicker.ColorPreferenceFragmentCompat;
 
-public class SettingsFragment extends PreferenceFragmentCompat implements
+public class SettingsFragment extends ColorPreferenceFragmentCompat implements
         Preference.OnPreferenceClickListener, PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
     private ShowFragmentListener fragmentListener;
 
