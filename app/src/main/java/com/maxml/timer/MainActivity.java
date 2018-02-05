@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity
         ShowProgressListener, StatisticControl, ShowFragmentListener {
 
     private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
     private ProgressBar pbLoad;
     private Toolbar toolbar;
     private LinearLayout statisticLayout;
@@ -93,6 +94,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        item.setChecked(true);
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
         switch (item.getItemId()) {
             case R.id.i_home:
@@ -313,8 +315,8 @@ public class MainActivity extends AppCompatActivity
         drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
 
-        NavigationView nv = findViewById(R.id.navigationView);
-        View header = nv.getHeaderView(0);
+        navigationView = findViewById(R.id.navigationView);
+        View header = navigationView.getHeaderView(0);
         header.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

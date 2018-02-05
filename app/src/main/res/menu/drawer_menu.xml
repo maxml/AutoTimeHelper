@@ -1,45 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:id="@+id/group1">
+        <group android:id="@+id/group1">
 
-        <item
-            android:id="@+id/i_home"
-            android:icon="@drawable/ic_home_white"
-            android:title="@string/home" />
+            <item
+                android:id="@+id/i_home"
+                android:checkable="true"
+                android:icon="@drawable/ic_home_white"
+                android:title="@string/home" />
 
-        <item
-            android:id="@+id/i_user"
-            android:icon="@drawable/ic_person"
-            android:title="@string/user" />
+            <item
+                android:id="@+id/i_user"
+                android:checkable="true"
+                android:icon="@drawable/ic_person"
+                android:title="@string/user" />
 
-        <item
-            android:id="@+id/i_tags"
-            android:icon="@drawable/ic_tags"
-            android:title="tags"/>
-    </group>
+            <item
+                android:id="@+id/i_tags"
+                android:checkable="true"
+                android:icon="@drawable/ic_tags"
+                android:title="tags" />
+        </group>
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/i_calendar_month"
-            android:icon="@android:drawable/ic_menu_month"
-            android:title="@string/drawable_menu_month" />
-        <item
-            android:id="@+id/i_calendar_week"
-            android:icon="@android:drawable/ic_menu_week"
-            android:title="@string/drawable_menu_week" />
-        <item
-            android:id="@+id/i_calendar_day"
-            android:icon="@android:drawable/ic_menu_day"
-            android:title="@string/drawable_menu_day" />
-    </group>
+        <group android:checkableBehavior="single">
+            <item
+                android:id="@+id/i_calendar_month"
+                android:checkable="true"
+                android:icon="@android:drawable/ic_menu_month"
+                android:title="@string/drawable_menu_month" />
+            <item
+                android:id="@+id/i_calendar_week"
+                android:checkable="true"
+                android:icon="@android:drawable/ic_menu_week"
+                android:title="@string/drawable_menu_week" />
+            <item
+                android:id="@+id/i_calendar_day"
+                android:checkable="true"
+                android:icon="@android:drawable/ic_menu_day"
+                android:title="@string/drawable_menu_day" />
+        </group>
 
-    <group android:id="@+id/group2">
+        <group android:id="@+id/group2">
 
-        <item
-            android:id="@+id/i_setting"
-            android:icon="@drawable/ic_settings"
-            android:title="@string/settings" />
-    </group>
+            <item
+                android:id="@+id/i_setting"
+                android:checkable="true"
+                android:icon="@drawable/ic_settings"
+                android:title="@string/settings" />
+        </group>
 </menu>
 

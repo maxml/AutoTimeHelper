@@ -87,9 +87,9 @@
         android:background="@color/primary"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/drawer_header"
-        app:itemBackground="@color/primary"
-        app:itemIconTint="@color/primary_text"
-        app:itemTextColor="@color/primary_text"
+        app:itemBackground="@android:color/transparent"
+        app:itemIconTint="@color/drawer_color"
+        app:itemTextColor="@color/drawer_color"
         app:menu="@menu/drawer_menu" />
 
     <!--

@@ -24,6 +24,10 @@
     <color name="text">#ffffff</color>
     <color name="divider">#B6B6B6</color>
 
+    <color name="drawer_default">@color/primary_text</color>
+    <color name="drawer_checked">@color/secondary_text</color>
+
+
     <!-- the next colors are my classic -->
 
     <color name="my1000">#1000</color>
