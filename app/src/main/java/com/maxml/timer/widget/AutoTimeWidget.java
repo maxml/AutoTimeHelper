@@ -30,7 +30,6 @@ public class AutoTimeWidget extends AppWidgetProvider {
                 initEventBus(context);
             }
         }
-        // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
             updateWidget(context, appWidgetManager, appWidgetId);
         }
@@ -54,12 +53,9 @@ public class AutoTimeWidget extends AppWidgetProvider {
 
         String action = intent.getAction();
 
-        // if action null return
         if (action == null) {
             return;
         }
-
-        // if action widget
         if (action.equals(Constants.ACTION_WIDGET_RECEIVER)) {
             String message = intent.getStringExtra(Constants.WIDGET_EXTRA);
             if (message == null) {
@@ -82,7 +78,6 @@ public class AutoTimeWidget extends AppWidgetProvider {
             }
         }
 
-        // update action status
         if (action.equals(Constants.WIDGET_UPDATE_ACTION_STATUS)) {
             updateActionStatus(context, intent);
         }
@@ -90,7 +85,6 @@ public class AutoTimeWidget extends AppWidgetProvider {
 
     private void updateWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
         RemoteViews views = getRemoteView(context);
-        // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
@@ -108,42 +102,35 @@ public class AutoTimeWidget extends AppWidgetProvider {
     }
 
     private RemoteViews getRemoteView(Context context) {
-        // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
 
-        // create intent for button WORK
         Intent activeWork = new Intent(context, AutoTimeWidget.class);
         activeWork.setAction(Constants.ACTION_WIDGET_RECEIVER);
         activeWork.putExtra(Constants.WIDGET_EXTRA, Constants.EVENT_WORK_ACTION);
         PendingIntent pendingWork = PendingIntent.getBroadcast(context, 1, activeWork,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
-        // create intent for button REST
         Intent activeRest = new Intent(context, AutoTimeWidget.class);
         activeRest.setAction(Constants.ACTION_WIDGET_RECEIVER);
         activeRest.putExtra(Constants.WIDGET_EXTRA, Constants.EVENT_REST_ACTION);
         PendingIntent pendingRest = PendingIntent.getBroadcast(context, 2, activeRest,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
-        // create intent for button WALK
         Intent activeWalk = new Intent(context, AutoTimeWidget.class);
         activeWalk.setAction(Constants.ACTION_WIDGET_RECEIVER);
         activeWalk.putExtra(Constants.WIDGET_EXTRA, Constants.EVENT_WALK_ACTION);
         PendingIntent pendingWalk = PendingIntent.getBroadcast(context, 3, activeWalk,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
-        // create intent for button CALL
         Intent activeCall = new Intent(context, AutoTimeWidget.class);
         activeCall.setAction(Constants.ACTION_WIDGET_RECEIVER);
         activeCall.putExtra(Constants.WIDGET_EXTRA, Constants.EVENT_CALL_ACTION);
         PendingIntent pendingCall = PendingIntent.getBroadcast(context, 4, activeCall,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
-        // start MainActivity
         Intent activeActivity = new Intent(context, LoginActivity.class);
         PendingIntent pendingActivity = PendingIntent.getActivity(context, 0, activeActivity, 0);
 
-        // register actions
         views.setOnClickPendingIntent(R.id.b_work, pendingWork);
         views.setOnClickPendingIntent(R.id.b_walk, pendingWalk);
         views.setOnClickPendingIntent(R.id.b_rest, pendingRest);

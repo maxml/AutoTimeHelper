@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
+import android.util.Log;
 
 import com.maxml.timer.controllers.ActionController;
 import com.maxml.timer.controllers.DbController;
@@ -20,7 +22,7 @@ public class WifiReceiver extends BroadcastReceiver {
     private ActionController actionController;
     private EventBus eventBus;
 
-    private static boolean isActiveWifi;
+    public static boolean isActiveWifi;
     private static int wifiType;
 
     @Override

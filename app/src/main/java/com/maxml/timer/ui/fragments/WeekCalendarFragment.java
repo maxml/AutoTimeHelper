@@ -30,6 +30,7 @@ import com.maxml.timer.entity.ShowFragmentListener;
 import com.maxml.timer.entity.ShowProgressListener;
 import com.maxml.timer.entity.StatisticControl;
 import com.maxml.timer.entity.Table;
+import com.maxml.timer.ui.dialog.ChangeActionDialog;
 import com.maxml.timer.ui.dialog.CreateActionDialog;
 import com.maxml.timer.ui.dialog.OptionDialog;
 import com.maxml.timer.util.ActionUtils;
@@ -48,7 +49,8 @@ import java.util.List;
 
 public class WeekCalendarFragment extends Fragment implements WeekView.EventClickListener,
         MonthLoader.MonthChangeListener, WeekView.EventLongPressListener,
-        OptionDialog.OnDialogItemClickListener, CreateActionDialog.OnActionCreatedListener {
+        OptionDialog.OnDialogItemClickListener, CreateActionDialog.OnActionCreatedListener,
+        ChangeActionDialog.OnActionChangedListener{
 
     private WeekView weekView;
     private CalendarView cvCalendar;
@@ -174,12 +176,11 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
     public void onDialogItemClick(int position) {
         switch (position) {
             case Constants.ID_BUTTON_ACTION_EDIT:
+                ChangeActionDialog changeActionDialog = ChangeActionDialog.getInstance(this);
                 Bundle args = new Bundle();
                 args.putString(Constants.EXTRA_ID_ACTION, ((ActionWeek) lastEvent).getActionId());
-                DetailsActionFragment fragment = new DetailsActionFragment();
-                fragment.setArguments(args);
-
-                fragmentListener.showFragment(fragment);
+                changeActionDialog.setArguments(args);
+                changeActionDialog.show(getFragmentManager(), "DialogEditAction");
                 break;
             case Constants.ID_BUTTON_ACTION_DELETE:
                 Action action = ActionUtils.findActionById(((ActionWeek) lastEvent).getActionId(), actions);
@@ -235,6 +236,11 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void actionChanged(Action action) {
+        loadActions();
     }
 
     @Subscribe

@@ -11,11 +11,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.maxml.timer.R;
+import com.maxml.timer.controllers.ActionController;
 import com.maxml.timer.controllers.DbController;
+import com.maxml.timer.entity.Events;
 import com.maxml.timer.entity.WifiState;
 import com.maxml.timer.ui.adapter.WifiAdapter;
 import com.maxml.timer.ui.dialog.OptionDialog;
 import com.maxml.timer.util.Constants;
+import com.maxml.timer.util.NetworkUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -23,9 +26,11 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SettingWifiFragment extends Fragment implements WifiAdapter.OnItemClickListener, OptionDialog.OnDialogItemClickListener {
+public class SettingWifiFragment extends Fragment implements WifiAdapter.OnItemClickListener,
+        OptionDialog.OnDialogItemClickListener {
     private EventBus eventBus;
-    private DbController controller;
+    private DbController dbController;
+    private ActionController actionController;
 
     private WifiAdapter adapter;
     private WifiState lastWifiState;
@@ -39,7 +44,8 @@ public class SettingWifiFragment extends Fragment implements WifiAdapter.OnItemC
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_setting_wifi, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_setting_wifi, container,
+                false);
         
         initView(rootView);
 
@@ -50,17 +56,20 @@ public class SettingWifiFragment extends Fragment implements WifiAdapter.OnItemC
     public void onStart() {
         super.onStart();
         eventBus.register(this);
-        controller.registerEventBus(eventBus);
+        dbController.registerEventBus(eventBus);
+        actionController.registerEventBus(eventBus);
 
         loadWifi();
     }
 
     @Override
     public void onStop() {
-        controller.unregisterEventBus(eventBus);
+        dbController.unregisterEventBus(eventBus);
+        actionController.unregisterEventBus(eventBus);
         eventBus.unregister(this);
         super.onStop();
     }
+
     @Override
     public void onItemClick(WifiState wifiState) {
         this.lastWifiState = wifiState;
@@ -77,8 +86,19 @@ public class SettingWifiFragment extends Fragment implements WifiAdapter.OnItemC
         } else {
             lastWifiState.setType(0);
         }
-        controller.updateWifi(lastWifiState);
-        controller.getAllWifi();
+        dbController.updateWifi(lastWifiState);
+        dbController.getAllWifi();
+
+        announceAboutConnecting();
+    }
+
+    private void announceAboutConnecting() {
+        WifiState wifiState = NetworkUtil.getCurrentWifi(getContext());
+
+        if (wifiState.getId() != null && !wifiState.getId().equalsIgnoreCase("")) {
+            actionController.onReceiveWifiEvent(new Events.WifiEvent(Constants.EVENT_WIFI_ENABLE,
+                    lastWifiState.getType()));
+        }
     }
 
     @Subscribe
@@ -96,11 +116,11 @@ public class SettingWifiFragment extends Fragment implements WifiAdapter.OnItemC
     }
 
     private void loadWifi() {
-        controller.getAllWifi();
+        dbController.getAllWifi();
     }
 
     private void registerEventBus() {
         eventBus = new EventBus();
-        controller = new DbController(getContext(), eventBus);
+        actionController = new ActionController(getContext(), eventBus);
     }
 }

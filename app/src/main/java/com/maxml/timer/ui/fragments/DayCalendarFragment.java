@@ -1,6 +1,5 @@
 package com.maxml.timer.ui.fragments;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -22,6 +21,7 @@ import android.widget.Toast;
 import com.maxml.timer.R;
 import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.entity.Action;
+import com.maxml.timer.entity.ActionWeek;
 import com.maxml.timer.entity.Events;
 import com.maxml.timer.entity.ShowFragmentListener;
 import com.maxml.timer.entity.ShowProgressListener;
@@ -30,6 +30,7 @@ import com.maxml.timer.entity.Table;
 import com.maxml.timer.listeners.OnSwipeTouchListener;
 import com.maxml.timer.ui.adapter.CalendarDayActionAdapter;
 import com.maxml.timer.ui.adapter.CalendarDayTimeAdapter;
+import com.maxml.timer.ui.dialog.ChangeActionDialog;
 import com.maxml.timer.util.ActionUtils;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.OptionButtons;
@@ -45,7 +46,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-public class DayCalendarFragment extends Fragment implements CalendarDayActionAdapter.OnClickListener {
+public class DayCalendarFragment extends Fragment implements CalendarDayActionAdapter.OnClickListener, ChangeActionDialog.OnActionChangedListener {
 
     private RecyclerView recyclerViewTime;
     private RecyclerView recyclerViewActions;
@@ -127,11 +128,6 @@ public class DayCalendarFragment extends Fragment implements CalendarDayActionAd
         initStatistic();
     }
 
-    private void updateDay() {
-        String date = Utils.parseToDate(currentDate.getTime());
-        tvDay.setText(date);
-    }
-
     @Override
     public void onStop() {
         eventBus.unregister(this);
@@ -171,11 +167,11 @@ public class DayCalendarFragment extends Fragment implements CalendarDayActionAd
                 progressListener.showProgressBar();
                 break;
             case EDIT:
+                ChangeActionDialog changeActionDialog = ChangeActionDialog.getInstance(this);
                 Bundle args = new Bundle();
                 args.putString(Constants.EXTRA_ID_ACTION, item.getId());
-                DetailsActionFragment fragment = new DetailsActionFragment();
-                fragment.setArguments(args);
-                fragmentListener.showFragment(fragment);
+                changeActionDialog.setArguments(args);
+                changeActionDialog.show(getFragmentManager(), "DialogEditAction");
                 break;
             case JOIN:
                 isJoined = true;
@@ -201,6 +197,17 @@ public class DayCalendarFragment extends Fragment implements CalendarDayActionAd
             isJoined = false;
             changeMenuVisible();
         }
+    }
+
+    @Override
+    public void actionChanged(Action action) {
+        if (getArguments() != null) {
+            currentDate = new Date(getArguments().getLong(Constants.EXTRA_TIME_ACTION));
+        } else {
+            currentDate = new Date(System.currentTimeMillis());
+        }
+        loadActions(currentDate.getTime());
+        updateDay();
     }
 
     @Subscribe
@@ -230,6 +237,11 @@ public class DayCalendarFragment extends Fragment implements CalendarDayActionAd
                 progressListener.hideProgressBar();
                 break;
         }
+    }
+
+    private void updateDay() {
+        String date = Utils.parseToDate(currentDate.getTime());
+        tvDay.setText(date);
     }
 
     private void loadActions(long time) {

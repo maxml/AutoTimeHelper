@@ -44,6 +44,7 @@ public class ActionDAO {
         String dbId = actionRef.push().getKey();
         action.setId(dbId);
         action.setDescription(ActionUtils.escapingTag(action.getDescription()));
+        if (action.getDescription().equalsIgnoreCase("")) action.setDescription("-");
 
         actionRef.child(dbId).setValue(action)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -65,6 +66,7 @@ public class ActionDAO {
         final String dbId = actionRef.push().getKey();
         walk.setId(dbId);
         walk.setDescription(ActionUtils.escapingTag(walk.getDescription()));
+        if (walk.getDescription().equalsIgnoreCase("")) walk.setDescription("-");
 
         actionRef.child(dbId).setValue(walk).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -97,6 +99,8 @@ public class ActionDAO {
 
     public void updateActionInDb(final Action action, final String oldDescription) {
         action.setDescription(ActionUtils.escapingTag(action.getDescription()));
+
+        if (action.getDescription().equalsIgnoreCase("")) action.setDescription("-");
 
         Map<String, Object> map = new HashMap<>();
         map.put("description", action.getDescription());

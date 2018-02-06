@@ -1,16 +1,20 @@
-package com.maxml.timer.ui.fragments;
+package com.maxml.timer.ui.dialog;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TimePicker;
@@ -23,7 +27,7 @@ import com.maxml.timer.entity.Action;
 import com.maxml.timer.entity.Events;
 import com.maxml.timer.entity.ShowFragmentListener;
 import com.maxml.timer.entity.ShowProgressListener;
-import com.maxml.timer.ui.dialog.CheckTimeDialog;
+import com.maxml.timer.ui.fragments.GoogleMapFragment;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.Utils;
 
@@ -32,10 +36,9 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Calendar;
 
-public class DetailsActionFragment extends Fragment implements View.OnClickListener {
-
+public class ChangeActionDialog extends DialogFragment implements View.OnClickListener {
     private BootstrapButton bbShowPathInMap;
-    private BootstrapButton bbOk;
+    private Button bPositive;
     private EditText etDescription;
     private EditText etStartDate;
     private EditText etEndDate;
@@ -48,6 +51,21 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
 
     private ShowProgressListener progressListener;
     private ShowFragmentListener fragmentListener;
+    private static OnActionChangedListener actionChangedListener;
+
+    private static ChangeActionDialog dialog;
+
+    public interface OnActionChangedListener {
+        void actionChanged(Action action);
+    }
+
+    public static ChangeActionDialog getInstance(OnActionChangedListener listener) {
+        if (dialog == null) {
+            dialog = new ChangeActionDialog();
+        }
+        actionChangedListener = listener;
+        return dialog;
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -66,15 +84,37 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
         registerEventBus();
     }
 
+    @NonNull
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.dialog_details_action, container, false);
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        View rootView = LayoutInflater.from(getContext())
+                .inflate(R.layout.dialog_details_action, null);
 
         initUI(rootView);
         setListeners();
 
-        return rootView;
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
+                .setView(rootView)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        progressListener.showProgressBar();
+
+                        updateAction();
+                        actionChangedListener.actionChanged(action);
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                bPositive = ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE);
+            }
+        });
+
+        return dialog;
     }
 
     @Override
@@ -110,11 +150,8 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
 
                 mapFragment.setArguments(args);
                 fragmentListener.showFragment(mapFragment);
-                break;
-            case R.id.bb_ok:
-                progressListener.showProgressBar();
 
-                updateAction();
+                dismiss();
                 break;
         }
     }
@@ -162,14 +199,15 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
                 etStartDate.setText(Utils.parseToTime(calendarStartDate.getTimeInMillis()));
 
                 if (!isSuccessfulDate()) {
-                    bbOk.setEnabled(false);
+                    bPositive.setEnabled(false);
                 } else {
-                    bbOk.setEnabled(true);
+                    bPositive.setEnabled(true);
                 }
             }
         });
         checkStartTimeDialog.show(getFragmentManager(), "checkStartTimeDialog");
     }
+
 
     private void showDialogEndTime() {
         final Calendar calendarEndDate = Calendar.getInstance();
@@ -183,9 +221,9 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
                 etEndDate.setText(Utils.parseToTime(calendarEndDate.getTimeInMillis()));
 
                 if (!isSuccessfulDate()) {
-                    bbOk.setEnabled(false);
+                    bPositive.setEnabled(false);
                 } else {
-                    bbOk.setEnabled(true);
+                    bPositive.setEnabled(true);
                 }
             }
         });
@@ -197,6 +235,7 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
 
         dbController.updateActionInDb(action, oldAction.getDescription());
     }
+
 
     private void setDataToAction() {
         if (sAction.getSelectedItemPosition() == 0) {
@@ -218,7 +257,6 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
 
     private void initUI(View view) {
         bbShowPathInMap = view.findViewById(R.id.bb_show_path_in_map);
-        bbOk = view.findViewById(R.id.bb_ok);
 
         sAction = view.findViewById(R.id.s_action_type);
 
@@ -243,7 +281,6 @@ public class DetailsActionFragment extends Fragment implements View.OnClickListe
 
     private void setListeners() {
         bbShowPathInMap.setOnClickListener(this);
-        bbOk.setOnClickListener(this);
 
         etStartDate.setOnClickListener(this);
         etEndDate.setOnClickListener(this);

@@ -146,6 +146,7 @@ public class TableDAO {
     }
 
     public void getTableByDescription(String description) {
+        description = ActionUtils.escapingTag(description);
         actionRef
                 .orderByChild(Constants.COLUMN_DESCRIPTION)
                 .equalTo(description)

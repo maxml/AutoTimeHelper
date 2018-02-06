@@ -29,14 +29,12 @@ public class DbController {
     private EventBus entityEventBus;
     private Context context;
 
-    // db
     private ActionDAO actionDAO;
     private TableDAO tableDAO;
     private PathDAO pathDAO;
     private CoordinateDAO coordinateDAO;
     private UserDAO userDAO;
     private WifiStateDAO wifiStateDAO;
-
 
     public DbController(Context context, EventBus entityEventBus) {
         this.context = context;

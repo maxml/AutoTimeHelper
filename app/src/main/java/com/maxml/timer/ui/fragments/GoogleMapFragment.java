@@ -37,11 +37,9 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
     private MapView mapView;
     private DbController dbController;
 
-    // single path
     private String idPath;
     private Polyline polyline;
 
-    // multi path
     private List<String> listIdPath;
     private List<Polyline> polylines = new ArrayList<>();
 

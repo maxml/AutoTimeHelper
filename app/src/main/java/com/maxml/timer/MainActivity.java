@@ -30,6 +30,7 @@ import com.maxml.timer.entity.ShowFragmentListener;
 import com.maxml.timer.entity.ShowProgressListener;
 import com.maxml.timer.entity.StatisticControl;
 import com.maxml.timer.entity.User;
+import com.maxml.timer.entity.WifiState;
 import com.maxml.timer.ui.activity.LoginActivity;
 import com.maxml.timer.ui.dialog.DialogCallback;
 import com.maxml.timer.ui.dialog.DialogFactory;
@@ -90,6 +91,7 @@ public class MainActivity extends AppCompatActivity
         initDrawer();
         initController();
         setHomeFragment();
+        checkOnWifi();
     }
 
     @Override
@@ -134,6 +136,7 @@ public class MainActivity extends AppCompatActivity
                 }
                 break;
         }
+
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -170,6 +173,12 @@ public class MainActivity extends AppCompatActivity
                     })
                     .create()
                     .show();
+        }
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
         }
     }
 
@@ -302,13 +311,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initDrawer() {
-        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(
-                this,
-                drawerLayout,
-                toolbar,
-                R.string.drawer_open,
-                R.string.drawer_close) {
-        };
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this,
+                drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
 
         drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         drawerLayout.setStatusBarBackground(R.color.primary_dark);
@@ -316,6 +320,15 @@ public class MainActivity extends AppCompatActivity
         drawerToggle.syncState();
 
         navigationView = findViewById(R.id.navigationView);
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                item.setChecked(true);
+                return false;
+            }
+        });
+
         View header = navigationView.getHeaderView(0);
         header.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -330,13 +343,12 @@ public class MainActivity extends AppCompatActivity
         if (user == null) {
             return;
         }
-        NavigationView nv = findViewById(R.id.navigationView);
-        View header = nv.getHeaderView(0);
+        View header = navigationView.getHeaderView(0);
 
         TextView name = header.findViewById(R.id.user_name);
         ImageView icon = header.findViewById(R.id.profile_image);
 
-        nv.setNavigationItemSelectedListener(this);
+        navigationView.setNavigationItemSelectedListener(this);
 
         if (user.getEmail() != null && !user.getEmail().isEmpty()) {
             if (user.getUsername() != null) {
@@ -377,5 +389,13 @@ public class MainActivity extends AppCompatActivity
         View snackBarView = snackbar.getView();
         snackBarView.setBackgroundColor(getResources().getColor(R.color.divider));
         snackbar.show();
+    }
+
+    private void checkOnWifi() {
+        WifiState wifiState = NetworkUtil.getCurrentWifi(getApplicationContext());
+
+        if (wifiState.getId() != null && !wifiState.getId().equalsIgnoreCase("")) {
+            dbController.wifiActivated(wifiState);
+        }
     }
 }
