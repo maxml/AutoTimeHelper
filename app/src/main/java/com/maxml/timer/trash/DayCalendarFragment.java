@@ -23,7 +23,6 @@ import com.maxml.timer.entity.ShowFragmentListener;
 import com.maxml.timer.entity.ShowProgressListener;
 import com.maxml.timer.entity.StatisticControl;
 import com.maxml.timer.entity.Table;
-import com.maxml.timer.ui.fragments.DetailsActionFragment;
 import com.maxml.timer.util.ActionUtils;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.NetworkUtil;

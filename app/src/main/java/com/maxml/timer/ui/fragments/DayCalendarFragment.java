@@ -21,9 +21,7 @@ import android.widget.Toast;
 import com.maxml.timer.R;
 import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.entity.Action;
-import com.maxml.timer.entity.ActionWeek;
 import com.maxml.timer.entity.Events;
-import com.maxml.timer.entity.ShowFragmentListener;
 import com.maxml.timer.entity.ShowProgressListener;
 import com.maxml.timer.entity.StatisticControl;
 import com.maxml.timer.entity.Table;
@@ -66,7 +64,6 @@ public class DayCalendarFragment extends Fragment implements CalendarDayActionAd
     private Menu menu;
 
     private StatisticControl statisticControl;
-    private ShowFragmentListener fragmentListener;
     private ShowProgressListener progressListener;
 
     @Override
@@ -74,9 +71,6 @@ public class DayCalendarFragment extends Fragment implements CalendarDayActionAd
         super.onAttach(context);
         if (context instanceof StatisticControl) {
             statisticControl = (StatisticControl) context;
-        }
-        if (context instanceof ShowFragmentListener) {
-            fragmentListener = (ShowFragmentListener) context;
         }
         if (context instanceof ShowProgressListener) {
             progressListener = (ShowProgressListener) context;

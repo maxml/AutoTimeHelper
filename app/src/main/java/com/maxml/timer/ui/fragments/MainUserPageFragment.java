@@ -36,9 +36,6 @@ import java.io.File;
 
 public class MainUserPageFragment extends Fragment implements View.OnClickListener {
 
-    private BootstrapButton bbChangePicture;
-    private BootstrapButton bbChangeName;
-    private BootstrapButton bbChangeEmail;
     private BootstrapButton bbOk;
     private EditText etName;
     private EditText etEmail;
@@ -93,26 +90,13 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.bb_email:
-                etEmail.setEnabled(true);
-                bbOk.setVisibility(View.VISIBLE);
-                break;
-            case R.id.bb_name:
-                etName.setEnabled(true);
-                bbOk.setVisibility(View.VISIBLE);
-                break;
-            case R.id.bb_change_picture:
-
+            case R.id.iv_user:
                 Intent intent = ImageUtil.createIntentForLoadImage(getActivity());
                 if (intent != null) {
                     getActivity().startActivityForResult(intent, Constants.REQUEST_CODE_TAKE_PHOTO);
                 }
                 break;
             case R.id.bb_ok:
-                bbOk.setVisibility(View.GONE);
-                etEmail.setEnabled(false);
-                etName.setEnabled(false);
-
                 dbController.updateUserEmail(etEmail.getText().toString());
                 dbController.updateUserName(etName.getText().toString());
 
@@ -169,23 +153,17 @@ public class MainUserPageFragment extends Fragment implements View.OnClickListen
 
 
     private void disableAccessToUI() {
-        bbChangeEmail.setEnabled(false);
-        bbChangeName.setEnabled(false);
-        bbChangePicture.setEnabled(false);
+        etName.setEnabled(false);
+        etEmail.setEnabled(false);
         bbOk.setEnabled(false);
     }
 
     private void setListeners() {
-        bbChangePicture.setOnClickListener(this);
-        bbChangeName.setOnClickListener(this);
-        bbChangeEmail.setOnClickListener(this);
         bbOk.setOnClickListener(this);
+        ivUser.setOnClickListener(this);
     }
 
     private void initUI(View view) {
-        bbChangeEmail = view.findViewById(R.id.bb_email);
-        bbChangeName = view.findViewById(R.id.bb_name);
-        bbChangePicture = view.findViewById(R.id.bb_change_picture);
         bbOk = view.findViewById(R.id.bb_ok);
 
         etName = view.findViewById(R.id.bet_name);

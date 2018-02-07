@@ -26,7 +26,6 @@ import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.entity.Action;
 import com.maxml.timer.entity.ActionWeek;
 import com.maxml.timer.entity.Events;
-import com.maxml.timer.entity.ShowFragmentListener;
 import com.maxml.timer.entity.ShowProgressListener;
 import com.maxml.timer.entity.StatisticControl;
 import com.maxml.timer.entity.Table;
@@ -65,19 +64,14 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
 
     private EventBus eventBus;
     private DbController controller;
-    private ShowFragmentListener fragmentListener;
     private ShowProgressListener progressListener;
     private StatisticControl statisticControl;
 
     private WeekViewEvent lastEvent;
-    private WeekViewEvent standarColorForAction;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof ShowFragmentListener) {
-            fragmentListener = (ShowFragmentListener) context;
-        }
         if (context instanceof ShowProgressListener) {
             progressListener = (ShowProgressListener) context;
         }

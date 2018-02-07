@@ -182,7 +182,6 @@ public class UserDAO {
     }
 
     public void updateEmail(final String email) {
-        //TODO don`t work changing email
         FirebaseUser user = mAuth.getCurrentUser();
 
         user.updateEmail(email)

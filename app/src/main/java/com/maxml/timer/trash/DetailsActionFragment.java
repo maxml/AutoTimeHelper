@@ -1,4 +1,4 @@
-package com.maxml.timer.ui.fragments;
+package com.maxml.timer.trash;
 
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -24,6 +24,7 @@ import com.maxml.timer.entity.Events;
 import com.maxml.timer.entity.ShowFragmentListener;
 import com.maxml.timer.entity.ShowProgressListener;
 import com.maxml.timer.ui.dialog.CheckTimeDialog;
+import com.maxml.timer.ui.fragments.GoogleMapFragment;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.Utils;
 

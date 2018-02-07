@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        findViewById(R.id.cv_calendar).setVisibility(View.GONE);
         pbLoad = findViewById(R.id.pb_load);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

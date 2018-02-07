@@ -34,8 +34,7 @@
                 <CalendarView
                     android:id="@+id/cv_calendar"
                     android:layout_width="match_parent"
-                    android:layout_height="300dp"
-                    android:visibility="gone" />
+                    android:layout_height="300dp"/>
 
                 <ProgressBar
                     android:id="@+id/pb_load"
@@ -47,7 +46,6 @@
                     android:visibility="invisible" />
             </android.support.design.widget.AppBarLayout>
 
-
             <FrameLayout
                 android:id="@+id/content_frame"
                 android:layout_width="match_parent"
@@ -55,6 +53,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_below="@+id/app_bar_layout"
                 android:background="@color/backGroundGrey" />
+
 
             <LinearLayout
                 android:id="@+id/layoutStatistic"
