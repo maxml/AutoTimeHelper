@@ -4,8 +4,10 @@ import android.content.Context;
 import android.graphics.Color;
 
 import com.alamkanak.weekview.WeekViewEvent;
+import com.maxml.timer.R;
 import com.maxml.timer.entity.Action;
 import com.maxml.timer.entity.ActionWeek;
+import com.u1aryz.android.colorpicker.ColorPreferenceFragmentCompat;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,6 +39,24 @@ public class ActionUtils {
             result.add(actionWeek);
         }
         return result;
+    }
+
+    public static List<WeekViewEvent> findNeedActionsForJoin(List<WeekViewEvent> list, WeekViewEvent changeAction) {
+        //if the actions intersect with the selected action, then change their color.
+        long startTimeSelectAction = changeAction.getStartTime().getTimeInMillis();
+        long endTimeSelectAction = changeAction.getEndTime().getTimeInMillis();
+        for (int i = 0; i < list.size(); i++) {
+            long startTimeAction = list.get(i).getStartTime().getTimeInMillis();
+            long endTimeAction = list.get(i).getEndTime().getTimeInMillis();
+            if ((startTimeSelectAction != startTimeAction) &&
+                    ((startTimeSelectAction <= startTimeAction && endTimeSelectAction >= startTimeAction) ||
+                            (startTimeSelectAction <= endTimeAction && endTimeSelectAction >= endTimeAction)) ||
+                    ((startTimeAction <= startTimeSelectAction && endTimeAction >= startTimeSelectAction) ||
+                            (startTimeAction <= endTimeSelectAction && endTimeAction >= endTimeSelectAction))) {
+                list.get(i).setColor(R.color.color1);
+            }
+        }
+        return list;
     }
 
     public static ActionWeek setStandartColor(Context context, ActionWeek action) {

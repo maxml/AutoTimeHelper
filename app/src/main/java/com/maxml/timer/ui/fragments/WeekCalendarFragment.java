@@ -35,6 +35,7 @@ import com.maxml.timer.ui.dialog.OptionDialog;
 import com.maxml.timer.util.ActionUtils;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.NetworkUtil;
+import com.u1aryz.android.colorpicker.ColorPreferenceFragmentCompat;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -49,7 +50,7 @@ import java.util.List;
 public class WeekCalendarFragment extends Fragment implements WeekView.EventClickListener,
         MonthLoader.MonthChangeListener, WeekView.EventLongPressListener,
         OptionDialog.OnDialogItemClickListener, CreateActionDialog.OnActionCreatedListener,
-        ChangeActionDialog.OnActionChangedListener{
+        ChangeActionDialog.OnActionChangedListener {
 
     private WeekView weekView;
     private CalendarView cvCalendar;
@@ -146,8 +147,10 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
     @Override
     public void onEventClick(WeekViewEvent event, RectF eventRect) {
         if (isJoined) {
-            setStandartColorForAction(lastEvent);
-            joinTwoAction(event);
+            if (event.getColor() == R.color.color1) {
+                setStandartColorForActions();
+                joinTwoAction(event);
+            }
         } else {
             lastEvent = event;
             DialogFragment dialog = OptionDialog.getInstance(this, R.array.options_action);
@@ -187,6 +190,7 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
             case Constants.ID_BUTTON_ACTION_JOIN:
                 isJoined = true;
 
+                list = ActionUtils.findNeedActionsForJoin(list, lastEvent);
                 lastEvent.setColor(R.color.select_action);
                 weekView.notifyDataSetChanged();
 
@@ -225,7 +229,7 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
             case R.id.i_v_cancel:
                 isJoined = false;
                 changeMenuVisible();
-                setStandartColorForAction(lastEvent);
+                setStandartColorForActions();
                 break;
         }
 
@@ -286,18 +290,15 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
 
 
     private void joinTwoAction(WeekViewEvent event) {
-        if (event != lastEvent) {
-            Action firesAction = ActionUtils.findActionById(((ActionWeek) lastEvent).getActionId(), actions);
-            Action secondAction = ActionUtils.findActionById(((ActionWeek) event).getActionId(), actions);
+        Action firesAction = ActionUtils.findActionById(((ActionWeek) lastEvent).getActionId(), actions);
+        Action secondAction = ActionUtils.findActionById(((ActionWeek) event).getActionId(), actions);
 
-            Action action = ActionUtils.joinActions(firesAction, secondAction);
+        Action action = ActionUtils.joinActions(firesAction, secondAction);
 
-            controller.updateActionInDb(action, firesAction.getDescription());
-            controller.removeActionInDb(secondAction.getId(), secondAction.getDescription());
-            showProgress();
-        } else {
-            Toast.makeText(getContext(), R.string.message_two_identical_action, Toast.LENGTH_SHORT).show();
-        }
+        controller.updateActionInDb(action, firesAction.getDescription());
+        controller.removeActionInDb(secondAction.getId(), secondAction.getDescription());
+        showProgress();
+
         isJoined = false;
 
         changeMenuVisible();
@@ -377,8 +378,8 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
         menu.setGroupVisible(R.id.g_cancel_option, isJoined);
     }
 
-    public void setStandartColorForAction(WeekViewEvent weekViewEvent) {
-        ActionUtils.setStandartColor(getContext(), (ActionWeek) weekViewEvent);
+    public void setStandartColorForActions() {
+        list = ActionUtils.convertActionsToWeekViewEvents(actions, getContext());
         weekView.notifyDataSetChanged();
     }
 }

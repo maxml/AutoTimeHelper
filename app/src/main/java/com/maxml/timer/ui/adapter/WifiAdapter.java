@@ -75,7 +75,7 @@ public class WifiAdapter extends RecyclerView.Adapter<WifiAdapter.ViewHolder> {
             } else {
                 ivType.setBackground(null);
             }
-            tvName.setText(wifiState.getName());
+            tvName.setText(wifiState.getName().substring(1, wifiState.getName().length() - 1));
         }
     }
 }

@@ -23,7 +23,7 @@ public class WifiReceiver extends BroadcastReceiver {
     private EventBus eventBus;
 
     public static boolean isActiveWifi;
-    private static int wifiType;
+    public static int wifiType;
 
     @Override
     public void onReceive(Context context, Intent intent) {

@@ -15,6 +15,7 @@ import com.maxml.timer.controllers.ActionController;
 import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.entity.Events;
 import com.maxml.timer.entity.WifiState;
+import com.maxml.timer.receivers.WifiReceiver;
 import com.maxml.timer.ui.adapter.WifiAdapter;
 import com.maxml.timer.ui.dialog.OptionDialog;
 import com.maxml.timer.util.Constants;
@@ -64,9 +65,9 @@ public class SettingWifiFragment extends Fragment implements WifiAdapter.OnItemC
 
     @Override
     public void onStop() {
+        eventBus.unregister(this);
         dbController.unregisterEventBus(eventBus);
         actionController.unregisterEventBus(eventBus);
-        eventBus.unregister(this);
         super.onStop();
     }
 
@@ -98,6 +99,8 @@ public class SettingWifiFragment extends Fragment implements WifiAdapter.OnItemC
         if (wifiState.getId() != null && !wifiState.getId().equalsIgnoreCase("")) {
             actionController.onReceiveWifiEvent(new Events.WifiEvent(Constants.EVENT_WIFI_ENABLE,
                     lastWifiState.getType()));
+            WifiReceiver.isActiveWifi = true;
+            WifiReceiver.wifiType = lastWifiState.getType();
         }
     }
 
@@ -121,6 +124,7 @@ public class SettingWifiFragment extends Fragment implements WifiAdapter.OnItemC
 
     private void registerEventBus() {
         eventBus = new EventBus();
+        dbController = new DbController(getContext(), eventBus);
         actionController = new ActionController(getContext(), eventBus);
     }
 }
