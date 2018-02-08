@@ -5,13 +5,13 @@
     <group android:id="@+id/g_main_option">
         <item
             android:id="@+id/i_v_month_calendar"
-            android:icon="@drawable/calendar_icon"
+            android:icon="@drawable/ic_calendar_normal"
             android:title="Month"
             app:showAsAction="always" />
 
         <item
             android:id="@+id/i_v_current_day"
-            android:icon="@drawable/current_day"
+            android:icon="@drawable/ic_current_day_normal"
             android:title="current"
             app:showAsAction="always" />
 

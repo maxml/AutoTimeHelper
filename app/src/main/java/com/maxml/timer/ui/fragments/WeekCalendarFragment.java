@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 import com.alamkanak.weekview.MonthLoader;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
+import com.google.api.client.util.Data;
 import com.maxml.timer.R;
 import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.entity.Action;
@@ -35,7 +37,7 @@ import com.maxml.timer.ui.dialog.OptionDialog;
 import com.maxml.timer.util.ActionUtils;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.NetworkUtil;
-import com.u1aryz.android.colorpicker.ColorPreferenceFragmentCompat;
+import com.maxml.timer.util.Utils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -48,9 +50,8 @@ import java.util.Date;
 import java.util.List;
 
 public class WeekCalendarFragment extends Fragment implements WeekView.EventClickListener,
-        MonthLoader.MonthChangeListener, WeekView.EventLongPressListener,
-        OptionDialog.OnDialogItemClickListener, CreateActionDialog.OnActionCreatedListener,
-        ChangeActionDialog.OnActionChangedListener {
+        MonthLoader.MonthChangeListener, OptionDialog.OnDialogItemClickListener,
+        CreateActionDialog.OnActionCreatedListener, ChangeActionDialog.OnActionChangedListener, WeekView.ScrollListener {
 
     private WeekView weekView;
     private CalendarView cvCalendar;
@@ -69,6 +70,7 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
     private StatisticControl statisticControl;
 
     private WeekViewEvent lastEvent;
+    private MenuItem iCurrentDay;
 
     @Override
     public void onAttach(Context context) {
@@ -141,20 +143,29 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
     }
 
     @Override
-    public void onEventLongPress(WeekViewEvent event, RectF eventRect) {
-    }
-
-    @Override
     public void onEventClick(WeekViewEvent event, RectF eventRect) {
-        if (isJoined) {
-            if (event.getColor() == R.color.color1) {
-                setStandartColorForActions();
-                joinTwoAction(event);
-            }
+        if (isJoined && event.getColor() == R.color.color1) {
+            setStandartColorForActions();
+            joinTwoAction(event);
         } else {
             lastEvent = event;
             DialogFragment dialog = OptionDialog.getInstance(this, R.array.options_action);
             dialog.show(getFragmentManager(), "dialog option");
+        }
+    }
+
+
+    @Override
+    public void onFirstVisibleDayChanged(Calendar newFirstVisibleDay, Calendar oldFirstVisibleDay) {
+        //dates mast have eqals hour and minutes
+        Date currentDate = new Date(System.currentTimeMillis());
+        Date calendarDate = new Date(newFirstVisibleDay.getTimeInMillis() +
+                (System.currentTimeMillis() / 1000 / 24));
+
+        if (Utils.getDayCount(currentDate) == Utils.getDayCount(calendarDate)) {
+            iCurrentDay.setIcon(R.drawable.ic_current_day_pressed);
+        } else {
+            iCurrentDay.setIcon(R.drawable.ic_current_day_normal);
         }
     }
 
@@ -203,6 +214,8 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.calendar_week_menu, menu);
+        iCurrentDay = menu.getItem(1);
+//        iCurrentDay.setIcon(R.drawable.ic_current_day_pressed);
         this.menu = menu;
     }
 
@@ -219,8 +232,10 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
                 if (cvCalendar.getVisibility() == View.GONE) {
                     cvCalendar.setVisibility(View.VISIBLE);
                     cvCalendar.setDate(weekView.getFirstVisibleDay().getTimeInMillis());
+                    item.setIcon(R.drawable.ic_calendar_pressed);
                 } else {
                     cvCalendar.setVisibility(View.GONE);
+                    item.setIcon(R.drawable.ic_calendar_normal);
                 }
                 break;
             case R.id.i_v_refresh:
@@ -336,7 +351,7 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
 
         weekView.setMonthChangeListener(this);
         weekView.setOnEventClickListener(this);
-        weekView.setEventLongPressListener(this);
+        weekView.setScrollListener(this);
         weekView.setShowNowLine(true);
         weekView.setNumberOfVisibleDays(3);
     }
