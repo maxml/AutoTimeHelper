@@ -16,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CalendarView;
 import android.widget.Toast;
 
@@ -151,6 +152,12 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
             lastEvent = event;
             DialogFragment dialog = OptionDialog.getInstance(this, R.array.options_action);
             dialog.show(getFragmentManager(), "dialog option");
+//            if (event.isMenuIsOpened()) {
+//                event.setMenuIsOpened(false);
+//            } else  {
+//                event.setMenuIsOpened(true);
+//            }
+            weekView.invalidate();
         }
     }
 

@@ -18,6 +18,7 @@ public class WeekViewEvent {
     private String mLocation;
     private int mColor;
     private boolean mAllDay;
+    private boolean menuIsOpened;
 
     public WeekViewEvent(){
 
@@ -154,6 +155,14 @@ public class WeekViewEvent {
 
     public void setId(long id) {
         this.mId = id;
+    }
+
+    public boolean isMenuIsOpened() {
+        return menuIsOpened;
+    }
+
+    public void setMenuIsOpened(boolean menuIsOpened) {
+        this.menuIsOpened = menuIsOpened;
     }
 
     @Override

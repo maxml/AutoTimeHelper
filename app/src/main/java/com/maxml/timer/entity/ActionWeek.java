@@ -30,5 +30,4 @@ public class ActionWeek extends WeekViewEvent{
     public void setType(String type) {
         this.type = type;
     }
-
 }
