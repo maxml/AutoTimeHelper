@@ -62,6 +62,7 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
     private CalendarView cvCalendar;
     private Toolbar toolbar;
     private Menu menu;
+    private MenuItem iCurrentDay;
 
     private List<WeekViewEvent> list = new ArrayList<>();
     private List<Action> actions = new ArrayList<>();
@@ -75,7 +76,6 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
     private StatisticControl statisticControl;
 
     private WeekViewEvent lastEvent;
-    private MenuItem iCurrentDay;
 
     @Override
     public void onAttach(Context context) {
@@ -152,10 +152,8 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
         if (isJoined && event.getColor() == R.color.color1) {
             setStandartColorForActions();
             joinTwoAction(event);
-        } else {
+        } else if (!isJoined){
             lastEvent = event;
-//            DialogFragment dialog = OptionDialog.getInstance(this, R.array.options_action);
-//            dialog.show(getFragmentManager(), "dialog option");
             if (event.isMenuIsOpened()) {
                 event.setMenuIsOpened(false);
             } else {
@@ -168,7 +166,6 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
             weekView.invalidate();
         }
     }
-
 
     @Override
     public void onFirstVisibleDayChanged(Calendar newFirstVisibleDay, Calendar oldFirstVisibleDay) {
