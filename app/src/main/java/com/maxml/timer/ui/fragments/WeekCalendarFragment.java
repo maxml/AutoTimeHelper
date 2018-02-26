@@ -1,6 +1,9 @@
 package com.maxml.timer.ui.fragments;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -39,6 +42,7 @@ import com.maxml.timer.util.ActionUtils;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.NetworkUtil;
 import com.maxml.timer.util.Utils;
+import com.u1aryz.android.colorpicker.ColorPreferenceFragmentCompat;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -51,8 +55,8 @@ import java.util.Date;
 import java.util.List;
 
 public class WeekCalendarFragment extends Fragment implements WeekView.EventClickListener,
-        MonthLoader.MonthChangeListener, OptionDialog.OnDialogItemClickListener,
-        CreateActionDialog.OnActionCreatedListener, ChangeActionDialog.OnActionChangedListener, WeekView.ScrollListener {
+        MonthLoader.MonthChangeListener, CreateActionDialog.OnActionCreatedListener,
+        ChangeActionDialog.OnActionChangedListener, WeekView.ScrollListener, WeekView.OptionEventClickListener {
 
     private WeekView weekView;
     private CalendarView cvCalendar;
@@ -150,13 +154,17 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
             joinTwoAction(event);
         } else {
             lastEvent = event;
-            DialogFragment dialog = OptionDialog.getInstance(this, R.array.options_action);
-            dialog.show(getFragmentManager(), "dialog option");
-//            if (event.isMenuIsOpened()) {
-//                event.setMenuIsOpened(false);
-//            } else  {
-//                event.setMenuIsOpened(true);
-//            }
+//            DialogFragment dialog = OptionDialog.getInstance(this, R.array.options_action);
+//            dialog.show(getFragmentManager(), "dialog option");
+            if (event.isMenuIsOpened()) {
+                event.setMenuIsOpened(false);
+            } else {
+                for (WeekViewEvent e :
+                        list) {
+                    e.setMenuIsOpened(false);
+                }
+                event.setMenuIsOpened(true);
+            }
             weekView.invalidate();
         }
     }
@@ -188,16 +196,16 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
     }
 
     @Override
-    public void onDialogItemClick(int position) {
+    public void onEventClick(WeekViewEvent event, int position) {
         switch (position) {
-            case Constants.ID_BUTTON_ACTION_EDIT:
+            case Constants.ID_BUTTON_ACTION_DELETE:
                 ChangeActionDialog changeActionDialog = ChangeActionDialog.getInstance(this);
                 Bundle args = new Bundle();
                 args.putString(Constants.EXTRA_ID_ACTION, ((ActionWeek) lastEvent).getActionId());
                 changeActionDialog.setArguments(args);
                 changeActionDialog.show(getFragmentManager(), "DialogEditAction");
                 break;
-            case Constants.ID_BUTTON_ACTION_DELETE:
+            case Constants.ID_BUTTON_ACTION_EDIT:
                 Action action = ActionUtils.findActionById(((ActionWeek) lastEvent).getActionId(), actions);
                 controller.removeActionInDb(action.getId(), action.getDescription());
                 list.remove(lastEvent);
@@ -215,6 +223,8 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
                 changeMenuVisible();
                 break;
         }
+        event.setMenuIsOpened(false);
+        weekView.invalidate();
     }
 
     @Override
@@ -356,9 +366,11 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
             }
         });
 
+        weekView.setEventCornerRadius(12);
         weekView.setMonthChangeListener(this);
         weekView.setOnEventClickListener(this);
         weekView.setScrollListener(this);
+        weekView.setOnOptionEventClickListener(this);
         weekView.setShowNowLine(true);
         weekView.setNumberOfVisibleDays(3);
     }

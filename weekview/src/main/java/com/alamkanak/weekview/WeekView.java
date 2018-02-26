@@ -32,6 +32,7 @@ import android.view.SoundEffectConstants;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.OverScroller;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -148,6 +149,7 @@ public class WeekView extends View {
 
     // Listeners.
     private EventClickListener mEventClickListener;
+    private OptionEventClickListener mOptionEventClickListener;
     private EventLongPressListener mEventLongPressListener;
     private WeekViewLoader mWeekViewLoader;
     private EmptyViewClickListener mEmptyViewClickListener;
@@ -246,11 +248,24 @@ public class WeekView extends View {
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
             // If the tap was on an event then trigger the callback.
-            if (mEventRects != null && mEventClickListener != null) {
+            if (mEventRects != null && mEventClickListener != null && mOptionEventClickListener != null) {
                 List<EventRect> reversedEventRects = mEventRects;
                 Collections.reverse(reversedEventRects);
                 for (EventRect event : reversedEventRects) {
-                    if (event.rectF != null && e.getX() > event.rectF.left && e.getX() < event.rectF.right && e.getY() > event.rectF.top && e.getY() < event.rectF.bottom) {
+                    if (event.optionRectF != null && e.getX() > event.optionRectF.left && e.getX() < event.optionRectF.right && e.getY() > event.optionRectF.top && e.getY() < event.optionRectF.bottom) {
+                        int position = -1;
+                        int point = (int) (e.getY() - event.optionRectF.top);
+                        if (point > 120) {
+                            position = 2;
+                        } else if (point > 60) {
+                            position = 1;
+                        } else {
+                            position = 0;
+                        }
+                        mOptionEventClickListener.onEventClick(event.originalEvent, position);
+                        playSoundEffect(SoundEffectConstants.CLICK);
+                        return super.onSingleTapConfirmed(e);
+                    } else if (event.rectF != null && e.getX() > event.rectF.left && e.getX() < event.rectF.right && e.getY() > event.rectF.top && e.getY() < event.rectF.bottom) {
                         mEventClickListener.onEventClick(event.originalEvent, event.rectF);
                         playSoundEffect(SoundEffectConstants.CLICK);
                         return super.onSingleTapConfirmed(e);
@@ -496,6 +511,14 @@ public class WeekView extends View {
 
         // Draw the time column and all the axes/separators.
         drawTimeColumnAndAxes(canvas);
+
+        drawMenu(canvas);
+    }
+
+    private void drawMenu(Canvas canvas) {
+        Paint paint = new Paint();
+        paint.setColor(Color.parseColor("#FFC107"));
+        canvas.drawRect(new Rect(200, 200, 500, 500), paint);
     }
 
     private void calculateHeaderHeight() {
@@ -778,6 +801,10 @@ public class WeekView extends View {
      * @param canvas         The canvas to draw upon.
      */
     private void drawEvents(Calendar date, float startFromPixel, Canvas canvas) {
+        RectF optionRectF = null;
+        int optionTop = 0, optionLeft = 0;
+        Paint optionPaint = null;
+
         if (mEventRects != null && mEventRects.size() > 0) {
             for (int i = 0; i < mEventRects.size(); i++) {
                 if (isSameDay(mEventRects.get(i).event.getStartTime(), date) && !mEventRects.get(i).event.isAllDay()) {
@@ -804,18 +831,29 @@ public class WeekView extends View {
                             right > mHeaderColumnWidth &&
                             bottom > mHeaderHeight + mHeaderRowPadding * 2 + mTimeTextHeight / 2 + mHeaderMarginBottom
                             ) {
-//                        if (mEventRects.get(i).event.isMenuIsOpened()) {
-//                            mEventRects.get(i).rectF = new RectF(left + 2, top + 2, right - 2 + 300, bottom - 2 + 300);
-//                        } else {
                         mEventRects.get(i).rectF = new RectF(left + 2, top + 2, right - 2, bottom - 2);
-//                        }
                         mEventBackgroundPaint.setColor(mEventRects.get(i).event.getColor() == 0 ? mDefaultEventColor : mEventRects.get(i).event.getColor());
+                        if (mEventRects.get(i).event.isMenuIsOpened()) {
+                            mEventRects.get(i).optionRectF = new RectF(left + 2, top + 2 + (bottom - top), left - 2 + 140, bottom - 2 + 180);
+                            optionRectF = mEventRects.get(i).optionRectF;
+                            optionTop = (int) (top + (bottom - top));
+                            optionLeft = (int) left;
+                            optionPaint = new Paint(mEventBackgroundPaint);
+                        } else {
+                            mEventRects.get(i).optionRectF = null;
+                        }
                         canvas.drawRoundRect(mEventRects.get(i).rectF, mEventCornerRadius, mEventCornerRadius, mEventBackgroundPaint);
+
                         drawEventTitle(mEventRects.get(i).event, mEventRects.get(i).rectF, canvas, top, left);
                     } else
                         mEventRects.get(i).rectF = null;
                 }
             }
+        }
+        if (optionRectF != null) {
+            canvas.drawRoundRect(optionRectF, mEventCornerRadius, mEventCornerRadius, optionPaint);
+
+            drawOptionsTitles(optionRectF, canvas, optionTop, optionLeft);
         }
     }
 
@@ -920,6 +958,50 @@ public class WeekView extends View {
     }
 
 
+    private void drawOptionsTitles(RectF rect, Canvas canvas, float top, float left) {
+        if (rect.right - rect.left - mEventPadding * 2 < 0) return;
+        if (rect.bottom - rect.top - mEventPadding * 2 < 0) return;
+
+        // Prepare the name of the event.
+        SpannableStringBuilder bob = new SpannableStringBuilder();
+        bob.append("Delete\nEdit\nJoin");
+        bob.setSpan(new StyleSpan(Typeface.BOLD), 0, bob.length(), 0);
+        bob.append(' ');
+
+        int availableHeight = (int) (rect.bottom - top - mEventPadding * 2);
+        int availableWidth = (int) (rect.right - left - mEventPadding * 2);
+
+        // Get text dimensions.
+        StaticLayout textLayout = new StaticLayout(bob, mEventTextPaint, availableWidth,
+                Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+
+        int lineHeight = textLayout.getHeight() / textLayout.getLineCount();
+
+        if (availableHeight >= lineHeight) {
+            // Calculate available number of line counts.
+            int availableLineCount = availableHeight / lineHeight;
+            do {
+                // Ellipsize text to fit into event rect.
+                textLayout = new StaticLayout(TextUtils.ellipsize(bob, mEventTextPaint,
+                        availableLineCount * availableWidth, TextUtils.TruncateAt.END),
+                        mEventTextPaint, (int) (rect.right - left - mEventPadding * 2),
+                        Layout.Alignment.ALIGN_NORMAL, 1.4f, 0.0f, false);
+
+                // Reduce line count.
+                availableLineCount--;
+
+                // Repeat until text is short enough.
+            } while (textLayout.getHeight() > availableHeight);
+
+            // Draw text.
+            canvas.save();
+            canvas.translate(left + mEventPadding, top + mEventPadding);
+            textLayout.draw(canvas);
+            canvas.restore();
+        }
+    }
+
+
     /**
      * A class to hold reference to the events and their visual representation. An EventRect is
      * actually the rectangle that is drawn on the calendar for a given event. There may be more
@@ -932,6 +1014,7 @@ public class WeekView extends View {
         public WeekViewEvent event;
         public WeekViewEvent originalEvent;
         public RectF rectF;
+        public RectF optionRectF;
         public float left;
         public float width;
         public float top;
@@ -968,7 +1051,7 @@ public class WeekView extends View {
 
         // Get more events if the month is changed.
         if (mEventRects == null)
-            mEventRects = new ArrayList<EventRect>();
+            mEventRects = new ArrayList<>();
         if (mWeekViewLoader == null && !isInEditMode())
             throw new IllegalStateException("You must provide a MonthChangeListener");
 
@@ -1233,6 +1316,10 @@ public class WeekView extends View {
 
     public void setOnEventClickListener(EventClickListener listener) {
         this.mEventClickListener = listener;
+    }
+
+    public void setOnOptionEventClickListener(OptionEventClickListener mOptionEventClickListener) {
+        this.mOptionEventClickListener = mOptionEventClickListener;
     }
 
     public EventClickListener getEventClickListener() {
@@ -2047,6 +2134,10 @@ public class WeekView extends View {
          * @param eventRect: view containing the clicked event.
          */
         void onEventClick(WeekViewEvent event, RectF eventRect);
+    }
+
+    public interface OptionEventClickListener {
+        void onEventClick(WeekViewEvent event, int position);
     }
 
     public interface EventLongPressListener {
