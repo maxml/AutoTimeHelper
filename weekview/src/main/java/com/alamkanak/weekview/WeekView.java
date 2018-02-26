@@ -32,7 +32,6 @@ import android.view.SoundEffectConstants;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.OverScroller;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -82,6 +81,7 @@ public class WeekView extends View {
     private Paint mNowLinePaint;
     private Paint mTodayHeaderTextPaint;
     private Paint mEventBackgroundPaint;
+    private Paint mOptionPaint;
     private float mHeaderColumnWidth;
     private List<EventRect> mEventRects;
     private List<? extends WeekViewEvent> mPreviousPeriodEvents;
@@ -732,6 +732,14 @@ public class WeekView extends View {
             // In the next iteration, start from the next day.
             startPixel += mWidthPerDay + mColumnGap;
         }
+        for (EventRect e :
+                mEventRects) {
+            if (e.optionRectF != null) {
+                canvas.drawRoundRect(e.optionRectF, mEventCornerRadius, mEventCornerRadius, mOptionPaint);
+
+                drawOptionsTitles(e.optionRectF, canvas, e.getOptionTop(), e.getOptionLeft());
+            }
+        }
 
         // Hide everything in the first cell (top left corner).
         canvas.clipRect(0, 0, mTimeTextWidth + mHeaderColumnPadding * 2, mHeaderHeight + mHeaderRowPadding * 2, Region.Op.REPLACE);
@@ -801,10 +809,6 @@ public class WeekView extends View {
      * @param canvas         The canvas to draw upon.
      */
     private void drawEvents(Calendar date, float startFromPixel, Canvas canvas) {
-        RectF optionRectF = null;
-        int optionTop = 0, optionLeft = 0;
-        Paint optionPaint = null;
-
         if (mEventRects != null && mEventRects.size() > 0) {
             for (int i = 0; i < mEventRects.size(); i++) {
                 if (isSameDay(mEventRects.get(i).event.getStartTime(), date) && !mEventRects.get(i).event.isAllDay()) {
@@ -835,10 +839,8 @@ public class WeekView extends View {
                         mEventBackgroundPaint.setColor(mEventRects.get(i).event.getColor() == 0 ? mDefaultEventColor : mEventRects.get(i).event.getColor());
                         if (mEventRects.get(i).event.isMenuIsOpened()) {
                             mEventRects.get(i).optionRectF = new RectF(left + 2, top + 2 + (bottom - top), left - 2 + 140, bottom - 2 + 180);
-                            optionRectF = mEventRects.get(i).optionRectF;
-                            optionTop = (int) (top + (bottom - top));
-                            optionLeft = (int) left;
-                            optionPaint = new Paint(mEventBackgroundPaint);
+                            mEventRects.get(i).setOptionsStartCoordinates(top + (bottom - top), left);
+                            mOptionPaint = new Paint(mEventBackgroundPaint);
                         } else {
                             mEventRects.get(i).optionRectF = null;
                         }
@@ -849,11 +851,6 @@ public class WeekView extends View {
                         mEventRects.get(i).rectF = null;
                 }
             }
-        }
-        if (optionRectF != null) {
-            canvas.drawRoundRect(optionRectF, mEventCornerRadius, mEventCornerRadius, optionPaint);
-
-            drawOptionsTitles(optionRectF, canvas, optionTop, optionLeft);
         }
     }
 
@@ -1019,6 +1016,8 @@ public class WeekView extends View {
         public float width;
         public float top;
         public float bottom;
+        private float optionTop;
+        private float optionLeft;
 
         /**
          * Create a new instance of event rect. An EventRect is actually the rectangle that is drawn
@@ -1036,6 +1035,19 @@ public class WeekView extends View {
             this.event = event;
             this.rectF = rectF;
             this.originalEvent = originalEvent;
+        }
+
+        public void setOptionsStartCoordinates(float top, float left) {
+            optionTop = top;
+            optionLeft = left;
+        }
+
+        public float getOptionTop() {
+            return optionTop;
+        }
+
+        public float getOptionLeft() {
+            return optionLeft;
         }
     }
 
