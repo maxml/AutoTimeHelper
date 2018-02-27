@@ -36,14 +36,13 @@ import com.maxml.timer.ui.dialog.DialogCallback;
 import com.maxml.timer.ui.dialog.DialogFactory;
 import com.maxml.timer.ui.fragments.DayCalendarFragment;
 import com.maxml.timer.ui.fragments.HomeFragment;
-import com.maxml.timer.ui.fragments.MainUserPageFragment;
+import com.maxml.timer.ui.fragments.UserFragment;
 import com.maxml.timer.ui.fragments.MonthCalendarFragment;
 import com.maxml.timer.ui.fragments.SelectTagsFragment;
 import com.maxml.timer.ui.fragments.SettingsFragment;
 import com.maxml.timer.ui.fragments.WeekCalendarFragment;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.FragmentUtils;
-import com.maxml.timer.util.ImageUtil;
 import com.maxml.timer.util.NetworkUtil;
 import com.squareup.picasso.Picasso;
 
@@ -106,8 +105,8 @@ public class MainActivity extends AppCompatActivity
                 }
                 break;
             case R.id.i_user:
-                if (!(fragment instanceof MainUserPageFragment)) {
-                    setupFragment(new MainUserPageFragment());
+                if (!(fragment instanceof UserFragment)) {
+                    setupFragment(new UserFragment());
                 }
                 break;
             case R.id.i_tags:
@@ -131,7 +130,7 @@ public class MainActivity extends AppCompatActivity
                 }
                 break;
             case R.id.i_setting:
-                Log.d(Constants.TAG, "Select setting");
+                Log.d(Constants.LOG_TAG, "Select setting");
                 if (!(fragment instanceof SettingsFragment)) {
                     setupFragment(new SettingsFragment());
                 }
@@ -180,40 +179,6 @@ public class MainActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case Constants.REQUEST_CODE_TAKE_PHOTO:
-                if (resultCode == RESULT_OK) {
-                    if (NetworkUtil.isNetworkAvailable(this)) {
-                        if (data != null && data.getData() != null) {
-                            loadImageFromGallery(data);
-                        } else if (ImageUtil.fPhoto != null) {
-                            loadImageFromCamera();
-                        }
-                        showProgressBar();
-
-                        dbController.getCurrentUser();
-                    } else {
-                        Toast.makeText(this, R.string.no_network, Toast.LENGTH_SHORT).show();
-                    }
-                }
-                break;
-
-            case Constants.REQUEST_CHECK_LOCATION_SETTING:
-                if (resultCode == RESULT_OK) {
-                    Log.d(Constants.LOG, "Dialog turn on navigation ok");
-                    // do logic under method
-                    eventBus.post(new Events.TurnOnGeolocation(Constants.EVENT_TURN_ON_SUCCESSFUL, settingRequest));
-                } else {
-                    Log.d(Constants.LOG, "Dialog turn on navigation cancel");
-                    eventBus.post(new Events.TurnOnGeolocation(Constants.EVENT_TURN_ON_DENY, settingRequest));
-                }
-                break;
         }
     }
 
@@ -277,8 +242,8 @@ public class MainActivity extends AppCompatActivity
     public void onDatabaseEvent(Events.DbResult event) {
         switch (event.getResultStatus()) {
             case Constants.EVENT_DB_RESULT_OK:
-                if (FragmentUtils.getCurrentFragment(this) instanceof MainUserPageFragment) {
-                    ((MainUserPageFragment) FragmentUtils.getCurrentFragment(this))
+                if (FragmentUtils.getCurrentFragment(this) instanceof UserFragment) {
+                    ((UserFragment) FragmentUtils.getCurrentFragment(this))
                             .updateUI();
 
                     dbController.getCurrentUser();
@@ -334,7 +299,7 @@ public class MainActivity extends AppCompatActivity
         header.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setupFragment(new MainUserPageFragment());
+                setupFragment(new UserFragment());
                 drawerLayout.closeDrawers();
             }
         });
@@ -356,27 +321,11 @@ public class MainActivity extends AppCompatActivity
                 name.setText(user.getUsername());
             } else name.setText(user.getEmail());
             if (user.getPhoto() != null && !user.getPhoto().equalsIgnoreCase("")) {
-                if (user.getPhoto().contains("content")) {
-                    Picasso.with(this)
-                            .load(user.getPhoto())
-                            .into(icon);
-                } else {
-                    File file = new File(user.getPhoto());
-
-                    Picasso.with(this)
-                            .load(file)
-                            .into(icon);
-                }
+                Picasso.with(this)
+                        .load(user.getPhoto())
+                        .into(icon);
             }
         }
-    }
-
-    private void loadImageFromGallery(Intent data) {
-        dbController.updateUserPhoto(data.getData().toString());
-    }
-
-    private void loadImageFromCamera() {
-        dbController.updateUserPhoto(ImageUtil.fPhoto.toString());
     }
 
     private void showMessageAboutAnonymously() {

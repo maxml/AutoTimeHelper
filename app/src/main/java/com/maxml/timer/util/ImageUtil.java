@@ -1,68 +1,44 @@
 package com.maxml.timer.util;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.ResolveInfo;
-import android.net.Uri;
-import android.os.Parcelable;
-import android.provider.MediaStore;
-import android.util.Log;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 public class ImageUtil {
 
-    public static File fPhoto;
+    public static Bitmap decodeSampledBitmapFromResource(String path, int reqWidth, int reqHeight) {
+        // Читаем с inJustDecodeBounds=true для определения размеров
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(path, options);
 
-    public static Intent createIntentForLoadImage(Context context) {
-        try {
-            fPhoto = createTempImageFile(context.getExternalCacheDir());
+        // Вычисляем inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, reqWidth,
+                reqHeight);
 
-            List<Intent> intentList = new ArrayList<>();
-            Intent chooserIntent = null;
+        // Читаем с использованием inSampleSize коэффициента
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeFile(path, options);
+    }
 
-            Intent pickIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    private static int calculateInSampleSize(BitmapFactory.Options options,
+                                             int reqWidth, int reqHeight) {
+        // Реальные размеры изображения
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
 
-            takePhotoIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(fPhoto));
+        if (height > reqHeight || width > reqWidth) {
 
-            intentList = addIntentsToList(context, intentList, pickIntent);
-            intentList = addIntentsToList(context, intentList, takePhotoIntent);
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
 
-            if (!intentList.isEmpty()) {
-                chooserIntent = Intent.createChooser(intentList.remove(intentList.size() - 1), "Choose your image source");
-                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentList.toArray(new Parcelable[]{}));
+            // Вычисляем наибольший inSampleSize, который будет кратным двум
+            // и оставит полученные размеры больше, чем требуемые
+            while ((halfHeight / inSampleSize) > reqHeight
+                    && (halfWidth / inSampleSize) > reqWidth) {
+                inSampleSize *= 2;
             }
-
-            return chooserIntent;
-        } catch (IOException e) {
-            Log.e(Constants.TAG, e.getMessage());
         }
-        return null;
-    }
 
-    private static File createTempImageFile(File storageDir) throws IOException {
-        String imageFileName = "profile_photo";
-
-        return File.createTempFile(
-                imageFileName,
-                ".jpg",
-                storageDir
-        );
-    }
-
-    private static List<Intent> addIntentsToList(Context context, List<Intent> list, Intent intent) {
-        List<ResolveInfo> resInfo = context.getPackageManager().queryIntentActivities(intent, 0);
-        for (ResolveInfo resolveInfo : resInfo) {
-            String packageName = resolveInfo.activityInfo.packageName;
-            Intent targetedIntent = new Intent(intent);
-            targetedIntent.setPackage(packageName);
-            list.add(targetedIntent);
-        }
-        return list;
+        return inSampleSize;
     }
 }

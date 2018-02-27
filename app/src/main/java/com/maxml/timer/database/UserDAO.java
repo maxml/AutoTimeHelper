@@ -34,10 +34,10 @@ public class UserDAO {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-                    Log.d(Constants.TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    Log.d(Constants.LOG_TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                 } else {
                     // User is signed out
-                    Log.d(Constants.TAG, "onAuthStateChanged:signed_out");
+                    Log.d(Constants.LOG_TAG, "onAuthStateChanged:signed_out");
                 }
             }
         };
@@ -65,7 +65,7 @@ public class UserDAO {
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(Constants.TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
+                        Log.d(Constants.LOG_TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
 
                         if (!task.isSuccessful()) {
                             dbController.sendDbResultError();
@@ -81,7 +81,7 @@ public class UserDAO {
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(Constants.TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
+                        Log.d(Constants.LOG_TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
 
                         if (!task.isSuccessful()) {
                             dbController.sendDbResultError();
@@ -147,7 +147,7 @@ public class UserDAO {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Log.d(Constants.TAG, "Email sent.");
+                            Log.d(Constants.LOG_TAG, "Email sent.");
                             dbController.sendDbResultOk();
                         } else {
                             dbController.sendDbResultError();

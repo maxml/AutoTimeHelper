@@ -60,7 +60,7 @@ public class ReceiverService extends Service implements LocationListener {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(Constants.TAG, "Service: onStartCommand");
+        Log.d(Constants.LOG_TAG, "Service: onStartCommand");
         return START_STICKY;
     }
 
@@ -327,7 +327,7 @@ public class ReceiverService extends Service implements LocationListener {
 
     @Override
     public void onDestroy() {
-        Log.d(Constants.TAG, "Service: onDestroy");
+        Log.d(Constants.LOG_TAG, "Service: onDestroy");
         unregisterEventBus(serviceEventBus);
         unregisterEventBus(widgetEventBus);
         unregisterEventBus(callEventBus);
@@ -346,7 +346,7 @@ public class ReceiverService extends Service implements LocationListener {
             public void run() {
                 dontMoveTimer++;
                 if (dontMoveTimer >= Constants.WAY_DONT_MOVE_TIME) {
-                    Log.d(Constants.TAG, "Don't move timer activated");
+                    Log.d(Constants.LOG_TAG, "Don't move timer activated");
                     actionController.dontMoveTimerOff();
                     stopTimer();
                 } else {

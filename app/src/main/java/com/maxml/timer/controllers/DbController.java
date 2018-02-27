@@ -1,11 +1,13 @@
 package com.maxml.timer.controllers;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 
 import com.maxml.timer.database.ActionDAO;
 import com.maxml.timer.database.CoordinateDAO;
 import com.maxml.timer.database.DBFactory;
+import com.maxml.timer.database.ImageDao;
 import com.maxml.timer.database.PathDAO;
 import com.maxml.timer.database.TableDAO;
 import com.maxml.timer.database.UserDAO;
@@ -29,6 +31,7 @@ public class DbController {
     private EventBus entityEventBus;
     private Context context;
 
+    private ImageDao imageDao;
     private ActionDAO actionDAO;
     private TableDAO tableDAO;
     private PathDAO pathDAO;
@@ -55,13 +58,24 @@ public class DbController {
         actionDAO.createWalkAction(walk);
     }
 
-
     public void sendDbResultOk() {
         entityEventBus.post(new Events.DbResult(Constants.EVENT_DB_RESULT_OK));
     }
 
     public void sendDbResultError() {
         entityEventBus.post(new Events.DbResult(Constants.EVENT_DB_RESULT_ERROR));
+    }
+
+    public void sendImage(Bitmap bitmap) {
+        entityEventBus.post(bitmap);
+    }
+
+    public void saveImage(Bitmap bitmap) {
+        imageDao.saveBitmap(bitmap, "user_phot_" + userDAO.getCurrentUserId());
+    }
+
+    public void imageSaved(String url) {
+        entityEventBus.post(url);
     }
 
     public void getPathFromDb(List<String> listIdPath) {
@@ -184,7 +198,7 @@ public class DbController {
         return Constants.WIFI_TYPE_NONE;
     }
 
-    public void updateWifi(WifiState wifiState){
+    public void updateWifi(WifiState wifiState) {
         wifiStateDAO.updateData(wifiState);
     }
 
@@ -204,6 +218,7 @@ public class DbController {
         tableDAO = new TableDAO(this);
         actionDAO = new ActionDAO(this);
         userDAO = new UserDAO(this);
+        imageDao = new ImageDao(this);
         wifiStateDAO = DBFactory.getHelper().getWifiStateDAO();
         pathDAO = DBFactory.getHelper().getPathDAO();
         coordinateDAO = DBFactory.getHelper().getCoordinateDAO();

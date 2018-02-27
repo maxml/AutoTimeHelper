@@ -72,6 +72,13 @@
     <string name="sec">sec</string>
     <string name="toast_wrong_description">Wrong description</string>
     <string name="text_work_statistic">Вы проработали:</string>
+    <string name="permission_camera_rationale">Для работы с камерой нужны разрешения</string>
+    <string name="permission_button_allow">Открить</string>
+    <string name="permission_button_deny">Отложить</string>
+    <string name="permission_camera_denied">Разрешения вы можете дать при нажатии на кнопку фото</string>
+    <string name="permission_neverask">Дать разрешения вы можете в настройках телефона</string>
+    <string name="createhomesecond_gallery">Галерея</string>
+    <string name="createhomesecond_camera">Камера</string>
 
     <string-array name="options_action">
         <item>Edit</item>

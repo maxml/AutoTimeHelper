@@ -67,6 +67,13 @@ dependencies {
     implementation 'com.u1aryz:colorpicker-preference-compat:0.1.0'
     implementation 'com.j256.ormlite:ormlite-android:5.0'
     implementation 'com.j256.ormlite:ormlite-core:5.0'
+
+    compile("com.github.hotchemi:permissionsdispatcher:3.1.0") {
+        exclude module: "support-v13"
+    }
+    annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:3.1.0"
+    compile 'com.afollestad.material-dialogs:core:0.9.4.3'
+
     implementation group: 'com.j256.ormlite', name: 'ormlite-core', version: '5.0'
     androidTestCompile 'junit:junit:4.12'
     compile project(path: ':weekview')

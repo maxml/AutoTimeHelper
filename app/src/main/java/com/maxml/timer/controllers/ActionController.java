@@ -203,7 +203,7 @@ public class ActionController {
     }
 
     private void startRestEvent() {
-        Log.d(Constants.TAG, "ActionController: startRestEvent()");
+        Log.d(Constants.LOG_TAG, "ActionController: startRestEvent()");
         // create action entity
         Action rest = new Action();
         rest.setType(Constants.EVENT_REST_ACTION);
@@ -227,7 +227,7 @@ public class ActionController {
     }
 
     private void endRestEvent() {
-        Log.d(Constants.TAG, "ActionController: endRestEvent()");
+        Log.d(Constants.LOG_TAG, "ActionController: endRestEvent()");
         Action rest = currentAction;
         rest.setEndDate(new Date());
         dbController.createAction(rest);
@@ -236,7 +236,7 @@ public class ActionController {
     }
 
     private void startWorkEvent() {
-        Log.d(Constants.TAG, "ActionController: startWorkEvent()");
+        Log.d(Constants.LOG_TAG, "ActionController: startWorkEvent()");
         // create action entity
         Action work = new Action();
         work.setType(Constants.EVENT_WORK_ACTION);
@@ -260,7 +260,7 @@ public class ActionController {
     }
 
     private void endWorkEvent() {
-        Log.d(Constants.TAG, "ActionController: endWorkEvent()");
+        Log.d(Constants.LOG_TAG, "ActionController: endWorkEvent()");
         Action work = currentAction;
         work.setEndDate(new Date());
         dbController.createAction(work);
@@ -269,7 +269,7 @@ public class ActionController {
     }
 
     private void startCallEvent() {
-        Log.d(Constants.TAG, "ActionController: startCallEvent()");
+        Log.d(Constants.LOG_TAG, "ActionController: startCallEvent()");
         // create action entity
         Action call = new Action();
         call.setType(Constants.EVENT_CALL_ACTION);
@@ -293,7 +293,7 @@ public class ActionController {
     }
 
     private void endCallEvent() {
-        Log.d(Constants.TAG, "ActionController: endCallEvent()");
+        Log.d(Constants.LOG_TAG, "ActionController: endCallEvent()");
         Action call = currentAction;
         call.setEndDate(new Date());
         dbController.createAction(call);
@@ -302,7 +302,7 @@ public class ActionController {
     }
 
     private void startWalkEvent() {
-        Log.d(Constants.TAG, "ActionController: startWalkEvent()");
+        Log.d(Constants.LOG_TAG, "ActionController: startWalkEvent()");
         // create action entity
         Action walk = new Action();
         walk.setType(Constants.EVENT_WALK_ACTION);
@@ -328,7 +328,7 @@ public class ActionController {
     }
 
     private void endWalkEvent() {
-        Log.d(Constants.TAG, "ActionController: endWalkEvent()");
+        Log.d(Constants.LOG_TAG, "ActionController: endWalkEvent()");
         Action walk = currentAction;
         walk.setEndDate(new Date());
         dbController.createWalkAction(walk);
@@ -341,7 +341,7 @@ public class ActionController {
             // if last Action break previous continue previous action
             BackStackEntity entity = backStack.get(backStack.size() - 1);
             if (entity.isBreak()) {
-                Log.d(Constants.TAG, "ActionController: setPreviousAction(), start stopped Action");
+                Log.d(Constants.LOG_TAG, "ActionController: setPreviousAction(), start stopped Action");
                 continuePreviousAction();
                 return;
             }
@@ -350,7 +350,7 @@ public class ActionController {
     }
 
     private void stopCurrentAction() {
-        Log.d(Constants.TAG, "ActionController: stopCurrentAction()");
+        Log.d(Constants.LOG_TAG, "ActionController: stopCurrentAction()");
         if (currentAction == null) {
             return;
         }

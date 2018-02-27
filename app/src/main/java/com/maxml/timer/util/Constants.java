@@ -2,7 +2,7 @@ package com.maxml.timer.util;
 
 public class Constants {
 
-    public static final String TAG = "LOG";
+    public static final String LOG_TAG = "LOG";
 
     public static final float MIN_DISTANCE_START_WALK_ACTION = 80f;
     public static final float MIN_DISTANCE_UPDATES = 100f;
@@ -110,4 +110,6 @@ public class Constants {
     public static final int REQUEST_CHECK_LOCATION_SETTING = 122;
     public static final int REQUEST_WALK_TRACKER = 123;
     public static final int REQUEST_AUTO_WALK_STARTER = 124;
+    public static int ACTION_SELECT_IMAGE = 3232;
+    public static int ACTION_IMAGE_CAPTURE = 2332;
 }

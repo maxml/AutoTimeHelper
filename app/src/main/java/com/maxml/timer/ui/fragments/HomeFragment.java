@@ -127,7 +127,7 @@ public class HomeFragment extends Fragment {
         bCall.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(Constants.TAG, "HomeFragment: click button Call");
+                Log.d(Constants.LOG_TAG, "HomeFragment: click button Call");
                 setActiveButton((ToggleButton) v);
                 actionController.callActionEvent();
             }
@@ -136,7 +136,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                Log.d(Constants.TAG, "HomeFragment: click button Work");
+                Log.d(Constants.LOG_TAG, "HomeFragment: click button Work");
                 setActiveButton((ToggleButton) v);
                 actionController.workActionEvent();
             }
@@ -145,7 +145,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                Log.d(Constants.TAG, "HomeFragment: click button Rest");
+                Log.d(Constants.LOG_TAG, "HomeFragment: click button Rest");
                 setActiveButton((ToggleButton) v);
                 actionController.restActionEvent();
             }
@@ -154,7 +154,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                Log.d(Constants.TAG, "HomeFragment: click button Walk");
+                Log.d(Constants.LOG_TAG, "HomeFragment: click button Walk");
                 setActiveButton((ToggleButton) v);
                 actionController.walkActionEvent();
             }

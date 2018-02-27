@@ -40,7 +40,7 @@ public class SplashActivity extends AppCompatActivity {
     private void initService() {
         // if service not instant yet, start one
         if (!Utils.isServiceRunning(this, ReceiverService.class)) {
-            Log.d(Constants.TAG, "start new service instance");
+            Log.d(Constants.LOG_TAG, "start new service instance");
             Intent serviceIntent = new Intent(this, ReceiverService.class);
             startService(serviceIntent);
         }
