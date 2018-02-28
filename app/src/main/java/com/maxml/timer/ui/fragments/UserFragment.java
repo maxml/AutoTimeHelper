@@ -16,6 +16,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -59,6 +60,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
     private EditText etName;
     private EditText etEmail;
     private ImageView ivUser;
+    private Toolbar toolbar;
 
     private DbController dbController;
     private EventBus eventBus;
@@ -242,12 +244,21 @@ public class UserFragment extends Fragment implements View.OnClickListener {
             Bitmap bitmap = ImageUtil.decodeSampledBitmapFromResource(imageUri.toString(), 300, 300);
             ivUser.setImageBitmap(bitmap);
             dbController.saveImage(bitmap);
+            showProgress();
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        toolbar.setTitle(R.string.app_name);
     }
 
     @Subscribe
     public void onReceiveImageLoated(String url) {
         dbController.updateUserPhoto(url);
+        progressListener.hideProgressBar();
+        updateImage(Uri.parse(url));
     }
 
     @Subscribe
@@ -295,11 +306,12 @@ public class UserFragment extends Fragment implements View.OnClickListener {
 
     private void initUI(View view) {
         bbOk = view.findViewById(R.id.bb_ok);
-
         etName = view.findViewById(R.id.bet_name);
         etEmail = view.findViewById(R.id.bet_email);
-
         ivUser = view.findViewById(R.id.iv_user);
+        toolbar = getActivity().findViewById(R.id.toolbar);
+
+        toolbar.setTitle(R.string.user);
     }
 
     private void updateUI(User user) {

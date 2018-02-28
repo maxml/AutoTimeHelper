@@ -1,32 +1,24 @@
 package com.maxml.timer.ui.fragments;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.CalendarView;
-import android.widget.Toast;
 
 import com.alamkanak.weekview.MonthLoader;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
-import com.google.api.client.util.Data;
 import com.maxml.timer.R;
 import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.entity.Action;
@@ -37,12 +29,10 @@ import com.maxml.timer.entity.StatisticControl;
 import com.maxml.timer.entity.Table;
 import com.maxml.timer.ui.dialog.ChangeActionDialog;
 import com.maxml.timer.ui.dialog.CreateActionDialog;
-import com.maxml.timer.ui.dialog.OptionDialog;
 import com.maxml.timer.util.ActionUtils;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.NetworkUtil;
 import com.maxml.timer.util.Utils;
-import com.u1aryz.android.colorpicker.ColorPreferenceFragmentCompat;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -142,8 +132,8 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    public void onDestroy() {
+        super.onDestroy();
         toolbar.setTitle(R.string.app_name);
     }
 
@@ -152,7 +142,7 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
         if (isJoined && event.getColor() == R.color.color1) {
             setStandartColorForActions();
             joinTwoAction(event);
-        } else if (!isJoined){
+        } else if (!isJoined) {
             lastEvent = event;
             if (event.isMenuIsOpened()) {
                 event.setMenuIsOpened(false);

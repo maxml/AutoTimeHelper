@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import java.util.Calendar;
 
 public class MonthCalendarFragment extends Fragment {
     private CalendarView cvCalendar;
+    private Toolbar toolbar;
 
     private ShowFragmentListener fragmentListener;
     private StatisticControl statisticControl;
@@ -57,9 +59,18 @@ public class MonthCalendarFragment extends Fragment {
         super.onStop();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        toolbar.setTitle(R.string.app_name);
+    }
+
     private void initUI(View view) {
         cvCalendar = view.findViewById(R.id.cv_calendar);
         cvCalendar.setDate(System.currentTimeMillis());
+
+        toolbar = getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.calendar);
     }
 
     private void initListener() {

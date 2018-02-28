@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,8 @@ import java.util.List;
 
 public class SettingWifiFragment extends Fragment implements WifiAdapter.OnItemClickListener,
         OptionDialog.OnDialogItemClickListener {
+    private Toolbar toolbar;
+
     private EventBus eventBus;
     private DbController dbController;
     private ActionController actionController;
@@ -93,6 +96,12 @@ public class SettingWifiFragment extends Fragment implements WifiAdapter.OnItemC
         announceAboutConnecting();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        toolbar.setTitle(R.string.app_name);
+    }
+
     private void announceAboutConnecting() {
         WifiState wifiState = NetworkUtil.getCurrentWifi(getContext());
 
@@ -116,6 +125,9 @@ public class SettingWifiFragment extends Fragment implements WifiAdapter.OnItemC
 
         adapter = new WifiAdapter(new ArrayList<WifiState>(), this);
         rvWifi.setAdapter(adapter);
+
+        toolbar = getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.settings);
     }
 
     private void loadWifi() {

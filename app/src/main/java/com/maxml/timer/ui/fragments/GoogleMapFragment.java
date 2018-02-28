@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +37,7 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
     private EventBus eventBus;
     private MapView mapView;
     private DbController dbController;
+    private Toolbar toolbar;
 
     private String idPath;
     private Polyline polyline;
@@ -59,13 +61,26 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
 //            mapView = (SupportMapFragment) getChildFragmentManager()
 //                    .findFragmentById(R.id.map);
 //        }
-        mapView = rootView.findViewById(R.id.mapView);
+        initView(rootView);
         mapView.onCreate(savedInstanceState);
-        // init feedback bridge
-        eventBus = new EventBus();
-        dbController = new DbController(getContext(), eventBus);
+
+        createEventBus();
         registerEventBus();
-        // get input data
+
+        getInputArguments();
+
+        mapView.getMapAsync(this);
+        return rootView;
+    }
+
+    private void initView(View rootView) {
+        mapView = rootView.findViewById(R.id.mapView);
+
+        toolbar = getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.map);
+    }
+
+    private void getInputArguments() {
         Bundle argument = getArguments();
         if (argument != null) {
             idPath = argument.getString(Constants.EXTRA_ID_PATH);
@@ -74,9 +89,11 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
             // todo data for test fragment
             idPath = "-L1x9-4twC3flcTw9FX8";
         }
-        // init map
-        mapView.getMapAsync(this);
-        return rootView;
+    }
+
+    private void createEventBus() {
+        eventBus = new EventBus();
+        dbController = new DbController(getContext(), eventBus);
     }
 
     @Override
@@ -139,13 +156,18 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        toolbar.setTitle(R.string.app_name);
+    }
+
+    @Override
     public void onLowMemory() {
         super.onLowMemory();
         if (mapView != null) {
             mapView.onLowMemory();
         }
     }
-
 
     @Subscribe()
     public void onReceiveSinglePath(Path path) {

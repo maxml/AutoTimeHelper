@@ -1,6 +1,5 @@
 package com.maxml.timer.ui.fragments;
 
-
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +40,7 @@ import java.util.Set;
 public class SelectTagsFragment extends Fragment implements View.OnClickListener, TagsAdapter.OnTagsUpdateListener {
     private AutoCompleteTextView acTags;
     private BootstrapButton bAdd;
+    private Toolbar toolbar;
 
     private DbController controller;
     private EventBus eventBus;
@@ -122,6 +123,12 @@ public class SelectTagsFragment extends Fragment implements View.OnClickListener
         loadData();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        toolbar.setTitle(R.string.app_name);
+    }
+
     @Subscribe
     public void onReceiveTags(List<String> tags) {
         this.allTags = tags;
@@ -185,6 +192,9 @@ public class SelectTagsFragment extends Fragment implements View.OnClickListener
         rvListTags.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new TagsAdapter(getContext(), getFragmentManager(), this);
         rvListTags.setAdapter(adapter);
+
+        toolbar = getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.tags);
     }
 
     private void updateUi(List<String> list) {

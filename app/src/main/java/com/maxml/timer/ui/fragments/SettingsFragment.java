@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
+import android.support.v7.widget.Toolbar;
 
 import com.maxml.timer.R;
 import com.maxml.timer.entity.ShowFragmentListener;
@@ -16,6 +17,8 @@ import com.u1aryz.android.colorpicker.ColorPreferenceFragmentCompat;
 
 public class SettingsFragment extends ColorPreferenceFragmentCompat implements
         Preference.OnPreferenceClickListener, PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
+    private Toolbar toolbar;
+
     private ShowFragmentListener fragmentListener;
 
     @Override
@@ -29,6 +32,8 @@ public class SettingsFragment extends ColorPreferenceFragmentCompat implements
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.setting, rootKey);
+
+        initView();
 
         Preference wifiPreference = getPreferenceManager().findPreference(Constants.KEY_SETTING_WIFI);
         Preference singInPreference = getPreferenceManager().findPreference(Constants.KEY_MANAGE_ACCOUNT);
@@ -57,5 +62,16 @@ public class SettingsFragment extends ColorPreferenceFragmentCompat implements
     public boolean onPreferenceStartScreen(PreferenceFragmentCompat preferenceFragmentCompat, PreferenceScreen preferenceScreen) {
         preferenceFragmentCompat.setPreferenceScreen(preferenceScreen);
         return true;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        toolbar.setTitle(R.string.app_name);
+    }
+
+    private void initView() {
+        toolbar = getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.settings);
     }
 }
