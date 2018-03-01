@@ -22,7 +22,6 @@ import com.alamkanak.weekview.WeekViewEvent;
 import com.maxml.timer.R;
 import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.entity.Action;
-import com.maxml.timer.entity.ActionWeek;
 import com.maxml.timer.entity.Events;
 import com.maxml.timer.entity.ShowProgressListener;
 import com.maxml.timer.entity.StatisticControl;
@@ -188,12 +187,12 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
             case Constants.ID_BUTTON_ACTION_DELETE:
                 ChangeActionDialog changeActionDialog = ChangeActionDialog.getInstance(this);
                 Bundle args = new Bundle();
-                args.putString(Constants.EXTRA_ID_ACTION, ((ActionWeek) lastEvent).getActionId());
+                args.putString(Constants.EXTRA_ID_ACTION, lastEvent.getStringId());
                 changeActionDialog.setArguments(args);
                 changeActionDialog.show(getFragmentManager(), "DialogEditAction");
                 break;
             case Constants.ID_BUTTON_ACTION_EDIT:
-                Action action = ActionUtils.findActionById(((ActionWeek) lastEvent).getActionId(), actions);
+                Action action = ActionUtils.findActionById(lastEvent.getStringId(), actions);
                 controller.removeActionInDb(action.getId(), action.getDescription());
                 list.remove(lastEvent);
                 weekView.notifyDataSetChanged();
@@ -309,8 +308,8 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
 
 
     private void joinTwoAction(WeekViewEvent event) {
-        Action firesAction = ActionUtils.findActionById(((ActionWeek) lastEvent).getActionId(), actions);
-        Action secondAction = ActionUtils.findActionById(((ActionWeek) event).getActionId(), actions);
+        Action firesAction = ActionUtils.findActionById(lastEvent.getStringId(), actions);
+        Action secondAction = ActionUtils.findActionById(event.getStringId(), actions);
 
         Action action = ActionUtils.joinActions(firesAction, secondAction);
 

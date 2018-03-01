@@ -175,14 +175,15 @@ public class MainActivity extends AppCompatActivity
                     })
                     .create()
                     .show();
-        }
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            DrawerLayout drawer = findViewById(R.id.drawer_layout);
+            if (drawer.isDrawerOpen(GravityCompat.START)) {
+                drawer.closeDrawer(GravityCompat.START);
+            } else {
+                super.onBackPressed();
+            }
+            changeNavigationView();
         }
-        changeNavigationView();
     }
 
     @Override
@@ -310,15 +311,6 @@ public class MainActivity extends AppCompatActivity
         drawerToggle.syncState();
 
         navigationView = findViewById(R.id.navigationView);
-
-
-//        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-//            @Override
-//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//                item.setChecked(true);
-//                return false;
-//            }
-//        });
 
         View header = navigationView.getHeaderView(0);
         header.setOnClickListener(new View.OnClickListener() {

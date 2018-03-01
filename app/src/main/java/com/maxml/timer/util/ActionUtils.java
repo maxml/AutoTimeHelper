@@ -1,13 +1,10 @@
 package com.maxml.timer.util;
 
 import android.content.Context;
-import android.graphics.Color;
 
 import com.alamkanak.weekview.WeekViewEvent;
 import com.maxml.timer.R;
 import com.maxml.timer.entity.Action;
-import com.maxml.timer.entity.ActionWeek;
-import com.u1aryz.android.colorpicker.ColorPreferenceFragmentCompat;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -31,7 +28,7 @@ public class ActionUtils {
                 endData.setTimeInMillis(startData.getTimeInMillis() + (1000 * 60 * 30));
             }
 
-            ActionWeek actionWeek = new ActionWeek(action.getId(), action.getDescription(),
+            WeekViewEvent actionWeek = new WeekViewEvent(action.getId(), action.getDescription(),
                     action.getType(), startData, endData);
 
             actionWeek.setColor(SharedPreferencesUtils.getColor(context, actionWeek.getType()));
@@ -59,7 +56,7 @@ public class ActionUtils {
         return list;
     }
 
-    public static ActionWeek setStandartColor(Context context, ActionWeek action) {
+    public static WeekViewEvent setStandartColor(Context context, WeekViewEvent action) {
         action.setColor(SharedPreferencesUtils.getColor(context, action.getType()));
         return action;
     }

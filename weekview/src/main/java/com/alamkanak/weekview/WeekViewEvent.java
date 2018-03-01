@@ -12,6 +12,8 @@ import static com.alamkanak.weekview.WeekViewUtil.*;
  */
 public class WeekViewEvent {
     private long mId;
+    private String id;
+    private String type;
     private Calendar mStartTime;
     private Calendar mEndTime;
     private String mName;
@@ -100,6 +102,13 @@ public class WeekViewEvent {
         this(id, name, null, startTime, endTime);
     }
 
+    public WeekViewEvent(String id, String name, String type, Calendar startTime, Calendar endTime) {
+        this.id = id;
+        this.mName = name;
+        this.mStartTime = startTime;
+        this.mEndTime = endTime;
+        this.type = type;
+    }
 
     public Calendar getStartTime() {
         return mStartTime;
@@ -163,6 +172,22 @@ public class WeekViewEvent {
 
     public void setMenuIsOpened(boolean menuIsOpened) {
         this.menuIsOpened = menuIsOpened;
+    }
+
+    public void setStringId(String id) {
+        this.id = id;
+    }
+
+    public String getStringId() {
+        return id;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     @Override
