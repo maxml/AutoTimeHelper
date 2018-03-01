@@ -32,6 +32,7 @@
                     android:layout_alignParentTop="true"
                     app:titleTextColor="@color/primary_text" />
 
+                <!--Shold be open-->
                 <CalendarView
                     android:id="@+id/cv_calendar"
                     android:layout_width="match_parent"

@@ -154,7 +154,7 @@ public class SelectTagsFragment extends Fragment implements View.OnClickListener
     private void initStatistic() {
         if (statisticControl != null) {
             String time = getStatisticTime();
-            statisticControl.setEventTime("Time actions: " + time);
+            statisticControl.setEventTime(time);
             statisticControl.showStatisticLayout();
         }
     }

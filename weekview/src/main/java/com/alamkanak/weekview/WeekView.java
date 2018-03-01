@@ -48,7 +48,6 @@ import static com.alamkanak.weekview.WeekViewUtil.*;
  * Website: http://alamkanak.github.io/
  */
 public class WeekView extends View {
-
     private enum Direction {
         NONE, LEFT, RIGHT, VERTICAL
     }
@@ -568,7 +567,7 @@ public class WeekView extends View {
         }
     }
 
-    private void drawHeaderRowAndEvents(Canvas canvas) {
+    private void drawHeaderRowAndEvents(final Canvas canvas) {
         // Calculate the available width for each day.
         mHeaderColumnWidth = mTimeTextWidth + mHeaderColumnPadding * 2;
         mWidthPerDay = getWidth() - mHeaderColumnWidth - mColumnGap * (mNumberOfVisibleDays - 1);

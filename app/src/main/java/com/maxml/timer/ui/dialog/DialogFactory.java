@@ -37,6 +37,16 @@ public class DialogFactory {
         builder.create().show();
     }
 
+    public static AlertDialog messageDialog(Context context, String title, String description,
+                                            DialogInterface.OnClickListener listener) {
+        return new AlertDialog.Builder(context)
+                .setTitle(title)
+                .setMessage(description)
+                .setNegativeButton(android.R.string.no, null)
+                .setPositiveButton(android.R.string.yes, listener)
+                .create();
+    }
+
     public static void showGpsSwitchAlert(final Context context) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
 

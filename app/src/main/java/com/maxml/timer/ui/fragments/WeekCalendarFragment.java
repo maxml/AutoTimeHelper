@@ -218,7 +218,6 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.calendar_week_menu, menu);
         iCurrentDay = menu.getItem(1);
-//        iCurrentDay.setIcon(R.drawable.ic_current_day_pressed);
         this.menu = menu;
     }
 

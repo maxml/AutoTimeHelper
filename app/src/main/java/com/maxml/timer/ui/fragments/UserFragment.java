@@ -36,6 +36,7 @@ import com.maxml.timer.entity.ShowProgressListener;
 import com.maxml.timer.R;
 import com.maxml.timer.entity.User;
 import com.maxml.timer.ui.activity.LoginActivity;
+import com.maxml.timer.ui.dialog.DialogFactory;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.ImageUtil;
 import com.maxml.timer.util.NetworkUtil;
@@ -133,8 +134,15 @@ public class UserFragment extends Fragment implements View.OnClickListener {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.i_log_out) {
-            dbController.logout();
-            startActivity(new Intent(getActivity(), LoginActivity.class));
+            DialogFactory.messageDialog(getContext(), getResources().getString(R.string.dialog_title_logout),
+                    getResources().getString(R.string.dialog_message_logout), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dbController.logout();
+                            startActivity(new Intent(getActivity(), LoginActivity.class));
+                            getActivity().finish();
+                        }
+                    }).show();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -203,7 +211,6 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                     }).show();
         }
     }
-
 
     private void openGallery() {
         Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);

@@ -74,15 +74,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        findViewById(R.id.cv_calendar).setVisibility(View.GONE);
-        pbLoad = findViewById(R.id.pb_load);
-        toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        statisticLayout = findViewById(R.id.layoutStatistic);
-        eventTime = findViewById(R.id.tvTime);
-
-        drawerLayout = findViewById(R.id.drawer_layout);
+        initUI();
         hideProgressBar();
 
         if (getSupportActionBar() != null) {
@@ -163,18 +155,14 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         if (!FragmentUtils.backFragment(this)) {
-            new AlertDialog.Builder(this)
-                    .setTitle(R.string.dialog_title_exit)
-                    .setMessage(R.string.dialog_message_exit)
-                    .setNegativeButton(android.R.string.no, null)
-                    .setPositiveButton(android.R.string.yes, new OnClickListener() {
-                        public void onClick(DialogInterface arg0, int arg1) {
+            DialogFactory.messageDialog(this, getResources().getString(R.string.dialog_title_exit),
+                    getResources().getString(R.string.dialog_message_exit), new OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
                             actionController.closeApp();
                             finish();
                         }
-                    })
-                    .create()
-                    .show();
+                    }).show();
         } else {
             DrawerLayout drawer = findViewById(R.id.drawer_layout);
             if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -256,6 +244,18 @@ public class MainActivity extends AppCompatActivity
                 }
                 break;
         }
+    }
+
+    private void initUI() {
+        findViewById(R.id.cv_calendar).setVisibility(View.GONE);
+        pbLoad = findViewById(R.id.pb_load);
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        statisticLayout = findViewById(R.id.layoutStatistic);
+        eventTime = findViewById(R.id.tvTime);
+
+        drawerLayout = findViewById(R.id.drawer_layout);
     }
 
     public void showProgressBar() {
