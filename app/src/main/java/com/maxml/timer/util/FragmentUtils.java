@@ -27,9 +27,6 @@ public class FragmentUtils {
     }
 
     public static boolean backFragment(FragmentActivity activity) {
-        activity.getSupportFragmentManager()
-                .popBackStack();
-
         return activity.getSupportFragmentManager().getBackStackEntryCount() != 0;
     }
 }

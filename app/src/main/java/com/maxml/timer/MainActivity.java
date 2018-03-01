@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -23,6 +24,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alamkanak.weekview.WeekView;
 import com.maxml.timer.controllers.ActionController;
 import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.entity.Events;
@@ -180,6 +182,7 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+        changeNavigationView();
     }
 
     @Override
@@ -264,6 +267,26 @@ public class MainActivity extends AppCompatActivity
 
     public void setupFragment(Fragment fragment) {
         FragmentUtils.setFragment(this, fragment, fragment.getClass().getName());
+        changeNavigationView();
+    }
+
+    private void changeNavigationView() {
+        Fragment fragment = FragmentUtils.getCurrentFragment(this);
+        if (fragment instanceof HomeFragment) {
+            navigationView.setCheckedItem(R.id.i_home);
+        } else if (fragment instanceof UserFragment) {
+            navigationView.setCheckedItem(R.id.i_user);
+        } else if (fragment instanceof SelectTagsFragment) {
+            navigationView.setCheckedItem(R.id.i_tags);
+        } else if (fragment instanceof MonthCalendarFragment) {
+            navigationView.setCheckedItem(R.id.i_calendar_month);
+        } else if (fragment instanceof WeekCalendarFragment) {
+            navigationView.setCheckedItem(R.id.i_calendar_week);
+        } else if (fragment instanceof DayCalendarFragment) {
+            navigationView.setCheckedItem(R.id.i_calendar_day);
+        } else if (fragment instanceof SettingsFragment) {
+            navigationView.setCheckedItem(R.id.i_setting);
+        }
     }
 
     private void initController() {
@@ -274,6 +297,7 @@ public class MainActivity extends AppCompatActivity
 
     private void setHomeFragment() {
         FragmentUtils.setFragment(this, new HomeFragment());
+        navigationView.setCheckedItem(R.id.i_home);
     }
 
     private void initDrawer() {
@@ -287,13 +311,14 @@ public class MainActivity extends AppCompatActivity
 
         navigationView = findViewById(R.id.navigationView);
 
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                item.setChecked(true);
-                return false;
-            }
-        });
+
+//        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+//            @Override
+//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//                item.setChecked(true);
+//                return false;
+//            }
+//        });
 
         View header = navigationView.getHeaderView(0);
         header.setOnClickListener(new View.OnClickListener() {
