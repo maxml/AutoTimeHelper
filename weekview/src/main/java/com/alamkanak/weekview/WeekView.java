@@ -254,9 +254,9 @@ public class WeekView extends View {
                     if (event.optionRectF != null && e.getX() > event.optionRectF.left && e.getX() < event.optionRectF.right && e.getY() > event.optionRectF.top && e.getY() < event.optionRectF.bottom) {
                         int position = -1;
                         int point = (int) (e.getY() - event.optionRectF.top);
-                        if (point > 120) {
+                        if (point > (int) (mHeaderTextHeight * 8.5 / 3 * 2)) {
                             position = 2;
-                        } else if (point > 60) {
+                        } else if (point > (int) (mHeaderTextHeight * 8.5 / 3)) {
                             position = 1;
                         } else {
                             position = 0;
@@ -731,14 +731,14 @@ public class WeekView extends View {
             // In the next iteration, start from the next day.
             startPixel += mWidthPerDay + mColumnGap;
         }
-        for (EventRect e :
-                mEventRects) {
-            if (e.optionRectF != null) {
-                canvas.drawRoundRect(e.optionRectF, mEventCornerRadius, mEventCornerRadius, mOptionPaint);
-
-                drawOptionsTitles(e.optionRectF, canvas, e.getOptionTop(), e.getOptionLeft());
-            }
-        }
+//        for (EventRect e :
+//                mEventRects) {
+//            if (e.optionRectF != null) {
+//                canvas.drawRoundRect(e.optionRectF, mEventCornerRadius, mEventCornerRadius, mOptionPaint);
+//
+//                drawOptionsTitles(e.optionRectF, canvas, e.getOptionTop(), e.getOptionLeft());
+//            }
+//        }
 
         // Hide everything in the first cell (top left corner).
         canvas.clipRect(0, 0, mTimeTextWidth + mHeaderColumnPadding * 2, mHeaderHeight + mHeaderRowPadding * 2, Region.Op.REPLACE);
@@ -809,6 +809,7 @@ public class WeekView extends View {
      */
     private void drawEvents(Calendar date, float startFromPixel, Canvas canvas) {
         if (mEventRects != null && mEventRects.size() > 0) {
+            boolean isHaveMenu = false;
             for (int i = 0; i < mEventRects.size(); i++) {
                 if (isSameDay(mEventRects.get(i).event.getStartTime(), date) && !mEventRects.get(i).event.isAllDay()) {
 
@@ -837,9 +838,13 @@ public class WeekView extends View {
                         mEventRects.get(i).rectF = new RectF(left + 2, top + 2, right - 2, bottom - 2);
                         mEventBackgroundPaint.setColor(mEventRects.get(i).event.getColor() == 0 ? mDefaultEventColor : mEventRects.get(i).event.getColor());
                         if (mEventRects.get(i).event.isMenuIsOpened()) {
-                            mEventRects.get(i).optionRectF = new RectF(left + 2, top + 2 + (bottom - top), left - 2 + 140, bottom - 2 + 180);
+                            mEventRects.get(i).optionRectF = new RectF(left + 2, top + 2 + (bottom - top), left - 2 + (int)(mHeaderTextHeight * 6), bottom - 2 + (int) (mHeaderTextHeight * 8.5));
                             mEventRects.get(i).setOptionsStartCoordinates(top + (bottom - top), left);
                             mOptionPaint = new Paint(mEventBackgroundPaint);
+                            isHaveMenu = true;
+//                            canvas.drawRoundRect(mEventRects.get(i).optionRectF, mEventCornerRadius, mEventCornerRadius, mOptionPaint);
+//
+//                            drawOptionsTitles(mEventRects.get(i).optionRectF, canvas, mEventRects.get(i).getOptionTop(), mEventRects.get(i).getOptionLeft());
                         } else {
                             mEventRects.get(i).optionRectF = null;
                         }
@@ -848,6 +853,16 @@ public class WeekView extends View {
                         drawEventTitle(mEventRects.get(i).event, mEventRects.get(i).rectF, canvas, top, left);
                     } else
                         mEventRects.get(i).rectF = null;
+                }
+            }
+            if (isHaveMenu) {
+                for (EventRect e :
+                        mEventRects) {
+                    if (e.optionRectF != null) {
+                        canvas.drawRoundRect(e.optionRectF, mEventCornerRadius, mEventCornerRadius, mOptionPaint);
+
+                        drawOptionsTitles(e.optionRectF, canvas, e.getOptionTop(), e.getOptionLeft());
+                    }
                 }
             }
         }
