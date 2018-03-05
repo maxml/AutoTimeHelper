@@ -73,7 +73,6 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:padding="5dp"
-                    android:text="TextView"
                     android:textColor="@color/bootstrap_edittext_disabled" />
             </LinearLayout>
         </RelativeLayout>

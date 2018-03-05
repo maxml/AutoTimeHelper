@@ -807,9 +807,11 @@ public class WeekView extends View {
      * @param startFromPixel The left position of the day area. The events will never go any left from this value.
      * @param canvas         The canvas to draw upon.
      */
+
+    //done so because menu can be is hidden under another item
+    int count = 0;
     private void drawEvents(Calendar date, float startFromPixel, Canvas canvas) {
         if (mEventRects != null && mEventRects.size() > 0) {
-            boolean isHaveMenu = false;
             for (int i = 0; i < mEventRects.size(); i++) {
                 if (isSameDay(mEventRects.get(i).event.getStartTime(), date) && !mEventRects.get(i).event.isAllDay()) {
 
@@ -838,13 +840,10 @@ public class WeekView extends View {
                         mEventRects.get(i).rectF = new RectF(left + 2, top + 2, right - 2, bottom - 2);
                         mEventBackgroundPaint.setColor(mEventRects.get(i).event.getColor() == 0 ? mDefaultEventColor : mEventRects.get(i).event.getColor());
                         if (mEventRects.get(i).event.isMenuIsOpened()) {
-                            mEventRects.get(i).optionRectF = new RectF(left + 2, top + 2 + (bottom - top), left - 2 + (int)(mHeaderTextHeight * 6), bottom - 2 + (int) (mHeaderTextHeight * 8.5));
+                            mEventRects.get(i).optionRectF = new RectF(left + 2, top + 2 + (bottom - top), left - 2 + (int) (mHeaderTextHeight * 6), bottom - 2 + (int) (mHeaderTextHeight * 8.5));
                             mEventRects.get(i).setOptionsStartCoordinates(top + (bottom - top), left);
                             mOptionPaint = new Paint(mEventBackgroundPaint);
-                            isHaveMenu = true;
-//                            canvas.drawRoundRect(mEventRects.get(i).optionRectF, mEventCornerRadius, mEventCornerRadius, mOptionPaint);
-//
-//                            drawOptionsTitles(mEventRects.get(i).optionRectF, canvas, mEventRects.get(i).getOptionTop(), mEventRects.get(i).getOptionLeft());
+                            count = 1;
                         } else {
                             mEventRects.get(i).optionRectF = null;
                         }
@@ -855,7 +854,8 @@ public class WeekView extends View {
                         mEventRects.get(i).rectF = null;
                 }
             }
-            if (isHaveMenu) {
+
+            if (count == 2) {
                 for (EventRect e :
                         mEventRects) {
                     if (e.optionRectF != null) {
@@ -864,6 +864,9 @@ public class WeekView extends View {
                         drawOptionsTitles(e.optionRectF, canvas, e.getOptionTop(), e.getOptionLeft());
                     }
                 }
+                count = 0;
+            } else if (count == 1) {
+                count++;
             }
         }
     }
@@ -1330,8 +1333,20 @@ public class WeekView extends View {
 
     @Override
     public void invalidate() {
+        clearListFromDontUsedMenu();
         super.invalidate();
         mAreDimensionsInvalid = true;
+    }
+
+    private void clearListFromDontUsedMenu() {
+        if (mEventRects != null) {
+            for (EventRect e :
+                    mEventRects) {
+                if (!e.event.isMenuIsOpened()) {
+                    e.optionRectF = null;
+                }
+            }
+        }
     }
 
     /////////////////////////////////////////////////////////////////
