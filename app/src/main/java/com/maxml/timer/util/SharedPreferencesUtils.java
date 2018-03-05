@@ -58,8 +58,31 @@ public class SharedPreferencesUtils {
             defaultColor = resources.getColor(R.color.event_color_red);
         } else if (actionName.equalsIgnoreCase(Constants.EVENT_REST_ACTION)) {
             defaultColor = resources.getColor(R.color.event_color_green);
+        } else if (actionName.equalsIgnoreCase(Constants.ACTION_SELECTED)) {
+            defaultColor = resources.getColor(R.color.select_action);
+        } else if (actionName.equalsIgnoreCase(Constants.ACTION_JOINED)) {
+            defaultColor = resources.getColor(R.color.joined_action);
         }
-
         return sp.getInt(actionName, defaultColor);
+    }
+
+    public static void setColor(Context context, String actionName, int color) {
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+
+        if (actionName.equalsIgnoreCase(Constants.EVENT_WALK_ACTION)) {
+            editor.putInt(actionName, color);
+        } else if (actionName.equalsIgnoreCase(Constants.EVENT_CALL_ACTION)) {
+            editor.putInt(actionName, color);
+        } else if (actionName.equalsIgnoreCase(Constants.EVENT_WORK_ACTION)) {
+            editor.putInt(actionName, color);
+        } else if (actionName.equalsIgnoreCase(Constants.EVENT_REST_ACTION)) {
+            editor.putInt(actionName, color);
+        } else if (actionName.equalsIgnoreCase(Constants.ACTION_SELECTED)) {
+            editor.putInt(actionName, color);
+        } else if (actionName.equalsIgnoreCase(Constants.ACTION_JOINED)) {
+            editor.putInt(actionName, color);
+        }
+        editor.apply();
+        editor.commit();
     }
 }

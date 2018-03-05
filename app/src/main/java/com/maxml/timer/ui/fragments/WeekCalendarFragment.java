@@ -2,6 +2,7 @@ package com.maxml.timer.ui.fragments;
 
 import android.content.Context;
 import android.graphics.RectF;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -31,6 +32,7 @@ import com.maxml.timer.ui.dialog.CreateActionDialog;
 import com.maxml.timer.util.ActionUtils;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.NetworkUtil;
+import com.maxml.timer.util.SharedPreferencesUtils;
 import com.maxml.timer.util.Utils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -138,7 +140,7 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
 
     @Override
     public void onEventClick(WeekViewEvent event, RectF eventRect) {
-        if (isJoined && event.getColor() == R.color.color1) {
+        if (isJoined && event.getColor() == SharedPreferencesUtils.getColor(getContext(), Constants.ACTION_JOINED)) {
             setStandartColorForActions();
             joinTwoAction(event);
         } else if (!isJoined) {
@@ -202,8 +204,8 @@ public class WeekCalendarFragment extends Fragment implements WeekView.EventClic
             case Constants.ID_BUTTON_ACTION_JOIN:
                 isJoined = true;
 
-                list = ActionUtils.findNeedActionsForJoin(list, lastEvent);
-                lastEvent.setColor(R.color.select_action);
+                list = ActionUtils.findNeedActionsForJoin(getContext(), list, lastEvent);
+                lastEvent.setColor(SharedPreferencesUtils.getColor(getContext(), Constants.ACTION_SELECTED));
                 weekView.notifyDataSetChanged();
 
                 changeMenuVisible();

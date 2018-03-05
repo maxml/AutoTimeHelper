@@ -1,11 +1,17 @@
 package com.alamkanak.weekview;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Region;
@@ -31,6 +37,7 @@ import android.view.ScaleGestureDetector;
 import android.view.SoundEffectConstants;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.animation.LinearInterpolator;
 import android.widget.OverScroller;
 
 import java.text.SimpleDateFormat;
@@ -809,7 +816,8 @@ public class WeekView extends View {
      */
 
     //done so because menu can be is hidden under another item
-    int count = 0;
+    int countColumnAfterMenu = 0;
+
     private void drawEvents(Calendar date, float startFromPixel, Canvas canvas) {
         if (mEventRects != null && mEventRects.size() > 0) {
             for (int i = 0; i < mEventRects.size(); i++) {
@@ -843,7 +851,7 @@ public class WeekView extends View {
                             mEventRects.get(i).optionRectF = new RectF(left + 2, top + 2 + (bottom - top), left - 2 + (int) (mHeaderTextHeight * 6), bottom - 2 + (int) (mHeaderTextHeight * 8.5));
                             mEventRects.get(i).setOptionsStartCoordinates(top + (bottom - top), left);
                             mOptionPaint = new Paint(mEventBackgroundPaint);
-                            count = 1;
+                            countColumnAfterMenu = 1;
                         } else {
                             mEventRects.get(i).optionRectF = null;
                         }
@@ -855,7 +863,7 @@ public class WeekView extends View {
                 }
             }
 
-            if (count == 2) {
+            if (countColumnAfterMenu == 2) {
                 for (EventRect e :
                         mEventRects) {
                     if (e.optionRectF != null) {
@@ -864,9 +872,9 @@ public class WeekView extends View {
                         drawOptionsTitles(e.optionRectF, canvas, e.getOptionTop(), e.getOptionLeft());
                     }
                 }
-                count = 0;
-            } else if (count == 1) {
-                count++;
+                countColumnAfterMenu = 0;
+            } else if (countColumnAfterMenu == 1) {
+                countColumnAfterMenu++;
             }
         }
     }

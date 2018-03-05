@@ -30,10 +30,10 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.maxml.timer.R;
 import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.entity.Events;
 import com.maxml.timer.entity.ShowProgressListener;
-import com.maxml.timer.R;
 import com.maxml.timer.entity.User;
 import com.maxml.timer.ui.activity.LoginActivity;
 import com.maxml.timer.ui.dialog.DialogFactory;
@@ -44,8 +44,6 @@ import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-
-import java.io.File;
 
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.OnNeverAskAgain;
@@ -304,6 +302,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
         etName.setEnabled(false);
         etEmail.setEnabled(false);
         bbOk.setEnabled(false);
+        ivUser.setEnabled(false);
     }
 
     private void setListeners() {

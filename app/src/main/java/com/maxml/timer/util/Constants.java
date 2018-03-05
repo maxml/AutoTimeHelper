@@ -69,6 +69,9 @@ public class Constants {
     public static final String EVENT_WORK_ACTION = "work";
     public static final String EVENT_REST_ACTION = "rest";
     public static final String EVENT_WALK_ACTION = "walk";
+    public static final String ACTION_SELECTED = "select_action";
+    public static final String ACTION_JOINED = "join_action";
+
     public static final String WIDGET_UPDATE_ACTION_STATUS = "updateActionStatus";
     public final static String WIDGET_UPDATE_ACTION = "com.javatechig.intent.action.UPDATE_WIDGET";
     public static final String EVENT_LOCATION_CHANGE = "locationChange";

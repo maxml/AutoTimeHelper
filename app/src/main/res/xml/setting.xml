@@ -30,6 +30,18 @@
             android:persistent="true"
             android:title="Rest" />
 
+        <com.u1aryz.android.colorpicker.ColorPreference
+            android:defaultValue="@color/joined_action"
+            android:key="join_action"
+            android:persistent="true"
+            android:title="Join Action" />
+
+        <com.u1aryz.android.colorpicker.ColorPreference
+            android:defaultValue="@color/select_action"
+            android:key="select_action"
+            android:persistent="true"
+            android:title="Select action" />
+
     </android.support.v7.preference.PreferenceScreen>
 
     <android.support.v7.preference.Preference

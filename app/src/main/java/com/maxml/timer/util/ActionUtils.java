@@ -38,7 +38,7 @@ public class ActionUtils {
         return result;
     }
 
-    public static List<WeekViewEvent> findNeedActionsForJoin(List<WeekViewEvent> list, WeekViewEvent changeAction) {
+    public static List<WeekViewEvent> findNeedActionsForJoin(Context context, List<WeekViewEvent> list, WeekViewEvent changeAction) {
         //if the actions intersect with the selected action, then change their color.
         long startTimeSelectAction = changeAction.getStartTime().getTimeInMillis();
         long endTimeSelectAction = changeAction.getEndTime().getTimeInMillis();
@@ -50,7 +50,7 @@ public class ActionUtils {
                             (startTimeSelectAction <= endTimeAction && endTimeSelectAction >= endTimeAction)) ||
                     ((startTimeAction <= startTimeSelectAction && endTimeAction >= startTimeSelectAction) ||
                             (startTimeAction <= endTimeSelectAction && endTimeAction >= endTimeSelectAction))) {
-                list.get(i).setColor(R.color.color1);
+                list.get(i).setColor(SharedPreferencesUtils.getColor(context, Constants.ACTION_JOINED));
             }
         }
         return list;

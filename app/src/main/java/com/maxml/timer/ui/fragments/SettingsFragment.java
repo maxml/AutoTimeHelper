@@ -13,13 +13,16 @@ import com.maxml.timer.R;
 import com.maxml.timer.entity.ShowFragmentListener;
 import com.maxml.timer.ui.activity.LoginActivity;
 import com.maxml.timer.util.Constants;
+import com.maxml.timer.util.SharedPreferencesUtils;
+import com.u1aryz.android.colorpicker.ColorPreference;
 import com.u1aryz.android.colorpicker.ColorPreferenceFragmentCompat;
 
 public class SettingsFragment extends ColorPreferenceFragmentCompat implements
-        Preference.OnPreferenceClickListener, PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
+        Preference.OnPreferenceClickListener, PreferenceFragmentCompat.OnPreferenceStartScreenCallback, Preference.OnPreferenceChangeListener {
     private Toolbar toolbar;
 
     private ShowFragmentListener fragmentListener;
+    private int color;
 
     @Override
     public void onAttach(Context context) {
@@ -37,9 +40,12 @@ public class SettingsFragment extends ColorPreferenceFragmentCompat implements
 
         Preference wifiPreference = getPreferenceManager().findPreference(Constants.KEY_SETTING_WIFI);
         Preference singInPreference = getPreferenceManager().findPreference(Constants.KEY_MANAGE_ACCOUNT);
+        Preference restPreference = getPreferenceManager().findPreference(Constants.EVENT_REST_ACTION);
 
         wifiPreference.setOnPreferenceClickListener(this);
         singInPreference.setOnPreferenceClickListener(this);
+        restPreference.setOnPreferenceClickListener(this);
+        restPreference.setOnPreferenceChangeListener(this);
     }
 
     @Override
@@ -49,6 +55,14 @@ public class SettingsFragment extends ColorPreferenceFragmentCompat implements
             fragmentListener.showFragment(fragment);
         } else if (preference.getKey().equalsIgnoreCase(Constants.KEY_MANAGE_ACCOUNT)) {
             startActivity(new Intent(getContext(), LoginActivity.class));
+        } else if (preference.getKey().equalsIgnoreCase(Constants.EVENT_REST_ACTION)) {
+            color = SharedPreferencesUtils.getColor(getContext(), Constants.EVENT_REST_ACTION);
+        } else if (preference.getKey().equalsIgnoreCase(Constants.EVENT_CALL_ACTION)) {
+            color = SharedPreferencesUtils.getColor(getContext(), Constants.EVENT_CALL_ACTION);
+        } else if (preference.getKey().equalsIgnoreCase(Constants.EVENT_WORK_ACTION)) {
+            color = SharedPreferencesUtils.getColor(getContext(), Constants.EVENT_WORK_ACTION);
+        } else if (preference.getKey().equalsIgnoreCase(Constants.EVENT_WALK_ACTION)) {
+            color = SharedPreferencesUtils.getColor(getContext(), Constants.EVENT_WALK_ACTION);
         }
         return true;
     }
@@ -73,5 +87,33 @@ public class SettingsFragment extends ColorPreferenceFragmentCompat implements
     private void initView() {
         toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.settings);
+    }
+
+    @Override
+    public boolean onPreferenceChange(Preference preference, Object newValue) {
+        int newColor = (int) newValue;
+        if (!changeOnRightData(preference.getKey(), newColor)) {
+            SharedPreferencesUtils.setColor(getContext(), preference.getKey(), color);
+//            int colorTest = SharedPreferencesUtils.getColor(getContext(), preference.getKey());
+            return true;
+        }
+        return false;
+    }
+
+    private boolean changeOnRightData(String key, int newColor) {
+        int callColor = SharedPreferencesUtils.getColor(getContext(), Constants.EVENT_CALL_ACTION);
+        int walkColor = SharedPreferencesUtils.getColor(getContext(), Constants.EVENT_WALK_ACTION);
+        int workColor = SharedPreferencesUtils.getColor(getContext(), Constants.EVENT_WORK_ACTION);
+        int restColor = SharedPreferencesUtils.getColor(getContext(), Constants.EVENT_REST_ACTION);
+        if (key.equalsIgnoreCase(Constants.EVENT_WALK_ACTION)) {
+            if (newColor != callColor && newColor != workColor && newColor != restColor) {
+                return true;
+            }
+        } else if (key.equalsIgnoreCase(Constants.EVENT_REST_ACTION)) {
+            if (newColor != callColor && newColor != workColor && newColor != walkColor) {
+                return true;
+            }
+        }
+        return false;
     }
 }
