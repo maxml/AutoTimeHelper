@@ -69,6 +69,7 @@ public class SharedPreferencesUtils {
     public static void setColor(Context context, String actionName, int color) {
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
 
+
         if (actionName.equalsIgnoreCase(Constants.EVENT_WALK_ACTION)) {
             editor.putInt(actionName, color);
         } else if (actionName.equalsIgnoreCase(Constants.EVENT_CALL_ACTION)) {
@@ -85,4 +86,19 @@ public class SharedPreferencesUtils {
         editor.apply();
         editor.commit();
     }
+
+    public static void makeDefaultColors(Context context) {
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        Resources resources = context.getResources();
+        editor.putInt(Constants.EVENT_WALK_ACTION, resources.getColor(R.color.event_color_blue));
+        editor.putInt(Constants.EVENT_CALL_ACTION, resources.getColor(R.color.event_color_yellow));
+        editor.putInt(Constants.EVENT_WORK_ACTION, resources.getColor(R.color.event_color_red));
+        editor.putInt(Constants.EVENT_REST_ACTION, resources.getColor(R.color.event_color_green));
+        editor.putInt(Constants.ACTION_SELECTED, resources.getColor(R.color.select_action));
+        editor.putInt(Constants.ACTION_JOINED, resources.getColor(R.color.joined_action));
+
+        editor.apply();
+        editor.commit();
+    }
 }
+

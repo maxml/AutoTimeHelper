@@ -16,12 +16,15 @@ import com.maxml.timer.R;
 import com.maxml.timer.controllers.ActionController;
 import com.maxml.timer.entity.Events;
 import com.maxml.timer.util.Constants;
+import com.maxml.timer.util.SharedPreferencesUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import javax.net.ssl.SSLPeerUnverifiedException;
 
 public class HomeFragment extends Fragment {
 
@@ -168,6 +171,11 @@ public class HomeFragment extends Fragment {
         bWalk = view.findViewById(R.id.b_walk);
         tvStartDate = view.findViewById(R.id.tv_start_date);
         tvTitle = view.findViewById(R.id.tv_title);
+
+        bCall.setBackgroundColor(SharedPreferencesUtils.getColor(getContext(), Constants.EVENT_CALL_ACTION));
+        bWork.setBackgroundColor(SharedPreferencesUtils.getColor(getContext(), Constants.EVENT_WORK_ACTION));
+        bRest.setBackgroundColor(SharedPreferencesUtils.getColor(getContext(), Constants.EVENT_REST_ACTION));
+        bWalk.setBackgroundColor(SharedPreferencesUtils.getColor(getContext(), Constants.EVENT_WALK_ACTION));
     }
 
     private String charSequence(Date date) {

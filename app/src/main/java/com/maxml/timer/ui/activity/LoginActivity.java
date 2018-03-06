@@ -17,6 +17,7 @@ import com.maxml.timer.R;
 import com.maxml.timer.controllers.DbController;
 import com.maxml.timer.entity.Events;
 import com.maxml.timer.util.Constants;
+import com.maxml.timer.util.NetworkUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -31,7 +32,6 @@ public class LoginActivity extends AppCompatActivity implements EasyPermissions.
     private TextView entLogin;
     private TextView entPassword;
     private ProgressBar pbLoad;
-//    private BootstrapButton bLoginAnonymously;
     private BootstrapButton bLogin;
     private BootstrapButton bSignIn;
     private BootstrapButton bForgotPassword;
@@ -93,6 +93,23 @@ public class LoginActivity extends AppCompatActivity implements EasyPermissions.
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.b_login:
+                login();
+                break;
+            case R.id.b_sign_in:
+                Intent intent = new Intent(this, CreateUserActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.b_forgot_password:
+                Intent intentForgot = new Intent(this, ForgotPasswordActivity.class);
+                startActivity(intentForgot);
+                break;
+        }
+    }
+
     @Subscribe
     public void onReceiveUserApiEvent(Events.DbResult event) {
         switch (event.getResultStatus()) {
@@ -109,43 +126,6 @@ public class LoginActivity extends AppCompatActivity implements EasyPermissions.
         }
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.b_login:
-                login();
-                break;
-//            case R.id.b_login_anonymously:
-//                loginAsAnonymously();
-//                break;
-            case R.id.b_sign_in:
-                Intent intent = new Intent(this, CreateUserActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.b_forgot_password:
-                Intent intentForgot = new Intent(this, ForgotPasswordActivity.class);
-                startActivity(intentForgot);
-                break;
-        }
-    }
-
-    private void loginAsAnonymously() {
-        pbLoad.setVisibility(View.VISIBLE);
-        dbController.loginAnonymously();
-    }
-
-    private void login() {
-
-        String login = entLogin.getText().toString();
-        String password = entPassword.getText().toString();
-        if (!TextUtils.isEmpty(login) && !TextUtils.isEmpty(password)) {
-            dbController.login(login, password);
-            pbLoad.setVisibility(View.VISIBLE);
-        } else {
-            Toast.makeText(this, R.string.error_input_data, Toast.LENGTH_SHORT).show();
-        }
-    }
-
     @AfterPermissionGranted(Constants.REQUEST_LOCATION_PERMISSIONS)
     void checkPermissions() {
         String[] perms = {android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION};
@@ -158,18 +138,31 @@ public class LoginActivity extends AppCompatActivity implements EasyPermissions.
         }
     }
 
+    private void login() {
+        String login = entLogin.getText().toString();
+        String password = entPassword.getText().toString();
+        if (NetworkUtil.isNetworkAvailable(this)) {
+            if (!TextUtils.isEmpty(login) && !TextUtils.isEmpty(password)) {
+                dbController.login(login, password);
+                pbLoad.setVisibility(View.VISIBLE);
+            } else {
+                Toast.makeText(this, R.string.error_input_data, Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(this, R.string.error_connecting, Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void initUI() {
         entLogin = findViewById(R.id.et_login);
         entPassword = findViewById(R.id.et_password);
         pbLoad = findViewById(R.id.pb_load);
-//        bLoginAnonymously = findViewById(R.id.b_login_anonymously);
         bLogin = findViewById(R.id.b_login);
         bSignIn = findViewById(R.id.b_sign_in);
         bForgotPassword = findViewById(R.id.b_forgot_password);
     }
 
     private void setListeners() {
-//        bLoginAnonymously.setOnClickListener(this);
         bLogin.setOnClickListener(this);
         bSignIn.setOnClickListener(this);
         bForgotPassword.setOnClickListener(this);

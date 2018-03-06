@@ -867,6 +867,7 @@ public class WeekView extends View {
                 for (EventRect e :
                         mEventRects) {
                     if (e.optionRectF != null) {
+                        mOptionPaint.setAlpha(170);
                         canvas.drawRoundRect(e.optionRectF, mEventCornerRadius, mEventCornerRadius, mOptionPaint);
 
                         drawOptionsTitles(e.optionRectF, canvas, e.getOptionTop(), e.getOptionLeft());

@@ -71,6 +71,7 @@
     <string name="text_default_action_state"></string>
     <string name="text_default_action_date"></string>
     <string name="error_input_data">Please input login and password</string>
+    <string name="error_connecting">Please turn on internet</string>
     <string name="hour">h</string>
     <string name="min">min</string>
     <string name="sec">sec</string>
