@@ -1,0 +1,33 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'
+
+android {
+  compileSdkVersion 25
+  buildToolsVersion '26.0.2'
+
+  defaultConfig {
+    minSdkVersion 9
+    targetSdkVersion 25
+
+    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+  }
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
+  }
+}
+
+dependencies {
+  compile 'com.android.support:preference-v7:25.3.1'
+}
+
+publish {
+  userOrg = USER_ORG
+  groupId = GROUP_ID
+  artifactId = ARTIFACT_ID
+  publishVersion = VERSION_NAME
+  desc = DESCRIPTION
+  website = SITE_URL
+}

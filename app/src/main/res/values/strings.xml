@@ -83,6 +83,7 @@
     <string name="permission_neverask">Дать разрешения вы можете в настройках телефона</string>
     <string name="createhomesecond_gallery">Галерея</string>
     <string name="createhomesecond_camera">Камера</string>
+    <string name="select_different_colors">Select different colors.</string>
 
     <string-array name="options_action">
         <item>Edit</item>

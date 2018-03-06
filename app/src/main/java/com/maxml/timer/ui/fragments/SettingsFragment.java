@@ -8,13 +8,13 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
 import android.support.v7.widget.Toolbar;
+import android.widget.Toast;
 
 import com.maxml.timer.R;
 import com.maxml.timer.entity.ShowFragmentListener;
 import com.maxml.timer.ui.activity.LoginActivity;
 import com.maxml.timer.util.Constants;
 import com.maxml.timer.util.SharedPreferencesUtils;
-import com.u1aryz.android.colorpicker.ColorPreference;
 import com.u1aryz.android.colorpicker.ColorPreferenceFragmentCompat;
 
 public class SettingsFragment extends ColorPreferenceFragmentCompat implements
@@ -63,6 +63,10 @@ public class SettingsFragment extends ColorPreferenceFragmentCompat implements
             color = SharedPreferencesUtils.getColor(getContext(), Constants.EVENT_WORK_ACTION);
         } else if (preference.getKey().equalsIgnoreCase(Constants.EVENT_WALK_ACTION)) {
             color = SharedPreferencesUtils.getColor(getContext(), Constants.EVENT_WALK_ACTION);
+        } else if (preference.getKey().equalsIgnoreCase(Constants.ACTION_JOINED)) {
+            color = SharedPreferencesUtils.getColor(getContext(), Constants.ACTION_JOINED);
+        } else if (preference.getKey().equalsIgnoreCase(Constants.ACTION_SELECTED)) {
+            color = SharedPreferencesUtils.getColor(getContext(), Constants.ACTION_SELECTED);
         }
         return true;
     }
@@ -94,7 +98,7 @@ public class SettingsFragment extends ColorPreferenceFragmentCompat implements
         int newColor = (int) newValue;
         if (!changeOnRightData(preference.getKey(), newColor)) {
             SharedPreferencesUtils.setColor(getContext(), preference.getKey(), color);
-//            int colorTest = SharedPreferencesUtils.getColor(getContext(), preference.getKey());
+            Toast.makeText(getContext(), R.string.select_different_colors, Toast.LENGTH_SHORT).show();
             return true;
         }
         return false;
@@ -105,12 +109,30 @@ public class SettingsFragment extends ColorPreferenceFragmentCompat implements
         int walkColor = SharedPreferencesUtils.getColor(getContext(), Constants.EVENT_WALK_ACTION);
         int workColor = SharedPreferencesUtils.getColor(getContext(), Constants.EVENT_WORK_ACTION);
         int restColor = SharedPreferencesUtils.getColor(getContext(), Constants.EVENT_REST_ACTION);
+        int androidJoined = SharedPreferencesUtils.getColor(getContext(), Constants.ACTION_JOINED);
+        int actionSelected = SharedPreferencesUtils.getColor(getContext(), Constants.EVENT_REST_ACTION);
         if (key.equalsIgnoreCase(Constants.EVENT_WALK_ACTION)) {
-            if (newColor != callColor && newColor != workColor && newColor != restColor) {
+            if (newColor != callColor && newColor != workColor && newColor != restColor && newColor != actionSelected && newColor != androidJoined) {
                 return true;
             }
         } else if (key.equalsIgnoreCase(Constants.EVENT_REST_ACTION)) {
-            if (newColor != callColor && newColor != workColor && newColor != walkColor) {
+            if (newColor != callColor && newColor != workColor && newColor != walkColor && newColor != actionSelected && newColor != androidJoined) {
+                return true;
+            }
+        } else if (key.equalsIgnoreCase(Constants.EVENT_CALL_ACTION)) {
+            if (newColor != restColor && newColor != workColor && newColor != walkColor && newColor != actionSelected && newColor != androidJoined) {
+                return true;
+            }
+        } else if (key.equalsIgnoreCase(Constants.EVENT_WORK_ACTION)) {
+            if (newColor != callColor && newColor != restColor && newColor != walkColor && newColor != actionSelected && newColor != androidJoined) {
+                return true;
+            }
+        } else if (key.equalsIgnoreCase(Constants.ACTION_JOINED)) {
+            if (newColor != workColor && newColor != callColor && newColor != restColor && newColor != walkColor && newColor != actionSelected) {
+                return true;
+            }
+        } else if (key.equalsIgnoreCase(Constants.ACTION_JOINED)) {
+            if (newColor != workColor && newColor != callColor && newColor != restColor && newColor != walkColor && newColor != androidJoined) {
                 return true;
             }
         }
