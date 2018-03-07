@@ -120,10 +120,10 @@ public class HomeFragment extends Fragment {
         if (button == null) {
             button = new ToggleButton(getContext());
         }
-        bWork.setChecked(bWork.getId() == button.getId());
-        bWalk.setChecked(bWalk.getId() == button.getId());
-        bRest.setChecked(bRest.getId() == button.getId());
-        bCall.setChecked(bCall.getId() == button.getId());
+        bWork.setAlpha(bWork.getId() != button.getId() ? 1 : (float) 0.5);
+        bWalk.setAlpha(bWalk.getId() != button.getId() ? 1 : (float) 0.5);
+        bRest.setAlpha(bRest.getId() != button.getId() ? 1 : (float) 0.5);
+        bCall.setAlpha(bCall.getId() != button.getId() ? 1 : (float) 0.5);
     }
 
     private void initListeners() {

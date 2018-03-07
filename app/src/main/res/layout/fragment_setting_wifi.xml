@@ -9,4 +9,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <TextView
+        android:id="@+id/tv_text_empty"
+        android:layout_width="match_parent"
+        android:text="List is emplty"
+        android:visibility="gone"
+        android:textSize="28sp"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal|center_vertical" />
+
 </FrameLayout>

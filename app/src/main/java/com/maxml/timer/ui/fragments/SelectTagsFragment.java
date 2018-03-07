@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
@@ -41,6 +42,7 @@ public class SelectTagsFragment extends Fragment implements View.OnClickListener
     private AutoCompleteTextView acTags;
     private BootstrapButton bAdd;
     private Toolbar toolbar;
+    private TextView tvTextEmpty;
 
     private DbController controller;
     private EventBus eventBus;
@@ -75,6 +77,7 @@ public class SelectTagsFragment extends Fragment implements View.OnClickListener
 
         initView(rootView);
         setListeners();
+        showMessageIfListIsEmpty();
 
         return rootView;
     }
@@ -138,6 +141,7 @@ public class SelectTagsFragment extends Fragment implements View.OnClickListener
         progressListener.hideProgressBar();
 
         initStatistic();
+        showMessageIfListIsEmpty();
     }
 
     @Subscribe
@@ -188,6 +192,8 @@ public class SelectTagsFragment extends Fragment implements View.OnClickListener
         acTags = rootView.findViewById(R.id.ac_tags);
         bAdd = rootView.findViewById(R.id.b_add);
         RecyclerView rvListTags = rootView.findViewById(R.id.rv_list_tags);
+        tvTextEmpty = rootView.findViewById(R.id.tv_text_empty);
+
         rvListTags.setHasFixedSize(true);
         rvListTags.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new TagsAdapter(getContext(), getFragmentManager(), this);
@@ -229,11 +235,20 @@ public class SelectTagsFragment extends Fragment implements View.OnClickListener
 
         controller.getAllTags();
         showProgress();
+        showMessageIfListIsEmpty();
     }
 
     private void showProgress() {
         if (NetworkUtil.isNetworkAvailable(getContext())) {
             progressListener.showProgressBar();
+        }
+    }
+
+    public void showMessageIfListIsEmpty() {
+        if (adapter.getItemCount() == 0) {
+            tvTextEmpty.setVisibility(View.VISIBLE);
+        } else {
+            tvTextEmpty.setVisibility(View.GONE);
         }
     }
 }

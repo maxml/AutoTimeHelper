@@ -119,8 +119,7 @@ public class SettingsFragment extends ColorPreferenceFragmentCompat implements
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         Integer newColor = (int) newValue;
-        boolean b = !changeOnRightData(preference.getKey(), newColor);
-        if (b) {
+        if (changeOnRightData(preference.getKey(), newColor)) {
             SharedPreferencesUtils.setColor(getContext(), preference.getKey(), color);
             Toast.makeText(getContext(), R.string.select_different_colors, Toast.LENGTH_SHORT).show();
             return true;

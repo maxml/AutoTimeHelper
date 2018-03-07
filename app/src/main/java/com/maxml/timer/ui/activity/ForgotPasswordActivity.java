@@ -56,7 +56,7 @@ public class ForgotPasswordActivity extends Activity {
                 // sign in successful
                 pbLoad.setVisibility(View.INVISIBLE);
                 Toast.makeText(getApplicationContext(),
-                        "An email was successfully sent with reset instructions.", Toast.LENGTH_SHORT).show();
+                        "An email was successfully sent with reset instructions.", Toast.LENGTH_LONG).show();
                 break;
             case Constants.EVENT_DB_RESULT_ERROR:
                 // sign in error

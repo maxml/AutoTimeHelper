@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.maxml.timer.R;
 import com.maxml.timer.controllers.ActionController;
@@ -31,6 +32,7 @@ import java.util.List;
 public class SettingWifiFragment extends Fragment implements WifiAdapter.OnItemClickListener,
         OptionDialog.OnDialogItemClickListener {
     private Toolbar toolbar;
+    private TextView tvTextEmpty;
 
     private EventBus eventBus;
     private DbController dbController;
@@ -52,6 +54,7 @@ public class SettingWifiFragment extends Fragment implements WifiAdapter.OnItemC
                 false);
         
         initView(rootView);
+        showMessageIfListIsEmpty();
 
         return rootView;
     }
@@ -94,6 +97,8 @@ public class SettingWifiFragment extends Fragment implements WifiAdapter.OnItemC
         dbController.getAllWifi();
 
         announceAboutConnecting();
+        showMessageIfListIsEmpty();
+
     }
 
     @Override
@@ -116,17 +121,20 @@ public class SettingWifiFragment extends Fragment implements WifiAdapter.OnItemC
     @Subscribe
     public void receiveWifiFromDB(List<WifiState> list) {
         adapter.swapData(list);
+        showMessageIfListIsEmpty();
     }
 
     private void initView(View rootView) {
         RecyclerView rvWifi = rootView.findViewById(R.id.rv_wifi);
+        toolbar = getActivity().findViewById(R.id.toolbar);
+        tvTextEmpty = rootView.findViewById(R.id.tv_text_empty);
+
         rvWifi.setHasFixedSize(true);
         rvWifi.setLayoutManager(new LinearLayoutManager(getContext()));
 
         adapter = new WifiAdapter(new ArrayList<WifiState>(), this);
         rvWifi.setAdapter(adapter);
 
-        toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.settings);
     }
 
@@ -138,5 +146,13 @@ public class SettingWifiFragment extends Fragment implements WifiAdapter.OnItemC
         eventBus = new EventBus();
         dbController = new DbController(getContext(), eventBus);
         actionController = new ActionController(getContext(), eventBus);
+    }
+
+    public void showMessageIfListIsEmpty() {
+        if (adapter.getItemCount() == 0) {
+            tvTextEmpty.setVisibility(View.VISIBLE);
+        } else {
+            tvTextEmpty.setVisibility(View.GONE);
+        }
     }
 }

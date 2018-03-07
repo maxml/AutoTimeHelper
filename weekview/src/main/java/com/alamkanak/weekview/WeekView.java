@@ -852,6 +852,15 @@ public class WeekView extends View {
                             mEventRects.get(i).setOptionsStartCoordinates(top + (bottom - top), left);
                             mOptionPaint = new Paint(mEventBackgroundPaint);
                             countColumnAfterMenu = 1;
+
+//                            if (mEventRects.get(i).optionRectF != null) {
+//                                mOptionPaint.setAlpha(170);
+//                                mOptionPaint.setDither(true);
+//                                mOptionPaint.;
+//                                canvas.drawRoundRect(mEventRects.get(i).optionRectF, mEventCornerRadius, mEventCornerRadius, mOptionPaint);
+//
+//                                drawOptionsTitles(mEventRects.get(i).optionRectF, canvas, mEventRects.get(i).getOptionTop(), mEventRects.get(i).getOptionLeft());
+//                            }
                         } else {
                             mEventRects.get(i).optionRectF = null;
                         }
@@ -868,6 +877,7 @@ public class WeekView extends View {
                         mEventRects) {
                     if (e.optionRectF != null) {
                         mOptionPaint.setAlpha(170);
+                        mOptionPaint.setAntiAlias(true);
                         canvas.drawRoundRect(e.optionRectF, mEventCornerRadius, mEventCornerRadius, mOptionPaint);
 
                         drawOptionsTitles(e.optionRectF, canvas, e.getOptionTop(), e.getOptionLeft());
@@ -881,6 +891,7 @@ public class WeekView extends View {
     }
 
     /**
+     * w
      * Draw all the Allday-events of a particular day.
      *
      * @param date           The day.
