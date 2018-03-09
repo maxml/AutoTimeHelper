@@ -60,7 +60,8 @@
     <color name="colorText">#ffffff</color>
 
     <color name="event_color_blue">#32b5e3</color>
-    <color name="event_color_red">#fe4543</color>
+    <!--<color name="event_color_red">#fd4341</color>-->
+    <color name="event_color_red">#FF4A19</color>
     <color name="event_color_green">#98cc00</color>
     <color name="event_color_yellow">#ffbc30</color>
     <color name="toolbar">#efefef</color>

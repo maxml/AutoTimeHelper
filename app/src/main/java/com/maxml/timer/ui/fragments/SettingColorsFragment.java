@@ -11,6 +11,7 @@ import com.maxml.timer.util.SharedPreferencesUtils;
 import com.u1aryz.android.colorpicker.ColorPreference;
 import com.u1aryz.android.colorpicker.ColorPreferenceFragmentCompat;
 
+//Have problem with some red colors. Save (redColor - 1).
 public class SettingColorsFragment extends ColorPreferenceFragmentCompat implements
         Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
     private Toolbar toolbar;
@@ -119,8 +120,6 @@ public class SettingColorsFragment extends ColorPreferenceFragmentCompat impleme
             }
         } else if (key.equalsIgnoreCase(Constants.EVENT_REST_ACTION)) {
             if (newColor != callColor && newColor != workColor && newColor != walkColor && newColor != actionSelected && newColor != androidJoined) {
-                int a = 0;
-                a = 23;
                 return true;
             }
         } else if (key.equalsIgnoreCase(Constants.EVENT_CALL_ACTION)) {

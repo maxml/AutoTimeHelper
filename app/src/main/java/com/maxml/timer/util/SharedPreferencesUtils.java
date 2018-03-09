@@ -47,9 +47,8 @@ public class SharedPreferencesUtils {
     public static int getColor(Context context, String actionName) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
 
-        int defaultColor = 0;
+        int defaultColor;
         Resources resources = context.getResources();
-
         if (actionName.equalsIgnoreCase(Constants.EVENT_WALK_ACTION)) {
             defaultColor = resources.getColor(R.color.event_color_blue);
         } else if (actionName.equalsIgnoreCase(Constants.EVENT_CALL_ACTION)) {
@@ -62,13 +61,14 @@ public class SharedPreferencesUtils {
             defaultColor = resources.getColor(R.color.select_action);
         } else if (actionName.equalsIgnoreCase(Constants.ACTION_JOINED)) {
             defaultColor = resources.getColor(R.color.joined_action);
+        } else {
+            throw new RuntimeException("No color for this action.");
         }
         return sp.getInt(actionName, defaultColor);
     }
 
     public static void setColor(Context context, String actionName, int color) {
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-
 
         if (actionName.equalsIgnoreCase(Constants.EVENT_WALK_ACTION)) {
             editor.putInt(actionName, color);
